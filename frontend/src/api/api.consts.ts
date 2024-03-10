@@ -1,4 +1,4 @@
-export const API_BASE_PATH = '/api';
+export const API_BASE_PATH = '/api/api'; // ну бывает
 export const AUTH_URL = 'test_url';
 
 export enum METHOD {
