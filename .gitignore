@@ -1,0 +1,6 @@
+pgadmin-data/*
+.DS_store
+dbdata/*
+data/*
+
+

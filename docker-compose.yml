@@ -1,0 +1,57 @@
+name: e2b4free
+services:
+  db:
+    image: postgres:16.1
+    restart: unless-stopped
+    volumes:
+      - ./data/dbdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_DB=$POSTGRES_DB
+
+  backend:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend/backend:/e2b4free
+    environment:
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_DB=$POSTGRES_DB
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.admin
+      PGADMIN_DEFAULT_PASSWORD: L0t7ETNLWBEIcoH8
+    volumes:
+      - ./data/pgadmin-data:/var/lib/pgadmin
+
+  frontend_npm_builder:
+    build: ./frontend/
+    volumes: 
+      - frontend_static:/app/dist
+
+  caddy:
+    image: caddy:2.7-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes: 
+      - frontend_static:/static
+      - ./config/Caddyfile:/etc/caddy/Caddyfile
+      - ./data/caddy_data:/data
+      - ./data/caddy_config:/config
+
+volumes:
+  frontend_static:

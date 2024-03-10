@@ -1,0 +1,69 @@
+{
+    "id": 19,
+    "c_1_identification_case_safety_report": {
+        "id": 19,
+        "c_1_1_sender_safety_report_unique_id": {
+            "value": "kekus"
+        },
+        "c_1_2_date_creation": {
+            "value": "20240102"
+        },
+        "c_1_3_type_report": {
+            "value": 2
+        },
+        "c_1_4_date_report_first_received_source": {
+            "value": "20221010"
+        },
+        "c_1_5_date_most_recent_information": {
+            "value": "20251011"
+        },
+        "c_1_6_1_additional_documents_available": {
+            "value": true
+        },
+        "c_1_6_1_r_documents_held_sender": [
+            {
+                "id": 1,
+                "c_1_6_1_r_1_documents_held_sender": {
+                    "value": "asd"
+                }
+            },
+	    {
+		"id": 2,
+		"c_1_6_1_r_1_documents_held_sender": {
+                    "value": "lolus"
+                }
+	    }
+        ],
+        "c_1_7_fulfil_local_criteria_expedited_report": {
+            "value": true,
+            "null_flavor": null
+        },
+        "c_1_8_1_worldwide_unique_case_identification_number": {
+            "value": "KEK1234MEM"
+        },
+        "c_1_8_2_first_sender": {
+            "value": 1
+        },
+        "c_1_9_1_other_case_ids_previous_transmissions": {
+            "value": true
+        },
+	"c_1_9_1_r_source_case_id": [
+		{"id": 1, "c_1_9_1_r_1_source_case_id": {"value": "asd"}}
+	],
+        "c_1_10_r_identification_number_report_linked": [
+		{"id": 1, "c_1_10_r_identification_number_report_linked": {"value": "lol?"}}
+
+	],
+
+	"c_1_9_1_r_source_case_id": [
+		{"id": 1, "c_1_9_1_r_1_source_case_id": {"value": "kek DB"}, "c_1_9_1_r_2_case_id": {"value": "ROFL2024"}}
+	],
+
+        "c_1_11_1_report_nullification_amendment": {
+            "value": true
+        },
+        "c_1_11_2_reason_nullification_amendment": {
+            "value": "just because"
+        }
+    }
+}
