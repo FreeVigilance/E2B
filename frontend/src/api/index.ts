@@ -11,7 +11,4 @@ export const api = {
     getData: (id: any) => {
         return clientER.get(`/icsr/${id}`);
     },
-//    updateData: (id: any, data: any) => {
-//        return clientER.post(`/icsr/${id}`, { data });
-//    },
 };
