@@ -1,9 +1,33 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { e2bCaseKeys, pascalSnakeCaseKeys } from '../common/changekeys';
+import { e2bCaseKeys } from '../common/changekeys';
 import { getData } from '../display/slice';
 import { DocumentsHeldBySender, Identification, IdentificationNumber, OtherIdentifiers } from './identification';
 
 export const identificationSelector = (state) => state.identification;
+
+const indexArray = (arr) => {
+    return arr.map((el, index) => {
+        return {
+            ...el,
+            id: index + 1,
+        };
+    });
+};
+
+export const getIdentification = () => {
+    return (dispatch, getState) => {
+        console.log('state');
+        console.log(getState());
+        const state = JSON.parse(JSON.stringify(getState().identification));
+        const result = state.identification;
+
+        result.C_1_6_1_r_DocumentsHeldSender = indexArray(state.documentsHeldBySender);
+        result.C_1_9_1_r_SourceCaseId = indexArray(state.otherIdentifiers);
+        result.C_1_10_r_IdentificationNumberReportLinked = indexArray(state.identificationNumber);
+
+        return result;
+    };
+};
 
 const identificationSlice = createSlice({
     name: 'identification',
