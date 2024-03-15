@@ -23,17 +23,16 @@ export const Save = () => {
         const grugs = dispatch(getDrug());
         console.log(grugs);
         const identification = dispatch(getIdentification());
-        identification.id = 19;
 
         const result = {
-            id: 19,
+            id: 2,
             c_1_identification_case_safety_report: identification,
         };
 
         const resBackend = toSnakeKeys(result);
         console.log(resBackend);
 
-        api.save(resBackend);
+        api.save(2, resBackend);
     };
 
     return (

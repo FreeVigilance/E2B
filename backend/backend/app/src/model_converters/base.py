@@ -29,6 +29,22 @@ class ModelConverter[H, L](abc.ABC):
         )
 
     @staticmethod
+    @t.overload
+    def _convert_from_target_model_dict(
+            source_model: H,
+            target_model_dict: dict[str, t.Any],
+            target_model_class_getter: t.Callable[[type[H]], type[L]]
+    ) -> L: ...
+
+    @staticmethod
+    @t.overload
+    def _convert_from_target_model_dict(
+            source_model: L,
+            target_model_dict: dict[str, t.Any],
+            target_model_class_getter: t.Callable[[type[L]], type[H]]
+    ) -> H: ...
+
+    @staticmethod
     def _convert_from_target_model_dict(
             source_model: [H | L],
             target_model_dict: dict[str, t.Any],
@@ -42,6 +58,24 @@ class ModelConverter[H, L](abc.ABC):
 
     def _convert_to_higher_model_dict(self, lower_model: L, **kwargs) -> dict[str, t.Any]:
         raise NotImplementedError
+
+    @staticmethod
+    @t.overload
+    def _get_pydantic_model_attr_conversion_iterator(
+            source_model: L,
+            target_model_dict: dict[str, t.Any],
+            check_model_class: type[L],
+            convert_func: t.Callable[[L], t.Any]  # TODO: annotation for kwargs
+    ) -> t.Iterator[tuple[str, t.Any, bool]]: ...
+
+    @staticmethod
+    @t.overload
+    def _get_pydantic_model_attr_conversion_iterator(
+            source_model: H,
+            target_model_dict: dict[str, t.Any],
+            check_model_class: type[H],
+            convert_func: t.Callable[[H], t.Any]  # TODO: annotation for kwargs
+    ) -> t.Iterator[tuple[str, t.Any, bool]]: ...
 
     @staticmethod
     def _get_pydantic_model_attr_conversion_iterator(

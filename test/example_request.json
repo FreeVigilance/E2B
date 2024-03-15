@@ -1,7 +1,5 @@
 {
-    "id": 19,
     "c_1_identification_case_safety_report": {
-        "id": 19,
         "c_1_1_sender_safety_report_unique_id": {
             "value": "kekus"
         },
@@ -22,13 +20,11 @@
         },
         "c_1_6_1_r_documents_held_sender": [
             {
-                "id": 1,
                 "c_1_6_1_r_1_documents_held_sender": {
                     "value": "asd"
                 }
             },
 	    {
-		"id": 2,
 		"c_1_6_1_r_1_documents_held_sender": {
                     "value": "lolus"
                 }
@@ -48,15 +44,15 @@
             "value": true
         },
 	"c_1_9_1_r_source_case_id": [
-		{"id": 1, "c_1_9_1_r_1_source_case_id": {"value": "asd"}}
+		{"c_1_9_1_r_1_source_case_id": {"value": "asd"}}
 	],
         "c_1_10_r_identification_number_report_linked": [
-		{"id": 1, "c_1_10_r_identification_number_report_linked": {"value": "lol?"}}
+		{"c_1_10_r_identification_number_report_linked": {"value": "lol?"}}
 
 	],
 
 	"c_1_9_1_r_source_case_id": [
-		{"id": 1, "c_1_9_1_r_1_source_case_id": {"value": "kek DB"}, "c_1_9_1_r_2_case_id": {"value": "ROFL2024"}}
+		{"c_1_9_1_r_1_source_case_id": {"value": "kek DB"}, "c_1_9_1_r_2_case_id": {"value": "ROFL2024"}}
 	],
 
         "c_1_11_1_report_nullification_amendment": {
