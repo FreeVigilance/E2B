@@ -6,14 +6,17 @@ class DomainService:
     def __init__(self, storage_service: SupportsServiceMethods[DomainModel]) -> None:
         self.repository = storage_service
 
-    def read(self, domain_model_class: type[DomainModel], pk: int) -> DomainModel:
-        return self.repository.read(domain_model_class, pk)
+    def list(self, model_class: type[DomainModel]) -> list[int]:
+        return self.repository.list(model_class)
 
-    def create(self, domain_model: DomainModel) -> int:
-        return self.repository.create(domain_model)
+    def read(self, model_class: type[DomainModel], pk: int) -> DomainModel:
+        return self.repository.read(model_class, pk)
 
-    def update(self, domain_model: DomainModel) -> None:
-        self.repository.update(domain_model)
+    def create(self, model: DomainModel) -> DomainModel:
+        return self.repository.create(model)
 
-    def delete(self, domain_model_class: type[DomainModel], pk: int) -> None:
-        self.repository.delete(domain_model_class, pk)
+    def update(self, model: DomainModel, pk: int) -> DomainModel:
+        return self.repository.update(model, pk)
+
+    def delete(self, model_class: type[DomainModel], pk: int) -> None:
+        return self.repository.delete(model_class, pk)

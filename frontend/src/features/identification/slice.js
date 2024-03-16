@@ -21,9 +21,9 @@ export const getIdentification = () => {
         const state = JSON.parse(JSON.stringify(getState().identification));
         const result = state.identification;
 
-        result.C_1_6_1_r_DocumentsHeldSender = indexArray(state.documentsHeldBySender);
-        result.C_1_9_1_r_SourceCaseId = indexArray(state.otherIdentifiers);
-        result.C_1_10_r_IdentificationNumberReportLinked = indexArray(state.identificationNumber);
+        result.C_1_6_1_r_DocumentsHeldSender =state.documentsHeldBySender;
+        result.C_1_9_1_r_SourceCaseId = state.otherIdentifiers;
+        result.C_1_10_r_IdentificationNumberReportLinked = state.identificationNumber;
 
         return result;
     };
@@ -57,10 +57,10 @@ const identificationSlice = createSlice({
             console.log('why', data);
             state.identification = data;
 
-            state.documentsHeldBySender = data.C_1_6_1_r_DocumentsHeldSender;
+            state.documentsHeldBySender = indexArray(data.C_1_6_1_r_DocumentsHeldSender);
 
-            state.otherIdentifiers = data.C_1_9_1_r_SourceCaseId;
-            state.identificationNumber = data.C_1_10_r_IdentificationNumberReportLinked;
+            state.otherIdentifiers = indexArray(data.C_1_9_1_r_SourceCaseId);
+            state.identificationNumber = indexArray(data.C_1_10_r_IdentificationNumberReportLinked);
         });
     },
 });

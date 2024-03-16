@@ -3,17 +3,18 @@ from django.db import models
 from app.src.shared import enums
 from app.src.shared.enums import NullFlavor
 from extensions.django.constraints import add_choices_constraint, add_any_null_constraint, add_unique_together_constraint
-from extensions.django.models import ModelWithTempRelationsSupport
+from extensions.django.models import ModelWithTempRelationsSupport, PrefixedFieldUtils
 
-
-NULL_FLAVOR_FIELD_NAME_PREFIX = 'nf_'
 
 DATETIME_MAX_LENGTH = 24
 NULL_FLAVOR_MAX_LENGTH = 4
 
 
+null_flavor_field_utils = PrefixedFieldUtils('nf_')
+
+
 def add_null_flavor_constraint(meta_cls: type, field_name: str) -> None:
-    add_any_null_constraint(meta_cls, field_name, f'nf_{field_name}')
+    add_any_null_constraint(meta_cls, field_name, null_flavor_field_utils.make_special_field_name(field_name))
 
 
 class StorageModel(ModelWithTempRelationsSupport):
@@ -40,7 +41,7 @@ class C_1_identification_case_safety_report(StorageModel):
     c_1_2_date_creation = models.CharField(null=True, max_length=DATETIME_MAX_LENGTH)
 
     c_1_3_type_report = models.IntegerField(null=True)
-    add_choices_constraint(Meta, 'c_1_3_type_report', enums.C_1_3_type_of_report)
+    add_choices_constraint(Meta, 'c_1_3_type_report', enums.C_1_3_type_report)
 
     c_1_4_date_report_first_received_source = models.CharField(null=True, max_length=DATETIME_MAX_LENGTH)
 
@@ -56,7 +57,7 @@ class C_1_identification_case_safety_report(StorageModel):
     c_1_8_1_worldwide_unique_case_identification_number = models.CharField(null=True, unique=True, max_length=100)
 
     c_1_8_2_first_sender = models.IntegerField(null=True)
-    add_choices_constraint(Meta, 'c_1_8_2_first_sender', enums.C_1_8_2_first_sender_of_this_case)
+    add_choices_constraint(Meta, 'c_1_8_2_first_sender', enums.C_1_8_2_first_sender)
 
     c_1_9_1_other_case_ids_previous_transmissions = models.BooleanField(null=True)
     add_choices_constraint(Meta, 'c_1_9_1_other_case_ids_previous_transmissions', [True])
@@ -65,7 +66,7 @@ class C_1_identification_case_safety_report(StorageModel):
     add_null_flavor_constraint(Meta, 'c_1_9_1_other_case_ids_previous_transmissions')
 
     c_1_11_1_report_nullification_amendment = models.IntegerField(null=True)
-    add_choices_constraint(Meta, 'c_1_11_1_report_nullification_amendment', enums.C_1_11_1_report_nullification_or_amendment)
+    add_choices_constraint(Meta, 'c_1_11_1_report_nullification_amendment', enums.C_1_11_1_report_nullification_amendment)
 
     c_1_11_2_reason_nullification_amendment = models.CharField(null=True, max_length=2000)
 

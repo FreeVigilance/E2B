@@ -36,7 +36,7 @@ export const SideMenu = () => {
     };
 
     const handleNewReportClick = () => {
-        dispatch(getData(19));
+        dispatch(getData(2));
 
         dispatch(revertAll());
 

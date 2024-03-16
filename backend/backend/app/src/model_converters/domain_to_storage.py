@@ -1,14 +1,15 @@
 import typing as t
 
 from django import forms
+from django.db import models
 
 from app.src.layers.domain import models as domain_models
 from app.src.layers.domain.models import DomainModel
 from app.src.layers.storage import models as storage_models
-from app.src.layers.storage.models import StorageModel, NULL_FLAVOR_FIELD_NAME_PREFIX
+from app.src.layers.storage.models import StorageModel, null_flavor_field_utils
 from app.src.model_converters.base import ModelConverter
 from app.src.shared.enums import NullFlavor
-from extensions.django.models import TEMP_RELATION_FIELD_NAME_PREFIX
+from extensions.django.models import temp_relation_field_utils
 
 
 DOMAIN_TO_STORAGE_MODEL_CLASS_MAP = {
@@ -45,14 +46,15 @@ class DomainToStorageModelConverter(ModelConverter[DomainModel, StorageModel]):
             target_model_field = target_model_class._meta.get_field(key)
             if target_model_field.is_relation:
                 result_value = target_model_dict.pop(key)
-                target_model_dict[TEMP_RELATION_FIELD_NAME_PREFIX + key] = result_value
+                temp_field_name = temp_relation_field_utils.make_special_field_name(key)
+                target_model_dict[temp_field_name] = result_value
 
             if is_default_conditions_met:
                 continue
 
             if isinstance(value, NullFlavor):
                 del target_model_dict[key]
-                target_model_dict[NULL_FLAVOR_FIELD_NAME_PREFIX + key] = value
+                target_model_dict[null_flavor_field_utils.make_special_field_name(key)] = value
 
         return target_model_class(**target_model_dict)
 
@@ -75,18 +77,22 @@ class DomainToStorageModelConverter(ModelConverter[DomainModel, StorageModel]):
         for field in lower_model._meta.get_fields():
             field_name = field.name
 
-            if field_name.startswith(NULL_FLAVOR_FIELD_NAME_PREFIX):
+            if null_flavor_field_utils.is_special_field_name(field_name):
                 null_flavor = lower_model_dict.pop(field_name)
                 if null_flavor:
-                    value_field_name = field_name.replace(NULL_FLAVOR_FIELD_NAME_PREFIX, '')
+                    value_field_name = null_flavor_field_utils.get_base_field_name(field_name)
                     lower_model_dict[value_field_name] = null_flavor
 
-            if field_name in lower_model_dict or not include_related:
+            # Related models are retrieved only from m-1 and backward 1-1 relations.
+            # Backward m-m relations are ignored as there are none among the domain models.
+            # Forward relations are ignored as the domain models are only aware of embedded models
+            # (which are stored in storage models backward relations).
+
+            # Last condition checks if this field is a backward (reverse) relation
+            if not include_related or not field.is_relation or not isinstance(field, models.ForeignObjectRel):
                 continue
 
-            # Following code is executed only if include_related is True
-
-            if field.one_to_many or field.many_to_many:
+            if field.one_to_many:
                 related_lower_models = getattr(lower_model, field_name).all()
                 related_lower_models_dicts = []
                 for related_lower_model in related_lower_models:
@@ -95,7 +101,7 @@ class DomainToStorageModelConverter(ModelConverter[DomainModel, StorageModel]):
                 lower_model_dict[field_name] = related_lower_models_dicts
 
             elif field.one_to_one:
-                related_lower_model = getattr(lower_model, field_name)
+                related_lower_model = getattr(lower_model, field_name, None)
                 if related_lower_model:
                     related_lower_model_dict = self._convert_to_higher_model_dict(related_lower_model, include_related)
                     lower_model_dict[field_name] = related_lower_model_dict

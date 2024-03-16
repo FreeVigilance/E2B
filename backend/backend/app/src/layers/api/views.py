@@ -1,30 +1,49 @@
+import json
+import typing as t
+
 from django.views import View
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 
 from app.src.layers.api.models import ApiModel, ICSR
 from app.src.shared.protocols import SupportsServiceMethods
 
-class ICSRView(View):
-    domain_service: SupportsServiceMethods[ApiModel] = None
 
-    def get(self, request, pk: int):
-        model = self.domain_service.read(ICSR, pk)
-        return HttpResponse(model.model_dump_json(), content_type='application/json')
+class BaseView(View):
+    domain_service: SupportsServiceMethods[ApiModel] = ...
+    model_class: type[ApiModel] = ...
 
-    def post(self, request):
-        json = request.body
-        model = ICSR.model_validate_json(json)
+    def respond_with_model_json(self, model: ApiModel) -> HttpResponse:
+        return self.respond_with_json(model.model_dump_json())
+
+    def respond_with_object_json(self, obj: t.Any) -> HttpResponse:
+        return self.respond_with_json(json.dumps(obj))
+
+    def respond_with_json(self, json_str: str) -> HttpResponse:
+        return HttpResponse(json_str, content_type='application/json')
+
+
+class ModelClassView(BaseView):
+    def get(self, request: HttpRequest) -> HttpResponse:
+        result_list = self.domain_service.list(ICSR)
+        return self.respond_with_object_json(result_list)
+
+    def post(self, request: HttpRequest) -> HttpResponse:
+        model = ICSR.model_validate_json(request.body)
         # TODO: check id empty
-        pk = self.domain_service.create(model)
-        return HttpResponse(pk)
+        model = self.domain_service.create(model)
+        return self.respond_with_model_json(model)
 
-    def put(self, request, pk: int):
-        json = request.body
-        model = ICSR.model_validate_json(json)
-        model.id = pk
-        self.domain_service.update(model)
-        return HttpResponse(True)
 
-    def delete(self, request, pk: int):
+class ModelInstanceView(BaseView):
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        model = self.domain_service.read(ICSR, pk)
+        return self.respond_with_model_json(model)
+
+    def put(self, request: HttpRequest, pk: int) -> HttpResponse:
+        model = ICSR.model_validate_json(request.body)
+        model = self.domain_service.update(model, pk)
+        return self.respond_with_model_json(model)
+
+    def delete(self, request: HttpRequest, pk: int) -> HttpResponse:
         self.domain_service.delete(ICSR, pk)
-        return HttpResponse(True)
+        return self.respond_with_object_json(True)
