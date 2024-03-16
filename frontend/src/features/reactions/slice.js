@@ -69,11 +69,7 @@ export const getReaction = () => {
 
 			data.push(itemData);
 		});
-		let jsonResult = {
-			"id": null,
-			"E_i_ReactionEvent": data
-		}
-		return jsonResult;
+		return data;
 	}
 }
 
@@ -107,6 +103,7 @@ export const parseReaction = (jsonData) => {
 
 			reactionsData.push(itemData);
 		});
+		dispatch(setReactionsData(reactionsData));
 	}
 }
 

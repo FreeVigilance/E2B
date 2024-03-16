@@ -7,6 +7,10 @@ import { getReaction } from '@src/features/reactions/slice';
 import { getPatient } from '@src/features/patient/slice';
 import { getDrug } from '@src/features/drugs/slice';
 import { displaySelector, saveData } from '@src/features/display/slice';
+import { getReferences } from '@src/features/references/slice';
+import { getStudyIdentification } from '@src/features/study-identification/slice';
+import { getPrimarySources } from '@src/features/primary-source/slice';
+import { getInfoSender } from '@src/features/info-sender/slice';
 
 export const Save = () => {
     const dispatch = useDispatch();
@@ -15,16 +19,24 @@ export const Save = () => {
 
     const save = () => {
         const results = dispatch(getResults());
-        console.log(results);
-        // const reactions = dispatch(getReaction());
-        // console.log(reactions);
-        // const patient = dispatch(getPatient());
-        // console.log(patient);
-        // const grugs = dispatch(getDrug());
-        // console.log(grugs);
+        const grugs = dispatch(getDrug());
+        const patient = dispatch(getPatient());
+        const reactions = dispatch(getReaction());
+        const reference = dispatch(getReferences());
+        const studyIdent = dispatch(getStudyIdentification());
+        const primarySource = dispatch(getPrimarySources());
+        const infoSender = dispatch(getInfoSender());
+
         let data = {
             'id': currentId,
-            'F_r_ResultsTestsProceduresInvestigationPatient': results
+            'F_r_ResultsTestsProceduresInvestigationPatient': results,
+            'G_k_DrugInformation': grugs,
+            'D_PatientCharacteristics': patient['D_PatientCharacteristics'],
+            'E_i_ReactionEvent': reactions,
+            'C_4_r_LiteratureReference': reference,
+            'C_5_StudyIdentification': studyIdent,
+            'C_2_r_PrimarySourceInformation': primarySource,
+            'C_3_InformationSenderCaseSafetyReport': infoSender,
         }
         
         var snakecaseKeys = require('snakecase-keys');

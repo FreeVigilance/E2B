@@ -146,11 +146,7 @@ export const getDrug = () => {
 			
 			data.push(itemData);
 		});
-		let jsonResult = {
-			"id": null,
-			"G_k_DrugInformation": data
-		}
-		return jsonResult;
+		return data;
 	}
 }
 

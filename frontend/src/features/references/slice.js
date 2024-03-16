@@ -13,11 +13,7 @@ export const getReferences = () => {
 			itemData['C_4_r_1_LiteratureReference'] = item['C_4_r_1_LiteratureReference']
 			data.push(itemData);
 		});
-		let jsonResult = {
-			"id": null,
-			"C_4_r_LiteratureReference": data
-		}
-		return jsonResult;
+		return data;
 	}
 }
 
