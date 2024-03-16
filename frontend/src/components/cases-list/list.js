@@ -2,13 +2,17 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 import { casesListSelector, getCasesList } from "@src/features/cases-list/slice";
+import { getData, setOpenNewReport, setShowCasesList } from "@src/features/display/slice";
 
 export const CasesList = () => {
     const dispatch = useDispatch();
     const {cases} = useSelector(casesListSelector);
-    useEffect(() => {
-        dispatch(getCasesList());
-    }, []);
+
+    const openReport = (id) => {
+        dispatch(getData(id));
+        dispatch(setOpenNewReport(true));
+        dispatch(setShowCasesList(false));
+    }
 
     const generateList = () => {
         console.log("show");
@@ -16,8 +20,8 @@ export const CasesList = () => {
         for (let i = 0; i < cases.length; i+=1 ) {
             items.push(
             <ListItem key={i}>
-                <ListItemButton>
-                <ListItemText primary={cases[i]} />
+                <ListItemButton onClick={() => openReport(cases[i])}>
+                  <ListItemText primary={cases[i]} />
               </ListItemButton>
             </ListItem>)
         }

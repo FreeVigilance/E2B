@@ -71,16 +71,16 @@ export class HTTP {
         }
 
         function serializeHeader(method: METHOD, data: T) {
-            const strAuthorization = cookie.load('access_token');
-            const header = { authorization: `Bearer ${strAuthorization}` };
+            // const strAuthorization = cookie.load('access_token');
+            // const header = { authorization: `Bearer ${strAuthorization}` };
 
-            if (method === METHOD.GET || method === METHOD.DELETE) {
-                return header;
-            }
-            if (data instanceof FormData) {
-                return header;
-            }
-            return { ...header, 'Content-Type': 'application/json' };
+            // if (method === METHOD.GET || method === METHOD.DELETE) {
+            //     return header;
+            // }
+            // if (data instanceof FormData) {
+            //     return header;
+            // }
+            return { 'Content-Type': 'application/json' };
         }
 
         const { method, data, responseFormat = 'json' } = options;

@@ -37,7 +37,7 @@ export const parseReferences = (jsonData) => {
 const referencesSlice = createSlice({
 	name: 'references',
 	initialState: {
-		referencesData: [new Reference()]
+		referencesData: []
 	},
 	reducers: {
 		setReferencesData: (state, action) => {

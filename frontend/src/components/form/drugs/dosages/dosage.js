@@ -12,6 +12,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { MedHistory } from '@src/features/patient/patient';
 import { drugsSelector, setDosages, setSubstances } from '@src/features/drugs/slice';
 import { Dosage, Substance } from '@src/features/drugs/drugs';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const Dosages = ({drugIndex}) => {
 	const dispatch = useDispatch();
@@ -46,6 +47,13 @@ export const Dosages = ({drugIndex}) => {
 
     const formList = () => {
         let list = [];
+        if (dosages[drugIndex].length === 0) {
+            return ( <span>
+                <IconButton size='large' style= {{ top: '10px'}}
+                sx={{ color: "white", backgroundColor: "#1976d2"}}
+                            onClick={addForm}><AddIcon/></IconButton>
+            </span>);
+        }
         Object.values(dosages[drugIndex]).forEach((item, index) => {
             list.push(
                 <Card sx={{border: "3px solid #094B8C",
@@ -282,6 +290,12 @@ export const Dosages = ({drugIndex}) => {
                                     rows={3}/> 
                         </Grid>   
                     </Grid>
+                    <span>
+                                        <IconButton size='large' style= {{ top: '10px', right: '10px'}}
+                                        sx={{ color: "white", backgroundColor: "#1976d2"}}
+                                                onClick={() => removeForm(index)}><DeleteIcon/>
+                                        </IconButton>
+                                    </span> 
                     {index === dosages[drugIndex].length - 1 ?
                                 <span>
                                     <IconButton size='large' style= {{ top: '10px'}}
@@ -298,6 +312,12 @@ export const Dosages = ({drugIndex}) => {
         let dosagesCopy = JSON.parse(JSON.stringify(dosages));
         let dosageNew = new Dosage();
         dosagesCopy[drugIndex].push(dosageNew);
+        dispatch(setDosages(dosagesCopy));
+    }
+
+    const removeForm = (index) => {
+        let dosagesCopy = JSON.parse(JSON.stringify(dosages));
+        dosagesCopy[drugIndex].splice(index, 1);
         dispatch(setDosages(dosagesCopy));
     }
 

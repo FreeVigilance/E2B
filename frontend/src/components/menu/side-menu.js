@@ -15,6 +15,7 @@ import { Reaction } from '@src/features/reactions/reaction';
 import { Result } from '@src/features/results/result';
 import { AutopsyData, CauseOfDeath, DrugHistory, MedHistory, ParentDrugHistory } from '@src/features/patient/patient';
 import { patientSelector, setAutopsy, setCauseOfDeath, setDrugHistory, setMedicalHistory, setParentDrugHistory } from '@src/features/patient/slice';
+import { getCasesList } from '@src/features/cases-list/slice';
 
 const drawerWidth = 240;
 
@@ -32,48 +33,47 @@ export const SideMenu = () => {
 
     const handleCaseListShow = () => {
         dispatch(revertAll());
+        dispatch(getCasesList());
         dispatch(setShowCasesList(true));
     };
 
     const handleNewReportClick = () => {
-        dispatch(getData(2));
-
         dispatch(revertAll());
 
-        const reactionsDataCopy = JSON.parse(JSON.stringify(reactionsData));
-        const reactionNew = new Reaction();
-        reactionsDataCopy.push(reactionNew);
-        dispatch(setReactionsData(reactionsDataCopy));
+        // const reactionsDataCopy = JSON.parse(JSON.stringify(reactionsData));
+        // const reactionNew = new Reaction();
+        // reactionsDataCopy.push(reactionNew);
+        // dispatch(setReactionsData(reactionsDataCopy));
 
-        const resultsDataCopy = JSON.parse(JSON.stringify(resultsData));
-        const resultNew = new Result();
-        resultsDataCopy.push(resultNew);
-        dispatch(setResultsData(resultsDataCopy));
+        // const resultsDataCopy = JSON.parse(JSON.stringify(resultsData));
+        // const resultNew = new Result();
+        // resultsDataCopy.push(resultNew);
+        // dispatch(setResultsData(resultsDataCopy));
 
-        const medHistoryCopy = JSON.parse(JSON.stringify(medicalHistory));
-        const medicalHistoryNew = new MedHistory();
-        medHistoryCopy.push(medicalHistoryNew);
-        dispatch(setMedicalHistory(medHistoryCopy));
+        // const medHistoryCopy = JSON.parse(JSON.stringify(medicalHistory));
+        // const medicalHistoryNew = new MedHistory();
+        // medHistoryCopy.push(medicalHistoryNew);
+        // dispatch(setMedicalHistory(medHistoryCopy));
 
-        const drugHistoryCopy = JSON.parse(JSON.stringify(drugHistory));
-        const drugHistoryNew = new DrugHistory();
-        drugHistoryCopy.push(drugHistoryNew);
-        dispatch(setDrugHistory(drugHistoryCopy));
+        // const drugHistoryCopy = JSON.parse(JSON.stringify(drugHistory));
+        // const drugHistoryNew = new DrugHistory();
+        // drugHistoryCopy.push(drugHistoryNew);
+        // dispatch(setDrugHistory(drugHistoryCopy));
 
-        const causeOfDeathCopy = JSON.parse(JSON.stringify(causeOfDeath));
-        const causeOfDeathNew = new CauseOfDeath();
-        causeOfDeathCopy.push(causeOfDeathNew);
-        dispatch(setCauseOfDeath(causeOfDeathCopy));
+        // const causeOfDeathCopy = JSON.parse(JSON.stringify(causeOfDeath));
+        // const causeOfDeathNew = new CauseOfDeath();
+        // causeOfDeathCopy.push(causeOfDeathNew);
+        // dispatch(setCauseOfDeath(causeOfDeathCopy));
 
-        const autopsyCopy = JSON.parse(JSON.stringify(autopsy));
-        const autopsyNew = new AutopsyData();
-        autopsyCopy.push(autopsyNew);
-        dispatch(setAutopsy(autopsyCopy));
+        // const autopsyCopy = JSON.parse(JSON.stringify(autopsy));
+        // const autopsyNew = new AutopsyData();
+        // autopsyCopy.push(autopsyNew);
+        // dispatch(setAutopsy(autopsyCopy));
 
-        const parentDrugHistoryCopy = JSON.parse(JSON.stringify(parentDrugHistory));
-        const parentDrugHistoryNew = new ParentDrugHistory();
-        parentDrugHistoryCopy.push(parentDrugHistoryNew);
-        dispatch(setParentDrugHistory(parentDrugHistoryCopy));
+        // const parentDrugHistoryCopy = JSON.parse(JSON.stringify(parentDrugHistory));
+        // const parentDrugHistoryNew = new ParentDrugHistory();
+        // parentDrugHistoryCopy.push(parentDrugHistoryNew);
+        // dispatch(setParentDrugHistory(parentDrugHistoryCopy));
 
         dispatch(setOpenNewReport(true));
     };

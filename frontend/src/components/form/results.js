@@ -10,7 +10,7 @@ import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import { Result } from '@src/features/results/result';
 import AddIcon from '@mui/icons-material/Add';
-
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const Results = () => {
 	const dispatch = useDispatch();
@@ -24,10 +24,14 @@ export const Results = () => {
     const handleChange = (fieldName, index) => (event) => {
         console.log(event);
         let resultsDataCopy = JSON.parse(JSON.stringify(resultsData));
-        if (fieldName === 'F_r_7_MoreInformationAvailable') {
-            resultsDataCopy[index][fieldName].value = event.target.checked;
+        if (event.target === undefined) {
+            resultsDataCopy[index][fieldName].value = event.d;
         } else {
-            resultsDataCopy[index][fieldName].value = event.target.value;
+            if (fieldName === 'F_r_7_MoreInformationAvailable') {
+                resultsDataCopy[index][fieldName].value = event.target.checked;
+            } else {
+                resultsDataCopy[index][fieldName].value = event.target.value;
+            }
         }
         dispatch(setResultsData(resultsDataCopy));
     };
@@ -50,6 +54,13 @@ export const Results = () => {
 
     const formList = () => {
         let list = [];
+        if (resultsData.length === 0) {
+            return ( <span>
+                <IconButton size='large' style= {{ top: '10px'}}
+                sx={{ color: "white", backgroundColor: "#1976d2"}}
+                            onClick={addForm}><AddIcon/></IconButton>
+            </span>);
+        }
         Object.values(resultsData).forEach((item, index) => {
             list.push(
                 <Card sx={{border: "3px solid #094B8C",
@@ -176,13 +187,19 @@ export const Results = () => {
                                 multiline
                                 rows={5}/>
                         </Stack>
+                        <span>
+                            <IconButton size='large' style= {{ top: '10px', right: '10px'}}
+                            sx={{ color: "white", backgroundColor: "#1976d2"}}
+                                    onClick={() => removeForm(index)}><DeleteIcon/>
+                            </IconButton>
+                        </span>
                         {index === resultsData.length - 1 ?
                             <span>
                                 <IconButton size='large' style= {{ top: '10px'}}
                                 sx={{ color: "white", backgroundColor: "#1976d2"}}
                                             onClick={addForm}><AddIcon/></IconButton>
                             </span> : null}
-                    </CardContent>
+                        </CardContent>
                 </Card>
             );
         });
@@ -193,6 +210,12 @@ export const Results = () => {
         let resultsDataCopy = JSON.parse(JSON.stringify(resultsData));
         let reasultNew = new Result();
         resultsDataCopy.push(reasultNew);
+        dispatch(setResultsData(resultsDataCopy));
+    }
+
+    const removeForm = (index) => {
+        let resultsDataCopy = JSON.parse(JSON.stringify(resultsData));
+        resultsDataCopy.splice(index, 1);
         dispatch(setResultsData(resultsDataCopy));
     }
 

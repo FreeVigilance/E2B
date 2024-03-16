@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from "react-redux";
 import Box from '@mui/material/Box';
-import { Tab } from '@mui/material';
+import { FormControl, FormLabel, Tab } from '@mui/material';
 import { drugsSelector } from '@src/features/drugs/slice';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
@@ -41,18 +41,22 @@ export const DosageTabs = () => {
         return list;
     }
 
-	return (
-            <Box sx={{ width: '100%' }}>
-                <TabContext value={value}>
-                <TabList
-                    onChange={handleChange}
-                    aria-label="Dosages"
-                >
-                    {formTabsList()}
-                    
-                </TabList>
-                {formTabPanels()}
-                </TabContext>
-            </Box>
-	);
+    if (drugs.length === 0) {
+        return ( <FormLabel sx={{ fontSize: 40, color: 'black' }}> Add drug first</FormLabel>);
+    } else {
+        return (
+                <Box sx={{ width: '100%' }}>
+                    <TabContext value={value}>
+                    <TabList
+                        onChange={handleChange}
+                        aria-label="Dosages"
+                    >
+                        {formTabsList()}
+                        
+                    </TabList>
+                    {formTabPanels()}
+                    </TabContext>
+                </Box>
+        );
+    }
 }

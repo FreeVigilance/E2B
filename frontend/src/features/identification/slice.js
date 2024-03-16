@@ -1,41 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { e2bCaseKeys } from '../common/changekeys';
+import { e2bCaseKeys, pascalSnakeCaseKeys } from '../common/changekeys';
 import { getData } from '../display/slice';
 import { DocumentsHeldBySender, Identification, IdentificationNumber, OtherIdentifiers } from './identification';
 
 export const identificationSelector = (state) => state.identification;
 
-const indexArray = (arr) => {
-    return arr.map((el, index) => {
-        return {
-            ...el,
-            id: index + 1,
-        };
-    });
-};
-
-export const getIdentification = () => {
-    return (dispatch, getState) => {
-        console.log('state');
-        console.log(getState());
-        const state = JSON.parse(JSON.stringify(getState().identification));
-        const result = state.identification;
-
-        result.C_1_6_1_r_DocumentsHeldSender =state.documentsHeldBySender;
-        result.C_1_9_1_r_SourceCaseId = state.otherIdentifiers;
-        result.C_1_10_r_IdentificationNumberReportLinked = state.identificationNumber;
-
-        return result;
-    };
-};
-
 const identificationSlice = createSlice({
     name: 'identification',
     initialState: {
         identification: new Identification(),
-        documentsHeldBySender: [new DocumentsHeldBySender()],
-        otherIdentifiers: [new OtherIdentifiers()],
-        identificationNumber: [new IdentificationNumber()],
+        documentsHeldBySender: [],
+        otherIdentifiers: [],
+        identificationNumber: [],
     },
     reducers: {
         setIdentification: (state, action) => {
@@ -57,10 +33,11 @@ const identificationSlice = createSlice({
             console.log('why', data);
             state.identification = data;
 
-            state.documentsHeldBySender = indexArray(data.C_1_6_1_r_DocumentsHeldSender);
+            state.documentsHeldBySender = data.C_1_6_1_r_DocumentsHeldSender;
 
-            state.otherIdentifiers = indexArray(data.C_1_9_1_r_SourceCaseId);
-            state.identificationNumber = indexArray(data.C_1_10_r_IdentificationNumberReportLinked);
+            state.otherIdentifiers = data.C_1_9_1_r_SourceCaseId;
+            state.identificationNumber = data.C_1_10_r_IdentificationNumberReportLinked;
+            console.log('aaa', state.identification);
         });
     },
 });

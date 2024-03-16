@@ -10,7 +10,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { patientSelector, setMedicalHistory } from '@src/features/patient/slice';
 import AddIcon from '@mui/icons-material/Add';
 import { MedHistory } from '@src/features/patient/patient';
-
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const MedicalHistory = () => {
 	const dispatch = useDispatch();
@@ -46,6 +46,13 @@ export const MedicalHistory = () => {
 
     const formList = () => {
         let list = [];
+        if (medicalHistory.length === 0) {
+            return ( <span>
+                <IconButton size='large' style= {{ top: '10px'}}
+                sx={{ color: "white", backgroundColor: "#1976d2"}}
+                            onClick={addForm}><AddIcon/></IconButton>
+            </span>);
+        }
         Object.values(medicalHistory).forEach((item, index) => {
             list.push(
                 <Card sx={{border: "3px solid #094B8C",
@@ -191,6 +198,12 @@ export const MedicalHistory = () => {
                                             value = {item['D_7_1_r_5_Comments'].value}
                                             multiline
                                             rows={3}/>
+                            <span>
+                                <IconButton size='large' style= {{ top: '10px', right: '10px'}}
+                                sx={{ color: "white", backgroundColor: "#1976d2"}}
+                                        onClick={() => removeForm(index)}><DeleteIcon/>
+                                </IconButton>
+                            </span>
                             {index === medicalHistory.length - 1 ?
                                 <span>
                                     <IconButton size='large' style= {{ top: '10px'}}
@@ -207,6 +220,12 @@ export const MedicalHistory = () => {
         let medHistoryCopy = JSON.parse(JSON.stringify(medicalHistory));
         let medicalHistoryNew = new MedHistory();
         medHistoryCopy.push(medicalHistoryNew);
+        dispatch(setMedicalHistory(medHistoryCopy));
+    }
+
+    const removeForm = (index) => {
+        let medHistoryCopy = JSON.parse(JSON.stringify(medicalHistory));
+        medHistoryCopy.splice(index, 1);
         dispatch(setMedicalHistory(medHistoryCopy));
     }
 

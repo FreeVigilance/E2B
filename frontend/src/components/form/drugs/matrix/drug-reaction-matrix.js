@@ -6,6 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { drugsSelector, setDrugReactionMatrix, setRelatedness } from '@src/features/drugs/slice';
 import { DrugReactionMatrix, Relatedness } from '@src/features/drugs/drugs';
 import { Relatednesses } from './relatedness';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 export const DrugReactionsMatrix = ({drugIndex}) => {
@@ -13,8 +14,9 @@ export const DrugReactionsMatrix = ({drugIndex}) => {
     const {drugReactionMatrix, relatedness} = useSelector(drugsSelector);
 
     useEffect(() => {
-        console.log("STATE");
+        console.log("STATE matrix");
         console.log(drugReactionMatrix);
+        console.log(relatedness);
     });
 
     const handleChange = (fieldName, index) => (event) => {
@@ -25,6 +27,13 @@ export const DrugReactionsMatrix = ({drugIndex}) => {
 
     const formList = () => {
         let list = [];
+        if (drugReactionMatrix[drugIndex].length === 0) {
+            return ( <span>
+                <IconButton size='large' style= {{ top: '10px'}}
+                sx={{ color: "white", backgroundColor: "#1976d2"}}
+                            onClick={addForm}><AddIcon/></IconButton>
+            </span>);
+        }
         Object.values(drugReactionMatrix[drugIndex]).forEach((item, index) => {
             list.push(
                 <Card sx={{border: "3px solid #094B8C",
@@ -79,7 +88,12 @@ export const DrugReactionsMatrix = ({drugIndex}) => {
                                 </Stack>
                             </Grid>
                         </Grid>
-
+                        <span>
+                                        <IconButton size='large' style= {{ top: '10px', right: '10px'}}
+                                        sx={{ color: "white", backgroundColor: "#1976d2"}}
+                                                onClick={() => removeForm(index)}><DeleteIcon/>
+                                        </IconButton>
+                                    </span> 
                         {index === drugReactionMatrix[drugIndex].length - 1 ?
                                                 <span>
                                                     <IconButton size='large' style= {{ top: '10px'}}
@@ -99,10 +113,30 @@ export const DrugReactionsMatrix = ({drugIndex}) => {
 
         const relatednessCopy = JSON.parse(JSON.stringify(relatedness));
         const newMatrixInd = drugReactionMatrix[drugIndex].length;
-        relatednessCopy[drugIndex][newMatrixInd] = [new Relatedness()];
+        relatednessCopy[drugIndex][newMatrixInd] = [];
 
         dispatch(setDrugReactionMatrix(drugReactionMatrixCopy));
         dispatch(setRelatedness(relatednessCopy));
+    }
+
+    const removeForm = (index) => {
+        let drugReactionMatrixCopy = JSON.parse(JSON.stringify(drugReactionMatrix));
+        drugReactionMatrixCopy[drugIndex].splice(index, 1);
+
+        let relatednessCopy = JSON.parse(JSON.stringify(relatedness));
+
+        console.log("!!!!!");
+        console.log(relatednessCopy);
+        console.log(index);
+        for (let ind = index; ind <= Object.keys(relatedness[drugIndex]).length; ind++) {
+            console.log(ind);
+            relatednessCopy[drugIndex][ind] = relatednessCopy[drugIndex][ind + 1];
+        }
+        console.log(relatednessCopy);
+
+        dispatch(setDrugReactionMatrix(drugReactionMatrixCopy));
+        dispatch(setRelatedness(relatednessCopy));
+
     }
 
     return(

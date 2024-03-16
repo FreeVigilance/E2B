@@ -57,7 +57,7 @@ export const primarySourceSelector = (state) => state.primarySource;
 const primarySourceSlice = createSlice({
 	name: 'primarySource',
 	initialState: {
-		primarySourceData: [new PrimarySource()]
+		primarySourceData: []
 	},
 	reducers: {
 		setPrimarySourceData: (state, action) => {

@@ -295,13 +295,13 @@ const getNullFlavor = (item, field) => {
 const drugsSlice = createSlice({
 	name: 'drugs',
 	initialState: {
-		drugs: [new Drug()],
-		substances:{0: [new Substance()]},
-		dosages: {0: [new Dosage()]},
-		indications: {0: [new IndicationForUse()]},
-		drugReactionMatrix: {0: [new DrugReactionMatrix()]},
-		relatedness: {0: {0: [new Relatedness()]}},
-		additionalInfo: {0: [new AdditionalInfo()]}
+		drugs: [],
+		substances:{},
+		dosages: {},
+		indications: {},
+		drugReactionMatrix: {},
+		relatedness: {},
+		additionalInfo: {}
 	},
 	reducers: {
 		setDrugs: (state, action) => {

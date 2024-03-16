@@ -10,6 +10,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { primarySourceSelector, setPrimarySourceData } from '@src/features/primary-source/slice';
 import { PrimarySource } from '@src/features/primary-source/primary-source';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 var snakecaseKeys = require('snakecase-keys')
 
@@ -52,6 +53,13 @@ export const PrimarySourceComp = () => {
 
     const formList = () => {
         let list = [];
+        if (primarySourceData.length === 0) {
+            return ( <span>
+                <IconButton size='large' style= {{ top: '10px'}}
+                sx={{ color: "white", backgroundColor: "#1976d2"}}
+                            onClick={addForm}><AddIcon/></IconButton>
+            </span>);
+        }
         Object.values(primarySourceData).forEach((item, index) => {
             list.push(
                 <Card sx={{border: "3px solid #094B8C",
@@ -444,7 +452,7 @@ export const PrimarySourceComp = () => {
                                 </Box>
                                 {primarySourceData[index]['C_2_r_4_Qualification']['nullFlavor'] === null ? 
                                     <FormControl sx={{ width: '100%' }}>
-                                    <InputLabel>Test Result Code</InputLabel>
+                                    <InputLabel>Qualification</InputLabel>
                                     <Select
                                         label="Qualification"
                                         defaultValue={0}
@@ -471,6 +479,12 @@ export const PrimarySourceComp = () => {
                                 label="Primary Source for Regulatory Purposes"/>
                         </Grid>
                     </Grid>
+                    <span>
+                            <IconButton size='large' style= {{ top: '10px', right: '10px'}}
+                            sx={{ color: "white", backgroundColor: "#1976d2"}}
+                                    onClick={() => removeForm(index)}><DeleteIcon/>
+                            </IconButton>
+                    </span>
                     {index === primarySourceData.length - 1 ?
                         <span>
                             <IconButton size='large' style= {{ top: '10px'}}
@@ -488,6 +502,12 @@ export const PrimarySourceComp = () => {
         let primarySourceDataCopy = JSON.parse(JSON.stringify(primarySourceData));
         let primarySourceDataNew = new PrimarySource();
         primarySourceDataCopy.push(primarySourceDataNew);
+        dispatch(setPrimarySourceData(primarySourceDataCopy));
+    }
+
+    const removeForm = (index) => {
+        let primarySourceDataCopy = JSON.parse(JSON.stringify(primarySourceData));
+        primarySourceDataCopy.splice(index, 1);
         dispatch(setPrimarySourceData(primarySourceDataCopy));
     }
 

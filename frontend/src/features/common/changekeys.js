@@ -16,7 +16,7 @@ function changeKeysFactory (changeCase) {
             const value = object[key];
            
             let changedKey = '';
-            if (key !== 'value' && key !== 'id') {
+            if (key !== 'value') {
                 changedKey = changeCase(key, options);
             } else {
                 changedKey = key;
@@ -51,4 +51,3 @@ function pascalSnakeCase (input, options) {
 }
 
 export const e2bCaseKeys = changeKeysFactory(pascalSnakeCase);
-export const toSnakeKeys = changeKeysFactory(changeCase.snakeCase);

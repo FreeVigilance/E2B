@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import Box from '@mui/material/Box';
-import { Tab } from '@mui/material';
+import { FormLabel, Tab } from '@mui/material';
 import { drugsSelector } from '@src/features/drugs/slice';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
@@ -42,18 +42,22 @@ export const MatrixTabs = () => {
         return list;
     }
 
-	return (
-            <Box sx={{ width: '100%' }}>
-                <TabContext value={value}>
-                <TabList
-                    onChange={handleChange}
-                    aria-label="Drug Reaction Matrix"
-                >
-                    {formTabsList()}
-                    
-                </TabList>
-                {formTabPanels()}
-                </TabContext>
-            </Box>
-	);
+    if (drugs.length === 0) {
+        return ( <FormLabel sx={{ fontSize: 40, color: 'black' }}> Add drug first</FormLabel>);
+    } else {
+        return (
+                <Box sx={{ width: '100%' }}>
+                    <TabContext value={value}>
+                    <TabList
+                        onChange={handleChange}
+                        aria-label="Drug Reaction Matrix"
+                    >
+                        {formTabsList()}
+                        
+                    </TabList>
+                    {formTabPanels()}
+                    </TabContext>
+                </Box>
+        );
+    }
 }

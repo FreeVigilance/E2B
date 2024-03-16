@@ -31,12 +31,15 @@ export const FormTabs = () => {
     };
 
     return (
-        <Box sx={{ width: '100%', typography: 'body1' }}>
+        <Box sx={{ width: '95%', typography: 'body1' }}>
             <TabContext value={currentTab}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <TabList onChange={handleChange} aria-label="lab API tabs example">
+                    <TabList onChange={handleChange} aria-label="lab API tabs example"
+                    indicatorColor="secondary"
+          textColor="inherit"
+          variant="fullWidth">
                         <Tab label="Results" value="0" />
-                        <Tab label="Reactions/Events" value="1" />
+                        <Tab label="Reactions" value="1" />
                         <Tab label="Patient" value="2" />
                         <Tab label="Parent-child" value="3" />
                         <Tab label="Drugs" value="4" />
@@ -89,10 +92,10 @@ export const FormTabs = () => {
 
                 <Save></Save>
 
-                <IconButton color = 'primary'
+                {/* <IconButton color = 'primary'
                     sx={{ position: 'fixed', top: 5, right: 80, zIndex: 10000 }}>
                     <VerifiedUserIcon size='large'></VerifiedUserIcon>
-                </IconButton>
+                </IconButton> */}
             </TabContext>
         </Box>
     );

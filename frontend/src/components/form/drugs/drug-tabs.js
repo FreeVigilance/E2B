@@ -42,12 +42,13 @@ export const DrugTabs = () => {
 
         const newInd = drugs.length;
         drugsCopy.push(new Drug());
-        substancesCopy[newInd]= ([new Substance()]);
-        dosagesCopy[newInd] = ([new Dosage()]);
-        indicationsCopy[newInd] = ([new IndicationForUse()]);
-        drugReactionMatrixCopy[newInd] = ([new DrugReactionMatrix()]);
-        relatednessCopy[newInd] = ({0: [new Relatedness()]});
-        additionalInfoCopy[newInd] = ([new AdditionalInfo()]);
+        substancesCopy[newInd]= [];
+        console.log('substancesCopy', substancesCopy);
+        dosagesCopy[newInd] = [];
+        indicationsCopy[newInd] = [];
+        drugReactionMatrixCopy[newInd] = [];
+        relatednessCopy[newInd] = {0: []};
+        additionalInfoCopy[newInd] = [];
 
         dispatch(setDrugs(drugsCopy));
         dispatch(setSubstances(substancesCopy));

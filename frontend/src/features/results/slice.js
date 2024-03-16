@@ -39,11 +39,7 @@ export const getResults = () => {
 			itemData['F_r_7_MoreInformationAvailable'] = item["F_r_7_MoreInformationAvailable"];
 			data.push(itemData);
 		});
-		let jsonResult = {
-			"id": null,
-			"F_r_ResultsTestsProceduresInvestigationPatient": data
-		}
-		return jsonResult;
+		return data;
 	}
 }
 

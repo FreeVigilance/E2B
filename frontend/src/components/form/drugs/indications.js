@@ -6,6 +6,7 @@ import Checkbox from '@mui/material/Checkbox';
 import AddIcon from '@mui/icons-material/Add';
 import { drugsSelector, setIndications } from '@src/features/drugs/slice';
 import { IndicationForUse } from '@src/features/drugs/drugs';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 export const Indications = ({drugIndex}) => {
@@ -41,6 +42,13 @@ export const Indications = ({drugIndex}) => {
 
     const formList = () => {
         let list = [];
+        if (indications[drugIndex].length === 0) {
+            return ( <span>
+                <IconButton size='large' style= {{ top: '10px'}}
+                sx={{ color: "white", backgroundColor: "#1976d2"}}
+                            onClick={addForm}><AddIcon/></IconButton>
+            </span>);
+        }
         Object.values(indications[drugIndex]).forEach((item, index) => {
             list.push(
                 <Card sx={{border: "3px solid #094B8C",
@@ -90,13 +98,21 @@ export const Indications = ({drugIndex}) => {
                             <TextField label="Indication (MedDRA code)" variant="outlined"
                                     onChange={handleChange('G_k_7_r_2b_IndicationMedDRACode', index)}
                                     value = {item['G_k_7_r_2b_IndicationMedDRACode'].value}/>
-
+                        
+                        <Stack direction="row" justifyContent="flex-start">  
+                                    <span>
+                                        <IconButton size='large' style= {{ top: '10px', right: '10px'}}
+                                        sx={{ color: "white", backgroundColor: "#1976d2"}}
+                                                onClick={() => removeForm(index)}><DeleteIcon/>
+                                        </IconButton>
+                                    </span>  
                             {index === indications[drugIndex].length - 1 ?
                                 <span>
                                     <IconButton size='large' style= {{ top: '10px'}}
                                     sx={{ color: "white", backgroundColor: "#1976d2"}}
                                                 onClick={addForm}><AddIcon/></IconButton>
                                 </span> : null}
+                        </Stack>
                         </Stack>
                 </CardContent>
             </Card>);
@@ -108,6 +124,12 @@ export const Indications = ({drugIndex}) => {
         let indicationsCopy = JSON.parse(JSON.stringify(indications));
         let indicationNew = new IndicationForUse();
         indicationsCopy[drugIndex].push(indicationNew);
+        dispatch(setIndications(indicationsCopy));
+    }
+
+    const removeForm = (index) => {
+        let indicationsCopy = JSON.parse(JSON.stringify(indications));
+        indicationsCopy[drugIndex].splice(index, 1);
         dispatch(setIndications(indicationsCopy));
     }
 

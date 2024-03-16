@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 import { patientSelector, setAutopsy } from '@src/features/patient/slice';
 import AddIcon from '@mui/icons-material/Add';
 import { AutopsyData } from '@src/features/patient/patient';
-
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const Autopsy = () => {
 	const dispatch = useDispatch();
@@ -25,6 +25,13 @@ export const Autopsy = () => {
 
     const formList = () => {
         let list = [];
+        if (autopsy.length === 0) {
+            return ( <span>
+                <IconButton size='large' style= {{ top: '10px'}}
+                sx={{ color: "white", backgroundColor: "#1976d2"}}
+                            onClick={addForm}><AddIcon/></IconButton>
+            </span>);
+        }
         Object.values(autopsy).forEach((item, index) => {
             list.push(
                 <Card sx={{border: "3px solid #094B8C",
@@ -46,13 +53,20 @@ export const Autopsy = () => {
                                 <TextField label="Autopsy-determined Cause of Death (MedDRA code)" variant="outlined"
                                             onChange={handleChange('D_9_4_r_1b_AutopsyDeterminedCauseDeathMedDRACode', index)}
                                             value = {item['D_9_4_r_1b_AutopsyDeterminedCauseDeathMedDRACode'].value}/>
-                                            
-                            {index === autopsy.length - 1 ?
-                                <span>
-                                    <IconButton size='large' style= {{ top: '10px'}}
-                                    sx={{ color: "white", backgroundColor: "#1976d2"}}
-                                                onClick={addForm}><AddIcon/></IconButton>
-                                </span> : null}
+                                <Stack direction="row" justifyContent="flex-start"> 
+                                    <span>
+                                        <IconButton size='large' style= {{ top: '10px', right: '10px'}}
+                                        sx={{ color: "white", backgroundColor: "#1976d2"}}
+                                                onClick={() => removeForm(index)}><DeleteIcon/>
+                                        </IconButton>
+                                    </span>        
+                                    {index === autopsy.length - 1 ?
+                                        <span>
+                                            <IconButton size='large' style= {{ top: '10px'}}
+                                            sx={{ color: "white", backgroundColor: "#1976d2"}}
+                                                        onClick={addForm}><AddIcon/></IconButton>
+                                        </span> : null}
+                                </Stack>
                         </Stack>
                 </CardContent>
             </Card>);
@@ -64,6 +78,12 @@ export const Autopsy = () => {
         let autopsyCopy = JSON.parse(JSON.stringify(autopsy));
         let autopsyNew = new AutopsyData();
         autopsyCopy.push(autopsyNew);
+        dispatch(setAutopsy(autopsyCopy));
+    }
+
+    const removeForm = (index) => {
+        let autopsyCopy = JSON.parse(JSON.stringify(autopsy));
+        autopsyCopy.splice(index, 1);
         dispatch(setAutopsy(autopsyCopy));
     }
 

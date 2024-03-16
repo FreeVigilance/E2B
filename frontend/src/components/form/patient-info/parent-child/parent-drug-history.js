@@ -10,6 +10,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { patientSelector, setParentDrugHistory } from '@src/features/patient/slice';
 import AddIcon from '@mui/icons-material/Add';
 import { ParentDrugHistory } from '@src/features/patient/patient';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 export const ParentDrugsHistory = () => {
@@ -46,6 +47,13 @@ export const ParentDrugsHistory = () => {
 
     const formList = () => {
         let list = [];
+        if (parentDrugHistory.length === 0) {
+            return ( <span>
+                <IconButton size='large' style= {{ top: '10px'}}
+                sx={{ color: "white", backgroundColor: "#1976d2"}}
+                            onClick={addForm}><AddIcon/></IconButton>
+            </span>);
+        }
         Object.values(parentDrugHistory).forEach((item, index) => {
             list.push(
                 <Card sx={{border: "3px solid #094B8C",
@@ -193,6 +201,12 @@ export const ParentDrugsHistory = () => {
                                             }
                                     </Stack>
                             </Stack>
+                            <span>
+                                        <IconButton size='large' style= {{ top: '10px', right: '10px'}}
+                                        sx={{ color: "white", backgroundColor: "#1976d2"}}
+                                                onClick={() => removeForm(index)}><DeleteIcon/>
+                                        </IconButton>
+                                    </span>  
                             {index === parentDrugHistory.length - 1 ?
                                 <span>
                                     <IconButton size='large' style= {{ top: '10px'}}
@@ -209,6 +223,12 @@ export const ParentDrugsHistory = () => {
         let parentDrugHistoryCopy = JSON.parse(JSON.stringify(parentDrugHistory));
         let parentDrugHistoryNew = new ParentDrugHistory();
         parentDrugHistoryCopy.push(parentDrugHistoryNew);
+        dispatch(setParentDrugHistory(parentDrugHistoryCopy));
+    }
+
+    const removeForm = (index) => {
+        let parentDrugHistoryCopy = JSON.parse(JSON.stringify(parentDrugHistory));
+        parentDrugHistoryCopy.splice(index, 1);
         dispatch(setParentDrugHistory(parentDrugHistoryCopy));
     }
 

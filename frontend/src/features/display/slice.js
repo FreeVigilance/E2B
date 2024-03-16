@@ -12,11 +12,19 @@ export const getData = createAsyncThunk(
     },
 );
 
+export const saveData = createAsyncThunk(
+    'display/saveData',
+    (data) => {
+        return api.saveData(data);
+    },
+);
+
 const initialState = {
     showSideMenu: false,
     showCasesList: false,
     openNewReport: false,
     currentTab: 0,
+    currentId: null,
 };
 
 const displaySlice = createSlice({
@@ -31,10 +39,20 @@ const displaySlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(revertAll, () => initialState);
         builder.addCase(getData.fulfilled, (state, action) => {
+            console.log('data');
             console.log(action.payload);
         });
         builder.addCase(getData.rejected, (state, action) => {
             console.log('REJECTED');
+            console.log(action.payload);
+        });
+        builder.addCase(saveData.fulfilled, (state, action) => {
+            console.log('save');
+            console.log(action.payload);
+            state.currentId = action.payload.id;
+        });
+        builder.addCase(saveData.rejected, (state, action) => {
+            console.log('save');
             console.log(action.payload);
         });
     },

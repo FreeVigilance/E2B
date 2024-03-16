@@ -13,6 +13,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { MedHistory } from '@src/features/patient/patient';
 import { drugsSelector, setAdditionalInfo, setSubstances } from '@src/features/drugs/slice';
 import { AdditionalInfo, Substance } from '@src/features/drugs/drugs';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 export const AddInfo = ({drugIndex}) => {
@@ -32,8 +33,13 @@ export const AddInfo = ({drugIndex}) => {
 
     const formList = () => {
         let list = [];
-        console.log("HELP ME");
-        console.log(additionalInfo[drugIndex]);
+        if (additionalInfo[drugIndex].length === 0) {
+            return ( <span>
+                <IconButton size='large' style= {{ top: '10px'}}
+                sx={{ color: "white", backgroundColor: "#1976d2"}}
+                            onClick={addForm}><AddIcon/></IconButton>
+            </span>);
+        }
         Object.values(additionalInfo[drugIndex]).forEach((item, index) => {
             list.push(
                 <Card sx={{border: "3px solid #094B8C",
@@ -63,12 +69,20 @@ export const AddInfo = ({drugIndex}) => {
 
                                     </Select>
                             </FormControl>
+                            <Stack direction="row" justifyContent="flex-start">  
+                                    <span>
+                                        <IconButton size='large' style= {{ top: '10px', right: '10px'}}
+                                        sx={{ color: "white", backgroundColor: "#1976d2"}}
+                                                onClick={() => removeForm(index)}><DeleteIcon/>
+                                        </IconButton>
+                                    </span>  
                             {index === additionalInfo[drugIndex].length - 1 ?
                                     <span>
                                         <IconButton size='large' style= {{ top: '10px'}}
                                         sx={{ color: "white", backgroundColor: "#1976d2"}}
                                                     onClick={addForm}><AddIcon/></IconButton>
                                     </span> : null}
+                            </Stack>
                         </Stack>
                     </CardContent>
                 </Card>);
@@ -80,6 +94,12 @@ export const AddInfo = ({drugIndex}) => {
         let additionalInfoCopy = JSON.parse(JSON.stringify(additionalInfo));
         let additionalInfoNew = new AdditionalInfo();
         additionalInfoCopy[drugIndex].push(additionalInfoNew);
+        dispatch(setAdditionalInfo(additionalInfoCopy));
+    }
+
+    const removeForm = (index) => {
+        let additionalInfoCopy = JSON.parse(JSON.stringify(additionalInfo));
+        additionalInfoCopy[drugIndex].splice(index, 1);
         dispatch(setAdditionalInfo(additionalInfoCopy));
     }
 

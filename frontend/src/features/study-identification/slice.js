@@ -7,7 +7,7 @@ const studyIdentificationSlice = createSlice({
 	name: 'studyIdentification',
 	initialState: {
 		studyIdentification: new StudyIdentification(),
-		studyRegistration: [new StudyRegistration()]
+		studyRegistration: []
 	},
 	reducers: {
 		setStudyIdentification: (state, action) => {

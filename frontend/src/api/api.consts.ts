@@ -1,5 +1,5 @@
-export const API_BASE_PATH = 'http://localhost:8000/api'; // ну бывает
-export const AUTH_URL = 'test_url';
+export const API_BASE_PATH = 'http://e2b4free.kochan.fun:10101/api/api';
+export const AUTH_URL = "test_url";
 
 export enum METHOD {
     GET = 'GET',

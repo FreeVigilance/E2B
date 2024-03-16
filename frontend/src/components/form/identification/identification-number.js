@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import AddIcon from '@mui/icons-material/Add';
 import { identificationSelector, setIdentificationNumber } from '@src/features/identification/slice';
 import { IdentificationNumber } from '@src/features/identification/identification';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 export const IdentificationNumberComp = () => {
@@ -25,6 +26,13 @@ export const IdentificationNumberComp = () => {
 
     const formList = () => {
         let list = [];
+        if (identificationNumber.length === 0) {
+            return ( <span>
+                <IconButton size='large' style= {{ top: '10px'}}
+                sx={{ color: "white", backgroundColor: "#1976d2"}}
+                            onClick={addForm}><AddIcon/></IconButton>
+            </span>);
+        }
         Object.values(identificationNumber).forEach((item, index) => {
             list.push(
                 <Card sx={{border: "3px solid #094B8C",
@@ -39,13 +47,20 @@ export const IdentificationNumberComp = () => {
                                 value = {item['C_1_10_r_IdentificationNumberReportLinked'].value}
                                 multiline
                                 rows={3}/>
-
+                            <Stack direction="row" justifyContent="flex-start">
+                                <span>
+                                        <IconButton size='large' style= {{ top: '10px', right: '10px'}}
+                                        sx={{ color: "white", backgroundColor: "#1976d2"}}
+                                                onClick={() => removeForm(index)}><DeleteIcon/>
+                                        </IconButton>
+                                </span>
                             {index === identificationNumber.length - 1 ?
                                 <span>
                                     <IconButton size='large' style= {{ top: '10px'}}
                                     sx={{ color: "white", backgroundColor: "#1976d2"}}
                                                 onClick={addForm}><AddIcon/></IconButton>
                                 </span> : null}
+                            </Stack>
                         </Stack>
                 </CardContent>
             </Card>);
@@ -57,6 +72,12 @@ export const IdentificationNumberComp = () => {
         let identificationNumberCopy = JSON.parse(JSON.stringify(identificationNumber));
         let identificationNumberNew = new IdentificationNumber();
         identificationNumberCopy.push(identificationNumberNew);
+        dispatch(setIdentificationNumber(identificationNumberCopy));
+    }
+
+    const removeForm = (index) => {
+        let identificationNumberCopy = JSON.parse(JSON.stringify(identificationNumber));
+        identificationNumberCopy.splice(index, 1);
         dispatch(setIdentificationNumber(identificationNumberCopy));
     }
 

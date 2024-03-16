@@ -26,6 +26,13 @@ export const Relatednesses = ({drugIndex, matrixIndex}) => {
         let list = [];
         console.log("AAAAAAAA");
         console.log(relatedness[drugIndex]);
+        if (relatedness[drugIndex][matrixIndex].length === 0) {
+            return ( <span>
+                <IconButton size='large' style= {{ top: '10px'}}
+                sx={{ color: "white", backgroundColor: "#1976d2"}}
+                            onClick={addForm}><AddIcon/></IconButton>
+            </span>);
+        }
         Object.values(relatedness[drugIndex][matrixIndex]).forEach((item, index) => {
             list.push(
                 <Card sx={{border: "3px solid #094B8C",

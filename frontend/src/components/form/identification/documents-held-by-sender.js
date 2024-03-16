@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import AddIcon from '@mui/icons-material/Add';
 import { identificationSelector, setDocumentsHeldBySender } from '@src/features/identification/slice';
 import { DocumentsHeldBySender } from '@src/features/identification/identification';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 export const DocumentsHeldBySenderComp = () => {
@@ -26,6 +27,13 @@ export const DocumentsHeldBySenderComp = () => {
 
     const formList = () => {
         let list = [];
+        if (documentsHeldBySender.length === 0) {
+            return ( <span>
+                <IconButton size='large' style= {{ top: '10px'}}
+                sx={{ color: "white", backgroundColor: "#1976d2"}}
+                            onClick={addForm}><AddIcon/></IconButton>
+            </span>);
+        }
         Object.values(documentsHeldBySender).forEach((item, index) => {
             list.push(
                 <Card sx={{border: "3px solid #094B8C",
@@ -40,13 +48,20 @@ export const DocumentsHeldBySenderComp = () => {
                                 value = {item['C_1_6_1_r_1_DocumentsHeldSender'].value}
                                 multiline
                                 rows={5}/>
-
-                            {index === documentsHeldBySender.length - 1 ?
+                            <Stack direction="row" justifyContent="flex-start">
+                                <span>
+                                        <IconButton size='large' style= {{ top: '10px', right: '10px'}}
+                                        sx={{ color: "white", backgroundColor: "#1976d2"}}
+                                                onClick={() => removeForm(index)}><DeleteIcon/>
+                                        </IconButton>
+                                </span>  
+                                {index === documentsHeldBySender.length - 1 ?
                                 <span>
                                     <IconButton size='large' style= {{ top: '10px'}}
                                     sx={{ color: "white", backgroundColor: "#1976d2"}}
                                                 onClick={addForm}><AddIcon/></IconButton>
                                 </span> : null}
+                            </Stack>
                         </Stack>
                 </CardContent>
             </Card>);
@@ -58,6 +73,12 @@ export const DocumentsHeldBySenderComp = () => {
         let documentsHeldBySenderCopy = JSON.parse(JSON.stringify(documentsHeldBySender));
         let documentsHeldBySenderNew = new DocumentsHeldBySender();
         documentsHeldBySenderCopy.push(documentsHeldBySenderNew);
+        dispatch(setDocumentsHeldBySender(documentsHeldBySenderCopy));
+    }
+
+    const removeForm = (index) => {
+        let documentsHeldBySenderCopy = JSON.parse(JSON.stringify(documentsHeldBySender));
+        documentsHeldBySenderCopy.splice(index, 1);
         dispatch(setDocumentsHeldBySender(documentsHeldBySenderCopy));
     }
 

@@ -10,6 +10,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { patientSelector, setDrugHistory } from '@src/features/patient/slice';
 import AddIcon from '@mui/icons-material/Add';
 import { DrugHistory } from '@src/features/patient/patient';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 export const DrugsHistory = () => {
@@ -46,6 +47,13 @@ export const DrugsHistory = () => {
 
     const formList = () => {
         let list = [];
+        if (drugHistory.length === 0) {
+            return ( <span>
+                <IconButton size='large' style= {{ top: '10px'}}
+                sx={{ color: "white", backgroundColor: "#1976d2"}}
+                            onClick={addForm}><AddIcon/></IconButton>
+            </span>);
+        }
         Object.values(drugHistory).forEach((item, index) => {
             list.push(
                 <Card sx={{border: "3px solid #094B8C",
@@ -193,6 +201,12 @@ export const DrugsHistory = () => {
                                             }
                                     </Stack>
                             </Stack>
+                            <span>
+                                <IconButton size='large' style= {{ top: '10px', right: '10px'}}
+                                sx={{ color: "white", backgroundColor: "#1976d2"}}
+                                        onClick={() => removeForm(index)}><DeleteIcon/>
+                                </IconButton>
+                            </span>
                             {index === drugHistory.length - 1 ?
                                 <span>
                                     <IconButton size='large' style= {{ top: '10px'}}
@@ -209,6 +223,12 @@ export const DrugsHistory = () => {
         let drugHistoryCopy = JSON.parse(JSON.stringify(drugHistory));
         let drugHistoryNew = new DrugHistory();
         drugHistoryCopy.push(drugHistoryNew);
+        dispatch(setDrugHistory(drugHistoryCopy));
+    }
+
+    const removeForm = (index) => {
+        let drugHistoryCopy = JSON.parse(JSON.stringify(drugHistory));
+        drugHistoryCopy.splice(index, 1);
         dispatch(setDrugHistory(drugHistoryCopy));
     }
 

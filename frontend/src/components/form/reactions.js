@@ -13,6 +13,7 @@ import { reactionsSelector, setReactionsData } from '@src/features/reactions/sli
 import { Reaction } from '@src/features/reactions/reaction';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 var snakecaseKeys = require('snakecase-keys')
 
@@ -50,6 +51,13 @@ export const Reactions = () => {
 
     const formList = () => {
         let list = [];
+        if (reactionsData.length === 0) {
+            return ( <span>
+                <IconButton size='large' style= {{ top: '10px'}}
+                sx={{ color: "white", backgroundColor: "#1976d2"}}
+                            onClick={addForm}><AddIcon/></IconButton>
+            </span>);
+        }
         Object.values(reactionsData).forEach((item, index) => {
             list.push(
                 <Card sx={{border: "3px solid #094B8C",
@@ -325,6 +333,12 @@ export const Reactions = () => {
                     </Grid>
 
                 </Stack>
+                <span>
+                            <IconButton size='large' style= {{ top: '10px', right: '10px'}}
+                            sx={{ color: "white", backgroundColor: "#1976d2"}}
+                                    onClick={() => removeForm(index)}><DeleteIcon/>
+                            </IconButton>
+                </span>
                 {index === reactionsData.length - 1 ?
                     <span>
                         <IconButton size='large' style= {{ top: '10px'}}
@@ -343,6 +357,12 @@ export const Reactions = () => {
         let reactionsDataCopy = JSON.parse(JSON.stringify(reactionsData));
         let reactionNew = new Reaction();
         reactionsDataCopy.push(reactionNew);
+        dispatch(setReactionsData(reactionsDataCopy));
+    }
+
+    const removeForm = (index) => {
+        let reactionsDataCopy = JSON.parse(JSON.stringify(reactionsData));
+        reactionsDataCopy.splice(index, 1);
         dispatch(setReactionsData(reactionsDataCopy));
     }
 

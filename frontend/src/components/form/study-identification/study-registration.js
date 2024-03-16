@@ -7,6 +7,7 @@ import Checkbox from '@mui/material/Checkbox';
 import AddIcon from '@mui/icons-material/Add';
 import { setStudyRegistration, studyIdentificationSelector } from '@src/features/study-identification/slice';
 import { StudyRegistration } from '@src/features/study-identification/study-identification';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 export const StudyRegistrationComp = () => {
@@ -42,6 +43,13 @@ export const StudyRegistrationComp = () => {
 
     const formList = () => {
         let list = [];
+        if (studyRegistration.length === 0) {
+            return ( <span>
+                <IconButton size='large' style= {{ top: '10px'}}
+                sx={{ color: "white", backgroundColor: "#1976d2"}}
+                            onClick={addForm}><AddIcon/></IconButton>
+            </span>);
+        }
         Object.values(studyRegistration).forEach((item, index) => {
             list.push(
                 <Card sx={{border: "3px solid #094B8C",
@@ -105,13 +113,20 @@ export const StudyRegistrationComp = () => {
                                     </FormControl>}
                                 </Box>
                             </Stack>
-
+                        <Stack direction="row" justifyContent="flex-start">
+                            <span>
+                                <IconButton size='large' style= {{ top: '10px', right: '10px'}}
+                                sx={{ color: "white", backgroundColor: "#1976d2"}}
+                                        onClick={() => removeForm(index)}><DeleteIcon/>
+                                </IconButton>
+                            </span>
                             {index === studyRegistration.length - 1 ?
                                 <span>
                                     <IconButton size='large' style= {{ top: '10px'}}
                                     sx={{ color: "white", backgroundColor: "#1976d2"}}
                                                 onClick={addForm}><AddIcon/></IconButton>
                                 </span> : null}
+                            </Stack>
                         </Stack>
                 </CardContent>
             </Card>
@@ -124,6 +139,12 @@ export const StudyRegistrationComp = () => {
         let studyRegistrationCopy = JSON.parse(JSON.stringify(studyRegistration));
         let studyRegistrationNew = new StudyRegistration();
         studyRegistrationCopy.push(studyRegistrationNew);
+        dispatch(setStudyRegistration(studyRegistrationCopy));
+    }
+
+    const removeForm = (index) => {
+        let studyRegistrationCopy = JSON.parse(JSON.stringify(studyRegistration));
+        studyRegistrationCopy.splice(index, 1);
         dispatch(setStudyRegistration(studyRegistrationCopy));
     }
 

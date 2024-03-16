@@ -10,6 +10,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { referencesSelector, setReferencesData } from '@src/features/references/slice';
 import { Reference } from '@src/features/references/references';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 var snakecaseKeys = require('snakecase-keys')
 
@@ -52,6 +53,13 @@ export const ReferencesComp = () => {
 
     const formList = () => {
         let list = [];
+        if (referencesData.length === 0) {
+            return ( <span>
+                <IconButton size='large' style= {{ top: '10px'}}
+                sx={{ color: "white", backgroundColor: "#1976d2"}}
+                            onClick={addForm}><AddIcon/></IconButton>
+            </span>);
+        }
         Object.values(referencesData).forEach((item, index) => {
             list.push(
                 <Card sx={{border: "3px solid #094B8C",
@@ -91,7 +99,12 @@ export const ReferencesComp = () => {
                                     </FormControl>
                                 }
                             </Stack>
-                        
+                    <span>
+                            <IconButton size='large' style= {{ top: '10px', right: '10px'}}
+                            sx={{ color: "white", backgroundColor: "#1976d2"}}
+                                    onClick={() => removeForm(index)}><DeleteIcon/>
+                            </IconButton>
+                    </span>  
                     
                     {index === referencesData.length - 1 ?
                         <span>
@@ -110,6 +123,12 @@ export const ReferencesComp = () => {
         let referencesDataCopy = JSON.parse(JSON.stringify(referencesData));
         let referencesDataNew = new Reference();
         referencesDataCopy.push(referencesDataNew);
+        dispatch(setReferencesData(referencesDataCopy));
+    }
+    
+    const removeForm = (index) => {
+        let referencesDataCopy = JSON.parse(JSON.stringify(referencesData));
+        referencesDataCopy.splice(index, 1);
         dispatch(setReferencesData(referencesDataCopy));
     }
 

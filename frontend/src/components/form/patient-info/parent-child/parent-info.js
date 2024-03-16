@@ -10,6 +10,8 @@ import Checkbox from '@mui/material/Checkbox';
 import { patientSelector, setParentData } from '@src/features/patient/slice';
 import AddIcon from '@mui/icons-material/Add';
 import { ParentData } from '@src/features/patient/patient';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 
 export const ParentInfo = () => {
 	const dispatch = useDispatch();
@@ -45,6 +47,13 @@ export const ParentInfo = () => {
 
     const formList = () => {
         let list = [];
+        if (parentData.length === 0) {
+            return ( <span>
+                <IconButton size='large' style= {{ top: '10px'}}
+                sx={{ color: "white", backgroundColor: "#1976d2"}}
+                            onClick={addForm}><AddIcon/></IconButton>
+            </span>);
+        }
         Object.values(parentData).forEach((item, index) => {
             list.push(
                 <Card sx={{border: "3px solid #094B8C",
@@ -176,6 +185,12 @@ export const ParentInfo = () => {
                                             multiline
                                             rows={3}/>
                     </Stack>
+                                 <span>
+                                        <IconButton size='large' style= {{ top: '10px', right: '10px'}}
+                                        sx={{ color: "white", backgroundColor: "#1976d2"}}
+                                                onClick={() => removeForm(index)}><DeleteIcon/>
+                                        </IconButton>
+                                    </span>  
                             {index === parentData.length - 1 ?
                                 <span>
                                     <IconButton size='large' style= {{ top: '10px'}}
@@ -192,6 +207,12 @@ export const ParentInfo = () => {
         let parentDataCopy = JSON.parse(JSON.stringify(parentData));
         let parentDataNew = new ParentData();
         parentDataCopy.push(parentDataNew);
+        dispatch(setParentData(parentDataCopy));
+    }
+
+    const removeForm = (index) => {
+        let parentDataCopy = JSON.parse(JSON.stringify(parentData));
+        parentDataCopy.splice(index, 1);
         dispatch(setParentData(parentDataCopy));
     }
 

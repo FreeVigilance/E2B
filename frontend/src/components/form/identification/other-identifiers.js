@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import AddIcon from '@mui/icons-material/Add';
 import { identificationSelector, setOtherIdentifiers } from '@src/features/identification/slice';
 import { OtherIdentifiers } from '@src/features/identification/identification';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 export const OtherIdentifiersComp = () => {
@@ -25,6 +26,13 @@ export const OtherIdentifiersComp = () => {
 
     const formList = () => {
         let list = [];
+        if (otherIdentifiers.length === 0) {
+            return ( <span>
+                <IconButton size='large' style= {{ top: '10px'}}
+                sx={{ color: "white", backgroundColor: "#1976d2"}}
+                            onClick={addForm}><AddIcon/></IconButton>
+            </span>);
+        }
         Object.values(otherIdentifiers).forEach((item, index) => {
             list.push(
                 <Card sx={{border: "3px solid #094B8C",
@@ -45,13 +53,20 @@ export const OtherIdentifiersComp = () => {
                                 value = {item['C_1_9_1_r_2_CaseId'].value}
                                 multiline
                                 rows={5}/>
-
+                            <Stack direction="row" justifyContent="flex-start">
+                                <span>
+                                        <IconButton size='large' style= {{ top: '10px', right: '10px'}}
+                                        sx={{ color: "white", backgroundColor: "#1976d2"}}
+                                                onClick={() => removeForm(index)}><DeleteIcon/>
+                                        </IconButton>
+                                </span> 
                             {index === otherIdentifiers.length - 1 ?
                                 <span>
                                     <IconButton size='large' style= {{ top: '10px'}}
                                     sx={{ color: "white", backgroundColor: "#1976d2"}}
                                                 onClick={addForm}><AddIcon/></IconButton>
                                 </span> : null}
+                            </Stack>
                         </Stack>
                 </CardContent>
             </Card>);
@@ -63,6 +78,12 @@ export const OtherIdentifiersComp = () => {
         let otherIdentifiersCopy = JSON.parse(JSON.stringify(otherIdentifiers));
         let otherIdentifiersNew = new OtherIdentifiers();
         otherIdentifiersCopy.push(otherIdentifiersNew);
+        dispatch(setOtherIdentifiers(otherIdentifiersCopy));
+    }
+
+    const removeForm = (index) => {
+        let otherIdentifiersCopy = JSON.parse(JSON.stringify(otherIdentifiers));
+        otherIdentifiersCopy.splice(index, 1);
         dispatch(setOtherIdentifiers(otherIdentifiersCopy));
     }
 
