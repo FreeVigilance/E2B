@@ -20,7 +20,7 @@ def add_constraint(meta_cls: type[t.Any], constraint: models.BaseConstraint) -> 
     meta_cls.constraints.append(constraint)
 
 
-def make_constraint_name(*field_names: str, constraint_label: str) -> str:
+def make_constraint_name(constraint_label: str, *field_names: str) -> str:
     try:
         max_len = settings.DB_LABEL_MAX_LENGTH
         max_len -= len(constraint_label) + len(CONSTRAINT_NAME_PARTS_SEPARATOR)
@@ -47,7 +47,7 @@ def make_constraint_name(*field_names: str, constraint_label: str) -> str:
 def add_choices_constraint(meta_cls: type[t.Any], field_name: str, choices: t.Iterable[t.Any]) -> None:
     constraint = models.CheckConstraint(
         check=models.Q(**{f'{field_name}__in': choices}),
-        name=make_constraint_name(field_name, constraint_label=CHOICES_CONSTRAINT_LABEL)
+        name=make_constraint_name(CHOICES_CONSTRAINT_LABEL, field_name)
     )
     add_constraint(meta_cls, constraint)
 
@@ -55,7 +55,7 @@ def add_choices_constraint(meta_cls: type[t.Any], field_name: str, choices: t.It
 def add_unique_together_constraint(meta_cls: type[t.Any], *field_names: str):
     constraint = models.UniqueConstraint(
         fields=field_names,
-        name=make_constraint_name(*field_names, constraint_label=UNIQUE_TOGETHER_CONSTRAINT_LABEL)
+        name=make_constraint_name(UNIQUE_TOGETHER_CONSTRAINT_LABEL, *field_names)
     )
     add_constraint(meta_cls, constraint)
 
@@ -68,6 +68,6 @@ def add_any_null_constraint(meta_cls: type, *field_names: str) -> None:
 
     constraint = models.CheckConstraint(
         check=result_check,
-        name=make_constraint_name(*field_names, constraint_label=ANY_NULL_CONSTRAINT_LABEL)
+        name=make_constraint_name(ANY_NULL_CONSTRAINT_LABEL, *field_names)
     )
     add_constraint(meta_cls, constraint)
