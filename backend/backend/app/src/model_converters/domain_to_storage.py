@@ -9,7 +9,7 @@ from app.src.layers.storage import models as storage_models
 from app.src.layers.storage.models import StorageModel, null_flavor_field_utils
 from app.src.model_converters.base import ModelConverter
 from app.src.shared.enums import NullFlavor
-from extensions.django.models import temp_relation_field_utils
+from extensions.django.fields import temp_relation_field_utils
 
 
 DOMAIN_TO_STORAGE_MODEL_CLASS_MAP = {

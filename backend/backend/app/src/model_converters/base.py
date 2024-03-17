@@ -33,7 +33,7 @@ class ModelConverter[H, L](abc.ABC):
     def _convert_from_target_model_dict(
             source_model: H,
             target_model_dict: dict[str, t.Any],
-            target_model_class_getter: t.Callable[[type[H]], type[L]]
+            get_target_model_class: t.Callable[[type[H]], type[L]]
     ) -> L: ...
 
     @staticmethod
@@ -41,16 +41,16 @@ class ModelConverter[H, L](abc.ABC):
     def _convert_from_target_model_dict(
             source_model: L,
             target_model_dict: dict[str, t.Any],
-            target_model_class_getter: t.Callable[[type[L]], type[H]]
+            get_target_model_class: t.Callable[[type[L]], type[H]]
     ) -> H: ...
 
     @staticmethod
     def _convert_from_target_model_dict(
             source_model: [H | L],
             target_model_dict: dict[str, t.Any],
-            target_model_class_getter: t.Callable[[type[H] | type[L]], type[H] | type[L]]
+            get_target_model_class: t.Callable[[type[H] | type[L]], type[H] | type[L]]
     ) -> H | L:
-        target_model_class = target_model_class_getter(type(source_model))
+        target_model_class = get_target_model_class(type(source_model))
         return target_model_class(**target_model_dict)
 
     def _convert_to_lower_model_dict(self, higher_model: H, **kwargs) -> dict[str, t.Any]:
@@ -65,7 +65,7 @@ class ModelConverter[H, L](abc.ABC):
             source_model: L,
             target_model_dict: dict[str, t.Any],
             check_model_class: type[L],
-            convert_func: t.Callable[[L], t.Any]  # TODO: annotation for kwargs
+            convert_model: t.Callable[[L], t.Any]  # TODO: annotation for kwargs
     ) -> t.Iterator[tuple[str, t.Any, bool]]: ...
 
     @staticmethod
@@ -74,7 +74,7 @@ class ModelConverter[H, L](abc.ABC):
             source_model: H,
             target_model_dict: dict[str, t.Any],
             check_model_class: type[H],
-            convert_func: t.Callable[[H], t.Any]  # TODO: annotation for kwargs
+            convert_model: t.Callable[[H], t.Any]  # TODO: annotation for kwargs
     ) -> t.Iterator[tuple[str, t.Any, bool]]: ...
 
     @staticmethod
@@ -82,7 +82,7 @@ class ModelConverter[H, L](abc.ABC):
             source_model: H | L,
             target_model_dict: dict[str, t.Any],
             check_model_class: type[H | L],
-            convert_func: t.Callable[[H | L], t.Any]  # TODO: annotation for kwargs
+            convert_model: t.Callable[[H | L], t.Any]  # TODO: annotation for kwargs
     ) -> t.Iterator[tuple[str, t.Any, bool]]:
 
         for key in source_model.model_fields:
@@ -92,14 +92,14 @@ class ModelConverter[H, L](abc.ABC):
 
             if isinstance(value, check_model_class):
                 is_conditions_met = True
-                target_model_dict[key] = convert_func(value)
+                target_model_dict[key] = convert_model(value)
 
             elif isinstance(value, list):
                 is_conditions_met = True
                 result_value = []
                 for item in value:
                     if isinstance(item, check_model_class):
-                        item_value = convert_func(item)
+                        item_value = convert_model(item)
                     else:
                         item_value = value
                     result_value.append(item_value)

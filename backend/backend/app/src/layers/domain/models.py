@@ -1,4 +1,4 @@
-from typing import Optional, Literal
+import typing as t
 
 from pydantic import BaseModel
 
@@ -11,7 +11,7 @@ class DomainModel(BaseModel):
 
 
 class ICSR(DomainModel):
-    c_1_identification_case_safety_report: Optional['C_1_identification_case_safety_report'] = None
+    c_1_identification_case_safety_report: t.Optional['C_1_identification_case_safety_report'] = None
 
 
 class C_1_identification_case_safety_report(DomainModel):
@@ -22,10 +22,10 @@ class C_1_identification_case_safety_report(DomainModel):
     c_1_5_date_most_recent_information: str | None = None
     c_1_6_1_additional_documents_available: bool | None = None
     c_1_6_1_r_documents_held_sender: list['C_1_6_1_r_documents_held_sender'] | None = []
-    c_1_7_fulfil_local_criteria_expedited_report: bool | Literal[NullFlavor.NI] | None = None
+    c_1_7_fulfil_local_criteria_expedited_report: bool | t.Literal[NullFlavor.NI] | None = None
     c_1_8_1_worldwide_unique_case_identification_number: str | None = None
     c_1_8_2_first_sender: enums.C_1_8_2_first_sender | None = None
-    c_1_9_1_other_case_ids_previous_transmissions: Literal[True] | Literal[NullFlavor.NI] | None = None
+    c_1_9_1_other_case_ids_previous_transmissions: t.Literal[True] | t.Literal[NullFlavor.NI] | None = None
     c_1_9_1_r_source_case_id: list['C_1_9_1_r_source_case_id'] | None = []
     c_1_10_r_identification_number_report_linked: list['C_1_10_r_identification_number_report_linked'] | None = []
     c_1_11_1_report_nullification_amendment: enums.C_1_11_1_report_nullification_amendment | None = None

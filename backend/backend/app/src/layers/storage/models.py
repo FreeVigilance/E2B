@@ -3,7 +3,8 @@ from django.db import models
 from app.src.shared import enums
 from app.src.shared.enums import NullFlavor
 from extensions.django.constraints import add_choices_constraint, add_any_null_constraint, add_unique_together_constraint
-from extensions.django.models import ModelWithTempRelationsSupport, PrefixedFieldUtils
+from extensions.django.fields import PrefixedFieldUtils
+from extensions.django.models import ModelWithTempRelationSupport
 
 
 DATETIME_MAX_LENGTH = 24
@@ -17,7 +18,7 @@ def add_null_flavor_constraint(meta_cls: type, field_name: str) -> None:
     add_any_null_constraint(meta_cls, field_name, null_flavor_field_utils.make_special_field_name(field_name))
 
 
-class StorageModel(ModelWithTempRelationsSupport):
+class StorageModel(ModelWithTempRelationSupport):
     class Meta:
         abstract = True
 

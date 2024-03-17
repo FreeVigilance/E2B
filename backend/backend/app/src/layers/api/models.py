@@ -32,7 +32,6 @@ class ICSR(ApiModel):
     c_1_identification_case_safety_report: t.Optional['C_1_identification_case_safety_report'] = None
 
 
-# TODO: check if None for Value is needed
 class C_1_identification_case_safety_report(ApiModel):
     c_1_1_sender_safety_report_unique_id: Value[str] = Value()
     c_1_2_date_creation: Value[str] = Value()

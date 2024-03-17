@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django import http
 from django.urls import path
 
 from app.src.layers.api import views
@@ -24,7 +24,7 @@ view_shared_args = dict(
 )
 
 urlpatterns = [
-    path('test', lambda *args, **kwargs: HttpResponse('This is a test')),
+    path('test', lambda *args, **kwargs: http.HttpResponse('This is a test')),
     path('icsr', views.ModelClassView.as_view(**view_shared_args)),
     path('icsr/<int:pk>', views.ModelInstanceView.as_view(**view_shared_args)),
 ]

@@ -25,7 +25,7 @@ def make_constraint_name(*field_names: str, constraint_label: str) -> str:
         max_len = settings.DB_LABEL_MAX_LENGTH
         max_len -= len(constraint_label) + len(CONSTRAINT_NAME_PARTS_SEPARATOR)
     except AttributeError:
-        exceptions.raise_settings_attribute_exception('DB_LABEL_MAX_LENGTH')
+        exceptions.raise_settings_attribute_error('DB_LABEL_MAX_LENGTH')
     
     field_names_cnt = len(field_names)
     part_len = max_len // field_names_cnt - len(CONSTRAINT_NAME_PARTS_SEPARATOR)
