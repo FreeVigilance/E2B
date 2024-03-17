@@ -7,9 +7,6 @@ from extensions.django import fields as ext_fields
 from extensions.django import models as ext_models
 
 
-DATETIME_MAX_LENGTH = 24
-
-
 null_flavor_field_utils = ext_fields.PrefixedFieldUtils('nf_')
 
 
@@ -20,8 +17,6 @@ class StorageModelMeta(ext_models.ModelWithFieldChoicesConstraintMeta):
     """
 
     def __new__(cls, name, bases, attrs, **kwargs):
-        meta = ext_models.get_or_create_meta_attr(attrs)
-
         for field_name, field in attrs.items():
             if not null_flavor_field_utils.is_special_field_name(field_name):
                 continue
@@ -30,6 +25,7 @@ class StorageModelMeta(ext_models.ModelWithFieldChoicesConstraintMeta):
             assert field.choices, f'Null flavor field {field_name} must have choices restriction'
 
             # Call add_any_null_constraint
+            meta = ext_models.get_meta_attr_or_raise_exc(attrs, name, 'null flavor field')
             base_field_name = null_flavor_field_utils.get_base_field_name(field_name)
             ext_constraints.add_any_null_constraint(meta, base_field_name, field_name)
 
@@ -46,16 +42,19 @@ class ICSR(StorageModel):
 
 
 class C_1_identification_case_safety_report(StorageModel):
+    class Meta:
+        pass
+
     icsr = models.OneToOneField(
         to=ICSR,
         on_delete=models.CASCADE,
         related_name='c_1_identification_case_safety_report'
     )
     c_1_1_sender_safety_report_unique_id = models.CharField(null=True, unique=True, max_length=100)
-    c_1_2_date_creation = models.CharField(null=True, max_length=DATETIME_MAX_LENGTH)
+    c_1_2_date_creation = models.CharField(null=True)  # dt
     c_1_3_type_report = models.IntegerField(null=True, choices=enums.C_1_3_type_report)
-    c_1_4_date_report_first_received_source = models.CharField(null=True, max_length=DATETIME_MAX_LENGTH)
-    c_1_5_date_most_recent_information = models.CharField(null=True, max_length=DATETIME_MAX_LENGTH)
+    c_1_4_date_report_first_received_source = models.CharField(null=True)  # dt
+    c_1_5_date_most_recent_information = models.CharField(null=True)  # dt
     c_1_6_1_additional_documents_available = models.BooleanField(null=True)
     c_1_7_fulfil_local_criteria_expedited_report = models.BooleanField(null=True)
     nf_c_1_7_fulfil_local_criteria_expedited_report = models.CharField(null=True, choices=[NF.NI])

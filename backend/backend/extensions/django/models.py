@@ -6,9 +6,9 @@ from extensions.django.constraints import add_choices_constraint
 from extensions.django.fields import temp_relation_field_utils
 
 
-def get_or_create_meta_attr(attrs: t.Dict[str, t.Any]) -> type[t.Any]:
-    if 'Meta' not in attrs:
-        attrs['Meta'] = type('Meta', tuple(), dict())
+def get_meta_attr_or_raise_exc(attrs: t.Dict[str, t.Any], class_name: str, meta_attr_usage: str) -> type[t.Any]:
+    assert 'Meta' in attrs, \
+        f'Model class {class_name} must contain explicit inner class Meta for {meta_attr_usage} usage'
     return attrs['Meta']
 
 
@@ -39,7 +39,7 @@ class ModelWithFieldChoicesConstraintMeta(models.base.ModelBase):
 
             choices = field.choices
             if choices:
-                meta = get_or_create_meta_attr(attrs)
+                meta = get_meta_attr_or_raise_exc(attrs, name, 'choices field param')
                 add_choices_constraint(meta, field_name, choices)
 
                 # Format choices if current iterable is invalid for django

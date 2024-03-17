@@ -29,5 +29,6 @@ class ArbitraryDecimalField(models.DecimalField):
         return []
 
     def db_type(self, connection):
-        assert connection.settings_dict['ENGINE'] == 'django.db.backends.postgresql'
+        assert connection.settings_dict['ENGINE'] == 'django.db.backends.postgresql', \
+            'Class ArbitraryDecimalField is available only for PostgreSQL db'
         return 'numeric'
