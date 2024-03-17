@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { getData } from '../display/slice';
 import { Reference } from './references';
 
 export const referencesSelector = (state) => state.references;
@@ -18,16 +19,16 @@ export const getReferences = () => {
 }
 
 export const parseReferences = (jsonData) => {
-    return (dispatch, getState) => {
-		let data = jsonData['C_4_r_LiteratureReference'];
-		let referencesData = [];
-
+    let data = jsonData['c_4_r_literature_reference'];
+	let referencesData = [];
+	if (data) {
 		Object.values(data).forEach((item, index) => {
 			let itemData = new Reference();
-			itemData['C_4_r_1_LiteratureReference'] = item['C_4_r_1_LiteratureReference'];
+			itemData['C_4_r_1_LiteratureReference'] = item['c_4_r_1_literature_reference'];
 			referencesData.push(itemData);
 		});
 	}
+	return referencesData;
 }
 
 const referencesSlice = createSlice({
@@ -38,9 +39,13 @@ const referencesSlice = createSlice({
 	reducers: {
 		setReferencesData: (state, action) => {
 			state.referencesData = action.payload;
-		},
-		
-	}
+		},	
+	},
+	extraReducers: (builder) => {
+        builder.addCase(getData.fulfilled, (state, action) => {
+            state.referencesData = parseReferences(action.payload);
+        });
+    },
 })
 
 export default referencesSlice.reducer;

@@ -88,14 +88,12 @@ export const Dosages = ({drugIndex}) => {
                                                 label="No Info"/>
                                     </Box>
                                     {dosages[drugIndex][index]['G_k_4_r_4_DateTimeDrug']['nullFlavor'] !== -1 ? 
-                                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                    <DateTimePicker
-                                                        value = {item['G_k_4_r_4_DateTimeDrug'].value}
-                                                        renderInput={(props) => <TextField  {...props} />}
-                                                        label="Date and Time of Start of Drug"
-                                                        onChange={handleChange('G_k_4_r_4_DateTimeDrug', index)}
-                                                        />
-                                            </LocalizationProvider>
+                                            <TextField
+                                            label="Date and Time of Start of Drug"
+                                            variant="outlined"
+                                            value = {item['G_k_4_r_4_DateTimeDrug'].value}
+                                            onChange={handleChange('G_k_4_r_4_DateTimeDrug', index)}
+                                            />
                                             : <FormControl sx={{ width: '70%' }}>
                                                 <InputLabel>Null Flavor</InputLabel>
                                                 <Select
@@ -123,14 +121,12 @@ export const Dosages = ({drugIndex}) => {
                                                 label="No Info"/>
                                     </Box>
                                     {dosages[drugIndex][index]['G_k_4_r_5_DateTimeLastAdministration']['nullFlavor'] !== -1 ? 
-                                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                    <DateTimePicker
-                                                        value = {item['G_k_4_r_5_DateTimeLastAdministration'].value}
-                                                        renderInput={(props) => <TextField  {...props} />}
-                                                        label="Date and Time of Last Administration"
-                                                        onChange={handleChange('G_k_4_r_5_DateTimeLastAdministration', index)}
-                                                        />
-                                            </LocalizationProvider>
+                                            <TextField
+                                            label="Date and Time of Last Administration"
+                                            variant="outlined"
+                                            value = {item['G_k_4_r_5_DateTimeLastAdministration'].value}
+                                            onChange={handleChange('G_k_4_r_5_DateTimeLastAdministration', index)}
+                                            />
                                             : <FormControl sx={{ width: '70%' }}>
                                                 <InputLabel>Null Flavor</InputLabel>
                                                 <Select

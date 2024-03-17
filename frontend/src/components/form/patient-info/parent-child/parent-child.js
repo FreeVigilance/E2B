@@ -87,14 +87,12 @@ export const ParentChild = () => {
                                     />}
                                     label="No Info"/>
                             {parentChildData['D_10_2_1_DateBirthParent']['nullFlavor'] === null ? 
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <DateTimePicker
-                                        value = {parentChildData['D_10_2_1_DateBirthParent'].value}
-                                        renderInput={(props) => <TextField sx={{ width: '80%' }} {...props} />}
-                                        label="Date of Birth of Parent"
-                                        onChange={handleChange('D_10_2_1_DateBirthParent')}
-                                    />
-                                </LocalizationProvider>
+                                <TextField sx={{ width: '80%' }}
+                                label="Date of Birth of Parent"
+                                variant="outlined"
+                                value = {parentChildData['D_10_2_1_DateBirthParent'].value}
+                                onChange={handleChange('D_10_2_1_DateBirthParent')}
+                                />
                             : <FormControl>
                             <InputLabel>Null Flavor</InputLabel><Select
                                 value = {parentChildData['D_10_2_1_DateBirthParent'].nullFlavor}
@@ -157,14 +155,12 @@ export const ParentChild = () => {
                                 />}
                                 label="No Info"/>
                         {parentChildData['D_10_3_LastMenstrualPeriodDateParent']['nullFlavor'] === null ? 
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DateTimePicker
-                                    value = {parentChildData['D_10_3_LastMenstrualPeriodDateParent'].value}
-                                    renderInput={(props) => <TextField sx={{ width: '80%' }} {...props} />}
-                                    label="Last Menstrual Period Date of Parent"
-                                    onChange={handleChange('D_10_3_LastMenstrualPeriodDateParent')}
-                                />
-                            </LocalizationProvider>
+                            <TextField sx={{ width: '80%' }}
+                            label="Last Menstrual Period Date of Parent"
+                            variant="outlined"
+                            value = {parentChildData['D_10_3_LastMenstrualPeriodDateParent'].value}
+                            onChange={handleChange('D_10_3_LastMenstrualPeriodDateParent')}
+                            />
                         : <FormControl sx={{ width: '80%' }}>
                             <InputLabel>Null Flavor</InputLabel><Select
                                 value = {parentChildData['D_10_3_LastMenstrualPeriodDateParent'].nullFlavor}

@@ -286,14 +286,12 @@ export const Patient = () => {
                             />}
                             label="No Info"/>
                     {patientData['D_6_LastMenstrualPeriodDate']['nullFlavor'] === null ? 
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DateTimePicker
-                                value = {patientData['D_6_LastMenstrualPeriodDate'].value}
-                                renderInput={(props) => <TextField sx={{ width: '80%' }} {...props} />}
-                                label="Last Menstrual Period Date"
-                                onChange={handleChange('D_6_LastMenstrualPeriodDate')}
-                            />
-                        </LocalizationProvider>
+                        <TextField sx={{ width: '80%' }}
+                        label="Last Menstrual Period Date"
+                        variant="outlined"
+                        value = {patientData['D_6_LastMenstrualPeriodDate'].value}
+                        onChange={handleChange('D_6_LastMenstrualPeriodDate')}
+                        />
                     : <FormControl sx={{ width: '80%' }}>
                         <InputLabel>Null Flavor</InputLabel><Select
                             value = {patientData['D_1_Patient'].nullFlavor}
@@ -350,14 +348,12 @@ export const Patient = () => {
                             />}
                             label="No Info"/>
                         {patientData['D_9_1_DateDeath']['nullFlavor'] === null ? 
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DateTimePicker
-                                    value = {patientData['D_9_1_DateDeath'].value}
-                                    renderInput={(props) => <TextField sx={{ width: '80%' }} {...props} />}
-                                    label="Date Of Death"
-                                    onChange={handleChange('D_9_1_DateDeath')}
-                                />
-                            </LocalizationProvider>
+                            <TextField sx={{ width: '80%' }}
+                            label="Date Of Death"
+                            variant="outlined"
+                            value = {patientData['D_9_1_DateDeath'].value}
+                            onChange={handleChange('D_9_1_DateDeath')}
+                            />
                         :   <FormControl sx={{ width: '80%' }}>
                             <InputLabel>Null Flavor</InputLabel>
                             <Select

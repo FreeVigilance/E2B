@@ -65,14 +65,12 @@ export const IdentificationComp = () => {
                 <Grid container direction="row" columnGap={4}>
                     <Grid container item xs direction="column" rowGap={1}>
 
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DateTimePicker
-                                value = {identification.C_1_2_DateCreation.value}
-                                renderInput={(props) => <TextField sx={{ width: '100%' }} {...props} />}
-                                label="Date of Creation"
-                                onChange={handleChange('C_1_2_DateCreation')}
+                        <TextField sx={{ width: '100%' }}
+                            label="Date of Creation"
+                            variant="outlined"
+                            value = {identification['C_1_2_DateCreation'].value}
+                            onChange={handleChange('C_1_2_DateCreation')}
                             />
-                        </LocalizationProvider>
 
                         <FormControl sx={{ width: '100%' }}>
                             <InputLabel>Type of Report</InputLabel>
@@ -87,23 +85,19 @@ export const IdentificationComp = () => {
                             </Select>
                         </FormControl>
 
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DateTimePicker
-                                value = {identification.C_1_4_DateReportFirstReceivedSource.value}
-                                renderInput={(props) => <TextField sx={{ width: '100%' }} {...props} />}
-                                label="Date Report Was First Received from Source"
-                                onChange={handleChange('C_1_4_DateReportFirstReceivedSource')}
+                        <TextField sx={{ width: '100%' }}
+                            label="Date Report Was First Received from Source"
+                            variant="outlined"
+                            value = {identification['C_1_4_DateReportFirstReceivedSource'].value}
+                            onChange={handleChange('C_1_4_DateReportFirstReceivedSource')}
                             />
-                        </LocalizationProvider>
 
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DateTimePicker
-                                value = {identification.C_1_5_DateMostRecentInformation.value}
-                                renderInput={(props) => <TextField sx={{ width: '100%' }} {...props} />}
-                                label="Date of Most Recent Information for This Report"
-                                onChange={handleChange('C_1_5_DateMostRecentInformation')}
+                        <TextField sx={{ width: '100%' }}
+                            label="Date of Most Recent Information for This Report"
+                            variant="outlined"
+                            value = {identification['C_1_5_DateMostRecentInformation'].value}
+                            onChange={handleChange('C_1_5_DateMostRecentInformation')}
                             />
-                        </LocalizationProvider>
                     </Grid>
                     <Grid container item xs direction="column" rowGap={1}>
                         <FormControl sx={{ width: '100%' }}>

@@ -255,14 +255,13 @@ export const Reactions = () => {
                                     label="No Info"/>
                                 </Box>
                                 {reactionsData[index]['E_i_4_DateStartReaction']['nullFlavor'] === null ? 
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DateTimePicker
-                                            value = {item['E_i_4_DateStartReaction'].value}
-                                            renderInput={(props) => <TextField  {...props} />}
-                                            label="Start Date of Reaction"
-                                            onChange={handleChange('E_i_4_DateStartReaction', index)}
-                                            />
-                                </LocalizationProvider>
+
+                                <TextField
+                                label="Start Date of Reaction"
+                                variant="outlined"
+                                value = {item['E_i_4_DateStartReaction'].value}
+                                onChange={handleChange('E_i_4_DateStartReaction', index)}
+                                />
                                 : <FormControl sx={{ width: '100%' }}>
                                     <InputLabel>Null Flavor</InputLabel>
                                     <Select
@@ -290,14 +289,20 @@ export const Reactions = () => {
                                     label="No Info"/>
                                 </Box>
                             {reactionsData[index]['E_i_5_DateEndReaction']['nullFlavor'] === null ? 
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DateTimePicker
-                                            value = {item['E_i_5_DateEndReaction'].value}
-                                            renderInput={(props) => <TextField  {...props} />}
-                                            label="End Date of Reaction"
-                                            onChange={handleChange('E_i_5_DateEndReaction', index)}
-                                            />
-                                </LocalizationProvider>
+                                // <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                //         <DateTimePicker
+                                //             value = {item['E_i_5_DateEndReaction'].value}
+                                //             renderInput={(props) => <TextField  {...props} />}
+                                //             label="End Date of Reaction"
+                                //             onChange={handleChange('E_i_5_DateEndReaction', index)}
+                                //             />
+                                // </LocalizationProvider>
+                                <TextField
+                                label="End Date of Reaction"
+                                variant="outlined"
+                                value = {item['E_i_5_DateEndReaction'].value}
+                                onChange={handleChange('E_i_5_DateEndReaction', index)}
+                                />
                                 : <FormControl sx={{ width: '100%' }}>
                                     <InputLabel>Null Flavor</InputLabel>
                                     <Select

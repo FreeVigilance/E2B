@@ -143,14 +143,12 @@ export const ParentDrugsHistory = () => {
                                                         label="No Info"/>
                                             </Box>
                                             {parentDrugHistory[index]['D_10_8_r_4_StartDate']['nullFlavor'] === null ? 
-                                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                            <DateTimePicker
-                                                                value = {item['D_10_8_r_4_StartDate'].value}
-                                                                renderInput={(props) => <TextField  {...props} />}
-                                                                label="Start Date"
-                                                                onChange={handleChange('D_10_8_r_4_StartDate', index)}
-                                                                />
-                                                    </LocalizationProvider>
+                                                    <TextField
+                                                    label="Start Date"
+                                                    variant="outlined"
+                                                    value = {item['D_10_8_r_4_StartDate'].value}
+                                                    onChange={handleChange('D_10_8_r_4_StartDate', index)}
+                                                    />
                                                     : <FormControl sx={{ width: '70%' }}>
                                                         <InputLabel>Null Flavor</InputLabel>
                                                         <Select
@@ -178,14 +176,12 @@ export const ParentDrugsHistory = () => {
                                                         label="No Info"/>
                                             </Box>
                                             {parentDrugHistory[index]['D_10_8_r_5_EndDate']['nullFlavor'] === null ? 
-                                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                            <DateTimePicker
-                                                                value = {item['D_10_8_r_5_EndDate'].value}
-                                                                renderInput={(props) => <TextField  {...props} />}
-                                                                label="End Date"
-                                                                onChange={handleChange('D_10_8_r_5_EndDate', index)}
-                                                                />
-                                                    </LocalizationProvider>
+                                                    <TextField
+                                                    label="End Date"
+                                                    variant="outlined"
+                                                    value = {item['D_10_8_r_5_EndDate'].value}
+                                                    onChange={handleChange('D_10_8_r_5_EndDate', index)}
+                                                    />
                                                     : <FormControl sx={{ width: '70%' }}>
                                                         <InputLabel>Null Flavor</InputLabel>
                                                         <Select

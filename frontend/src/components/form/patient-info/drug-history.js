@@ -130,7 +130,7 @@ export const DrugsHistory = () => {
                                             value = {item['D_8_r_7b_ReactionMedDRACode'].value}/>
                                 </Grid>
                             </Grid>
-                            <Stack direction="row" spacing={2} justifyContent="flex-start">
+                            <Stack direction="column" spacing={2} justifyContent="flex-start">
                                 <Stack direction="row" spacing={2} justifyContent="flex-start"> 
                                             <Box className="text-small" style={{ padding: 0 }}>
                                                 <FormControlLabel
@@ -143,14 +143,12 @@ export const DrugsHistory = () => {
                                                         label="No Info"/>
                                             </Box>
                                             {drugHistory[index]['D_8_r_4_StartDate']['nullFlavor'] === null ? 
-                                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                            <DateTimePicker
-                                                                value = {item['D_8_r_4_StartDate'].value}
-                                                                renderInput={(props) => <TextField  {...props} />}
-                                                                label="Start Date"
-                                                                onChange={handleChange('D_8_r_4_StartDate', index)}
-                                                                />
-                                                    </LocalizationProvider>
+                                                    <TextField
+                                                    label="Start Date"
+                                                    variant="outlined"
+                                                    value = {item['D_8_r_4_StartDate'].value}
+                                                    onChange={handleChange('D_8_r_4_StartDate', index)}
+                                                    />
                                                     : <FormControl sx={{ width: '70%' }}>
                                                         <InputLabel>Null Flavor</InputLabel>
                                                         <Select
@@ -178,14 +176,12 @@ export const DrugsHistory = () => {
                                                         label="No Info"/>
                                             </Box>
                                             {drugHistory[index]['D_8_r_5_EndDate']['nullFlavor'] === null ? 
-                                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                            <DateTimePicker
-                                                                value = {item['D_8_r_5_EndDate'].value}
-                                                                renderInput={(props) => <TextField  {...props} />}
-                                                                label="End Date"
-                                                                onChange={handleChange('D_8_r_5_EndDate', index)}
-                                                                />
-                                                    </LocalizationProvider>
+                                                    <TextField
+                                                    label="End Date"
+                                                    variant="outlined"
+                                                    value = {item['D_8_r_5_EndDate'].value}
+                                                    onChange={handleChange('D_8_r_5_EndDate', index)}
+                                                    />
                                                     : <FormControl sx={{ width: '70%' }}>
                                                         <InputLabel>Null Flavor</InputLabel>
                                                         <Select

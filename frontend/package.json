@@ -102,7 +102,9 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "2.4.2",
     "rsuite": "5.53.2",
+    "snake-camel": "^1.0.8",
     "snakecase-keys": "6.0.0",
+    "to-camel-case": "^1.0.0",
     "uuid": "9.0.0",
     "uuidv4": "6.2.13"
   },

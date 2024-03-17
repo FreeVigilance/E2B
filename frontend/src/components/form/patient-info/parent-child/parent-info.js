@@ -80,14 +80,12 @@ export const ParentInfo = () => {
                                                 label="No Info"/>
                                     </Box>
                                     {parentData[index]['D_10_7_1_r_2_StartDate']['nullFlavor'] === null ? 
-                                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                    <DateTimePicker
-                                                        value = {item['D_10_7_1_r_2_StartDate'].value}
-                                                        renderInput={(props) => <TextField  {...props} />}
-                                                        label="Start Date"
-                                                        onChange={handleChange('D_10_7_1_r_2_StartDate', index)}
-                                                        />
-                                            </LocalizationProvider>
+                                            <TextField
+                                            label="Start Date"
+                                            variant="outlined"
+                                            value = {item['D_10_7_1_r_2_StartDate'].value}
+                                            onChange={handleChange('D_10_7_1_r_2_StartDate', index)}
+                                            />
                                             : <FormControl sx={{ width: '70%' }}>
                                                 <InputLabel>Null Flavor</InputLabel>
                                                 <Select
@@ -115,14 +113,12 @@ export const ParentInfo = () => {
                                                 label="No Info"/>
                                     </Box>
                                     {parentData[index]['D_10_7_1_r_4_EndDate']['nullFlavor'] === null ? 
-                                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                    <DateTimePicker
-                                                        value = {item['D_10_7_1_r_4_EndDate'].value}
-                                                        renderInput={(props) => <TextField  {...props} />}
-                                                        label="End Date"
-                                                        onChange={handleChange('D_10_7_1_r_4_EndDate', index)}
-                                                        />
-                                            </LocalizationProvider>
+                                            <TextField
+                                            label="End Date"
+                                            variant="outlined"
+                                            value = {item['D_10_7_1_r_4_EndDate'].value}
+                                            onChange={handleChange('D_10_7_1_r_4_EndDate', index)}
+                                            />
                                             : <FormControl sx={{ width: '70%' }}>
                                                 <InputLabel>Null Flavor</InputLabel>
                                                 <Select

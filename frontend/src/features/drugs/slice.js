@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import {AdditionalInfo, Dosage, Drug, DrugReactionMatrix, IndicationForUse, Relatedness, Substance} from './drugs';
 import { nullFlavors } from '@src/components/nullFlavours';
+import { getData } from '../display/slice';
 
 export const drugsSelector = (state) => state.drugs;
 
@@ -150,134 +151,140 @@ export const getDrug = () => {
 	}
 }
 
-export const parseResults = (jsonData) => {
-		return (dispatch, getState) => {
-			let data = jsonData['G_k_DrugInformation'];
+export const parseDrug = (jsonData) => {
+	let data = jsonData['g_k_drug_information'];
 			
-			let drugs = [];
-			let substances = {};
-			let dosages = {};
-			let indications = {};
-			let drugReactionMatrix = {};
-			let relatedness = {};
-			let additionalInfo = {};
+	let drugs = [];
+	let substances = {};
+	let dosages = {};
+	let indications = {};
+	let drugReactionMatrix = {};
+	let relatedness = {};
+	let additionalInfo = {};
 
-			Object.values(data).forEach((item, index) => {
-				let drugsData = new Drug();
-				drugsData['G_k_1_CharacterisationDrugRole'] = item['G_k_1_CharacterisationDrugRole'];
-				drugsData['G_k_2_1_1a_MPIDVersion'] = item['G_k_2_DrugIdentification']['G_k_2_1_MPIDPhPID']['G_k_2_1_1a_MPIDVersion'];
-				drugsData['G_k_2_1_1b_MPID'] = item['G_k_2_DrugIdentification']['G_k_2_1_MPIDPhPID']['G_k_2_1_1b_MPID'];
-				drugsData['G_k_2_1_2a_PhPIDVersion'] = item['G_k_2_DrugIdentification']['G_k_2_1_MPIDPhPID']['G_k_2_1_2a_PhPIDVersion'];
-				drugsData['G_k_2_1_2b_PhPID'] = item['G_k_2_DrugIdentification']['G_k_2_1_MPIDPhPID']['G_k_2_1_2b_PhPID'];
-				drugsData['G_k_2_2_MedicinalProductNamePrimarySource'] = item['G_k_2_DrugIdentification']['G_k_2_2_MedicinalProductNamePrimarySource'];
-				drugsData['G_k_2_4_IdentificationCountryDrugObtained'] = item['G_k_2_DrugIdentification']['G_k_2_4_IdentificationCountryDrugObtained'];
-				drugsData['G_k_2_5_InvestigationalProductBlinded'] = item['G_k_2_DrugIdentification']['G_k_2_5_InvestigationalProductBlinded'];
-				drugsData['G_k_3_1_AuthorisationApplicationNumber'] = item['G_k_3_HolderAuthorisationApplicationNumberDrug']['G_k_3_1_AuthorisationApplicationNumber'];
-				drugsData['G_k_3_2_CountryAuthorisationApplication'] = item['G_k_3_HolderAuthorisationApplicationNumberDrug']['G_k_3_2_CountryAuthorisationApplication'];
-				drugsData['G_k_3_3_NameHolderApplicant'] = item['G_k_3_HolderAuthorisationApplicationNumberDrug']['G_k_3_3_NameHolderApplicant'];
-				drugsData['G_k_5a_CumulativeDoseFirstReactionNum'] = item['G_k_5_CumulativeDoseFirstReaction']['G_k_5a_CumulativeDoseFirstReactionNum'];
-				drugsData['G_k_5b_CumulativeDoseFirstReactionUnit'] = item['G_k_5_CumulativeDoseFirstReaction']['G_k_5b_CumulativeDoseFirstReactionUnit'];
-				drugsData['G_k_6a_GestationPeriodExposureNum'] = item['G_k_6_GestationPeriodExposure']['G_k_6a_GestationPeriodExposureNum'];
-				drugsData['G_k_6b_GestationPeriodExposureUnit'] = item['G_k_6_GestationPeriodExposure']['G_k_6b_GestationPeriodExposureUnit'];
-				drugsData['G_k_8_ActionTakenDrug'] = item['G_k_8_ActionTakenDrug'];
-				drugsData['G_k_11_AdditionalInformationDrug'] = item['G_k_11_AdditionalInformationDrug'];
-				drugs.push(drugsData);
+	if (data) {
+		Object.values(data).forEach((item, index) => {
+			let drugsData = new Drug();
+			drugsData['G_k_1_CharacterisationDrugRole'] = item['g_k_1_characterisation_drug_role'];
+			drugsData['G_k_2_1_1a_MPIDVersion'] = item['g_k_2_drug_identification']['g_k_2_1_mpid_phpid']['g_k_2_1_1a_mpid_version'];
+			drugsData['G_k_2_1_1b_MPID'] = item['g_k_2_drug_identification']['g_k_2_1_mpid_phpid']['g_k_2_1_1b_mpid'];
+			drugsData['G_k_2_1_2a_PhPIDVersion'] = item['g_k_2_drug_identification']['g_k_2_1_2a_phpid_version'];
+			drugsData['G_k_2_1_2b_PhPID'] = item['g_k_2_drug_identification']['g_k_2_1_2b_phpid'];
+			drugsData['G_k_2_2_MedicinalProductNamePrimarySource'] = item['g_k_2_drug_identification']['g_k_2_2_medicinal_product_name_primary_source'];
+			drugsData['G_k_2_4_IdentificationCountryDrugObtained'] = item['g_k_2_drug_identification']['g_k_2_4_identification_country_drug_obtained'];
+			drugsData['G_k_2_5_InvestigationalProductBlinded'] = item['g_k_2_drug_identification']['g_k_2_5_investigational_product_blinded'];
 
-				let substancesArray = [];
-				Object.values(item['G_k_2_DrugIdentification']['G_k_2_3_r_SubstanceIdStrength']).forEach((subItem, subIndex) => {
+			drugsData['G_k_3_1_AuthorisationApplicationNumber'] = item['g_k_3_holder_authorisation_application_number_drug']['g_k_3_1_authorisation_application_number'];
+			drugsData['G_k_3_2_CountryAuthorisationApplication'] = item['g_k_3_holder_authorisation_application_number_drug']['g_k_3_2_country_authorisation_application'];
+			drugsData['G_k_3_3_NameHolderApplicant'] = item['g_k_3_holder_authorisation_application_number_drug']['g_k_3_3_name_holder_applicant'];
+			drugsData['G_k_5a_CumulativeDoseFirstReactionNum'] = item['g_k_5_cumulative_dose_first_reaction']['g_k_5a_cumulative_dose_first_reaction_num'];
+			drugsData['G_k_5b_CumulativeDoseFirstReactionUnit'] = item['g_k_5_cumulative_dose_first_reaction']['g_k_5b_cumulative_dose_first_reaction_unit'];
+			drugsData['G_k_6a_GestationPeriodExposureNum'] = item['g_k_6_gestation_period_exposure']['g_k_6a_gestation_period_exposure_num'];
+			drugsData['G_k_6b_GestationPeriodExposureUnit'] = item['g_k_6_gestation_period_exposure']['g_k_6b_gestation_period_exposure_unit'];
+			drugsData['G_k_8_ActionTakenDrug'] = item['g_k_8_action_taken_drug'];
+			drugsData['G_k_11_AdditionalInformationDrug'] = item['g_k_11_additional_information_drug'];
+			drugs.push(drugsData);
+
+			let substancesArray = [];
+			if (item['g_k_2_drug_identification']['g_k_2_3_r_substance_id_strength']) {
+				Object.values(item['g_k_2_drug_identification']['g_k_2_3_r_substance_id_strength']).forEach((subItem, subIndex) => {
 					let substancesData = new Substance();
-					substancesData['G_k_2_3_r_1_SubstanceName'] = subItem['G_k_2_3_r_1_SubstanceName'];
-					substancesData['G_k_2_3_r_2a_SubstanceTermIDVersion'] = subItem['G_k_2_3_r_2a_SubstanceTermIDVersion'];
-					substancesData['G_k_2_3_r_2b_SubstanceTermID'] = subItem['G_k_2_3_r_2b_SubstanceTermID'];
-					substancesData['G_k_2_3_r_3a_StrengthNum'] = subItem['G_k_2_3_r_3a_StrengthNum'];
-					substancesData['G_k_2_3_r_3b_StrengthUnit'] = subItem['G_k_2_3_r_3b_StrengthUnit'];
+					substancesData['G_k_2_3_r_1_SubstanceName'] = subItem['g_k_2_3_r_1_substance_name'];
+					substancesData['G_k_2_3_r_2a_SubstanceTermIDVersion'] = subItem['g_k_2_3_r_2a_substance_termid_version'];
+					substancesData['G_k_2_3_r_2b_SubstanceTermID'] = subItem['g_k_2_3_r_2b_substance_termid'];
+					substancesData['G_k_2_3_r_3a_StrengthNum'] = subItem['g_k_2_3_r_3a_strength_num'];
+					substancesData['G_k_2_3_r_3b_StrengthUnit'] = subItem['g_k_2_3_r_3b_strength_unit'];
 
 					substancesArray.push(substancesData);
 				});
-				substances[index] = substancesArray;
+			}
+			substances[index] = substancesArray;
 
-				let dosagesArray = [];
-				Object.values(item['G_k_4_r_DosageInformation']).forEach((subItem, subIndex) => {
+			let dosagesArray = [];
+			if (item['g_k_4_r_dosage_information']) {
+				Object.values(item['g_k_4_r_dosage_information']).forEach((subItem, subIndex) => {
 					let dosagesData = new Dosage();
-					dosagesData['G_k_4_r_1a_DoseNum'] = subItem['G_k_4_r_1a_DoseNum'];
-					dosagesData['G_k_4_r_1b_DoseUnit'] = subItem['G_k_4_r_1b_DoseUnit'];
-					dosagesData['G_k_4_r_2_NumberUnitsInterval'] = subItem['G_k_4_r_2_NumberUnitsInterval'];
-					dosagesData['G_k_4_r_3_DefinitionIntervalUnit'] = subItem['G_k_4_r_3_DefinitionIntervalUnit'];
-					dosagesData['G_k_4_r_4_DateTimeDrug'] = subItem['G_k_4_r_4_DateTimeDrug'];
-					dosagesData['G_k_4_r_5_DateTimeLastAdministration'] = subItem['G_k_4_r_5_DateTimeLastAdministration'];
-					dosagesData['G_k_4_r_6a_DurationDrugAdministrationNum'] = subItem['G_k_4_r_6_DurationDrugAdministration']['G_k_4_r_6a_DurationDrugAdministrationNum'];
-					dosagesData['G_k_4_r_6b_DurationDrugAdministrationUnit'] = subItem['G_k_4_r_6_DurationDrugAdministration']['G_k_4_r_6b_DurationDrugAdministrationUnit'];
-					dosagesData['G_k_4_r_7_BatchLotNumber'] = subItem['G_k_4_r_7_BatchLotNumber'];
-					dosagesData['G_k_4_r_8_DosageText'] = subItem['G_k_4_r_8_DosageText'];
-					dosagesData['G_k_4_r_9_1_PharmaceuticalDoseForm'] = subItem['G_k_4_r_9_PharmaceuticalDoseForm']['G_k_4_r_9_1_PharmaceuticalDoseForm'];
-					dosagesData['G_k_4_r_9_2a_PharmaceuticalDoseFormTermIDVersion'] = subItem['G_k_4_r_9_PharmaceuticalDoseForm']['G_k_4_r_9_2a_PharmaceuticalDoseFormTermIDVersion'];
-					dosagesData['G_k_4_r_9_2b_PharmaceuticalDoseFormTermID'] = subItem['G_k_4_r_9_PharmaceuticalDoseForm']['G_k_4_r_9_2b_PharmaceuticalDoseFormTermID'];
+					dosagesData['G_k_4_r_1a_DoseNum'] = subItem['g_k_4_r_1a_dose_num'];
+					dosagesData['G_k_4_r_1b_DoseUnit'] = subItem['g_k_4_r_1b_dose_unit'];
+					dosagesData['G_k_4_r_2_NumberUnitsInterval'] = subItem['g_k_4_r_2_number_units_interval'];
+					dosagesData['G_k_4_r_3_DefinitionIntervalUnit'] = subItem['g_k_4_r_3_definition_interval_unit'];
+					dosagesData['G_k_4_r_4_DateTimeDrug'] = subItem['g_k_4_r_4_date_time_drug'];
+					dosagesData['G_k_4_r_5_DateTimeLastAdministration'] = subItem['g_k_4_r_5_date_time_last_administration'];
+					dosagesData['G_k_4_r_6a_DurationDrugAdministrationNum'] = subItem['g_k_4_r_6_duration_drug_administration']['g_k_4_r_6a_duration_drug_administration_num'];
+					dosagesData['G_k_4_r_6b_DurationDrugAdministrationUnit'] = subItem['g_k_4_r_6_duration_drug_administration']['g_k_4_r_6b_duration_drug_administration_unit'];
+					dosagesData['G_k_4_r_7_BatchLotNumber'] = subItem['g_k_4_r_7_batch_lot_number'];
+					dosagesData['G_k_4_r_8_DosageText'] = subItem['g_k_4_r_8_dosage_text'];
+					dosagesData['G_k_4_r_9_1_PharmaceuticalDoseForm'] = subItem['g_k_4_r_9_pharmaceutical_dose_form']['g_k_4_r_9_1_pharmaceutical_dose_form'];
+					dosagesData['G_k_4_r_9_2a_PharmaceuticalDoseFormTermIDVersion'] = subItem['g_k_4_r_9_pharmaceutical_dose_form']['g_k_4_r_9_2a_pharmaceutical_dose_form_termid_version'];
+					dosagesData['G_k_4_r_9_2b_PharmaceuticalDoseFormTermID'] = subItem['g_k_4_r_9_pharmaceutical_dose_form']['g_k_4_r_9_2b_pharmaceutical_dose_form_termid'];
 
-					dosagesData['G_k_4_r_10_1_RouteAdministration'] = subItem['G_k_4_r_10_RouteAdministration']['G_k_4_r_10_1_RouteAdministration'];
-					dosagesData['G_k_4_r_10_2a_RouteAdministrationTermIDVersion'] = subItem['G_k_4_r_10_RouteAdministration']['G_k_4_r_10_2a_RouteAdministrationTermIDVersion'];
-					dosagesData['G_k_4_r_10_2b_RouteAdministrationTermID'] = subItem['G_k_4_r_10_RouteAdministration']['G_k_4_r_10_2b_RouteAdministrationTermID'];
+					dosagesData['G_k_4_r_10_1_RouteAdministration'] = subItem['g_k_4_r_10_route_administration']['g_k_4_r_10_1_route_administration'];
+					dosagesData['G_k_4_r_10_2a_RouteAdministrationTermIDVersion'] = subItem['g_k_4_r_10_route_administration']['g_k_4_r_10_2a_route_administration_termid_version'];
+					dosagesData['G_k_4_r_10_2b_RouteAdministrationTermID'] = subItem['g_k_4_r_10_route_administration']['g_k_4_r_10_2b_route_administration_termid'];
 
-					dosagesData['G_k_4_r_11_1_ParentRouteAdministration'] = subItem['G_k_4_r_11_ParentRouteAdministration']['G_k_4_r_11_1_ParentRouteAdministration'];
-					dosagesData['G_k_4_r_11_2a_ParentRouteAdministrationTermIDVersion'] = subItem['G_k_4_r_11_ParentRouteAdministration']['G_k_4_r_11_2a_ParentRouteAdministrationTermIDVersion'];
-					dosagesData['G_k_4_r_11_2b_ParentRouteAdministrationTermID'] = subItem['G_k_4_r_11_ParentRouteAdministration']['G_k_4_r_11_2b_ParentRouteAdministrationTermID'];
-
+					dosagesData['G_k_4_r_11_1_ParentRouteAdministration'] = subItem['g_k_4_r_11_parent_route_administration']['g_k_4_r_11_1_parent_route_administration'];
+					dosagesData['G_k_4_r_11_2a_ParentRouteAdministrationTermIDVersion'] = subItem['g_k_4_r_11_parent_route_administration']['g_k_4_r_11_2a_parent_route_administration_termid_version'];
+					dosagesData['G_k_4_r_11_2b_ParentRouteAdministrationTermID'] = subItem['g_k_4_r_11_parent_route_administration']['g_k_4_r_11_2b_parent_route_administration_termid'];
 
 					dosagesArray.push(dosagesData);
 				});
-				dosages[index] = dosagesArray;
+			}
+			dosages[index] = dosagesArray;
 
-				let indicationsArray = [];
-				Object.values(item['G_k_7_r_IndicationUseCase']).forEach((subItem, subIndex) => {
+			let indicationsArray = [];
+			if (item['g_k_7_r_indication_use_case']) {
+				Object.values(item['g_k_7_r_indication_use_case']).forEach((subItem, subIndex) => {
 					let indicationsData = new IndicationForUse();
-					indicationsData['G_k_7_r_1_IndicationPrimarySource'] = subItem['G_k_7_r_1_IndicationPrimarySource'];
-					indicationsData['G_k_7_r_2a_MedDRAVersionIndication'] = subItem['G_k_7_r_2_IndicationMedDRACode']['G_k_7_r_2a_MedDRAVersionIndication'];
-					indicationsData['G_k_7_r_2b_IndicationMedDRACode'] = subItem['G_k_7_r_2_IndicationMedDRACode']['G_k_7_r_2b_IndicationMedDRACode'];
+					indicationsData['G_k_7_r_1_IndicationPrimarySource'] = subItem['g_k_7_r_1_indication_primary_source'];
+					indicationsData['G_k_7_r_2a_MedDRAVersionIndication'] = subItem['g_k_7_r_2_indication_meddra_code']['g_k_7_r_2a_meddra_version_indication'];
+					indicationsData['G_k_7_r_2b_IndicationMedDRACode'] = subItem['g_k_7_r_2_indication_meddra_code']['g_k_7_r_2b_indication_meddra_code'];
 					indicationsArray.push(indicationsData);
 				});
-				indications[index] = indicationsArray;
+			}
+			indications[index] = indicationsArray;
 
 
- 				let drugReactionMatrixArray = [];
-				let relatednessInMatrix = {};
-				Object.values(item['G_k_9_i_DrugReactionMatrix']).forEach((subItem, subIndex) => {
+			let drugReactionMatrixArray = [];
+			let relatednessInMatrix = {};
+			if (item['g_k_9_i_drug_reaction_matrix']) {
+				Object.values(item['g_k_9_i_drug_reaction_matrix']).forEach((subItem, subIndex) => {
 					let reactionsMatrixData = new DrugReactionMatrix();
-					reactionsMatrixData['G_k_9_i_3_1a_IntervalDrugAdministrationReactionNum'] = subItem['G_k_9_i_3_IntervalDrugAdministrationReaction']['G_k_9_i_3_1a_IntervalDrugAdministrationReactionNum'];
-					reactionsMatrixData['G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit'] = subItem['G_k_9_i_3_IntervalDrugAdministrationReaction']['G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit'];
-					reactionsMatrixData['G_k_9_i_3_2a_IntervalLastDoseDrugReactionNum'] = subItem['G_k_9_i_3_2a_IntervalLastDoseDrugReactionNum'];
-					reactionsMatrixData['G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit'] = subItem['G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit'];
-					reactionsMatrixData['G_k_9_i_4_ReactionRecurReadministration'] = subItem['G_k_9_i_4_ReactionRecurReadministration'];
+					reactionsMatrixData['G_k_9_i_3_1a_IntervalDrugAdministrationReactionNum'] = subItem['g_k_9_i_3_interval_drug_administration_reaction']['g_k_9_i_3_1a_interval_drug_administration_reaction_num'];
+					reactionsMatrixData['G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit'] = subItem['g_k_9_i_3_interval_drug_administration_reaction']['g_k_9_i_3_1b_interval_drug_administration_reaction_unit'];
+					reactionsMatrixData['G_k_9_i_3_2a_IntervalLastDoseDrugReactionNum'] = subItem['g_k_9_i_3_interval_drug_administration_reaction']['g_k_9_i_3_2a_interval_last_dose_drug_reaction_num'];
+					reactionsMatrixData['G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit'] = subItem['g_k_9_i_3_interval_drug_administration_reaction']['g_k_9_i_3_2b_interval_last_dose_drug_reaction_unit'];
+					reactionsMatrixData['G_k_9_i_4_ReactionRecurReadministration'] = subItem['g_k_9_i_4_reaction_recur_readministration'];
 					drugReactionMatrixArray.push(reactionsMatrixData);
 
 					let relatednessArray = [];
-					Object.values(subItem['G_k_9_i_2_AssessmentRelatednessDrugReaction']).forEach((subSubItem, subSubIndex) => {
-						let relatednessData = new Relatedness();
-						relatednessData['G_k_9_i_2_r_1_SourceAssessment'] = subItem['G_k_9_i_2_r_AssessmentRelatednessDrugReaction']['G_k_9_i_2_r_1_SourceAssessment'];
-						relatednessData['G_k_9_i_2_r_2_MethodAssessment'] = subItem['G_k_9_i_2_r_AssessmentRelatednessDrugReaction']['G_k_9_i_2_r_2_MethodAssessment'];
-						relatednessData['G_k_9_i_2_r_3_ResultAssessment'] = subItem['G_k_9_i_2_r_AssessmentRelatednessDrugReaction']['G_k_9_i_2_r_3_ResultAssessment'];
-						relatednessArray.push(relatednessData);
-					});
+					if (subItem['g_k_9_i_2_assessment_relatedness_drug_reaction']) {
+						Object.values(subItem['g_k_9_i_2_assessment_relatedness_drug_reaction']).forEach((subSubItem, subSubIndex) => {
+							let relatednessData = new Relatedness();
+							relatednessData['G_k_9_i_2_r_1_SourceAssessment'] = subItem['g_k_9_i_2_r_assessment_relatedness_drug_reaction']['g_k_9_i_2_r_1_source_assessment'];
+							relatednessData['G_k_9_i_2_r_2_MethodAssessment'] = subItem['g_k_9_i_2_r_assessment_relatedness_drug_reaction']['g_k_9_i_2_r_2_method_assessment'];
+							relatednessData['G_k_9_i_2_r_3_ResultAssessment'] = subItem['g_k_9_i_2_r_assessment_relatedness_drug_reaction']['g_k_9_i_2_r_3_result_assessment'];
+							relatednessArray.push(relatednessData);
+						});
+					}
 					relatednessInMatrix[subIndex] = relatednessArray;
 				});
-				drugReactionMatrix[index] = drugReactionMatrixArray
-				relatedness[index] = relatednessInMatrix;
+			}
+			drugReactionMatrix[index] = drugReactionMatrixArray
+			relatedness[index] = relatednessInMatrix;
 
-				let additionalInfoArray = [];
-				Object.values(item['G_k_10_r_AdditionalInformationDrug']).forEach((subItem, subIndex) => {
+			let additionalInfoArray = [];
+			if (item['g_k_10_r_additional_information_drug']) {
+				Object.values(item['g_k_10_r_additional_information_drug']).forEach((subItem, subIndex) => {
 					let additionalInfoData = new IndicationForUse();
 					additionalInfoData['G_k_10_r_AdditionalInformationDrug'] = subItem;
 					additionalInfoArray.push(additionalInfoData);
 				});
-				additionalInfo[index] = additionalInfoArray;
-			});
+			}
+			additionalInfo[index] = additionalInfoArray;
+		});
+	}
 
-			dispatch(setDrugs(drugs));
-			dispatch(setSubstances(substances));
-			dispatch(setDosages(dosages));
-			dispatch(setIndications(indications));
-			dispatch(setDrugReactionMatrix(drugReactionMatrix));
-			dispatch(setRelatedness(relatedness));
-			dispatch(setAdditionalInfo(additionalInfo));
-		}
+	return [drugs, substances, dosages, indications, drugReactionMatrix, relatedness, additionalInfo];
 }
 
 
@@ -321,7 +328,19 @@ const drugsSlice = createSlice({
 		setAdditionalInfo: (state, action) => {
 			state.additionalInfo = action.payload;
 		},	
-	}
+	},
+	extraReducers: (builder) => {
+        builder.addCase(getData.fulfilled, (state, action) => {
+            let res = parseDrug(action.payload);
+			state.drugs = res[0];
+			state.substances = res[1];
+			state.dosages = res[2];
+			state.indications = res[3];
+			state.drugReactionMatrix = res[4];
+			state.relatedness = res[5];
+			state.additionalInfo = res[6];
+        });
+    },
 })
 
 export default drugsSlice.reducer;

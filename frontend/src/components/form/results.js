@@ -1,7 +1,7 @@
 
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import {Stack, FormControlLabel, Card, CardContent, IconButton, Box, Select, MenuItem, FormControl, InputLabel} from '@mui/material';
+import {Stack, FormControlLabel, Card, CardContent, IconButton, Box, Select, MenuItem, FormControl, InputLabel, InputAdornment, OutlinedInput} from '@mui/material';
 import { resultsSelector, setResultsData } from '@src/features/results/slice';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -35,6 +35,23 @@ export const Results = () => {
         }
         dispatch(setResultsData(resultsDataCopy));
     };
+
+    // const handleChangeDate = (fieldName, index) => (newValue) => {
+    //     console.log(event);
+    //     let resultsDataCopy = JSON.parse(JSON.stringify(resultsData));
+    //     // resultsDataCopy[index][fieldName].value = moment(newValue).format("YYYY-MM-DD HH:mm:ss");
+
+    //     // newValue = new Date(newValue);
+    //     // var month = newValue.getMonth() + 1;
+    //     // var day = newValue.getDate();
+    //     // var year = newValue.getFullYear();
+    //     // var time =  newValue.getHours() + ":" + newValue.getMinutes() + ":" + newValue.getSeconds();
+    //     // resultsDataCopy[index][fieldName].value =  day + "." + month + "." + year + ", " + time ;
+
+    //     resultsDataCopy[index][fieldName].value = moment(newValue).format("YYYY-MM-DD HH:mm:ss");
+
+    //     dispatch(setResultsData(resultsDataCopy));
+    // };
 
     const setNullFlavor = (fieldName, index) => (event) => {
         let resultsDataCopy = JSON.parse(JSON.stringify(resultsData));
@@ -81,15 +98,23 @@ export const Results = () => {
                                     label="No Date Info"/>
                                 </Box>
                                 {resultsData[index]['F_r_1_TestDate']['nullFlavor'] === null ? 
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                            <DateTimePicker
-                                                value = {item['F_r_1_TestDate'].value}
-                                                renderInput={(props) => <TextField sx={{ width: '25%' }} {...props} />}
-                                                label="Test Date"
-                                                inputFormat="yyyy-MM-dd hh:mm:ss"
-                                                onChange={handleChange('F_r_1_TestDate', index)}
-                                                />
-                                    </LocalizationProvider> : null}
+                                    // <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    //         <DateTimePicker
+                                    //             renderInput={(props) => <TextField 
+                                    //                 sx={{ width: '25%' }} {...props} />}
+                                    //             label="Test Date"
+                                    //             value = {item['F_r_1_TestDate'].value}
+                                    //             inputFormat="YYYY/MM/DD hh:mm:ss"                                                // views={['year', 'month', 'day', 'hours', 'minutes', 'seconds']}
+                                    //             onChange={handleChangeDate('F_r_1_TestDate', index)}
+                                    //             />
+                                    // </LocalizationProvider> 
+                                    <TextField sx={{ width: '25%' }}
+                                        label="Test Date"
+                                        variant="outlined"
+                                        value = {item['F_r_1_TestDate'].value}
+                                        onChange={handleChange('F_r_1_TestDate', index)}
+                                        />
+                                    : null}
                             </Stack>
 
                             <Stack direction="row" spacing={2} justifyContent="flex-start">                              
