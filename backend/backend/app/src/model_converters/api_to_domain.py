@@ -9,16 +9,23 @@ from app.src.shared.enums import NullFlavor
 
 
 API_TO_DOMAIN_MODEL_CLASS_MAP = {
-    api_models.ICSR:
-        domain_models.ICSR,
-    api_models.C_1_identification_case_safety_report:
-        domain_models.C_1_identification_case_safety_report,
-    api_models.C_1_6_1_r_documents_held_sender:
-        domain_models.C_1_6_1_r_documents_held_sender,
-    api_models.C_1_9_1_r_source_case_id:
-        domain_models.C_1_9_1_r_source_case_id,
-    api_models.C_1_10_r_identification_number_report_linked:
-        domain_models.C_1_10_r_identification_number_report_linked
+    api_models.ICSR: domain_models.ICSR,
+    api_models.C_1_identification_case_safety_report: domain_models.C_1_identification_case_safety_report,
+    api_models.C_1_6_1_r_documents_held_sender: domain_models.C_1_6_1_r_documents_held_sender,
+    api_models.C_1_9_1_r_source_case_id: domain_models.C_1_9_1_r_source_case_id,
+    api_models.C_1_10_r_identification_number_report_linked: domain_models.C_1_10_r_identification_number_report_linked,
+    api_models.C_2_r_primary_source_information: domain_models.C_2_r_primary_source_information,
+    api_models.C_3_information_sender_case_safety_report: domain_models.C_3_information_sender_case_safety_report,
+    api_models.C_4_r_literature_reference: domain_models.C_4_r_literature_reference,
+    api_models.C_5_study_identification: domain_models.C_5_study_identification,
+    api_models.C_5_1_r_study_registration: domain_models.C_5_1_r_study_registration,
+    api_models.D_patient_characteristics: domain_models.D_patient_characteristics,
+    api_models.D_7_1_r_structured_information_medical_history: domain_models.D_7_1_r_structured_information_medical_history,
+    api_models.D_8_r_past_drug_history: domain_models.D_8_r_past_drug_history,
+    api_models.D_9_2_r_cause_death: domain_models.D_9_2_r_cause_death,
+    api_models.D_9_4_r_autopsy_determined_cause_death: domain_models.D_9_4_r_autopsy_determined_cause_death,
+    api_models.D_10_7_1_r_structured_information_parent_meddra_code: domain_models.D_10_7_1_r_structured_information_parent_meddra_code,
+    api_models.D_10_8_r_past_drug_history_parent: domain_models.D_10_8_r_past_drug_history_parent,
 }
 
 

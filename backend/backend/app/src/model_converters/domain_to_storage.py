@@ -9,20 +9,27 @@ from app.src.layers.storage import models as storage_models
 from app.src.layers.storage.models import StorageModel, null_flavor_field_utils
 from app.src.model_converters.base import ModelConverter
 from app.src.shared.enums import NullFlavor
-from extensions.django.models import temp_relation_field_utils
+from extensions.django.fields import temp_relation_field_utils
 
 
 DOMAIN_TO_STORAGE_MODEL_CLASS_MAP = {
-    domain_models.ICSR:
-        storage_models.ICSR,
-    domain_models.C_1_identification_case_safety_report:
-        storage_models.C_1_identification_case_safety_report,
-    domain_models.C_1_6_1_r_documents_held_sender:
-        storage_models.C_1_6_1_r_documents_held_sender,
-    domain_models.C_1_9_1_r_source_case_id:
-        storage_models.C_1_9_1_r_source_case_id,
-    domain_models.C_1_10_r_identification_number_report_linked:
-        storage_models.C_1_10_r_identification_number_report_linked
+    domain_models.ICSR: storage_models.ICSR,
+    domain_models.C_1_identification_case_safety_report: storage_models.C_1_identification_case_safety_report,
+    domain_models.C_1_6_1_r_documents_held_sender: storage_models.C_1_6_1_r_documents_held_sender,
+    domain_models.C_1_9_1_r_source_case_id: storage_models.C_1_9_1_r_source_case_id,
+    domain_models.C_1_10_r_identification_number_report_linked: storage_models.C_1_10_r_identification_number_report_linked,
+    domain_models.C_2_r_primary_source_information: storage_models.C_2_r_primary_source_information,
+    domain_models.C_3_information_sender_case_safety_report: storage_models.C_3_information_sender_case_safety_report,
+    domain_models.C_4_r_literature_reference: storage_models.C_4_r_literature_reference,
+    domain_models.C_5_study_identification: storage_models.C_5_study_identification,
+    domain_models.C_5_1_r_study_registration: storage_models.C_5_1_r_study_registration,
+    domain_models.D_patient_characteristics: storage_models.D_patient_characteristics,
+    domain_models.D_7_1_r_structured_information_medical_history: storage_models.D_7_1_r_structured_information_medical_history,
+    domain_models.D_8_r_past_drug_history: storage_models.D_8_r_past_drug_history,
+    domain_models.D_9_2_r_cause_death: storage_models.D_9_2_r_cause_death,
+    domain_models.D_9_4_r_autopsy_determined_cause_death: storage_models.D_9_4_r_autopsy_determined_cause_death,
+    domain_models.D_10_7_1_r_structured_information_parent_meddra_code: storage_models.D_10_7_1_r_structured_information_parent_meddra_code,
+    domain_models.D_10_8_r_past_drug_history_parent: storage_models.D_10_8_r_past_drug_history_parent,
 }
 
 
