@@ -85,6 +85,7 @@ export const PrimarySourceComp = () => {
                                         onChange={handleChange('C_2_r_1_1_ReporterTitle', index)}
                                         value = {item['C_2_r_1_1_ReporterTitle'].value}
                                         sx={{ width: '100%' }}
+                                        inputProps={{ maxLength: 50}}
                                         multiline
                                         rows={2}/>
                                 : <FormControl sx={{ width: '100%' }}>
@@ -120,6 +121,7 @@ export const PrimarySourceComp = () => {
                                         value = {item['C_2_r_1_2_ReporterGivenName'].value}
                                         sx={{ width: '100%' }}
                                         multiline
+                                        inputProps={{ maxLength: 60}}
                                         rows={2}/>
                                 : <FormControl sx={{ width: '100%' }}>
                                     <InputLabel>Null Flavor</InputLabel>
@@ -152,6 +154,7 @@ export const PrimarySourceComp = () => {
                                         onChange={handleChange('C_2_r_1_3_ReporterMiddleName', index)}
                                         value = {item['C_2_r_1_3_ReporterMiddleName'].value}
                                         sx={{ width: '100%' }}
+                                        inputProps={{ maxLength: 60}}
                                         multiline
                                         rows={2}/>
                                 : <FormControl sx={{ width: '100%' }}>
@@ -185,6 +188,7 @@ export const PrimarySourceComp = () => {
                                         onChange={handleChange('C_2_r_1_4_ReporterFamilyName', index)}
                                         value = {item['C_2_r_1_4_ReporterFamilyName'].value}
                                         sx={{ width: '100%' }}
+                                        inputProps={{ maxLength: 60}}
                                         multiline
                                         rows={2}/>
                                 : <FormControl sx={{ width: '100%' }}>
@@ -219,6 +223,7 @@ export const PrimarySourceComp = () => {
                                         value = {item['C_2_r_2_1_ReporterOrganisation'].value}
                                         sx={{ width: '100%' }}
                                         multiline
+                                        inputProps={{ maxLength: 60}}
                                         rows={2}/>
                                 : <FormControl sx={{ width: '100%' }}>
                                     <InputLabel>Null Flavor</InputLabel>
@@ -252,6 +257,7 @@ export const PrimarySourceComp = () => {
                                         onChange={handleChange('C_2_r_2_2_ReporterDepartment', index)}
                                         value = {item['C_2_r_2_2_ReporterDepartment'].value}
                                         sx={{ width: '100%' }}
+                                        inputProps={{ maxLength: 60}}
                                         multiline
                                         rows={2}/>
                                 : <FormControl sx={{ width: '100%' }}>
@@ -286,6 +292,7 @@ export const PrimarySourceComp = () => {
                                         value = {item['C_2_r_2_3_ReporterStreet'].value}
                                         sx={{ width: '100%' }}
                                         multiline
+                                        inputProps={{ maxLength: 100}}
                                         rows={2}/>
                                 : <FormControl sx={{ width: '100%' }}>
                                     <InputLabel>Null Flavor</InputLabel>
@@ -319,6 +326,7 @@ export const PrimarySourceComp = () => {
                                         value = {item['C_2_r_2_4_ReporterCity'].value}
                                         sx={{ width: '100%' }}
                                         multiline
+                                        inputProps={{ maxLength: 35}}
                                         rows={2}/>
                                 : <FormControl sx={{ width: '100%' }}>
                                     <InputLabel>Null Flavor</InputLabel>
@@ -352,6 +360,7 @@ export const PrimarySourceComp = () => {
                                         value = {item['C_2_r_2_5_ReporterStateProvince'].value}
                                         sx={{ width: '100%' }}
                                         multiline
+                                        inputProps={{ maxLength: 40}}
                                         rows={2}/>
                                 : <FormControl sx={{ width: '100%' }}>
                                     <InputLabel>Null Flavor</InputLabel>
@@ -384,6 +393,7 @@ export const PrimarySourceComp = () => {
                                         onChange={handleChange('C_2_r_2_7_ReporterTelephone', index)}
                                         value = {item['C_2_r_2_7_ReporterTelephone'].value}
                                         sx={{ width: '100%' }}
+                                        inputProps={{ maxLength: 33}}
                                         multiline
                                         rows={2}/>
                                 : <FormControl sx={{ width: '100%' }}>
@@ -418,6 +428,7 @@ export const PrimarySourceComp = () => {
                                         onChange={handleChange('C_2_r_2_6_ReporterPostcode', index)}
                                         value = {item['C_2_r_2_6_ReporterPostcode'].value}
                                         sx={{ width: '100%' }}
+                                        inputProps={{ maxLength: 15}}
                                         multiline
                                         rows={2}/>
                                 : <FormControl sx={{ width: '100%' }}>
@@ -437,7 +448,8 @@ export const PrimarySourceComp = () => {
 
                             <TextField label="Reporter’s Country Code" variant="outlined"
                                 onChange={handleChange('C_2_r_3_ReporterCountryCode', index)}
-                                value = {item['C_2_r_3_ReporterCountryCode'].value}/>
+                                value = {item['C_2_r_3_ReporterCountryCode'].value}
+                                inputProps={{ maxLength: 2}}/>
 
                             <Stack direction="row" flexItem spacing={2}>
                                 <Box className="text-small" style={{ padding: 0 }}>

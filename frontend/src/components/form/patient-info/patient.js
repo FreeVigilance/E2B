@@ -62,6 +62,7 @@ export const Patient = () => {
                     {patientData['D_1_Patient']['nullFlavor'] !== -1 ? 
                         <TextField label="Patient Name" variant="outlined"
                         sx={{ width: '80%' }}
+                        inputProps={{ maxLength: 60}}
                         onChange={handleChange('D_1_Patient')}
                         value = {patientData['D_1_Patient'].value}/>
                     :   
@@ -92,6 +93,7 @@ export const Patient = () => {
                         {patientData['D_1_1_1_MedicalRecordNumberSourceGP']['nullFlavor'] !== -1 ? 
                             <TextField label="GP Medical Record Number" variant="outlined"
                             sx={{ width: '80%' }}
+                            inputProps={{ maxLength: 20}}
                             onChange={handleChange('D_1_1_1_MedicalRecordNumberSourceGP')}
                             value = {patientData['D_1_1_1_MedicalRecordNumberSourceGP'].value}/>
                         : <FormLabel>No GP Medical Record Number</FormLabel>}
@@ -111,6 +113,7 @@ export const Patient = () => {
                         {patientData['D_1_1_2_MedicalRecordNumberSourceSpecialist']['nullFlavor'] !== -1 ? 
                             <TextField label="Specialist Record Number" variant="outlined"
                             sx={{ width: '80%' }}
+                            inputProps={{ maxLength: 20}}
                             onChange={handleChange('D_1_1_2_MedicalRecordNumberSourceSpecialist')}
                             value = {patientData['D_1_1_2_MedicalRecordNumberSourceSpecialist'].value}/>
                         : <FormLabel>No Specialist Record Number</FormLabel>}
@@ -130,6 +133,7 @@ export const Patient = () => {
                         {patientData['D_1_1_3_MedicalRecordNumberSourceHospital']['nullFlavor'] !== -1 ? 
                             <TextField label="Hospital Record Number" variant="outlined"
                             sx={{ width: '80%' }}
+                            inputProps={{ maxLength: 20}}
                             onChange={handleChange('D_1_1_3_MedicalRecordNumberSourceHospital')}
                             value = {patientData['D_1_1_3_MedicalRecordNumberSourceHospital'].value}/>
                         : <FormLabel>No Hospital Record Number</FormLabel>}
@@ -149,6 +153,7 @@ export const Patient = () => {
                         {patientData['D_1_1_4_MedicalRecordNumberSourceInvestigation']['nullFlavor'] !== -1 ? 
                             <TextField label="Investigation Number" variant="outlined"
                             sx={{ width: '80%' }}
+                            inputProps={{ maxLength: 20}}
                             onChange={handleChange('D_1_1_4_MedicalRecordNumberSourceInvestigation')}
                             value = {patientData['D_1_1_4_MedicalRecordNumberSourceInvestigation'].value}/>
                         : <FormLabel>No Investigation Number</FormLabel>}
@@ -166,14 +171,12 @@ export const Patient = () => {
                                 label="No Info"/>
                         </Box>
                         {patientData['D_2_1_DateBirth']['nullFlavor'] !== -1 ? 
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DateTimePicker
-                                    value = {patientData['D_2_1_DateBirth'].value}
-                                    renderInput={(props) => <TextField sx={{ width: '80%' }} {...props} />}
-                                    label="Date of Birth"
-                                    onChange={handleChange('D_2_1_DateBirth')}
-                                />
-                            </LocalizationProvider>
+                            <TextField sx={{ width: '80%' }}
+                            label="Test Date"
+                            variant="outlined"
+                            value = {patientData['D_2_1_DateBirth'].value}
+                            onChange={handleChange('D_2_1_DateBirth')}
+                            />
                         : <FormLabel>No Date of Birth</FormLabel>}
                 </Stack>
                 <FormControlLabel
@@ -189,21 +192,35 @@ export const Patient = () => {
             <Grid container item xs direction="column" rowGap={1} style={{width: "40px"}}>
                 <TextField label="Age at Time of Reaction (number)" variant="outlined"
                     sx={{ width: '100%' }}
+                    inputProps={{ maxLength: 5}}
+                    type='number'
+                    onKeyDown={(evt) =>
+                        (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                        evt.preventDefault()
+                    }
                     onChange={handleChange('D_2_2a_AgeOnsetReactionNum')}
                     value = {patientData['D_2_2a_AgeOnsetReactionNum'].value}/>
 
                 <TextField label="Age at Time of Reaction (unit)" variant="outlined"
                     sx={{ width: '100%' }}
+                    inputProps={{ maxLength: 50}}
                     onChange={handleChange('D_2_2b_AgeOnsetReactionUnit')}
                     value = {patientData['D_2_2b_AgeOnsetReactionUnit'].value}/>
 
                 <TextField label="Gestation Period (number)" variant="outlined"
                     sx={{ width: '100%' }}
+                    inputProps={{ maxLength: 3}}
+                    type='number'
+                    onKeyDown={(evt) =>
+                        (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                        evt.preventDefault()
+                    }
                     onChange={handleChange('D_2_2_1a_GestationPeriodReactionFoetusNum')}
                     value = {patientData['D_2_2_1a_GestationPeriodReactionFoetusNum'].value}/>
 
                 <TextField label="Gestation Period (unit)" variant="outlined"
                     sx={{ width: '100%' }}
+                    inputProps={{ maxLength: 50}}
                     onChange={handleChange('D_2_2_1b_GestationPeriodReactionFoetusUnit')}
                     value = {patientData['D_2_2_1b_GestationPeriodReactionFoetusUnit'].value}/>
 
@@ -227,11 +244,23 @@ export const Patient = () => {
 
                 <TextField label="Body Weight" variant="outlined"
                     sx={{ width: '100%' }}
+                    inputProps={{ maxLength: 6}}
+                    type='number'
+                    onKeyDown={(evt) =>
+                        (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === ",") &&
+                        evt.preventDefault()
+                    }
                     onChange={handleChange('D_3_BodyWeight')}
                     value = {patientData['D_3_BodyWeight'].value}/>
 
                 <TextField label="Height" variant="outlined"
                     sx={{ width: '100%' }}
+                    inputProps={{ maxLength: 3}}
+                    type='number'
+                    onKeyDown={(evt) =>
+                        (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === ",") &&
+                        evt.preventDefault()
+                    }
                     onChange={handleChange('D_4_Height')}
                     value = {patientData['D_4_Height'].value}/>
             </Grid>
@@ -321,6 +350,7 @@ export const Patient = () => {
                                 value = {patientData['D_7_2_TextMedicalHistory'].value}
                                 onChange={handleChange('D_7_2_TextMedicalHistory')}
                                 multiline
+                                inputProps={{ maxLength: 10000}}
                                 rows={5}/>
                         :   <FormControl sx={{ width: '80%' }}>
                             <InputLabel>Null Flavor</InputLabel>

@@ -55,7 +55,7 @@ export const Save = () => {
 
     return(
         <IconButton color = 'primary'
-				sx={{ position: "fixed", top: 10, right: 30, zIndex: 10000 }}
+				sx={{ position: "fixed", top: 10, right: 30 }}
                 onClick = {save}>
 					<SaveIcon sx={{fontSize: 40}}></SaveIcon>
 			</IconButton>

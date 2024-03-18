@@ -52,6 +52,7 @@ export const IdentificationComp = () => {
                         onChange={handleChange('C_1_1_SenderSafetyReportUniqueId')}
                         value = {identification.C_1_1_SenderSafetyReportUniqueId.value}
                         multiline
+                        inputProps={{ maxLength: 100}}
                         rows={2}/>
 
                     <TextField label="Worldwide Unique Case Identification Number" variant="outlined"
@@ -59,6 +60,7 @@ export const IdentificationComp = () => {
                         onChange={handleChange('C_1_8_1_WorldwideUniqueCaseIdentificationNumber')}
                         value = {identification.C_1_8_1_WorldwideUniqueCaseIdentificationNumber.value}
                         multiline
+                        inputProps={{ maxLength: 100}}
                         rows={2}/>
 
                 </Stack>
@@ -172,6 +174,7 @@ export const IdentificationComp = () => {
                     onChange={handleChange('C_1_11_2_ReasonNullificationAmendment')}
                     value = {identification.C_1_11_2_ReasonNullificationAmendment.value}
                     multiline
+                    inputProps={{ maxLength: 2000}}
                     rows={5}/>
             </Stack>
 

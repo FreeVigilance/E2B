@@ -51,18 +51,32 @@ export const DrugReactionsMatrix = ({drugIndex}) => {
                                             
                                             <TextField label="Time Interval Beginning of Drug Administration and Start of Reaction" variant="outlined"
                                                         onChange={handleChange('G_k_9_i_3_1a_IntervalDrugAdministrationReactionNum', index)}
+                                                        inputProps={{ maxLength: 5}}
+                                                        type='number'
+                                                        onKeyDown={(evt) =>
+                                                            (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                                            evt.preventDefault()
+                                                        }
                                                         value = {item['G_k_9_i_3_1a_IntervalDrugAdministrationReactionNum'].value}/>
 
                                             <TextField label="(unit) Time Interval Beginning of Drug Administration and Start of Reaction" variant="outlined"
                                                         onChange={handleChange('G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit', index)}
+                                                        inputProps={{ maxLength: 50}}
                                                         value = {item['G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit'].value}/>
                                             
                                             <TextField label="Time Interval Last Dose of Drug and Start of Reaction / Event" variant="outlined"
                                                         onChange={handleChange('G_k_9_i_3_2a_IntervalLastDoseDrugReactionNum', index)}
+                                                        inputProps={{ maxLength: 5}}
+                                                        type='number'
+                                                        onKeyDown={(evt) =>
+                                                            (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                                            evt.preventDefault()
+                                                        }
                                                         value = {item['G_k_9_i_3_2a_IntervalLastDoseDrugReactionNum'].value}/>
                                             
                                             <TextField label="(unit) Time Interval Last Dose of Drug and Start of Reaction / Event" variant="outlined"
                                                         onChange={handleChange('G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit', index)}
+                                                        inputProps={{ maxLength: 50}}
                                                         value = {item['G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit'].value}/>
 
                                             <FormControl>

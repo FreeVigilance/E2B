@@ -68,6 +68,17 @@ const displaySlice = createSlice({
             console.log(action.payload);
             state.currentSaved = 2;
         });
+        builder.addCase(changeData.fulfilled, (state, action) => {
+            console.log('save');
+            console.log(action.payload);
+            state.currentId = action.payload.id;
+            state.currentSaved = 1;
+        });
+        builder.addCase(changeData.rejected, (state, action) => {
+            console.log('save');
+            console.log(action.payload);
+            state.currentSaved = 2;
+        });
     },
 });
 

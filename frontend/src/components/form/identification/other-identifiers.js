@@ -46,12 +46,14 @@ export const OtherIdentifiersComp = () => {
                                 onChange={handleChange('C_1_9_1_r_1_SourceCaseId', index)}
                                 value = {item['C_1_9_1_r_1_SourceCaseId'].value}
                                 multiline
+                                inputProps={{ maxLength: 100}}
                                 rows={5}/>
                             <TextField label="Case Identifier(s)" variant="outlined"
                                 sx={{ width: '100%' }}
                                 onChange={handleChange('C_1_9_1_r_2_CaseId', index)}
                                 value = {item['C_1_9_1_r_2_CaseId'].value}
                                 multiline
+                                inputProps={{ maxLength: 100}}
                                 rows={5}/>
                             <Stack direction="row" justifyContent="flex-start">
                                 <span>

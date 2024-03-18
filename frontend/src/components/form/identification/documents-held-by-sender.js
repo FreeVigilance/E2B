@@ -47,6 +47,7 @@ export const DocumentsHeldBySenderComp = () => {
                                 onChange={handleChange('C_1_6_1_r_1_DocumentsHeldSender', index)}
                                 value = {item['C_1_6_1_r_1_DocumentsHeldSender'].value}
                                 multiline
+                                inputProps={{ maxLength: 2000}}
                                 rows={5}/>
                             <Stack direction="row" justifyContent="flex-start">
                                 <span>

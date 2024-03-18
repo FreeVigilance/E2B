@@ -59,6 +59,7 @@ export const ParentChild = () => {
                         {parentChildData['D_10_1_ParentIdentification']['nullFlavor'] === null ? 
                             <TextField label="Parent Identification" variant="outlined"
                             sx={{ width: '80%' }}
+                            inputProps={{ maxLength: 60}}
                             onChange={handleChange('D_10_1_ParentIdentification')}
                             value = {parentChildData['D_10_1_ParentIdentification'].value}/>
                         :   
@@ -180,20 +181,39 @@ export const ParentChild = () => {
                     <TextField label="Age of Parent" variant="outlined"
                         sx={{ width: '100%' }}
                         onChange={handleChange('D_10_2_2a_AgeParentNum')}
+                        inputProps={{ maxLength: 3}}
+                        type='number'
+                        onKeyDown={(evt) =>
+                            (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                            evt.preventDefault()
+                        }
                         value = {parentChildData['D_10_2_2a_AgeParentNum'].value}/>
 
                     <TextField label="Age of Parent (unit)" variant="outlined"
                         sx={{ width: '100%' }}
+                        inputProps={{ maxLength: 50}}
                         onChange={handleChange('D_10_2_2b_AgeParentUnit')}
                         value = {parentChildData['D_10_2_2b_AgeParentUnit'].value}/>
 
                     <TextField label="Body Weight (kg) of Parent" variant="outlined"
                         sx={{ width: '100%' }}
+                        inputProps={{ maxLength: 6}}
+                        type='number'
+                        onKeyDown={(evt) =>
+                            (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === ",") &&
+                            evt.preventDefault()
+                        }
                         onChange={handleChange('D_10_4_BodyWeightParent')}
                         value = {parentChildData['D_10_4_BodyWeightParent'].value}/>
                     
                     <TextField label="Height (cm) of Parent" variant="outlined"
                         sx={{ width: '100%' }}
+                        inputProps={{ maxLength: 3}}
+                        type='number'
+                        onKeyDown={(evt) =>
+                            (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                            evt.preventDefault()
+                        }
                         onChange={handleChange('D_10_5_HeightParent')}
                         value = {parentChildData['D_10_5_HeightParent'].value}/>
                 </Grid>

@@ -36,23 +36,6 @@ export const Results = () => {
         dispatch(setResultsData(resultsDataCopy));
     };
 
-    // const handleChangeDate = (fieldName, index) => (newValue) => {
-    //     console.log(event);
-    //     let resultsDataCopy = JSON.parse(JSON.stringify(resultsData));
-    //     // resultsDataCopy[index][fieldName].value = moment(newValue).format("YYYY-MM-DD HH:mm:ss");
-
-    //     // newValue = new Date(newValue);
-    //     // var month = newValue.getMonth() + 1;
-    //     // var day = newValue.getDate();
-    //     // var year = newValue.getFullYear();
-    //     // var time =  newValue.getHours() + ":" + newValue.getMinutes() + ":" + newValue.getSeconds();
-    //     // resultsDataCopy[index][fieldName].value =  day + "." + month + "." + year + ", " + time ;
-
-    //     resultsDataCopy[index][fieldName].value = moment(newValue).format("YYYY-MM-DD HH:mm:ss");
-
-    //     dispatch(setResultsData(resultsDataCopy));
-    // };
-
     const setNullFlavor = (fieldName, index) => (event) => {
         let resultsDataCopy = JSON.parse(JSON.stringify(resultsData));
         resultsDataCopy[index][fieldName].nullFlavor = event.target.value;
@@ -98,16 +81,6 @@ export const Results = () => {
                                     label="No Date Info"/>
                                 </Box>
                                 {resultsData[index]['F_r_1_TestDate']['nullFlavor'] === null ? 
-                                    // <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    //         <DateTimePicker
-                                    //             renderInput={(props) => <TextField 
-                                    //                 sx={{ width: '25%' }} {...props} />}
-                                    //             label="Test Date"
-                                    //             value = {item['F_r_1_TestDate'].value}
-                                    //             inputFormat="YYYY/MM/DD hh:mm:ss"                                                // views={['year', 'month', 'day', 'hours', 'minutes', 'seconds']}
-                                    //             onChange={handleChangeDate('F_r_1_TestDate', index)}
-                                    //             />
-                                    // </LocalizationProvider> 
                                     <TextField sx={{ width: '25%' }}
                                         label="Test Date"
                                         variant="outlined"
@@ -121,15 +94,28 @@ export const Results = () => {
 
                                 <TextField label="Test Name" variant="outlined"
                                 onChange={handleChange('F_r_2_1_TestName', index)}
+                                inputProps={{ maxLength: 250 }}
                                 value = {item['F_r_2_1_TestName'].value}/>
 
                                 <TextField label="MedDRA Version for Test Name" variant="outlined"
                                 onChange={handleChange('F_r_2_2a_MedDRAVersionTestName', index)}
-                                value = {item['F_r_2_2a_MedDRAVersionTestName'].value}/>
+                                value = {item['F_r_2_2a_MedDRAVersionTestName'].value}
+                                inputProps={{ maxLength: 4}}
+                                type='number'
+                                onKeyDown={(evt) =>
+                                    (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === ",") &&
+                                    evt.preventDefault()
+                                }/>
 
                                 <TextField label="Test Name (MedDRA code)" variant="outlined"
                                 onChange={handleChange('F_r_2_2b_TestNameMedDRACode', index)}
-                                value = {item['F_r_2_2b_TestNameMedDRACode'].value}/>
+                                value = {item['F_r_2_2b_TestNameMedDRACode'].value}
+                                inputProps={{ maxLength: 8}}
+                                type='number'
+                                onKeyDown={(evt) =>
+                                    (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                    evt.preventDefault()
+                                }/>
 
                                 <FormControl sx={{ width: '15%' }}>
                                 <InputLabel>Test Result Code</InputLabel>
@@ -163,7 +149,13 @@ export const Results = () => {
                                 {resultsData[index]['F_r_3_2_TestResultValQual']['nullFlavor'] === null ? 
                                     <TextField label="Test Result (value/qualifier)" variant="outlined"
                                         onChange={handleChange('F_r_3_2_TestResultValQual', index)}
-                                        value = {item['F_r_3_2_TestResultValQual'].value}/>
+                                        value = {item['F_r_3_2_TestResultValQual'].value}
+                                        inputProps={{ maxLength: 50}}
+                                        type='number'
+                                        onKeyDown={(evt) =>
+                                            (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                            evt.preventDefault()
+                                        }/>
                                 : 
                                     <FormControl sx={{ width: '15%' }}>
                                     <InputLabel>Null Flavor</InputLabel>
@@ -183,15 +175,18 @@ export const Results = () => {
 
                                 <TextField label="Test Result (unit)" variant="outlined"
                                 onChange={handleChange('F_r_3_3_TestResultUnit', index)}
-                                value = {item['F_r_3_3_TestResultUnit'].value}/>
+                                value = {item['F_r_3_3_TestResultUnit'].value}
+                                inputProps={{ maxLength: 50}}/>
 
                                 <TextField label="Normal Low Value" variant="outlined"
                                 onChange={handleChange('F_r_4_NormalLowValue', index)}
-                                value = {item['F_r_4_NormalLowValue'].value}/>
+                                value = {item['F_r_4_NormalLowValue'].value}
+                                inputProps={{ maxLength: 50}}/>
                             
                                 <TextField label="Normal High Value" variant="outlined"
                                 onChange={handleChange('F_r_5_NormalHighValue', index)}
-                                value = {item['F_r_5_NormalHighValue'].value}/>
+                                value = {item['F_r_5_NormalHighValue'].value}
+                                inputProps={{ maxLength: 50}}/>
 
                                 <FormControlLabel 
                                     control={<Checkbox
@@ -204,12 +199,14 @@ export const Results = () => {
                                 value = {item['F_r_3_4_ResultUnstructuredData'].value}
                                 onChange={handleChange('F_r_3_4_ResultUnstructuredData', index)}
                                 multiline
+                                inputProps={{ maxLength: 2000}}
                                 rows={5}/>
 
                             <TextField label="Comments" variant="outlined"
                                 value = {item['F_r_6_Comments'].value}
                                 onChange={handleChange('F_r_6_Comments', index)}
                                 multiline
+                                inputProps={{ maxLength: 2000}}
                                 rows={5}/>
                         </Stack>
                         <span>

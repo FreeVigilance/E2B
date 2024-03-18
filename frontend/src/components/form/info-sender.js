@@ -47,6 +47,7 @@ export const InfoSenderComp = () => {
                                 onChange={handleChange('C_3_2_SenderOrganisation')}
                                 value = {infoSenderData['C_3_2_SenderOrganisation'].value}
                                 multiline
+                                inputProps={{ maxLength: 100}}
                                 rows={3}/>
 
                             <TextField label="Sender’s Department" variant="outlined"
@@ -54,18 +55,21 @@ export const InfoSenderComp = () => {
                                 onChange={handleChange('C_3_3_1_SenderDepartment')}
                                 value = {infoSenderData['C_3_3_1_SenderDepartment'].value}
                                 multiline
+                                inputProps={{ maxLength: 60}}
                                 rows={2}/>
                             <TextField label="Sender’s Title" variant="outlined"
                                 sx={{ width: '100%' }}
                                 onChange={handleChange('C_3_3_2_SenderTitle')}
                                 value = {infoSenderData['C_3_3_2_SenderTitle'].value}
                                 multiline
+                                inputProps={{ maxLength: 50}}
                                 rows={2}/>
                             <TextField label="Sender’s Given Name" variant="outlined"
                                 sx={{ width: '100%' }}
                                 onChange={handleChange('C_3_3_3_SenderGivenName')}
                                 value = {infoSenderData['C_3_3_3_SenderGivenName'].value}
                                 multiline
+                                inputProps={{ maxLength: 60}}
                                 rows={2}/>
                         </Grid>
                         <Grid container item xs direction="column" rowGap={1}>   
@@ -74,30 +78,35 @@ export const InfoSenderComp = () => {
                                 onChange={handleChange('C_3_3_4_SenderMiddleName')}
                                 value = {infoSenderData['C_3_3_4_SenderMiddleName'].value}
                                 multiline
+                                inputProps={{ maxLength: 60}}
                                 rows={2}/>
                             <TextField label="Sender’s Family Name" variant="outlined"
                                 sx={{ width: '100%' }}
                                 onChange={handleChange('C_3_3_5_SenderFamilyName')}
                                 value = {infoSenderData['C_3_3_5_SenderFamilyName'].value}
                                 multiline
+                                inputProps={{ maxLength: 60}}
                                 rows={2}/>
                             <TextField label="Sender’s Street Address" variant="outlined"
                                 sx={{ width: '100%' }}
                                 onChange={handleChange('C_3_4_1_SenderStreetAddress')}
                                 value = {infoSenderData['C_3_4_1_SenderStreetAddress'].value}
                                 multiline
+                                inputProps={{ maxLength: 100}}
                                 rows={3}/>
                             <TextField label="Sender’s City" variant="outlined"
                                 sx={{ width: '100%' }}
                                 onChange={handleChange('C_3_4_2_SenderCity')}
                                 value = {infoSenderData['C_3_4_2_SenderCity'].value}
                                 multiline
+                                inputProps={{ maxLength: 35}}
                                 rows={2}/>
                             <TextField label="Sender’s State or Province" variant="outlined"
                                 sx={{ width: '100%' }}
                                 onChange={handleChange('C_3_4_3_SenderStateProvince')}
                                 value = {infoSenderData['C_3_4_3_SenderStateProvince'].value}
                                 multiline
+                                inputProps={{ maxLength: 40}}
                                 rows={2}/>
                         </Grid>
                         <Grid container item xs direction="column" rowGap={1}>   
@@ -106,23 +115,28 @@ export const InfoSenderComp = () => {
                                 onChange={handleChange('C_3_4_4_SenderPostcode')}
                                 value = {infoSenderData['C_3_4_4_SenderPostcode'].value}
                                 multiline
+                                inputProps={{ maxLength: 15}}
                                 rows={2}/>
                             <TextField label="Sender’s Country Code" variant="outlined"
                                 sx={{ width: '100%' }}
+                                inputProps={{ maxLength: 2}}
                                 onChange={handleChange('C_3_4_5_SenderCountryCode')}
                                 value = {infoSenderData['C_3_4_5_SenderCountryCode'].value}/>
                             <TextField label="Sender’s Telephone" variant="outlined"
                                 sx={{ width: '100%' }}
+                                inputProps={{ maxLength: 33}}
                                 onChange={handleChange('C_3_4_6_SenderTelephone')}
                                 value = {infoSenderData['C_3_4_6_SenderTelephone'].value}/>
                             <TextField label="Sender’s Fax" variant="outlined"
                                 sx={{ width: '100%' }}
+                                inputProps={{ maxLength: 33}}
                                 onChange={handleChange('C_3_4_7_SenderFax')}
                                 value = {infoSenderData['C_3_4_7_SenderFax'].value}
                                 multiline
                                 rows={2}/>
                             <TextField label="Sender’s E-mail Address" variant="outlined"
                                 sx={{ width: '100%' }}
+                                inputProps={{ maxLength: 100}}
                                 onChange={handleChange('C_3_4_8_SenderEmail')}
                                 value = {infoSenderData['C_3_4_8_SenderEmail'].value}
                                 multiline
