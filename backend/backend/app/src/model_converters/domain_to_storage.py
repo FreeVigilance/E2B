@@ -3,38 +3,23 @@ import typing as t
 from django import forms
 from django.db import models
 
-from app.src.layers.domain import models as domain_models
 from app.src.layers.domain.models import DomainModel
-from app.src.layers.storage import models as storage_models
 from app.src.layers.storage.models import StorageModel, null_flavor_field_utils
 from app.src.model_converters.base import ModelConverter
 from app.src.shared.enums import NullFlavor
 from extensions.django.fields import temp_relation_field_utils
 
 
-DOMAIN_TO_STORAGE_MODEL_CLASS_MAP = {
-    domain_models.ICSR: storage_models.ICSR,
-    domain_models.C_1_identification_case_safety_report: storage_models.C_1_identification_case_safety_report,
-    domain_models.C_1_6_1_r_documents_held_sender: storage_models.C_1_6_1_r_documents_held_sender,
-    domain_models.C_1_9_1_r_source_case_id: storage_models.C_1_9_1_r_source_case_id,
-    domain_models.C_1_10_r_identification_number_report_linked: storage_models.C_1_10_r_identification_number_report_linked,
-    domain_models.C_2_r_primary_source_information: storage_models.C_2_r_primary_source_information,
-    domain_models.C_3_information_sender_case_safety_report: storage_models.C_3_information_sender_case_safety_report,
-    domain_models.C_4_r_literature_reference: storage_models.C_4_r_literature_reference,
-    domain_models.C_5_study_identification: storage_models.C_5_study_identification,
-    domain_models.C_5_1_r_study_registration: storage_models.C_5_1_r_study_registration,
-    domain_models.D_patient_characteristics: storage_models.D_patient_characteristics,
-    domain_models.D_7_1_r_structured_information_medical_history: storage_models.D_7_1_r_structured_information_medical_history,
-    domain_models.D_8_r_past_drug_history: storage_models.D_8_r_past_drug_history,
-    domain_models.D_9_2_r_cause_death: storage_models.D_9_2_r_cause_death,
-    domain_models.D_9_4_r_autopsy_determined_cause_death: storage_models.D_9_4_r_autopsy_determined_cause_death,
-    domain_models.D_10_7_1_r_structured_information_parent_meddra_code: storage_models.D_10_7_1_r_structured_information_parent_meddra_code,
-    domain_models.D_10_8_r_past_drug_history_parent: storage_models.D_10_8_r_past_drug_history_parent,
-}
-
-
 class DomainToStorageModelConverter(ModelConverter[DomainModel, StorageModel]):
     INCLUDE_RELATED_DEFAULT = True
+
+    @classmethod
+    def get_higher_model_base_class(cls):
+        return DomainModel
+
+    @classmethod
+    def get_lower_model_base_class(cls):
+        return StorageModel
 
     def convert_to_lower_model(self, higher_model: DomainModel, **kwargs) -> StorageModel:
         target_model_dict = dict()
@@ -90,8 +75,9 @@ class DomainToStorageModelConverter(ModelConverter[DomainModel, StorageModel]):
                     value_field_name = null_flavor_field_utils.get_base_field_name(field_name)
                     lower_model_dict[value_field_name] = NullFlavor(null_flavor)
 
-            # Related models are retrieved only from m-1 and backward 1-1 relations.
-            # Backward m-m relations are ignored as there are none among the domain models.
+            # Related models are retrieved only from 1-m and backward 1-1 relations
+            # (1-m relations can only be created as backward relations in django).
+            # m-m relations are ignored as there are none among the models.
             # Forward relations are ignored as the domain models are only aware of embedded models
             # (which are stored in storage models backward relations).
 
