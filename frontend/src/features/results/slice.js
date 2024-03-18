@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { nullFlavors } from '@src/components/nullFlavours';
 import { e2bCaseKeys } from '../common/changekeys';
-import { getData, revertAll } from '../display/slice';
+import { changeData, getData, revertAll, saveData } from '../display/slice';
 import { Result } from './result';
 
 export const resultsSelector = (state) => state.results;
@@ -55,6 +55,22 @@ const resultsSlice = createSlice({
 		builder.addCase(revertAll, () => initialState);
 
         builder.addCase(getData.fulfilled, (state, action) => {
+			if (action.payload.f_r_results_tests_procedures_investigation_patient) {
+				const data = e2bCaseKeys(action.payload.f_r_results_tests_procedures_investigation_patient);
+				console.log('results', data);
+				state.resultsData = data;
+			}
+        });
+
+		builder.addCase(changeData.fulfilled, (state, action) => {
+			if (action.payload.f_r_results_tests_procedures_investigation_patient) {
+				const data = e2bCaseKeys(action.payload.f_r_results_tests_procedures_investigation_patient);
+				console.log('results', data);
+				state.resultsData = data;
+			}
+        });
+
+		builder.addCase(saveData.fulfilled, (state, action) => {
 			if (action.payload.f_r_results_tests_procedures_investigation_patient) {
 				const data = e2bCaseKeys(action.payload.f_r_results_tests_procedures_investigation_patient);
 				console.log('results', data);

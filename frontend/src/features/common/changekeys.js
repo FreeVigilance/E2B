@@ -31,7 +31,19 @@ function changeKeysFactory (changeCase) {
                     changedValue = Object.keys(nullFlavors).find(key => nullFlavors[key] === changedValue);
                 }
             }
-
+            if (changedKey.indexOf('Meddra') >= 0) {
+                changedKey = changedKey.replace('Meddra', 'MedDRA');
+            }
+            if (changedKey.indexOf('Mpid') >= 0) {
+                changedKey = changedKey.replace('Mpid', 'MPID');
+            }
+            if (changedKey.indexOf('Phpid') >= 0) {
+                changedKey = changedKey.replace('Phpid', 'PhPID');
+            }
+            if (changedKey.indexOf('id') >= 0 && changedKey !== 'id' && changedKey.indexOf('MiddleName') < 0 && changedKey.indexOf('Identification') < 0) {
+                changedKey = changedKey.replace('id', 'ID');
+            }
+            
             result[changedKey] = changedValue;
         });
 

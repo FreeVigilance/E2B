@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { e2bCaseKeys } from '../common/changekeys';
-import { getData, revertAll } from '../display/slice';
+import { changeData, getData, revertAll, saveData } from '../display/slice';
 import { Reference } from './references';
 
 export const referencesSelector = (state) => state.references;
@@ -35,6 +35,18 @@ const referencesSlice = createSlice({
 		builder.addCase(revertAll, () => initialState);
 
         builder.addCase(getData.fulfilled, (state, action) => {
+			const data = e2bCaseKeys(action.payload.c_4_r_literature_reference);
+            console.log('references', data);
+			state.referencesData = data;
+        });
+
+		builder.addCase(saveData.fulfilled, (state, action) => {
+			const data = e2bCaseKeys(action.payload.c_4_r_literature_reference);
+            console.log('references', data);
+			state.referencesData = data;
+        });
+
+		builder.addCase(changeData.fulfilled, (state, action) => {
 			const data = e2bCaseKeys(action.payload.c_4_r_literature_reference);
             console.log('references', data);
 			state.referencesData = data;

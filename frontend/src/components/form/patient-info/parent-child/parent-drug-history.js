@@ -61,38 +61,13 @@ export const ParentDrugsHistory = () => {
                 boxShadow: "5px 5px #356BA0",
                 marginBottom: 5}}>
                     <CardContent>
-                            <Stack direction="row" spacing={2} justifyContent="flex-start"> 
-                                    <Box className="text-small" style={{ padding: 0 }}>
-                                        <FormControlLabel
-                                        control={<Checkbox
-                                                    checked = {item['D_10_8_r_1_NameDrug'].nullFlavor !== null}
-                                                    onChange={setUnknown('D_10_8_r_1_NameDrug', index)}
-                                                    sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                                    style={{padding: 1, marginLeft: 5, marginTop: 2 }}
-                                                    />}
-                                                label="No Info"/>
-                                    </Box>
-                                    {parentDrugHistory[index]['D_10_8_r_1_NameDrug']['nullFlavor'] === null ? 
-                                            <TextField label="Name of Drug" variant="outlined"
+                            <TextField label="Name of Drug" variant="outlined"
                                             onChange={handleChange('D_10_8_r_1_NameDrug', index)}
                                             value = {item['D_10_8_r_1_NameDrug'].value}
                                             multiline
                                             inputProps={{ maxLength: 250}}
                                             rows={3}
                                             sx={{ width: '100%' }}/>
-                                            : <FormControl sx={{ width: '100%' }}>
-                                                <InputLabel>Null Flavor</InputLabel>
-                                                <Select
-                                                    defaultValue = {0}
-                                                    value = {item['D_10_8_r_1_NameDrug'].nullFlavor}
-                                                    onChange={setNullFlavor('D_10_8_r_1_NameDrug', index)}
-                                                >
-                                                    <MenuItem value={3}>Unknown</MenuItem>
-                                                    <MenuItem value={6}>Not applicable</MenuItem>
-                                                </Select>
-                                                </FormControl>
-                                    }
-                            </Stack>
                             <Grid container direction="row" columnGap={4} sx={{padding: 2}}>
                                 <Grid container item xs direction="column" rowGap={1}>
 

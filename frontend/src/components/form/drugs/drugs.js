@@ -52,8 +52,8 @@ export const Drugs = ({index}) => {
                                                 <InputLabel>Characterisation of Drug Role</InputLabel>
                                                 <Select
                                                     defaultValue = {0}
-                                                    value = {drugs[index]['G_k_1_CharacterisationDrugRole'].nullFlavor}
-                                                    onChange={setNullFlavor('G_k_1_CharacterisationDrugRole', index)}
+                                                    value = {drugs[index]['G_k_1_CharacterisationDrugRole'].value}
+                                                    onChange={handleChange('G_k_1_CharacterisationDrugRole', index)}
                                                 >
                                                     <MenuItem value={1}>1 = Suspect</MenuItem>
                                                     <MenuItem value={2}>2 = Concomitant</MenuItem>

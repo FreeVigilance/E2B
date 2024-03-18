@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import {AdditionalInfo, Dosage, Drug, DrugReactionMatrix, IndicationForUse, Relatedness, Substance} from './drugs';
 import { nullFlavors } from '@src/components/nullFlavours';
-import { getData, revertAll } from '../display/slice';
+import { changeData, getData, revertAll, saveData } from '../display/slice';
 import { e2bCaseKeys } from '../common/changekeys';
 
 export const drugsSelector = (state) => state.drugs;
@@ -120,7 +120,10 @@ export const getDrug = () => {
 
 			let addInfoData = [];
 			Object.values(additionalInfo[index]).forEach((subItem, subIndex) => {
-				addInfoData.push(subItem['G_k_10_r_AdditionalInformationDrug']);
+				addInfoData.push({
+					'G_k_10_r_AdditionalInformationDrug': subItem['G_k_10_r_AdditionalInformationDrug'],
+					'id': subItem['id'],
+				});
 			});
 			itemData['G_k_10_r_AdditionalInformationDrug'] = addInfoData;
 
@@ -132,7 +135,7 @@ export const getDrug = () => {
 	}
 }
 
-export const parseDrug = (jsonData) => {
+export const parseDrug = (data) => {
 			
 	let drugs = [];
 	let substances = {};
@@ -226,7 +229,38 @@ const drugsSlice = createSlice({
 	},
 	extraReducers: (builder) => {
 		builder.addCase(revertAll, () => initialState);
+
         builder.addCase(getData.fulfilled, (state, action) => {
+			if (action.payload.g_k_drug_information) {
+				const data = e2bCaseKeys(action.payload.g_k_drug_information);
+				console.log('drugs', data);
+				let res = parseDrug(data);
+				state.drugs = res[0];
+				state.substances = res[1];
+				state.dosages = res[2];
+				state.indications = res[3];
+				state.drugReactionMatrix = res[4];
+				state.relatedness = res[5];
+				state.additionalInfo = res[6];
+			}
+        });
+
+		builder.addCase(saveData.fulfilled, (state, action) => {
+			if (action.payload.g_k_drug_information) {
+				const data = e2bCaseKeys(action.payload.g_k_drug_information);
+				console.log('drugs', data);
+				let res = parseDrug(data);
+				state.drugs = res[0];
+				state.substances = res[1];
+				state.dosages = res[2];
+				state.indications = res[3];
+				state.drugReactionMatrix = res[4];
+				state.relatedness = res[5];
+				state.additionalInfo = res[6];
+			}
+        });
+
+		builder.addCase(changeData.fulfilled, (state, action) => {
 			if (action.payload.g_k_drug_information) {
 				const data = e2bCaseKeys(action.payload.g_k_drug_information);
 				console.log('drugs', data);

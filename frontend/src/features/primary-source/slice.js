@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { nullFlavors } from '@src/components/nullFlavours';
 import { e2bCaseKeys } from '../common/changekeys';
-import { getData, revertAll } from '../display/slice';
+import { changeData, getData, revertAll, saveData } from '../display/slice';
 import { PrimarySource } from './primary-source';
 
 export const primarySourceSelector = (state) => state.primarySource;
@@ -64,6 +64,18 @@ const primarySourceSlice = createSlice({
 		builder.addCase(revertAll, () => initialState);
 
         builder.addCase(getData.fulfilled, (state, action) => {
+			const data = e2bCaseKeys(action.payload.c_2_r_primary_source_information);
+            console.log('primarySourceData', data);
+			state.primarySourceData = data;
+        });
+
+		builder.addCase(saveData.fulfilled, (state, action) => {
+			const data = e2bCaseKeys(action.payload.c_2_r_primary_source_information);
+            console.log('primarySourceData', data);
+			state.primarySourceData = data;
+        });
+
+		builder.addCase(changeData.fulfilled, (state, action) => {
 			const data = e2bCaseKeys(action.payload.c_2_r_primary_source_information);
             console.log('primarySourceData', data);
 			state.primarySourceData = data;

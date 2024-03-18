@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { e2bCaseKeys } from '../common/changekeys';
-import { getData, revertAll } from '../display/slice';
+import { changeData, getData, revertAll, saveData } from '../display/slice';
 import { InfoSender } from './info-sender';
 
 export const infoSenderSelector = (state) => state.infoSender;
@@ -44,6 +44,18 @@ const infoSenderSlice = createSlice({
 		builder.addCase(revertAll, () => initialState);
 
         builder.addCase(getData.fulfilled, (state, action) => {
+			const data = e2bCaseKeys(action.payload.c_3_information_sender_case_safety_report);
+            console.log('infoSender', data);
+			state.infoSenderData = data;
+        });
+
+		builder.addCase(saveData.fulfilled, (state, action) => {
+			const data = e2bCaseKeys(action.payload.c_3_information_sender_case_safety_report);
+            console.log('infoSender', data);
+			state.infoSenderData = data;
+        });
+
+		builder.addCase(changeData.fulfilled, (state, action) => {
 			const data = e2bCaseKeys(action.payload.c_3_information_sender_case_safety_report);
             console.log('infoSender', data);
 			state.infoSenderData = data;

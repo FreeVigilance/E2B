@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { e2bCaseKeys, pascalSnakeCaseKeys } from '../common/changekeys';
-import { getData, revertAll } from '../display/slice';
+import { changeData, getData, revertAll, saveData } from '../display/slice';
 import { DocumentsHeldBySender, Identification, IdentificationNumber, OtherIdentifiers } from './identification';
 
 export const identificationSelector = (state) => state.identification;
@@ -70,7 +70,32 @@ const identificationSlice = createSlice({
 
     extraReducers: (builder) => {
         builder.addCase(revertAll, () => initialState);
+
         builder.addCase(getData.fulfilled, (state, action) => {
+            const data = e2bCaseKeys(action.payload.c_1_identification_case_safety_report);
+            console.log('why', data);
+            state.identification = data;
+
+            state.documentsHeldBySender = data.C_1_6_1_r_DocumentsHeldSender;
+
+            state.otherIdentifiers = data.C_1_9_1_r_SourceCaseId;
+            state.identificationNumber = data.C_1_10_r_IdentificationNumberReportLinked;
+            console.log('aaa', state.identification);
+        });
+
+        builder.addCase(saveData.fulfilled, (state, action) => {
+            const data = e2bCaseKeys(action.payload.c_1_identification_case_safety_report);
+            console.log('why', data);
+            state.identification = data;
+
+            state.documentsHeldBySender = data.C_1_6_1_r_DocumentsHeldSender;
+
+            state.otherIdentifiers = data.C_1_9_1_r_SourceCaseId;
+            state.identificationNumber = data.C_1_10_r_IdentificationNumberReportLinked;
+            console.log('aaa', state.identification);
+        });
+
+        builder.addCase(changeData.fulfilled, (state, action) => {
             const data = e2bCaseKeys(action.payload.c_1_identification_case_safety_report);
             console.log('why', data);
             state.identification = data;
