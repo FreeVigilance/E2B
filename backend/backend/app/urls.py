@@ -1,9 +1,9 @@
 from django import http
 from django.urls import path
 
+from app.src.layers.api import models as api_models
 from app.src.layers.api import views
 from app.src.layers.domain.services import DomainService
-from app.src.layers.storage import models as storage_models
 from app.src.layers.storage.services import StorageService
 from app.src.model_converters.api_to_domain import ApiToDomainModelConverter
 from app.src.model_converters.domain_to_storage import DomainToStorageModelConverter
@@ -20,7 +20,7 @@ domain_service_adapter = ServiceAdapter(domain_service, api_to_domain_model_conv
 
 view_shared_args = dict(
     domain_service=domain_service_adapter,
-    model_class=storage_models.ICSR,
+    model_class=api_models.ICSR,
 )
 
 urlpatterns = [
