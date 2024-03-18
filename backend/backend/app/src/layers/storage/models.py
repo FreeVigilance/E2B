@@ -59,7 +59,7 @@ class C_1_identification_case_safety_report(StorageModel):
         related_name='c_1_identification_case_safety_report'
     )
 
-    c_1_1_sender_safety_report_unique_id = models.CharField(null=True, unique=True, max_length=100)
+    c_1_1_sender_safety_report_unique_id = models.CharField(null=True, unique=True)
     c_1_2_date_creation = models.CharField(null=True)  # dt
     c_1_3_type_report = models.IntegerField(null=True, choices=enums.C_1_3_type_report)
     c_1_4_date_report_first_received_source = models.CharField(null=True)  # dt
@@ -72,7 +72,7 @@ class C_1_identification_case_safety_report(StorageModel):
     nf_c_1_7_fulfil_local_criteria_expedited_report = models.CharField(null=True, choices=[NF.NI])
 
     # c_1_8_worldwide_unique_case_identification
-    c_1_8_1_worldwide_unique_case_identification_number = models.CharField(null=True, unique=True, max_length=100)
+    c_1_8_1_worldwide_unique_case_identification_number = models.CharField(null=True, unique=True)
     c_1_8_2_first_sender = models.IntegerField(null=True, choices=enums.C_1_8_2_first_sender)
 
     # c_1_9_other_case_ids
@@ -81,7 +81,7 @@ class C_1_identification_case_safety_report(StorageModel):
 
     # c_1_11_report_nullification_amendment
     c_1_11_1_report_nullification_amendment = models.IntegerField(null=True, choices=enums.C_1_11_1_report_nullification_amendment)
-    c_1_11_2_reason_nullification_amendment = models.CharField(null=True, max_length=2000)
+    c_1_11_2_reason_nullification_amendment = models.CharField(null=True)
 
 
 class C_1_6_1_r_documents_held_sender(StorageModel):
@@ -93,7 +93,7 @@ class C_1_6_1_r_documents_held_sender(StorageModel):
         related_name='c_1_6_1_r_documents_held_sender'
     )
 
-    c_1_6_1_r_1_documents_held_sender = models.CharField(null=True, max_length=2000)
+    c_1_6_1_r_1_documents_held_sender = models.CharField(null=True)
     # file: c_1_6_1_r_2_included_documents
 
 
@@ -112,8 +112,8 @@ class C_1_9_1_r_source_case_id(StorageModel):
         related_name='c_1_9_1_r_source_case_id'
     )
 
-    c_1_9_1_r_1_source_case_id = models.CharField(null=True, max_length=100)
-    c_1_9_1_r_2_case_id = models.CharField(null=True, max_length=100)
+    c_1_9_1_r_1_source_case_id = models.CharField(null=True)
+    c_1_9_1_r_2_case_id = models.CharField(null=True)
 
 
 class C_1_10_r_identification_number_report_linked(StorageModel):
@@ -131,7 +131,7 @@ class C_1_10_r_identification_number_report_linked(StorageModel):
         related_name='c_1_10_r_identification_number_report_linked'
     )
 
-    c_1_10_r_identification_number_report_linked = models.CharField(null=True, max_length=100)
+    c_1_10_r_identification_number_report_linked = models.CharField(null=True)
 
 
 # C_2_r_primary_source_information
@@ -153,32 +153,32 @@ class C_2_r_primary_source_information(StorageModel):
     )
 
     # c_2_r_1_reporter_name
-    c_2_r_1_1_reporter_title = models.CharField(null=True, max_length=50)
+    c_2_r_1_1_reporter_title = models.CharField(null=True)
     nf_c_2_r_1_1_reporter_title = models.CharField(null=True, choices=[NF.MSK, NF.ASKU, NF.NASK, NF.UNK])
-    c_2_r_1_2_reporter_given_name = models.CharField(null=True, max_length=60)
+    c_2_r_1_2_reporter_given_name = models.CharField(null=True)
     nf_c_2_r_1_2_reporter_given_name = models.CharField(null=True, choices=[NF.MSK, NF.ASKU, NF.NASK])
-    c_2_r_1_3_reporter_middle_name = models.CharField(null=True, max_length=60)
+    c_2_r_1_3_reporter_middle_name = models.CharField(null=True)
     nf_c_2_r_1_3_reporter_middle_name = models.CharField(null=True, choices=[NF.MSK, NF.ASKU, NF.NASK])
-    c_2_r_1_4_reporter_family_name = models.CharField(null=True, max_length=60)
+    c_2_r_1_4_reporter_family_name = models.CharField(null=True)
     nf_c_2_r_1_4_reporter_family_name = models.CharField(null=True, choices=[NF.MSK, NF.ASKU, NF.NASK])
 
     # c_2_r_2_reporter_address_telephone
-    c_2_r_2_1_reporter_organisation = models.CharField(null=True, max_length=60)
+    c_2_r_2_1_reporter_organisation = models.CharField(null=True)
     nf_c_2_r_2_1_reporter_organisation = models.CharField(null=True, choices=[NF.MSK, NF.ASKU, NF.NASK])
-    c_2_r_2_2_reporter_department = models.CharField(null=True, max_length=60)
+    c_2_r_2_2_reporter_department = models.CharField(null=True)
     nf_c_2_r_2_2_reporter_department = models.CharField(null=True, choices=[NF.MSK, NF.ASKU, NF.NASK])
-    c_2_r_2_3_reporter_street = models.CharField(null=True, max_length=100)
+    c_2_r_2_3_reporter_street = models.CharField(null=True)
     nf_c_2_r_2_3_reporter_street = models.CharField(null=True, choices=[NF.MSK, NF.ASKU, NF.NASK])
-    c_2_r_2_4_reporter_city = models.CharField(null=True, max_length=35)
+    c_2_r_2_4_reporter_city = models.CharField(null=True)
     nf_c_2_r_2_4_reporter_city = models.CharField(null=True, choices=[NF.MSK, NF.ASKU, NF.NASK])
-    c_2_r_2_5_reporter_state_province = models.CharField(null=True, max_length=40)
+    c_2_r_2_5_reporter_state_province = models.CharField(null=True)
     nf_c_2_r_2_5_reporter_state_province = models.CharField(null=True, choices=[NF.MSK, NF.ASKU, NF.NASK])
-    c_2_r_2_6_reporter_postcode = models.CharField(null=True, max_length=15)
+    c_2_r_2_6_reporter_postcode = models.CharField(null=True)
     nf_c_2_r_2_6_reporter_postcode = models.CharField(null=True, choices=[NF.MSK, NF.ASKU, NF.NASK])
-    c_2_r_2_7_reporter_telephone = models.CharField(null=True, max_length=33)
+    c_2_r_2_7_reporter_telephone = models.CharField(null=True)
     nf_c_2_r_2_7_reporter_telephone = models.CharField(null=True, choices=[NF.MSK, NF.ASKU, NF.NASK])
 
-    c_2_r_3_reporter_country_code = models.CharField(null=True, max_length=2)  # st
+    c_2_r_3_reporter_country_code = models.CharField(null=True)  # st
     c_2_r_4_qualification = models.IntegerField(null=True, choices=enums.C_2_r_4_qualification)
     nf_c_2_r_4_qualification = models.CharField(null=True, choices=[NF.UNK])
     c_2_r_5_primary_source_regulatory_purposes = models.IntegerField(null=True, choices=enums.C_2_r_5_primary_source_regulatory_purposes)
@@ -197,24 +197,24 @@ class C_3_information_sender_case_safety_report(StorageModel):
     )
 
     c_3_1_sender_type = models.IntegerField(null=True, choices=enums.C_3_1_sender_type)
-    c_3_2_sender_organisation = models.CharField(null=True, max_length=100)
+    c_3_2_sender_organisation = models.CharField(null=True)
 
     # c_3_3_person_responsible_sending_report
-    c_3_3_1_sender_department = models.CharField(null=True, max_length=60)
-    c_3_3_2_sender_title = models.CharField(null=True, max_length=50)
-    c_3_3_3_sender_given_name = models.CharField(null=True, max_length=60)
-    c_3_3_4_sender_middle_name = models.CharField(null=True, max_length=60)
-    c_3_3_5_sender_family_name = models.CharField(null=True, max_length=60)
+    c_3_3_1_sender_department = models.CharField(null=True)
+    c_3_3_2_sender_title = models.CharField(null=True)
+    c_3_3_3_sender_given_name = models.CharField(null=True)
+    c_3_3_4_sender_middle_name = models.CharField(null=True)
+    c_3_3_5_sender_family_name = models.CharField(null=True)
 
     # c_3_4_sender_address_fax_telephone_email
-    c_3_4_1_sender_street_address = models.CharField(null=True, max_length=100)
-    c_3_4_2_sender_city = models.CharField(null=True, max_length=35)
-    c_3_4_3_sender_state_province = models.CharField(null=True, max_length=40)
-    c_3_4_4_sender_postcode = models.CharField(null=True, max_length=15)
-    c_3_4_5_sender_country_code = models.CharField(null=True, max_length=2)  # st
-    c_3_4_6_sender_telephone = models.CharField(null=True, max_length=33)
-    c_3_4_7_sender_fax = models.CharField(null=True, max_length=33)
-    c_3_4_8_sender_email = models.CharField(null=True, max_length=100)
+    c_3_4_1_sender_street_address = models.CharField(null=True)
+    c_3_4_2_sender_city = models.CharField(null=True)
+    c_3_4_3_sender_state_province = models.CharField(null=True)
+    c_3_4_4_sender_postcode = models.CharField(null=True)
+    c_3_4_5_sender_country_code = models.CharField(null=True)  # st
+    c_3_4_6_sender_telephone = models.CharField(null=True)
+    c_3_4_7_sender_fax = models.CharField(null=True)
+    c_3_4_8_sender_email = models.CharField(null=True)
 
 
 # C_4_r_literature_reference
@@ -229,7 +229,7 @@ class C_4_r_literature_reference(StorageModel):
         related_name='c_4_r_literature_reference'
     )
 
-    c_4_r_1_literature_reference = models.CharField(null=True, max_length=500)
+    c_4_r_1_literature_reference = models.CharField(null=True)
     nf_c_4_r_1_literature_reference = models.CharField(null=True, choices=[NF.ASKU, NF.NASK])
     # file: c_4_r_2_included_documents
 
@@ -245,9 +245,9 @@ class C_5_study_identification(StorageModel):
         related_name='c_5_study_identification'
     )
 
-    c_5_2_study_name = models.CharField(null=True, max_length=2000)
+    c_5_2_study_name = models.CharField(null=True)
     nf_c_5_2_study_name = models.CharField(null=True, choices=[NF.ASKU, NF.NASK])
-    c_5_3_sponsor_study_number = models.CharField(null=True, max_length=50)
+    c_5_3_sponsor_study_number = models.CharField(null=True)
     nf_c_5_3_sponsor_study_number = models.CharField(null=True, choices=[NF.ASKU, NF.NASK])
     c_5_4_study_type_reaction = models.IntegerField(null=True, choices=enums.C_5_4_study_type_reaction)
 
@@ -261,9 +261,9 @@ class C_5_1_r_study_registration(StorageModel):
         related_name='c_5_1_r_study_registration'
     )
 
-    c_5_1_r_1_study_registration_number = models.CharField(null=True, max_length=50)
+    c_5_1_r_1_study_registration_number = models.CharField(null=True)
     nf_c_5_1_r_1_study_registration_number = models.CharField(null=True, choices=[NF.ASKU, NF.NASK])
-    c_5_1_r_2_study_registration_country = models.CharField(null=True, max_length=2)  # st
+    c_5_1_r_2_study_registration_country = models.CharField(null=True)  # st
     nf_c_5_1_r_2_study_registration_country = models.CharField(null=True, choices=[NF.ASKU, NF.NASK])
 
 
