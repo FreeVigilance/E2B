@@ -1,18 +1,49 @@
 import abc
+import functools
+import inspect
 import typing as t
 
 
 # TODO: consider creating pydantic instances instead of dicts, check speed
 class ModelConverter[H, L](abc.ABC):
-    def __init__(self, higher_to_lower_model_class_map: dict[type[H], type[L]]) -> None:
-        self.higher_to_lower_model_class_map = higher_to_lower_model_class_map
-        self.lower_to_higher_model_class_map = {v: k for k, v in higher_to_lower_model_class_map.items()}
+    @classmethod
+    @abc.abstractmethod
+    def get_higher_model_base_class(cls) -> type[H]:
+        pass
+
+    @classmethod
+    @abc.abstractmethod
+    def get_lower_model_base_class(cls) -> type[L]:
+        pass
+
+    @classmethod
+    @functools.cache  # TODO: check performance with logging
+    def get_higher_to_lower_model_class_map(cls) -> dict[type[H], type[L]]:
+        higher_class = cls.get_higher_model_base_class()
+        lower_class = cls.get_lower_model_base_class()
+        higher_module = inspect.getmodule(higher_class)
+        lower_module = inspect.getmodule(lower_class)
+        class_map = dict()
+
+        for higher_attr_name, higher_attr in vars(higher_module).items():
+            if inspect.isclass(higher_attr) and issubclass(higher_attr, higher_class) and higher_attr != higher_class:
+                lower_attr = getattr(lower_module, higher_attr_name)
+                if issubclass(lower_attr, lower_class):
+                    class_map[higher_attr] = lower_attr
+
+        return class_map
+
+
+    @classmethod
+    @functools.cache
+    def get_lower_to_higher_model_class_map(cls) -> dict[type[L], type[H]]:
+        return {v: k for k, v in cls.get_higher_to_lower_model_class_map().items()}
 
     def get_lower_model_class(self, higher_model_class: type[H]) -> type[L]:
-        return self.higher_to_lower_model_class_map[higher_model_class]
+        return self.get_higher_to_lower_model_class_map()[higher_model_class]
 
     def get_higher_model_class(self, lower_model_class: type[L]) -> type[H]:
-        return self.lower_to_higher_model_class_map[lower_model_class]
+        return self.get_lower_to_higher_model_class_map()[lower_model_class]
 
     def convert_to_lower_model(self, higher_model: H, **kwargs) -> L:
         return self._convert_from_target_model_dict(
@@ -27,6 +58,8 @@ class ModelConverter[H, L](abc.ABC):
             self._convert_to_higher_model_dict(lower_model, **kwargs),
             self.get_higher_model_class
         )
+
+    # TODO: check if there is a way to make the same annotation for these funcs without overload
 
     @staticmethod
     @t.overload

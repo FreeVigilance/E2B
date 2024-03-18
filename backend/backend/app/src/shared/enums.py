@@ -81,3 +81,63 @@ class D_5_sex(BaseIntEnum):
 class D_10_6_sex_parent(BaseIntEnum):
     MALE = 1
     FEMALE = 2
+
+
+class E_i_3_1_term_highlighted_reporter(BaseIntEnum):
+    YES_NOT_SERIOUS = 1
+    NO_NOT_SERIOUS = 2
+    YES_SERIOUS = 3
+    NO_SERIOUS = 4
+
+
+class E_i_7_outcome_reaction_last_observation(BaseIntEnum):
+    UNKNOWN = 0
+    RECOVERED_OR_RESOLVED = 1
+    RECOVERING_OR_RESOLVING = 2
+    NOT_RECOVERED_OR_NOT_RESOLVED_OR_ONGOING = 3
+    RECOVERED_OR_RESOLVED_WITH_SEQUELAE = 4
+    FATAL = 5
+
+
+class F_r_3_1_test_result_code(BaseIntEnum):
+    POSITIVE = 1
+    NEGATIVE = 2
+    BORDERLINE = 3
+    INCONCLUSIVE = 4
+
+
+class G_k_1_characterisation_drug_role(BaseIntEnum):
+    SUSPECT = 1
+    CONCOMITANT = 2
+    INTERACTING = 3
+    DRUG_NOT_ADMINISTERED = 4
+
+
+class G_k_8_action_taken_drug(BaseIntEnum):
+    UNKNOWN = 0
+    DRUG_WITHDRAWN = 1
+    DOSE_REDUCED = 2
+    DOSE_INCREASED = 3
+    DOSE_NOT_CHANGED = 4
+    NOT_APPLICABLE = 9
+
+
+class G_k_9_i_4_reaction_recur_readministration(BaseIntEnum):
+    YES_YES = 1
+    YES_NO = 2
+    YES_UNK = 3
+    NO_NA = 4
+
+
+class G_k_10_r_additional_information_drug(BaseIntEnum):
+    COUNTERFEIT = 1
+    OVERDOSE = 2
+    DRUG_TAKEN_BY_THE_FATHER = 3
+    DRUG_TAKEN_BEYOND_EXPIRY_DATE = 4
+    BATCH_AND_LOT_TESTED_AND_FOUND_WITHIN_SPECIFICATIONS = 5
+    BATCH_AND_LOT_TESTED_AND_FOUND_NOT_WITHIN_SPECIFICATIONS = 6
+    MEDICATION_ERROR = 7
+    MISUSE = 8
+    ABUSE = 9
+    OCCUPATIONAL_EXPOSURE = 10
+    OFF_LABEL_USE = 11
