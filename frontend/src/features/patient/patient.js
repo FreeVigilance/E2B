@@ -19,6 +19,7 @@ export class PatientInfo {
         this.D_7_3_ConcomitantTherapies = {"value": null}
         this.D_9_1_DateDeath = {"value": null, "nullFlavor": null}
         this.D_9_3_Autopsy = {"value": null, "nullFlavor": null}
+        this.id = null
     }
 }
 
@@ -31,6 +32,7 @@ export class MedHistory {
         this.D_7_1_r_4_EndDate = {"value": null, "nullFlavor": null}
         this.D_7_1_r_5_Comments = {"value": null}
         this.D_7_1_r_6_FamilyHistory = {"value": null}
+        this.id = null
     }
 }
 
@@ -47,6 +49,7 @@ export class DrugHistory {
         this.D_8_r_6b_IndicationMedDRACode = {"value": null}
         this.D_8_r_7a_MedDRAVersionReaction = {"value": null}
         this.D_8_r_7b_ReactionMedDRACode = {"value": null}
+        this.id = null
     }
 }
 
@@ -55,6 +58,7 @@ export class CauseOfDeath {
         this.D_9_2_r_1a_MedDRAVersionCauseDeath = {"value": null}
         this.D_9_2_r_1b_CauseDeathMedDRACode = {"value": null}
         this.D_9_2_r_2_CauseDeath = {"value": null}
+        this.id = null
     }
 }
 
@@ -63,6 +67,7 @@ export class AutopsyData {
         this.D_9_4_r_1a_MedDRAVersionAutopsyDeterminedCauseDeath = {"value": null}
         this.D_9_4_r_1b_AutopsyDeterminedCauseDeathMedDRACode = {"value": null}
         this.D_9_4_r_2_AutopsyDeterminedCauseDeath = {"value": null}
+        this.id = null
     }
 }
 
@@ -76,12 +81,14 @@ export class ParentChildData {
         this.D_10_4_BodyWeightParent = {"value": null}
         this.D_10_5_HeightParent = {"value": null}
         this.D_10_6_SexParent = {"value": null, "nullFlavor": null}
+        this.id = null
     }
 }
 
 export class ParentHistoryData {
     constructor() {
         this.D_10_7_2_TextMedicalHistoryParent = {"value": null}
+        this.id = null
     }
 }
 
@@ -93,6 +100,7 @@ export class ParentData {
         this.D_10_7_1_r_3_Continuing = {"value": null, "nullFlavor": null}
         this.D_10_7_1_r_4_EndDate = {"value": null, "nullFlavor": null}
         this.D_10_7_1_r_5_Comments = {"value": null}
+        this.id = null
     }
 }
 
@@ -109,6 +117,7 @@ export class ParentDrugHistory {
         this.D_10_8_r_6b_IndicationMedDRACode = {"value": null}
         this.D_10_8_r_7a_MedDRAVersionReaction = {"value": null}
         this.D_10_8_r_7b_ReactionsMedDRACode = {"value": null}
+        this.id = null
     }
 }
 

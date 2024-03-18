@@ -8,6 +8,9 @@ export const api = {
     saveData: (data: any) => {
         return clientER.post('/icsr', { data: data });
     },
+    changeData: (data: any) => {
+        return clientER.put(`/icsr/${data['id']}`, { data: data });
+    },
     getData: (id: any) => {
         return clientER.get(`/icsr/${id}`);
     },

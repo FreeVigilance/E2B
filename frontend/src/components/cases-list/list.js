@@ -21,7 +21,12 @@ export const CasesList = () => {
             items.push(
             <ListItem key={i}>
                 <ListItemButton onClick={() => openReport(cases[i])}>
-                  <ListItemText primary={cases[i]} />
+                {/* <ListItemAvatar>
+                    <Avatar>
+                      <ImageIcon />
+                    </Avatar>
+                </ListItemAvatar> */}
+                  <ListItemText primary={`Case id = ${cases[i]}`} />
               </ListItemButton>
             </ListItem>)
         }

@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { displaySelector, setCurrentTab } from '@src/features/display/slice';
+import { displaySelector, setCurrentSaved, setCurrentTab } from '@src/features/display/slice';
 import { Results } from './results';
 import { Reactions } from './reactions';
 import { IconButton } from '@mui/material';
@@ -21,10 +21,23 @@ import { InfoSenderComp } from './info-sender';
 import { ReferencesComp } from './references';
 import { IdentificationComp } from './identification/identification';
 import { StudyIdentificationComp } from './study-identification/study-identification';
+import { useSnackbar } from 'notistack';
 
 export const FormTabs = () => {
     const dispatch = useDispatch();
-    const { currentTab } = useSelector(displaySelector);
+    const { currentTab, currentSaved } = useSelector(displaySelector);
+
+    const { enqueueSnackbar } = useSnackbar();
+
+    useEffect(() => {
+        if (currentSaved === 1) {
+            enqueueSnackbar(`Успешно сохранено`,{ variant: 'success' });
+            dispatch(setCurrentSaved(0));
+        } else if (currentSaved === 2) {
+            enqueueSnackbar(`Ошибка сохранения`,{ variant: 'error' });
+            dispatch(setCurrentSaved(0));
+        }
+    }, [currentSaved]);
 
     const handleChange = (event, newValue) => {
         dispatch(setCurrentTab(newValue));

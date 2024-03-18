@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, Provider } from 'react-redux';
 import { authSelector } from './features/auth/slice';
 import { Box, Menu, Stack } from '@mui/material';
 import { AuthComponent } from './components/auth/auth-component';
@@ -11,6 +11,8 @@ import { CasesList } from './components/cases-list/list';
 import { SideMenu } from './components/menu/side-menu';
 import { displaySelector } from './features/display/slice';
 import { FormTabs } from './components/form/form-tabs';
+import { SnackbarProvider } from 'notistack';
+import { store } from './store/store';
 
 export const App = () => {
     const dispatch = useDispatch();
@@ -29,11 +31,17 @@ export const App = () => {
         );
     } else {
         return (
-            <Stack direction="row" spacing={1} justifyContent="flex-start">
-                <SideMenu></SideMenu>
-                {showCasesList ? <CasesList></CasesList> : null}
-                {openNewReport ? <FormTabs></FormTabs> : null}
-            </Stack>
+            <Provider store={store}>
+                <SnackbarProvider autoHideDuration={3000} anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right'}}>
+                        <Stack direction="row" spacing={1} justifyContent="flex-start">
+                            <SideMenu></SideMenu>
+                            {showCasesList ? <CasesList></CasesList> : null}
+                            {openNewReport ? <FormTabs></FormTabs> : null}
+                        </Stack>
+                </SnackbarProvider>
+            </Provider>
         );
     }
 };

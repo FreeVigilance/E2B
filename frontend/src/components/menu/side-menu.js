@@ -5,7 +5,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import { displaySelector, getData, revertAll, setOpenNewReport, setShowCasesList, setShowSideMenu } from '@src/features/display/slice';
+import { displaySelector, getData, revertAll, setCurrentId, setOpenNewReport, setShowCasesList, setShowSideMenu } from '@src/features/display/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { Fab } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -39,42 +39,7 @@ export const SideMenu = () => {
 
     const handleNewReportClick = () => {
         dispatch(revertAll());
-
-        // const reactionsDataCopy = JSON.parse(JSON.stringify(reactionsData));
-        // const reactionNew = new Reaction();
-        // reactionsDataCopy.push(reactionNew);
-        // dispatch(setReactionsData(reactionsDataCopy));
-
-        // const resultsDataCopy = JSON.parse(JSON.stringify(resultsData));
-        // const resultNew = new Result();
-        // resultsDataCopy.push(resultNew);
-        // dispatch(setResultsData(resultsDataCopy));
-
-        // const medHistoryCopy = JSON.parse(JSON.stringify(medicalHistory));
-        // const medicalHistoryNew = new MedHistory();
-        // medHistoryCopy.push(medicalHistoryNew);
-        // dispatch(setMedicalHistory(medHistoryCopy));
-
-        // const drugHistoryCopy = JSON.parse(JSON.stringify(drugHistory));
-        // const drugHistoryNew = new DrugHistory();
-        // drugHistoryCopy.push(drugHistoryNew);
-        // dispatch(setDrugHistory(drugHistoryCopy));
-
-        // const causeOfDeathCopy = JSON.parse(JSON.stringify(causeOfDeath));
-        // const causeOfDeathNew = new CauseOfDeath();
-        // causeOfDeathCopy.push(causeOfDeathNew);
-        // dispatch(setCauseOfDeath(causeOfDeathCopy));
-
-        // const autopsyCopy = JSON.parse(JSON.stringify(autopsy));
-        // const autopsyNew = new AutopsyData();
-        // autopsyCopy.push(autopsyNew);
-        // dispatch(setAutopsy(autopsyCopy));
-
-        // const parentDrugHistoryCopy = JSON.parse(JSON.stringify(parentDrugHistory));
-        // const parentDrugHistoryNew = new ParentDrugHistory();
-        // parentDrugHistoryCopy.push(parentDrugHistoryNew);
-        // dispatch(setParentDrugHistory(parentDrugHistoryCopy));
-
+        dispatch(setCurrentId(null));
         dispatch(setOpenNewReport(true));
     };
 

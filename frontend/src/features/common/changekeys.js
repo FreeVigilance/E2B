@@ -1,4 +1,5 @@
 import * as changeCase from 'change-case';
+import { nullFlavors } from '@src/components/nullFlavours';
 
 const isObject = (object) => object !== null && typeof object === 'object';
 
@@ -16,13 +17,20 @@ function changeKeysFactory (changeCase) {
             const value = object[key];
            
             let changedKey = '';
-            if (key !== 'value') {
+            if (key === 'null_flavor') {
+                changedKey = 'nullFlavor';
+            } else if (key !== 'value' && key !== 'id') {
                 changedKey = changeCase(key, options);
             } else {
                 changedKey = key;
             }
 
-            const changedValue = changeKeys(value, depth - 1, options);
+            let changedValue = changeKeys(value, depth - 1, options);
+            if (changedKey === 'nullFlavor') {
+                if (changedValue !== null) {
+                    changedValue = Object.keys(nullFlavors).find(key => nullFlavors[key] === changedValue);
+                }
+            }
 
             result[changedKey] = changedValue;
         });

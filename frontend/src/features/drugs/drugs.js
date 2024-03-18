@@ -17,6 +17,7 @@ export class Drug {
         this.G_k_6b_GestationPeriodExposureUnit = {"value": null}
         this.G_k_8_ActionTakenDrug = {"value": null}
         this.G_k_11_AdditionalInformationDrug = {"value": null}
+        this.id = null
     }
 }
 
@@ -27,6 +28,7 @@ export class Substance {
         this.G_k_2_3_r_2b_SubstanceTermID = {"value": null}
         this.G_k_2_3_r_3a_StrengthNum = {"value": null}
         this.G_k_2_3_r_3b_StrengthUnit = {"value": null}
+        this.id = null
     }
 }
 
@@ -51,6 +53,7 @@ export class Dosage {
         this.G_k_4_r_11_1_ParentRouteAdministration = {"value": null, "nullFlavor": null}
         this.G_k_4_r_11_2a_ParentRouteAdministrationTermIDVersion = {"value": null}
         this.G_k_4_r_11_2b_ParentRouteAdministrationTermID = {"value": null}
+        this.id = null
     }
 }
 
@@ -59,6 +62,7 @@ export class IndicationForUse {
         this.G_k_7_r_1_IndicationPrimarySource = {"value": null, "nullFlavor": null}
         this.G_k_7_r_2a_MedDRAVersionIndication = {"value": null}
         this.G_k_7_r_2b_IndicationMedDRACode = {"value": null}
+        this.id = null
     }
 }
 
@@ -69,6 +73,7 @@ export class DrugReactionMatrix {
         this.G_k_9_i_3_2a_IntervalLastDoseDrugReactionNum = {"value": null}
         this.G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit = {"value": null}
         this.G_k_9_i_4_ReactionRecurReadministration = {"value": null}
+        this.id = null
     }
 }
 
@@ -77,11 +82,13 @@ export class Relatedness {
         this.G_k_9_i_2_r_1_SourceAssessment = {"value": null}
         this.G_k_9_i_2_r_2_MethodAssessment = {"value": null}
         this.G_k_9_i_2_r_3_ResultAssessment = {"value": null}
+        this.id = null
     }
 }
 
 export class AdditionalInfo {
     constructor() {
         this.G_k_10_r_AdditionalInformationDrug = {"value": null}
+        this.id = null
     }
 }

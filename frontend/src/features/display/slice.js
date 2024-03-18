@@ -19,12 +19,20 @@ export const saveData = createAsyncThunk(
     },
 );
 
+export const changeData = createAsyncThunk(
+    'display/changeData',
+    (data) => {
+        return api.changeData(data);
+    },
+);
+
 const initialState = {
     showSideMenu: false,
     showCasesList: false,
     openNewReport: false,
     currentTab: 0,
     currentId: null,
+    currentSaved: 0,
 };
 
 const displaySlice = createSlice({
@@ -35,11 +43,14 @@ const displaySlice = createSlice({
         setShowCasesList: (state, action) => { state.showCasesList = action.payload; },
         setOpenNewReport: (state, action) => { state.openNewReport = action.payload; },
         setCurrentTab: (state, action) => { state.currentTab = action.payload; },
+        setCurrentId: (state, action) => { state.currentId = action.payload; },
+        setCurrentSaved: (state, action) => { state.currentSaved = action.payload; },
     },
     extraReducers: (builder) => {
         builder.addCase(revertAll, () => initialState);
         builder.addCase(getData.fulfilled, (state, action) => {
             console.log('data');
+            state.currentId = action.payload['id'];
             console.log(action.payload);
         });
         builder.addCase(getData.rejected, (state, action) => {
@@ -50,10 +61,12 @@ const displaySlice = createSlice({
             console.log('save');
             console.log(action.payload);
             state.currentId = action.payload.id;
+            state.currentSaved = 1;
         });
         builder.addCase(saveData.rejected, (state, action) => {
             console.log('save');
             console.log(action.payload);
+            state.currentSaved = 2;
         });
     },
 });
@@ -64,5 +77,7 @@ export const {
     setShowCasesList,
     setOpenNewReport,
     setCurrentTab,
+    setCurrentId,
+    setCurrentSaved,
 
 } = displaySlice.actions;
