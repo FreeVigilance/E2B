@@ -88,7 +88,7 @@ class DomainToStorageModelConverter(ModelConverter[DomainModel, StorageModel]):
                 null_flavor = lower_model_dict.pop(field_name)
                 if null_flavor:
                     value_field_name = null_flavor_field_utils.get_base_field_name(field_name)
-                    lower_model_dict[value_field_name] = null_flavor
+                    lower_model_dict[value_field_name] = NullFlavor(null_flavor)
 
             # Related models are retrieved only from m-1 and backward 1-1 relations.
             # Backward m-m relations are ignored as there are none among the domain models.
