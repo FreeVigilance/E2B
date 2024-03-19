@@ -26,7 +26,8 @@ export const getIdentification = () => {
                 'C_1_8_1_WorldwideUniqueCaseIdentificationNumber': identificationData['C_1_8_1_WorldwideUniqueCaseIdentificationNumber'],
                 'C_1_8_2_FirstSender': identificationData['C_1_8_2_FirstSender'],
                 'C_1_9_OtherCaseIds': identificationData['C_1_9_OtherCaseIds'],
-                'C_1_9_1_OtherCaseIdsPreviousTransmissions': (identificationData['C_1_9_1_OtherCaseIdsPreviousTransmissions']['value'] === false
+                'C_1_9_1_OtherCaseIdsPreviousTransmissions': (identificationData['C_1_9_1_OtherCaseIdsPreviousTransmissions']['value'] === false ||
+                identificationData['C_1_9_1_OtherCaseIdsPreviousTransmissions']['value'] === null 
                 ? {'value': null, 'nullFlavor': 'NI'}
                 : identificationData['C_1_9_1_OtherCaseIdsPreviousTransmissions']),
                 'C_1_11_ReportNullificationAmendment': identificationData['C_1_11_ReportNullificationAmendment'],

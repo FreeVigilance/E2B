@@ -26,6 +26,16 @@ export const changeData = createAsyncThunk(
     },
 );
 
+
+export const deleteReport = createAsyncThunk(
+    'display/deleteReport',
+    (id) => {
+        console.log('delete', id);
+        return api.deleteReport(id);
+    },
+);
+
+
 const initialState = {
     showSideMenu: false,
     showCasesList: false,
@@ -33,6 +43,7 @@ const initialState = {
     currentTab: 0,
     currentId: null,
     currentSaved: 0,
+    uploadedFile: null,
 };
 
 const displaySlice = createSlice({
@@ -45,6 +56,7 @@ const displaySlice = createSlice({
         setCurrentTab: (state, action) => { state.currentTab = action.payload; },
         setCurrentId: (state, action) => { state.currentId = action.payload; },
         setCurrentSaved: (state, action) => { state.currentSaved = action.payload; },
+        setUploadedFile: (state, action) => { state.uploadedFile = action.payload; },
     },
     extraReducers: (builder) => {
         builder.addCase(revertAll, () => initialState);
@@ -80,6 +92,7 @@ const displaySlice = createSlice({
             state.currentSaved = 2;
         });
     },
+
 });
 
 export default displaySlice.reducer;
@@ -90,5 +103,6 @@ export const {
     setCurrentTab,
     setCurrentId,
     setCurrentSaved,
+    setUploadedFile
 
 } = displaySlice.actions;

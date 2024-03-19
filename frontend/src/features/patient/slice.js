@@ -125,8 +125,8 @@ export const getPatient = () => {
 		Object.values(parentData).forEach((item, index) => {
 			let itemData = {
 				'id': item['id'],
-				'D_10_7_1_r_1a_MedDRAVersionMedicalHistory': item['D_10_7_1_r_1a_MedDRAVersionMedicalHistory'],
-				'D_10_7_1_r_1b_MedicalHistoryMedDRACode': item['D_10_7_1_r_1b_MedicalHistoryMedDRACode'],
+				'D_10_7_1_r_1a_MeddraVersionMedicalHistory': item['D_10_7_1_r_1a_MedDRAVersionMedicalHistory'],
+				'D_10_7_1_r_1b_MedicalHistoryMeddraCode': item['D_10_7_1_r_1b_MedicalHistoryMedDRACode'],
 				'D_10_7_1_r_2_StartDate': getNullFlavor(item, 'D_10_7_1_r_2_StartDate'),
 				'D_10_7_1_r_3_Continuing': getNullFlavor(item, 'D_10_7_1_r_3_Continuing'),
 				'D_10_7_1_r_4_EndDate': getNullFlavor(item, 'D_10_7_1_r_4_EndDate'),
@@ -136,7 +136,7 @@ export const getPatient = () => {
 			parentDataRes.push(itemData);
 		});
 
-		jsonResult['D_PatientCharacteristics']['D_10_7_1_r_StructuredInformationParentMedDRACode'] = parentDataRes;
+		jsonResult['D_PatientCharacteristics']['D_10_7_1_r_StructuredInformationParentMeddraCode'] = parentDataRes;
 		jsonResult['D_PatientCharacteristics']['D_10_7_2_TextMedicalHistoryParent'] = parentHistoryData['D_10_7_2_TextMedicalHistoryParent'];
 
 		let parentDrugHistoryData = [];

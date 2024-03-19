@@ -8,7 +8,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import { displaySelector, setCurrentSaved, setCurrentTab } from '@src/features/display/slice';
 import { Results } from './results';
 import { Reactions } from './reactions';
-import { IconButton } from '@mui/material';
+import { FormLabel, IconButton } from '@mui/material';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import { Patient } from './patient-info/patient';
 import { ParentChild } from './patient-info/parent-child/parent-child';
@@ -22,10 +22,11 @@ import { ReferencesComp } from './references';
 import { IdentificationComp } from './identification/identification';
 import { StudyIdentificationComp } from './study-identification/study-identification';
 import { useSnackbar } from 'notistack';
+import { NarrativeComp } from './narrative/narrative';
 
 export const FormTabs = () => {
     const dispatch = useDispatch();
-    const { currentTab, currentSaved } = useSelector(displaySelector);
+    const { currentTab, currentSaved, currentId } = useSelector(displaySelector);
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -57,12 +58,13 @@ export const FormTabs = () => {
                         <Tab label="Parent-child" value="3" />
                         <Tab label="Drugs" value="4" />
                         <Tab label="Dosages" value="5" />
-                        <Tab label="Drug Reaction Matrix" value="6" />
+                        {/* <Tab label="Drug Reaction Matrix" value="6" /> */}
                         <Tab label="Primary Source" value="7" />
                         <Tab label="Sender Information" value="8" />
                         <Tab label="Literature References" value="9" />
                         <Tab label="Identification of report" value="10" />
                         <Tab label="Study Identification" value="11" />
+                        <Tab label="Narrative Case Summary" value="12" />
 
                     </TabList>
                 </Box>
@@ -84,9 +86,9 @@ export const FormTabs = () => {
                 <TabPanel value="5">
                     <DosageTabs></DosageTabs>
                 </TabPanel>
-                <TabPanel value="6">
+                {/* <TabPanel value="6">
                     <MatrixTabs></MatrixTabs>
-                </TabPanel>
+                </TabPanel> */}
                 <TabPanel value="7">
                     <PrimarySourceComp></PrimarySourceComp>
                 </TabPanel>
@@ -102,9 +104,13 @@ export const FormTabs = () => {
                 <TabPanel value="11">
                     <StudyIdentificationComp></StudyIdentificationComp>
                 </TabPanel>
+                <TabPanel value="12">
+                    <NarrativeComp></NarrativeComp>
+                </TabPanel>
 
                 <Save></Save>
-
+                <FormLabel sx={{ position: 'fixed', bottom: '2%', right: '2%',
+                zIndex: 10000, fontSize: 25,  color: 'black'}}>Report id: {currentId}</FormLabel>
                 {/* <IconButton color = 'primary'
                     sx={{ position: 'fixed', top: 5, right: 80, zIndex: 10000 }}>
                     <VerifiedUserIcon size='large'></VerifiedUserIcon>

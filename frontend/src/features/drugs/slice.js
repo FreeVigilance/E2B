@@ -85,8 +85,8 @@ export const getDrug = () => {
 				indicationsData.push({
 					'id': subItem['id'],
 					'G_k_7_r_1_IndicationPrimarySource': getNullFlavor(subItem, 'G_k_7_r_1_IndicationPrimarySource'),
-					'G_k_7_r_2a_MedDRAVersionIndication': subItem['G_k_7_r_2a_MedDRAVersionIndication'],
-					'G_k_7_r_2b_IndicationMedDRACode': subItem['G_k_7_r_2b_IndicationMedDRACode'],
+					'G_k_7_r_2a_MeddraVersionIndication': subItem['G_k_7_r_2a_MedDRAVersionIndication'],
+					'G_k_7_r_2b_IndicationMeddraCode': subItem['G_k_7_r_2b_IndicationMedDRACode'],
 				})
 			});
 			itemData['G_k_7_r_IndicationUseCase'] = indicationsData;
@@ -148,6 +148,7 @@ export const parseDrug = (data) => {
 	if (data) {
 		Object.values(data).forEach((item, index) => {
 			let drugsData = new Drug();
+			drugsData['id'] = item['id'];
 			drugsData['G_k_1_CharacterisationDrugRole'] = item['G_k_1_CharacterisationDrugRole'];
 			drugsData['G_k_2_1_1a_MPIDVersion'] = item['G_k_2_1_1a_MPIDVersion'];
 			drugsData['G_k_2_1_1b_MPID'] = item['G_k_2_1_1b_MPID'];

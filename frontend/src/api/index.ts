@@ -17,5 +17,8 @@ export const api = {
     getCasesList: () => {
         console.log('getCasesList api')
         return clientER.get('/icsr');
+    },
+    deleteReport: (id: any) => {
+        return clientER.delete(`/icsr/${id}`);
     }
 };

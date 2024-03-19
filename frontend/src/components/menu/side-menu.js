@@ -16,13 +16,14 @@ import { Result } from '@src/features/results/result';
 import { AutopsyData, CauseOfDeath, DrugHistory, MedHistory, ParentDrugHistory } from '@src/features/patient/patient';
 import { patientSelector, setAutopsy, setCauseOfDeath, setDrugHistory, setMedicalHistory, setParentDrugHistory } from '@src/features/patient/slice';
 import { getCasesList } from '@src/features/cases-list/slice';
+// import { UploadXml } from './upload-xml';
 
 const drawerWidth = 240;
 
 export const SideMenu = () => {
     const dispatch = useDispatch();
 
-    const { showSideMenu } = useSelector(displaySelector);
+    const { showSideMenu, openNewReport } = useSelector(displaySelector);
     const { reactionsData } = useSelector(reactionsSelector);
     const { resultsData } = useSelector(resultsSelector);
     const { medicalHistory, drugHistory, causeOfDeath, parentHistoryData, parentDrugHistory, autopsy } = useSelector(patientSelector);
@@ -32,6 +33,10 @@ export const SideMenu = () => {
     }, []);
 
     const handleCaseListShow = () => {
+        if (openNewReport) {
+            let answer = window.confirm(`Are you shure? There may be unsaved data`);
+            if (!answer) return;
+        }
         dispatch(revertAll());
         dispatch(getCasesList());
         dispatch(setShowCasesList(true));
@@ -72,15 +77,16 @@ export const SideMenu = () => {
                         </ListItemButton>
                     </ListItem>
 
-                    <ListItem key={'Import XML'} disablePadding>
+                    {/* <ListItem key={'Import XML'} disablePadding>
                         <ListItemButton>
                             <ListItemText primary={'Import XML'} />
                         </ListItemButton>
-                    </ListItem>
+                    </ListItem> */}
+                    {/* <UploadXml></UploadXml> */}
                 </List>
             </SwipeableDrawer>
             <Fab variant="contained"
-                sx={{ position: 'fixed', bottom: 10, left: 10, zIndex: 10000 }}
+                sx={{ position: 'fixed', bottom: '2%', left: '1%', zIndex: 10000 }}
                 onClick={handleToggleMenuClick}>
                 <MenuIcon></MenuIcon>
             </Fab>
