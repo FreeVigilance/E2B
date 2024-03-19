@@ -665,7 +665,7 @@ class G_k_4_r_dosage_information(StorageModel):
 
     g_k_4_r_9_1_pharmaceutical_dose_form = models.CharField(null=True)
     nf_g_k_4_r_9_1_pharmaceutical_dose_form = models.CharField(null=True, choices=[NF.ASKU, NF.NASK, NF.UNK])
-    g_k_4_r_9_2a_pharmaceutical_dose_fom_termid_version = models.CharField(null=True)  # st
+    g_k_4_r_9_2a_pharmaceutical_dose_form_termid_version = models.CharField(null=True)  # st
     g_k_4_r_9_2b_pharmaceutical_dose_form_termid = models.CharField(null=True)  # st
 
     # g_k_4_r_10_route_administration

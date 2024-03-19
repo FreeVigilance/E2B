@@ -418,7 +418,7 @@ class G_k_4_r_dosage_information(DomainModel):
     # g_k_4_r_9_pharmaceutical_dose_form
 
     g_k_4_r_9_1_pharmaceutical_dose_form: str | t.Literal[NF.ASKU, NF.NASK, NF.UNK] | None = None
-    g_k_4_r_9_2a_pharmaceutical_dose_fom_termid_version: str | None = None  # st
+    g_k_4_r_9_2a_pharmaceutical_dose_form_termid_version: str | None = None  # st
     g_k_4_r_9_2b_pharmaceutical_dose_form_termid: str | None = None  # st
 
     # g_k_4_r_10_route_administration

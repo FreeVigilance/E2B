@@ -81,6 +81,8 @@ class DomainToStorageModelConverter(ModelConverter[DomainModel, StorageModel]):
             # Forward relations are ignored as the domain models are only aware of embedded models
             # (which are stored in storage models backward relations).
 
+            # m-1 and forward 1-1 relations are retrieved as ids by forms.model_to_dict
+
             # Last condition checks if this field is a backward (reverse) relation
             if not include_related or not field.is_relation or not isinstance(field, models.ForeignObjectRel):
                 continue
