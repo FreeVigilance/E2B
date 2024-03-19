@@ -1,9 +1,6 @@
 import typing as t
 
-from django.conf import settings
-from django.db import models
-
-from extensions.django import exceptions
+from django.db import models, connection
 
 
 CONSTRAINT_NAME_PARTS_SEPARATOR = '__'
@@ -13,32 +10,31 @@ ANY_NULL_CONSTRAINT_LABEL = 'anynul'
 
 
 def add_constraint(meta_cls: type[t.Any], constraint: models.BaseConstraint) -> None:
-    try:
-        meta_cls.constraints
-    except AttributeError:
-        setattr(meta_cls, 'constraints', [])
-    meta_cls.constraints.append(constraint)
+    constraints = getattr(meta_cls, 'constraints', [])
+    constraints.append(constraint)
+    setattr(meta_cls, 'constraints', constraints)
 
 
-def make_constraint_name(*field_names: str, constraint_label: str) -> str:
-    try:
-        max_len = settings.DB_LABEL_MAX_LENGTH
-        max_len -= len(constraint_label) + len(CONSTRAINT_NAME_PARTS_SEPARATOR)
-    except AttributeError:
-        exceptions.raise_settings_attribute_exception('DB_LABEL_MAX_LENGTH')
-    
-    field_names_cnt = len(field_names)
-    part_len = max_len // field_names_cnt - len(CONSTRAINT_NAME_PARTS_SEPARATOR)
+def make_constraint_name(meta_cls: type[t.Any], constraint_label: str, *field_names: str) -> str:
+    # Add db_table or model class name to constraint name parts for better uniqueness
+    db_table = getattr(meta_cls, 'db_table', meta_cls.__qualname__.split('.')[0])
+    parts = (db_table,) + field_names
+
+    db_names_max_len = connection.ops.max_name_length()
+    sep_len = len(CONSTRAINT_NAME_PARTS_SEPARATOR)
+    max_len = db_names_max_len - len(constraint_label) - sep_len
+    parts_cnt = len(parts)
+    part_len = max_len // parts_cnt - sep_len
     constraint_name = constraint_label + CONSTRAINT_NAME_PARTS_SEPARATOR
-    
-    for i in range(field_names_cnt):
-        field_name = field_names[i]
-        end_idx = min(part_len, len(field_name))
-        part = field_name[:end_idx]
+
+    for i in range(parts_cnt):
+        part = parts[i]
+        end_idx = min(part_len, len(part))
+        part = part[:end_idx]
         if part[-1] == '_':
             part = part[:-1]
         constraint_name += part
-        if i < field_names_cnt - 1:
+        if i < parts_cnt - 1:
             constraint_name += CONSTRAINT_NAME_PARTS_SEPARATOR
 
     return constraint_name
@@ -47,15 +43,15 @@ def make_constraint_name(*field_names: str, constraint_label: str) -> str:
 def add_choices_constraint(meta_cls: type[t.Any], field_name: str, choices: t.Iterable[t.Any]) -> None:
     constraint = models.CheckConstraint(
         check=models.Q(**{f'{field_name}__in': choices}),
-        name=make_constraint_name(field_name, constraint_label=CHOICES_CONSTRAINT_LABEL)
+        name=make_constraint_name(meta_cls, CHOICES_CONSTRAINT_LABEL, field_name)
     )
     add_constraint(meta_cls, constraint)
 
 
-def add_unique_together_constraint(meta_cls: type[t.Any], *field_names: str):
+def add_unique_together_constraint(meta_cls: type[t.Any], *field_names: str) -> None:
     constraint = models.UniqueConstraint(
         fields=field_names,
-        name=make_constraint_name(*field_names, constraint_label=UNIQUE_TOGETHER_CONSTRAINT_LABEL)
+        name=make_constraint_name(meta_cls, UNIQUE_TOGETHER_CONSTRAINT_LABEL, *field_names)
     )
     add_constraint(meta_cls, constraint)
 
@@ -68,6 +64,6 @@ def add_any_null_constraint(meta_cls: type, *field_names: str) -> None:
 
     constraint = models.CheckConstraint(
         check=result_check,
-        name=make_constraint_name(*field_names, constraint_label=ANY_NULL_CONSTRAINT_LABEL)
+        name=make_constraint_name(meta_cls, ANY_NULL_CONSTRAINT_LABEL, *field_names)
     )
     add_constraint(meta_cls, constraint)

@@ -1,24 +1,18 @@
+import typing as t
+
 from django.db import models
 
-
-class PrefixedFieldUtils:
-    def __init__(self, field_name_prefix: str):
-        self._field_name_prefix = field_name_prefix
-
-    def make_special_field_name(self, field_name):
-        return self._field_name_prefix + field_name
-
-    def is_special_field_name(self, field_name: str) -> bool:
-        return field_name.startswith(self._field_name_prefix)
-
-    def get_base_field_name(self, temp_relation_field_name: str):
-        return temp_relation_field_name.replace(self._field_name_prefix, '', 1)
+from extensions.django.constraints import add_choices_constraint
+from extensions.django.fields import temp_relation_field_utils
 
 
-temp_relation_field_utils = PrefixedFieldUtils('tmp_rel_')
+def get_meta_attr_or_raise_exc(attrs: t.Dict[str, t.Any], class_name: str, meta_attr_usage: str) -> type[t.Any]:
+    assert 'Meta' in attrs, \
+        f'Model class {class_name} must contain explicit inner class Meta for {meta_attr_usage} usage'
+    return attrs['Meta']
 
 
-class ModelWithTempRelationsSupport(models.Model):
+class ModelWithTempRelationSupport(models.Model):
     class Meta:
         abstract = True
 
@@ -30,3 +24,26 @@ class ModelWithTempRelationsSupport(models.Model):
         super().__init__(*args, **kwargs)
         for key, value in popped_kwargs.items():
             setattr(self, key, value)
+
+
+class ModelWithFieldChoicesConstraintMeta(models.base.ModelBase):
+    """
+    Used for a db constraint creation for the choices param in every model field.
+    Also allows to set choices param in any model field as any iterable.
+    """
+
+    def __new__(cls, name, bases, attrs, **kwargs):
+        for field_name, field in attrs.items():
+            if not isinstance(field, models.Field):
+                continue
+
+            choices = field.choices
+            if choices:
+                meta = get_meta_attr_or_raise_exc(attrs, name, 'choices field param')
+                add_choices_constraint(meta, field_name, choices)
+
+                # Format choices if current iterable is invalid for django
+                if field._check_choices():
+                    field.choices = {c: c for c in choices}
+
+        return super().__new__(cls, name, bases, attrs, **kwargs)

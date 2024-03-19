@@ -1,18 +1,49 @@
 import abc
+import functools
+import inspect
 import typing as t
 
 
 # TODO: consider creating pydantic instances instead of dicts, check speed
 class ModelConverter[H, L](abc.ABC):
-    def __init__(self, higher_to_lower_model_class_map: dict[type[H], type[L]]) -> None:
-        self.higher_to_lower_model_class_map = higher_to_lower_model_class_map
-        self.lower_to_higher_model_class_map = {v: k for k, v in higher_to_lower_model_class_map.items()}
+    @classmethod
+    @abc.abstractmethod
+    def get_higher_model_base_class(cls) -> type[H]:
+        pass
+
+    @classmethod
+    @abc.abstractmethod
+    def get_lower_model_base_class(cls) -> type[L]:
+        pass
+
+    @classmethod
+    @functools.cache  # TODO: check performance with logging
+    def get_higher_to_lower_model_class_map(cls) -> dict[type[H], type[L]]:
+        higher_class = cls.get_higher_model_base_class()
+        lower_class = cls.get_lower_model_base_class()
+        higher_module = inspect.getmodule(higher_class)
+        lower_module = inspect.getmodule(lower_class)
+        class_map = dict()
+
+        for higher_attr_name, higher_attr in vars(higher_module).items():
+            if inspect.isclass(higher_attr) and issubclass(higher_attr, higher_class) and higher_attr != higher_class:
+                lower_attr = getattr(lower_module, higher_attr_name)
+                if issubclass(lower_attr, lower_class):
+                    class_map[higher_attr] = lower_attr
+
+        return class_map
+
+
+    @classmethod
+    @functools.cache
+    def get_lower_to_higher_model_class_map(cls) -> dict[type[L], type[H]]:
+        return {v: k for k, v in cls.get_higher_to_lower_model_class_map().items()}
 
     def get_lower_model_class(self, higher_model_class: type[H]) -> type[L]:
-        return self.higher_to_lower_model_class_map[higher_model_class]
+        return self.get_higher_to_lower_model_class_map()[higher_model_class]
 
     def get_higher_model_class(self, lower_model_class: type[L]) -> type[H]:
-        return self.lower_to_higher_model_class_map[lower_model_class]
+        return self.get_lower_to_higher_model_class_map()[lower_model_class]
 
     def convert_to_lower_model(self, higher_model: H, **kwargs) -> L:
         return self._convert_from_target_model_dict(
@@ -28,12 +59,14 @@ class ModelConverter[H, L](abc.ABC):
             self.get_higher_model_class
         )
 
+    # TODO: check if there is a way to make the same annotation for these funcs without overload
+
     @staticmethod
     @t.overload
     def _convert_from_target_model_dict(
             source_model: H,
             target_model_dict: dict[str, t.Any],
-            target_model_class_getter: t.Callable[[type[H]], type[L]]
+            get_target_model_class: t.Callable[[type[H]], type[L]]
     ) -> L: ...
 
     @staticmethod
@@ -41,16 +74,16 @@ class ModelConverter[H, L](abc.ABC):
     def _convert_from_target_model_dict(
             source_model: L,
             target_model_dict: dict[str, t.Any],
-            target_model_class_getter: t.Callable[[type[L]], type[H]]
+            get_target_model_class: t.Callable[[type[L]], type[H]]
     ) -> H: ...
 
     @staticmethod
     def _convert_from_target_model_dict(
             source_model: [H | L],
             target_model_dict: dict[str, t.Any],
-            target_model_class_getter: t.Callable[[type[H] | type[L]], type[H] | type[L]]
+            get_target_model_class: t.Callable[[type[H] | type[L]], type[H] | type[L]]
     ) -> H | L:
-        target_model_class = target_model_class_getter(type(source_model))
+        target_model_class = get_target_model_class(type(source_model))
         return target_model_class(**target_model_dict)
 
     def _convert_to_lower_model_dict(self, higher_model: H, **kwargs) -> dict[str, t.Any]:
@@ -65,7 +98,7 @@ class ModelConverter[H, L](abc.ABC):
             source_model: L,
             target_model_dict: dict[str, t.Any],
             check_model_class: type[L],
-            convert_func: t.Callable[[L], t.Any]  # TODO: annotation for kwargs
+            convert_model: t.Callable[[L], t.Any]  # TODO: annotation for kwargs
     ) -> t.Iterator[tuple[str, t.Any, bool]]: ...
 
     @staticmethod
@@ -74,7 +107,7 @@ class ModelConverter[H, L](abc.ABC):
             source_model: H,
             target_model_dict: dict[str, t.Any],
             check_model_class: type[H],
-            convert_func: t.Callable[[H], t.Any]  # TODO: annotation for kwargs
+            convert_model: t.Callable[[H], t.Any]  # TODO: annotation for kwargs
     ) -> t.Iterator[tuple[str, t.Any, bool]]: ...
 
     @staticmethod
@@ -82,7 +115,7 @@ class ModelConverter[H, L](abc.ABC):
             source_model: H | L,
             target_model_dict: dict[str, t.Any],
             check_model_class: type[H | L],
-            convert_func: t.Callable[[H | L], t.Any]  # TODO: annotation for kwargs
+            convert_model: t.Callable[[H | L], t.Any]  # TODO: annotation for kwargs
     ) -> t.Iterator[tuple[str, t.Any, bool]]:
 
         for key in source_model.model_fields:
@@ -92,14 +125,14 @@ class ModelConverter[H, L](abc.ABC):
 
             if isinstance(value, check_model_class):
                 is_conditions_met = True
-                target_model_dict[key] = convert_func(value)
+                target_model_dict[key] = convert_model(value)
 
             elif isinstance(value, list):
                 is_conditions_met = True
                 result_value = []
                 for item in value:
                     if isinstance(item, check_model_class):
-                        item_value = convert_func(item)
+                        item_value = convert_model(item)
                     else:
                         item_value = value
                     result_value.append(item_value)

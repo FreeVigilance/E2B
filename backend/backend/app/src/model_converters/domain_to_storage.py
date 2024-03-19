@@ -3,31 +3,23 @@ import typing as t
 from django import forms
 from django.db import models
 
-from app.src.layers.domain import models as domain_models
 from app.src.layers.domain.models import DomainModel
-from app.src.layers.storage import models as storage_models
 from app.src.layers.storage.models import StorageModel, null_flavor_field_utils
 from app.src.model_converters.base import ModelConverter
 from app.src.shared.enums import NullFlavor
-from extensions.django.models import temp_relation_field_utils
-
-
-DOMAIN_TO_STORAGE_MODEL_CLASS_MAP = {
-    domain_models.ICSR:
-        storage_models.ICSR,
-    domain_models.C_1_identification_case_safety_report:
-        storage_models.C_1_identification_case_safety_report,
-    domain_models.C_1_6_1_r_documents_held_sender:
-        storage_models.C_1_6_1_r_documents_held_sender,
-    domain_models.C_1_9_1_r_source_case_id:
-        storage_models.C_1_9_1_r_source_case_id,
-    domain_models.C_1_10_r_identification_number_report_linked:
-        storage_models.C_1_10_r_identification_number_report_linked
-}
+from extensions.django.fields import temp_relation_field_utils
 
 
 class DomainToStorageModelConverter(ModelConverter[DomainModel, StorageModel]):
     INCLUDE_RELATED_DEFAULT = True
+
+    @classmethod
+    def get_higher_model_base_class(cls):
+        return DomainModel
+
+    @classmethod
+    def get_lower_model_base_class(cls):
+        return StorageModel
 
     def convert_to_lower_model(self, higher_model: DomainModel, **kwargs) -> StorageModel:
         target_model_dict = dict()
@@ -81,12 +73,15 @@ class DomainToStorageModelConverter(ModelConverter[DomainModel, StorageModel]):
                 null_flavor = lower_model_dict.pop(field_name)
                 if null_flavor:
                     value_field_name = null_flavor_field_utils.get_base_field_name(field_name)
-                    lower_model_dict[value_field_name] = null_flavor
+                    lower_model_dict[value_field_name] = NullFlavor(null_flavor)
 
-            # Related models are retrieved only from m-1 and backward 1-1 relations.
-            # Backward m-m relations are ignored as there are none among the domain models.
+            # Related models are retrieved only from 1-m and backward 1-1 relations
+            # (1-m relations can only be created as backward relations in django).
+            # m-m relations are ignored as there are none among the models.
             # Forward relations are ignored as the domain models are only aware of embedded models
             # (which are stored in storage models backward relations).
+
+            # m-1 and forward 1-1 relations are retrieved as ids by forms.model_to_dict
 
             # Last condition checks if this field is a backward (reverse) relation
             if not include_related or not field.is_relation or not isinstance(field, models.ForeignObjectRel):

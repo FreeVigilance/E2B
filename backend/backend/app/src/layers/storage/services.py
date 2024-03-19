@@ -3,7 +3,7 @@ import enum
 from django.db import transaction
 
 from app.src.layers.storage.models import StorageModel
-from extensions.django.models import temp_relation_field_utils
+from extensions.django.fields import temp_relation_field_utils
 
 
 class StorageService:
@@ -19,7 +19,7 @@ class StorageService:
 
     @transaction.atomic
     def create(self, new_model: StorageModel) -> StorageModel:
-        assert new_model.id is None, 'Id must not be specified when creating a new entity'
+        assert new_model.id is None, 'Id can not be specified when creating a new entity'
         self._save_with_related(new_model, self.SaveOperation.INSERT)
         return new_model
 
@@ -76,8 +76,8 @@ class StorageService:
                 else:
                     self.update(related_model, related_model.id)
 
-    def delete_model(self, old_model: StorageModel) -> None:
-        self.delete(type(old_model), old_model.pk)
-
     def delete(self, model_class: type[StorageModel], pk: int) -> None:
         model_class.objects.get(pk=pk).delete()
+
+    def delete_model(self, old_model: StorageModel) -> None:
+        self.delete(type(old_model), old_model.pk)

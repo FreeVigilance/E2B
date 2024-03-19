@@ -13,7 +13,6 @@
     "release:minor": "standard-version --release-as minor",
     "release:major": "standard-version --release-as major",
     "release:dev": "standard-version --skip.changelog --skip.tag --prerelease",
-    "postinstall": "husky install",
     "ci": "npm run lint"
   },
   "devDependencies": {
