@@ -40,6 +40,7 @@ class ModelInstanceView(BaseView):
         return self.respond_with_model_json(model)
 
     def put(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
+        # TODO: check pk = model.id
         model = self.model_class.model_validate_json(request.body)
         model = self.domain_service.update(model, pk)
         return self.respond_with_model_json(model)
