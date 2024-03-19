@@ -1,14 +1,16 @@
 import enum
 
 
-class StandardEnumStrMixin:
+class BaseEnumStrMixin:
+    """Declares base Enum str representation."""
+
     def __str__(self):
         return enum.Enum.__str__(self)
 
 
-class BaseIntEnum(StandardEnumStrMixin, enum.IntEnum):
+class BaseIntEnum(BaseEnumStrMixin, enum.IntEnum):
     pass
 
 
-class BaseStrEnum(StandardEnumStrMixin, enum.StrEnum):
+class BaseStrEnum(BaseEnumStrMixin, enum.StrEnum):
     pass
