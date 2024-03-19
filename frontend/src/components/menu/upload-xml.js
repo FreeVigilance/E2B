@@ -1,60 +1,73 @@
-// import React from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { displaySelector, setUploadedFile } from "@src/features/display/slice";
-// import axios from "axios";
+import React, { useState } from "react";
+import { displaySelector, getJsonFromXml, revertAll, setOpenNewReport, setShowUpload, setUploadedFile } from "@src/features/display/slice";
+import { useDispatch, useSelector } from "react-redux";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormLabel, Input, OutlinedInput, Stack } from "@mui/material";
 
-// export const UploadXml = () => {
-//     const dispatch = useDispatch();
+export const UploadXml = () => {
+    const dispatch = useDispatch();
 
-//     const { uploadedFile } = useSelector(displaySelector);
+    const { showUpload } = useSelector(displaySelector);
+    const [file, setFile] = useState(null);
 
-//     const handleFileChange = (e) => {
-//         if (e.target.files) {
-//             dispatch(setUploadedFile(e.target.files[0]));
-//         }
-//     };
-  
-//     const handleUploadClick = () => {
-//         console.log(uploadedFile);
-//         if (!uploadedFile) {
-//             return;
-//         }
-//         axios.get(uploadedFile, {
-//             "Content-Type": "application/xml; charset=utf-8"
-//          })
-//          .then((response) => {
-//             console.log('Your xml file as string', response.data);
-//          });
-  
-//         // var rawFile = new XMLHttpRequest();
-//         // rawFile.open("GET", uploadedFile, false);
-//         // console.log(rawFile);
-//         // rawFile.onreadystatechange = () => {
-//         //     console.log(rawFile)
-//         //     if (rawFile.readyState === 4) {
-//         //         console.log("!")
-//         //         if (rawFile.status === 200 || rawFile.status == 0) {
-//         //             console.log("!!")
-//         //             var xmlasstring = rawFile.responseText;
-//         //             console.log('Your xml file as string', xmlasstring)
-//         //         }
-//         //     }
-//         // }
-//         // axios.get(uploadedFile, {
-//         //     "Content-Type": "application/xml; charset=utf-8"
-//         // })
-//         // .then((response) => {
-//         //     console.log('Your xml file as string', response.data);
-//         // });
-//     };
-  
-//     return (
-//         <div>
-//             <input type="file" onChange={handleFileChange} />
-    
-//             <div>{uploadedFile && `${uploadedFile.name}`}</div>
-    
-//             <button onClick={handleUploadClick}>Upload</button>
-//         </div>
-//     );
-//   }
+    const onHide = (event, reason) => {
+        if (reason && reason === "backdropClick") 
+            return;
+        dispatch(setShowUpload(false));
+    };
+
+    const handleFileChange = (e) => {
+        if (e.target.files) {
+        setFile(e.target.files[0]);
+        }
+    };
+
+    const handleUpload = async () => {
+        if (file) {
+            var reader = new FileReader();
+            let readXml=null;
+            reader.onload = function(e) {
+                readXml = e.target.result;
+                dispatch(revertAll());
+                dispatch(setUploadedFile(readXml));
+                dispatch(getJsonFromXml(readXml));
+                dispatch(setShowUpload(false));
+                dispatch(setOpenNewReport(true));
+            }
+            reader.readAsText(file);
+        }
+    };
+
+    return (
+
+        <Dialog
+        open={showUpload}
+        onClose={onHide}
+        >
+            <DialogTitle sx={{ fontSize: 30, color: 'black' }}>
+            {"Upload XML file"}
+            </DialogTitle>
+            <DialogContent>
+                <Stack direction="column" spacing={2} justifyContent="flex-start">
+                    <form method="post" enctype="multipart/form-data">
+                        <label class="input-file">
+                            <input type="file" name="file" onChange={handleFileChange}></input>
+                                <span className="input-file-btn" >
+                                    Choose file
+                                </span>
+                        </label>
+                    </form>
+
+                    {file && 
+                    <Stack direction="column" spacing={2} justifyContent="flex-start">
+                        <FormLabel>{`File Name: ${file.name}`}</FormLabel>
+                        <Button variant="contained" color="secondary" onClick={handleUpload}>Upload a file</Button>
+                    </Stack>
+                    }
+                </Stack>
+            </DialogContent>
+            <DialogActions>
+            <Button variant="outlined" onClick={onHide}>Закрыть</Button>
+            </DialogActions>
+        </Dialog>
+    );
+};

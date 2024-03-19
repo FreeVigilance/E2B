@@ -20,5 +20,13 @@ export const api = {
     },
     deleteReport: (id: any) => {
         return clientER.delete(`/icsr/${id}`);
+    },
+    getXmlFromJson: (data: any) => {
+        console.log(data);
+        return clientER.getXml('/icsr/to-xml', { data: data });
+    },
+    getJsonFromXml: (data: any) => {
+        console.log(data);
+        return clientER.getJson('/icsr/from-xml', { data: data });
     }
 };
