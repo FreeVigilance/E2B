@@ -56,7 +56,7 @@ class ModelInstanceView(BaseView):
 
 
 class ModelToXmlView(BaseView):
-    def get(self, request: http.HttpRequest) -> http.HttpResponse:
+    def post(self, request: http.HttpRequest) -> http.HttpResponse:
         model = self.get_model_from_request(request)
         model_dict = model.model_dump()
         self.extend_lists(model_dict)
@@ -75,7 +75,7 @@ class ModelToXmlView(BaseView):
 
 
 class ModelFromXmlView(BaseView):
-    def get(self, request: http.HttpRequest) -> http.HttpResponse:
+    def post(self, request: http.HttpRequest) -> http.HttpResponse:
         xml = request.body
         model_dict = xmltodict.parse(xml)
         model_dict = model_dict[self.model_class.__name__]
