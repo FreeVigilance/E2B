@@ -754,7 +754,7 @@ class G_k_10_r_additional_information_drug(StorageModel):
 class H_narrative_case_summary(StorageModel):
     class Meta: pass
 
-    icsr = models.ForeignKey(
+    icsr = models.OneToOneField(
         to=ICSR,
         on_delete=models.CASCADE,
         related_name='h_narrative_case_summary'

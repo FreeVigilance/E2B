@@ -39,7 +39,7 @@ class ICSR(ApiModel):
     e_i_reaction_event: list['E_i_reaction_event'] = []
     f_r_results_tests_procedures_investigation_patient: list['F_r_results_tests_procedures_investigation_patient'] = []
     g_k_drug_information: list['G_k_drug_information'] = []
-    h_narrative_case_summary: list['H_narrative_case_summary'] = []
+    h_narrative_case_summary: t.Optional['H_narrative_case_summary'] = None
 
 
 # C_1_identification_case_safety_report
