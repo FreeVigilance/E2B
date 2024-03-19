@@ -44,15 +44,28 @@ export const CausesOfDeath = () => {
                                 <TextField label="Reported Cause of Death" variant="outlined"
                                             onChange={handleChange('D_9_2_r_2_CauseDeath', index)}
                                             value = {item['D_9_2_r_2_CauseDeath'].value}
+                                            inputProps={{ maxLength: 250}}
                                             multiline
                                             rows={3}/>
         
                                 <TextField label="MedDRA Version for Reported Cause(s) of Death" variant="outlined"
                                             onChange={handleChange('D_9_2_r_1a_MedDRAVersionCauseDeath', index)}
+                                            inputProps={{ maxLength: 4}}
+                                            type='number'
+                                            onKeyDown={(evt) =>
+                                                (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === ",") &&
+                                                evt.preventDefault()
+                                            }
                                             value = {item['D_9_2_r_1a_MedDRAVersionCauseDeath'].value}/>
 
                                 <TextField label="Reported Cause of Death (MedDRA code)" variant="outlined"
                                             onChange={handleChange('D_9_2_r_1b_CauseDeathMedDRACode', index)}
+                                            inputProps={{ maxLength: 8}}
+                                            type='number'
+                                            onKeyDown={(evt) =>
+                                                (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                                evt.preventDefault()
+                                            }
                                             value = {item['D_9_2_r_1b_CauseDeathMedDRACode'].value}/>
                                 <Stack direction="row" justifyContent="flex-start"> 
                                     <span>

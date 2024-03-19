@@ -52,8 +52,8 @@ export const Drugs = ({index}) => {
                                                 <InputLabel>Characterisation of Drug Role</InputLabel>
                                                 <Select
                                                     defaultValue = {0}
-                                                    value = {drugs[index]['G_k_1_CharacterisationDrugRole'].nullFlavor}
-                                                    onChange={setNullFlavor('G_k_1_CharacterisationDrugRole', index)}
+                                                    value = {drugs[index]['G_k_1_CharacterisationDrugRole'].value}
+                                                    onChange={handleChange('G_k_1_CharacterisationDrugRole', index)}
                                                 >
                                                     <MenuItem value={1}>1 = Suspect</MenuItem>
                                                     <MenuItem value={2}>2 = Concomitant</MenuItem>
@@ -82,6 +82,7 @@ export const Drugs = ({index}) => {
                                             onChange={handleChange('G_k_2_2_MedicinalProductNamePrimarySource', index)}
                                             value = {drugs[index]['G_k_2_2_MedicinalProductNamePrimarySource'].value}
                                             multiline
+                                            inputProps={{ maxLength: 250}}
                                             rows={3}/>
 
                                 </Grid>
@@ -94,20 +95,24 @@ export const Drugs = ({index}) => {
 
                                     <TextField label="Identification of the Country Where the Drug Was Obtained" variant="outlined"
                                             onChange={handleChange('G_k_2_4_IdentificationCountryDrugObtained', index)}
+                                            inputProps={{ maxLength: 2}}
                                             value = {drugs[index]['G_k_2_4_IdentificationCountryDrugObtained'].value}/>
                                 
                                     <TextField label="Authorisation / Application Number" variant="outlined"
                                             onChange={handleChange('G_k_3_1_AuthorisationApplicationNumber', index)}
+                                            inputProps={{ maxLength: 35}}
                                             value = {drugs[index]['G_k_3_1_AuthorisationApplicationNumber'].value}
                                             multiline
                                             rows={2}/>
 
                                     <TextField label="Country of Authorisation / Application" variant="outlined"
                                             onChange={handleChange('G_k_3_2_CountryAuthorisationApplication', index)}
+                                            inputProps={{ maxLength: 2}}
                                             value = {drugs[index]['G_k_3_2_CountryAuthorisationApplication'].value}/>
                                     
                                     <TextField label="Name of Holder / Applicant" variant="outlined"
                                             onChange={handleChange('G_k_3_3_NameHolderApplicant', index)}
+                                            inputProps={{ maxLength: 60}}
                                             value = {drugs[index]['G_k_3_3_NameHolderApplicant'].value}
                                             multiline
                                             rows={3}/>
@@ -115,6 +120,12 @@ export const Drugs = ({index}) => {
                                 <Grid container item xs direction="column" rowGap={1}>
                                     <TextField label="Cumulative Dose to First Reaction" variant="outlined"
                                             onChange={handleChange('G_k_5a_CumulativeDoseFirstReactionNum', index)}
+                                            inputProps={{ maxLength: 10}}
+                                            type='number'
+                                            onKeyDown={(evt) =>
+                                                (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                                evt.preventDefault()
+                                            }
                                             value = {drugs[index]['G_k_5a_CumulativeDoseFirstReactionNum'].value}/>
                                     
                                     <TextField label="Cumulative Dose to First Reaction (unit)" variant="outlined"
@@ -125,6 +136,12 @@ export const Drugs = ({index}) => {
 
                                     <TextField label="Gestation Period at Time of Exposure (number)" variant="outlined"
                                             onChange={handleChange('G_k_6a_GestationPeriodExposureNum', index)}
+                                            inputProps={{ maxLength: 3}}
+                                            type='number'
+                                            onKeyDown={(evt) =>
+                                                (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                                evt.preventDefault()
+                                            }
                                             value = {drugs[index]['G_k_6a_GestationPeriodExposureNum'].value}/>
                                     
                                     <TextField label="Gestation Period at Time of Exposure (unit)" variant="outlined"
@@ -169,6 +186,7 @@ export const Drugs = ({index}) => {
                                                 value = {drugs[index]['G_k_11_AdditionalInformationDrug'].value}
                                                 sx={{paddingTop: 2}}
                                                 multiline
+                                                inputProps={{ maxLength: 2000}}
                                                 rows={5}/>
                             </Stack>
 

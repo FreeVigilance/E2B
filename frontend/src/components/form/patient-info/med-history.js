@@ -64,10 +64,16 @@ export const MedicalHistory = () => {
                         <Grid container item xs direction="column" rowGap={1}>
                                 <TextField label="MedDRA Version for Medical History" variant="outlined"
                                     onChange={handleChange('D_7_1_r_1a_MedDRAVersionMedicalHistory', index)}
-                                    value = {item['D_7_1_r_1a_MedDRAVersionMedicalHistory'].value}/>
-                                <TextField label="Medical History code" variant="outlined"
+                                    value = {item['D_7_1_r_1a_MedDRAVersionMedicalHistory'].value}
+                                    inputProps={{ maxLength: 4}}
+                                    type='number'
+                                    onKeyDown={(evt) =>
+                                        (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === ",") &&
+                                        evt.preventDefault()
+                                    }/>
+                                {/* <TextField label="Medical History code" variant="outlined"
                                     onChange={handleChange('D_7_1_r_1a_MedDRAVersionMedicalHistory', index)}
-                                    value = {item['D_7_1_r_1b_MedicalHistoryMedDRACode'].value}/>
+                                    value = {item['D_7_1_r_1b_MedicalHistoryMedDRACode'].value}/> */}
                                 <Box className="text-small" style={{ padding: 0 }}>
                                         <FormControlLabel
                                         control={<Checkbox
@@ -193,6 +199,7 @@ export const MedicalHistory = () => {
                                             onChange={handleChange('D_7_1_r_5_Comments', index)}
                                             value = {item['D_7_1_r_5_Comments'].value}
                                             multiline
+                                            inputProps={{ maxLength: 2000}}
                                             rows={3}/>
                             <span>
                                 <IconButton size='large' style= {{ top: '10px', right: '10px'}}

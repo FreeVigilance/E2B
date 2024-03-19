@@ -64,9 +64,21 @@ export const ParentInfo = () => {
                     <Stack direction="column" spacing={2} justifyContent="flex-start">
                             <TextField label="MedDRA Version for Medical History" variant="outlined"
                                                 onChange={handleChange('D_10_7_1_r_1a_MedDRAVersionMedicalHistory', index)}
+                                                inputProps={{ maxLength: 4}}
+                                                type='number'
+                                                onKeyDown={(evt) =>
+                                                    (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === ",") &&
+                                                    evt.preventDefault()
+                                                }
                                                 value = {item['D_10_7_1_r_1a_MedDRAVersionMedicalHistory'].value}/>
                             <TextField label=" Medical History (disease / surgical procedure / etc.) (MedDRA code)" variant="outlined"
                                                 onChange={handleChange('D_10_7_1_r_1b_MedicalHistoryMedDRACode', index)}
+                                                inputProps={{ maxLength: 8}}
+                                                type='number'
+                                                onKeyDown={(evt) =>
+                                                    (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                                    evt.preventDefault()
+                                                }
                                                 value = {item['D_10_7_1_r_1b_MedicalHistoryMedDRACode'].value}/>                        
                                 <Stack direction="row" spacing={2} justifyContent="flex-start"> 
                                     <Box className="text-small" style={{ padding: 0 }}>
@@ -179,6 +191,7 @@ export const ParentInfo = () => {
                                             onChange={handleChange('D_10_7_1_r_5_Comments', index)}
                                             value = {item['D_10_7_1_r_5_Comments'].value}
                                             multiline
+                                            inputProps={{ maxLength: 2000}}
                                             rows={3}/>
                     </Stack>
                                  <span>

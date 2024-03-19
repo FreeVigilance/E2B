@@ -77,6 +77,7 @@ export const DrugsHistory = () => {
                                             onChange={handleChange('D_8_r_1_NameDrug', index)}
                                             value = {item['D_8_r_1_NameDrug'].value}
                                             multiline
+                                            inputProps={{ maxLength: 250}}
                                             rows={3}
                                             sx={{ width: '100%' }}/>
                                             : <FormControl sx={{ width: '100%' }}>
@@ -115,18 +116,42 @@ export const DrugsHistory = () => {
                                 <Grid container item xs direction="column" rowGap={1}>
                                     <TextField label="MedDRA Version for Indication" variant="outlined"
                                             onChange={handleChange('D_8_r_6a_MedDRAVersionIndication', index)}
+                                            inputProps={{ maxLength: 4}}
+                                            type='number'
+                                            onKeyDown={(evt) =>
+                                                (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === ",") &&
+                                                evt.preventDefault()
+                                            }
                                             value = {item['D_8_r_6a_MedDRAVersionIndication'].value}/>
 
                                     <TextField label="Indication (MedDRA code)" variant="outlined"
                                             onChange={handleChange('D_8_r_6b_IndicationMedDRACode', index)}
+                                            inputProps={{ maxLength: 8}}
+                                            type='number'
+                                            onKeyDown={(evt) =>
+                                                (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                                evt.preventDefault()
+                                            }
                                             value = {item['D_8_r_6b_IndicationMedDRACode'].value}/>
 
                                     <TextField label="MedDRA Version for Reaction" variant="outlined"
                                             onChange={handleChange('D_8_r_7a_MedDRAVersionReaction', index)}
+                                            inputProps={{ maxLength: 4}}
+                                            type='number'
+                                            onKeyDown={(evt) =>
+                                                (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === ",") &&
+                                                evt.preventDefault()
+                                            }
                                             value = {item['D_8_r_7a_MedDRAVersionReaction'].value}/>
 
                                     <TextField label="Reaction (MedDRA code)" variant="outlined"
                                             onChange={handleChange('D_8_r_7b_ReactionMedDRACode', index)}
+                                            inputProps={{ maxLength: 8}}
+                                            type='number'
+                                            onKeyDown={(evt) =>
+                                                (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                                evt.preventDefault()
+                                            }
                                             value = {item['D_8_r_7b_ReactionMedDRACode'].value}/>
                                 </Grid>
                             </Grid>

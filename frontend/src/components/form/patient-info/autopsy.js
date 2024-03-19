@@ -44,14 +44,27 @@ export const Autopsy = () => {
                                             onChange={handleChange('D_9_4_r_2_AutopsyDeterminedCauseDeath', index)}
                                             value = {item['D_9_4_r_2_AutopsyDeterminedCauseDeath'].value}
                                             multiline
+                                            inputProps={{ maxLength: 250}}
                                             rows={3}/>
 
                                 <TextField label="MedDRA Version for Autopsy-determined Cause of Death" variant="outlined"
                                             onChange={handleChange('D_9_4_r_1a_MedDRAVersionAutopsyDeterminedCauseDeath', index)}
+                                            inputProps={{ maxLength: 4}}
+                                            type='number'
+                                            onKeyDown={(evt) =>
+                                                (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === ",") &&
+                                                evt.preventDefault()
+                                            }
                                             value = {item['D_9_4_r_1a_MedDRAVersionAutopsyDeterminedCauseDeath'].value}/>
 
                                 <TextField label="Autopsy-determined Cause of Death (MedDRA code)" variant="outlined"
                                             onChange={handleChange('D_9_4_r_1b_AutopsyDeterminedCauseDeathMedDRACode', index)}
+                                            inputProps={{ maxLength: 8}}
+                                            type='number'
+                                            onKeyDown={(evt) =>
+                                                (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                                evt.preventDefault()
+                                            }
                                             value = {item['D_9_4_r_1b_AutopsyDeterminedCauseDeathMedDRACode'].value}/>
                                 <Stack direction="row" justifyContent="flex-start"> 
                                     <span>

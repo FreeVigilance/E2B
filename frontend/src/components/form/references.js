@@ -84,6 +84,7 @@ export const ReferencesComp = () => {
                                         onChange={handleChange('C_4_r_1_LiteratureReference', index)}
                                         value = {item['C_4_r_1_LiteratureReference'].value}
                                         sx={{ width: '80%' }}
+                                        inputProps={{ maxLength: 500}}
                                         multiline
                                         rows={7}/>
                                 : <FormControl sx={{ width: '20%' }}>

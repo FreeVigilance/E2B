@@ -14,5 +14,6 @@ export class PrimarySource {
         this.C_2_r_3_ReporterCountryCode = {"value": null}
         this.C_2_r_4_Qualification = {"value": null, "nullFlavor": null}
         this.C_2_r_5_PrimarySourceRegulatoryPurposes = {"value": null}
+        this.id = null
     }
 }

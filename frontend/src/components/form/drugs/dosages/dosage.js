@@ -65,14 +65,27 @@ export const Dosages = ({drugIndex}) => {
                         <Grid container item xs direction="column" rowGap={1}>
                             <TextField label="Dose" variant="outlined"
                                     onChange={handleChange('G_k_4_r_1a_DoseNum', index)}
+                                    inputProps={{ maxLength: 8}}
+                                    type='number'
+                                    onKeyDown={(evt) =>
+                                        (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                        evt.preventDefault()
+                                    }
                                     value = {item['G_k_4_r_1a_DoseNum'].value}/> 
 
                             <TextField label="Dose (unit)" variant="outlined"
                                     onChange={handleChange('G_k_4_r_1b_DoseUnit', index)}
+                                    inputProps={{ maxLength: 50}}
                                     value = {item['G_k_4_r_1b_DoseUnit'].value}/> 
 
                             <TextField label="Number of Units in the Interval" variant="outlined"
                                     onChange={handleChange('G_k_4_r_2_NumberUnitsInterval', index)}
+                                    inputProps={{ maxLength: 4}}
+                                    type='number'
+                                    onKeyDown={(evt) =>
+                                        (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                        evt.preventDefault()
+                                    }
                                     value = {item['G_k_4_r_2_NumberUnitsInterval'].value}/> 
    
 
@@ -145,10 +158,17 @@ export const Dosages = ({drugIndex}) => {
                         <Grid container item xs direction="column" rowGap={1}>
                             <TextField label="Duration of Drug Administration" variant="outlined"
                                     onChange={handleChange('G_k_4_r_6a_DurationDrugAdministrationNum', index)}
+                                    inputProps={{ maxLength: 5}}
+                                    type='number'
+                                    onKeyDown={(evt) =>
+                                        (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                        evt.preventDefault()
+                                    }
                                     value = {item['G_k_4_r_6a_DurationDrugAdministrationNum'].value}/>
 
                             <TextField label="Duration of Drug Administration (unit)" variant="outlined"
                                     onChange={handleChange('G_k_4_r_6b_DurationDrugAdministrationUnit', index)}
+                                    inputProps={{ maxLength: 50}}
                                     value = {item['G_k_4_r_6b_DurationDrugAdministrationUnit'].value}/>
 
                             <Stack direction="row" spacing={2} justifyContent="flex-start"> 
@@ -164,6 +184,7 @@ export const Dosages = ({drugIndex}) => {
                                     </Box>
                                     {dosages[drugIndex][index]['G_k_4_r_9_1_PharmaceuticalDoseForm']['nullFlavor'] !== -1 ? 
                                             <TextField label="Pharmaceutical Dose Form" variant="outlined"
+                                                inputProps={{ maxLength: 60}}
                                                 onChange={handleChange('G_k_4_r_9_1_PharmaceuticalDoseForm', index)}
                                                 value = {item['G_k_4_r_9_1_PharmaceuticalDoseForm'].value}/> 
                                             : <FormControl sx={{ width: '70%' }}>
@@ -205,6 +226,7 @@ export const Dosages = ({drugIndex}) => {
                                     {dosages[drugIndex][index]['G_k_4_r_10_1_RouteAdministration']['nullFlavor'] !== -1 ? 
                                             <TextField label="Route of Administration" variant="outlined"
                                                 onChange={handleChange('G_k_4_r_10_1_RouteAdministration', index)}
+                                                inputProps={{ maxLength: 60}}
                                                 value = {item['G_k_4_r_10_1_RouteAdministration'].value}/> 
                                             : <FormControl sx={{ width: '70%' }}>
                                                 <InputLabel>Null Flavor</InputLabel>
@@ -243,6 +265,7 @@ export const Dosages = ({drugIndex}) => {
                                     {dosages[drugIndex][index]['G_k_4_r_11_1_ParentRouteAdministration']['nullFlavor'] !== -1 ? 
                                             <TextField label="Parent Route of Administration" variant="outlined"
                                                 onChange={handleChange('G_k_4_r_11_1_ParentRouteAdministration', index)}
+                                                inputProps={{ maxLength: 60}}
                                                 value = {item['G_k_4_r_11_1_ParentRouteAdministration'].value}/> 
                                             : <FormControl sx={{ width: '70%' }}>
                                                 <InputLabel>Null Flavor</InputLabel>
@@ -271,16 +294,19 @@ export const Dosages = ({drugIndex}) => {
                         <Grid container item xs direction="column" rowGap={1}> 
                             <TextField label="Batch / Lot Number" variant="outlined"
                                     onChange={handleChange('G_k_4_r_7_BatchLotNumber', index)}
+                                    inputProps={{ maxLength: 35}}
                                     value = {item['G_k_4_r_7_BatchLotNumber'].value}/>                         
                             
                             <TextField label="Dosage Text" variant="outlined"
                                     onChange={handleChange('G_k_4_r_8_DosageText', index)}
                                     value = {item['G_k_4_r_8_DosageText'].value}
                                     multiline
+                                    inputProps={{ maxLength: 2000}}
                                     rows={5}/> 
 
                             <TextField label="Definition of the Time Interval Unit" variant="outlined"
                                     onChange={handleChange('G_k_4_r_3_DefinitionIntervalUnit', index)}
+                                    inputProps={{ maxLength: 50}}
                                     value = {item['G_k_4_r_3_DefinitionIntervalUnit'].value}
                                     multiline
                                     rows={3}/> 

@@ -9,15 +9,17 @@ export class Identification {
         this.C_1_7_FulfilLocalCriteriaExpeditedReport = { value: null, nullFlavor: null };
         this.C_1_8_1_WorldwideUniqueCaseIdentificationNumber = { value: null };
         this.C_1_8_2_FirstSender = { value: null };
-        this.C_1_9_1_OtherCaseIdsPreviousTransmissions = { value: null, nullFlavor: null };
+        this.C_1_9_1_OtherCaseIdsPreviousTransmissions = { value: false, nullFlavor: null };
         this.C_1_11_1_ReportNullificationAmendment = { value: null };
         this.C_1_11_2_ReasonNullificationAmendment = { value: null };
+        this.id = null;
     }
 }
 
 export class DocumentsHeldBySender {
     constructor () {
         this.C_1_6_1_r_1_DocumentsHeldSender = { value: null };
+        this.id = null;
     }
 }
 
@@ -25,11 +27,13 @@ export class OtherIdentifiers {
     constructor () {
         this.C_1_9_1_r_1_SourceCaseId = { value: null };
         this.C_1_9_1_r_2_CaseId = { value: null };
+        this.id = null;
     }
 }
 
 export class IdentificationNumber {
     constructor () {
         this.C_1_10_r_IdentificationNumberReportLinked = { value: null };
+        this.id = null;
     }
 }

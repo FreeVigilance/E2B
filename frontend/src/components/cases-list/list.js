@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useReducer } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
-import { casesListSelector, getCasesList } from "@src/features/cases-list/slice";
-import { getData, setOpenNewReport, setShowCasesList } from "@src/features/display/slice";
+import { Avatar, Box, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import { casesListSelector, getCasesList, setCases } from "@src/features/cases-list/slice";
+import { deleteReport, getData, revertAll, setOpenNewReport, setShowCasesList } from "@src/features/display/slice";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const CasesList = () => {
     const dispatch = useDispatch();
@@ -13,18 +14,38 @@ export const CasesList = () => {
         dispatch(setOpenNewReport(true));
         dispatch(setShowCasesList(false));
     }
+    
+    const removeReport = (id) => {
+      let answer = window.confirm(`Are you sure you want to remove report ${id}?`);
+      if (!answer) return;
+
+      let casesCopy = JSON.parse(JSON.stringify(cases));
+      casesCopy = casesCopy.filter((x) => x !== id);
+      console.log('remove');
+      console.log(casesCopy);
+      dispatch(setCases(casesCopy));
+      dispatch(deleteReport(id));
+    }
 
     const generateList = () => {
         console.log("show");
+        console.log(cases);
         let items = [];
-        for (let i = 0; i < cases.length; i+=1 ) {
-            items.push(
-            <ListItem key={i}>
-                <ListItemButton onClick={() => openReport(cases[i])}>
-                  <ListItemText primary={cases[i]} />
-              </ListItemButton>
-            </ListItem>)
-        }
+        Object.values(cases).forEach((item, index) => {
+          items.push(
+            <ListItem
+                secondaryAction={
+                  <IconButton edge="end" aria-label="delete">
+                    <DeleteIcon onClick={() => removeReport(item)}/>
+                  </IconButton>
+                }
+              >
+                <ListItemButton onClick={() => openReport(item)}>
+                <ListItemText primary={`Case id = ${item}`} />
+                </ListItemButton>
+              </ListItem>
+          )
+        });
         return items;
     }
 

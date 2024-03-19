@@ -46,6 +46,7 @@ export const IdentificationNumberComp = () => {
                                 onChange={handleChange('C_1_10_r_IdentificationNumberReportLinked', index)}
                                 value = {item['C_1_10_r_IdentificationNumberReportLinked'].value}
                                 multiline
+                                inputProps={{ maxLength: 100}}
                                 rows={3}/>
                             <Stack direction="row" justifyContent="flex-start">
                                 <span>

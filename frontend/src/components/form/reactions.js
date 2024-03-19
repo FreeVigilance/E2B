@@ -71,18 +71,21 @@ export const Reactions = () => {
                             onChange={handleChange('E_i_1_1a_ReactionPrimarySourceNativeLanguage', index)}
                             value = {item['E_i_1_1a_ReactionPrimarySourceNativeLanguage'].value}
                             multiline
+                            inputProps={{ maxLength: 250}}
                             sx={{ width: '35%' }}
                             rows={4}/>
                         <TextField label="Reported by the Primary Source Language" variant="outlined"
                             onChange={handleChange('E_i_1_1b_ReactionPrimarySourceLanguage', index)}
                             value = {item['E_i_1_1b_ReactionPrimarySourceLanguage'].value}
                             multiline
+                            inputProps={{ maxLength: 3}}
                             sx={{ width: '35%' }}
                             rows={4}/>
                         <TextField label="Reported by the Primary Source for Translation" variant="outlined"
                             onChange={handleChange('E_i_1_2_ReactionPrimarySourceTranslation', index)}
                             value = {item['E_i_1_2_ReactionPrimarySourceTranslation'].value}
                             multiline
+                            inputProps={{ maxLength: 250}}
                             sx={{ width: '35%' }}
                             rows={4}/>
                     </Stack>
@@ -96,11 +99,23 @@ export const Reactions = () => {
                                     label="MedDRA Version for Reaction"
                                     value = {item['E_i_2_1a_MedDRAVersionReaction'].value}
                                     onChange={handleChange('E_i_2_1a_MedDRAVersionReaction', index)}
+                                    inputProps={{ maxLength: 4}}
+                                    type='number'
+                                    onKeyDown={(evt) =>
+                                        (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === ",") &&
+                                        evt.preventDefault()
+                                    }
                                 />
                             <TextField
                                     onChange={handleChange('E_i_2_1b_ReactionMedDRACode', index)}
                                     value = {item['E_i_2_1b_ReactionMedDRACode'].value}
                                     autoComplete="off"
+                                    inputProps={{ maxLength: 8}}
+                                    type='number'
+                                    onKeyDown={(evt) =>
+                                        (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                        evt.preventDefault()
+                                    }
                                     label="Reaction / Event MedDRA Code"
                                 />
                             <FormControl sx={{ width: '100%' }}>
@@ -152,6 +167,7 @@ export const Reactions = () => {
                             <TextField
                                 label="Identification of the Country Where the Reaction Occurred"
                                 variant="outlined"
+                                inputProps={{ maxLength: 2}}
                                 onChange={handleChange('E_i_9_IdentificationCountryReaction', index)}
                                 value = {item['E_i_9_IdentificationCountryReaction'].value}
                                 />
@@ -325,6 +341,12 @@ export const Reactions = () => {
                                     onChange={handleChange('E_i_6a_DurationReactionNum', index)}
                                     autoComplete="off"
                                     InputProps={{ inputProps: { min: 1, max: 4 } }}
+                                    inputProps={{ maxLength: 5}}
+                                    type='number'
+                                    onKeyDown={(evt) =>
+                                        (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                        evt.preventDefault()
+                                    }
                                     label="Duration of Reaction (number)"
                                 />
 
@@ -332,6 +354,7 @@ export const Reactions = () => {
                                 value = {item['E_i_6b_DurationReactionUnit'].value}
                                 label="Duration of Reaction (unit)"
                                 variant="outlined"
+                                inputProps={{ maxLength: 50}}
                                 onChange={handleChange('E_i_6b_DurationReactionUnit', index)}
                                 />
                         </Grid>
