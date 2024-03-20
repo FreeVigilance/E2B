@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { e2bCaseKeys } from '../common/changekeys';
-import { changeData, getData, revertAll, saveData } from '../display/slice';
+import { changeData, getData, getJsonFromXml, revertAll, saveData } from '../display/slice';
 import { StudyIdentification, StudyRegistration } from './study-identification';
 
 export const studyIdentificationSelector = (state) => state.studyIdentification;
@@ -62,6 +62,13 @@ const studyIdentificationSlice = createSlice({
         });
 
 		builder.addCase(changeData.fulfilled, (state, action) => {
+			const data = e2bCaseKeys(action.payload.c_5_study_identification);
+            console.log('STUDY', data);
+			state.studyIdentification = data;
+			state.studyRegistration = data['C_5_1_r_StudyRegistration'];
+        });
+
+		builder.addCase(getJsonFromXml.fulfilled, (state, action) => {
 			const data = e2bCaseKeys(action.payload.c_5_study_identification);
             console.log('STUDY', data);
 			state.studyIdentification = data;
