@@ -182,7 +182,7 @@ def convert_lab_tests(lab_tests: List[models.F_r_results_tests_procedures_invest
 	res = ""
 	for i, lab_test in enumerate(lab_tests):
 		narrative = convert_lab_test(lab_test)
-		res += f"#{i+1}: {narrative}"
+		res += f"#{i+1}: {narrative}\n"
 
 	return res
 
