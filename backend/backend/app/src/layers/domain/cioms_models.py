@@ -39,6 +39,14 @@ class CIOMS(BaseModel):
 	is_follow_up: bool # 25a
 	date_of_this_report: str
 
+
+def _getattr(obj, key, default=None):
+	x = getattr(obj, key, default)
+	if x is None:
+		return default
+
+	return x
+
 def unk_if_none(x) -> str:
 	if x is None or x == "":
 		return "[UNK]"
@@ -74,8 +82,8 @@ def convert_sex(x: enums.D_5_sex | Any) -> str:
 
 
 def convert_dosage(dosage: models.G_k_4_r_dosage_information) -> str:
-	dosage_text = unk_if_none(getattr(dosage, "g_k_4_r_8_dosage_text", None))
-	simple = (str(unk_if_none(getattr(dosage, "g_k_4_r_1a_dose_num", ""))) + unk_if_none(getattr(dosage, "g_k_4_r_1b_dose_unit", ""))).strip()
+	dosage_text = unk_if_none(_getattr(dosage, "g_k_4_r_8_dosage_text", None))
+	simple = (str(unk_if_none(_getattr(dosage, "g_k_4_r_1a_dose_num", ""))) + unk_if_none(_getattr(dosage, "g_k_4_r_1b_dose_unit", ""))).strip()
 	simple = f"({simple})" if simple != "" else ""
 	return f"{dosage_text}{simple}"
 
@@ -84,50 +92,119 @@ def convert_dosages(dosages: List[models.G_k_4_r_dosage_information]) -> str:
 
 
 def convert_route_of_adm(dosage: models.G_k_4_r_dosage_information) -> str:
-	return unk_if_none(getattr(dosage, "g_k_4_r_10_1_route_administration", None))
+	return unk_if_none(_getattr(dosage, "g_k_4_r_10_1_route_administration", None))
 
 def convert_routes_of_adm(dosages: List[models.G_k_4_r_dosage_information]) -> str:
 	return "; ".join(map( convert_route_of_adm, dosages ))
 
 def convert_therapy_dates(dosage: models.G_k_4_r_dosage_information) -> str:
-	return unk_if_none(getattr(dosage, "g_k_4_r_4_date_time_drug", None)) + \
+	return unk_if_none(_getattr(dosage, "g_k_4_r_4_date_time_drug", None)) + \
 			"->" + \
-			unk_if_none(getattr(dosage, "g_k_4_r_5_date_time_last_administration", None))
+			unk_if_none(_getattr(dosage, "g_k_4_r_5_date_time_last_administration", None))
 
 def convert_therapies_dates(dosages: List[models.G_k_4_r_dosage_information]) -> str:
 	return "; ".join(map( convert_therapy_dates, dosages ))
 
 def convert_therapy_duration(dosage: models.G_k_4_r_dosage_information) -> str:
-	return str(unk_if_none(getattr(dosage, "g_k_4_r_6a_duration_drug_administration_num", None))) + \
-			unk_if_none(getattr(dosage, "g_k_4_r_6b_duration_drug_administration_unit", None))
+	return str(unk_if_none(_getattr(dosage, "g_k_4_r_6a_duration_drug_administration_num", None))) + \
+			unk_if_none(_getattr(dosage, "g_k_4_r_6b_duration_drug_administration_unit", None))
 
 def convert_therapies_duration(dosages: List[models.G_k_4_r_dosage_information]) -> str:
 	return "; ".join(map( convert_therapy_duration, dosages ))
 
 def convert_usecases(use_cases: List[models.G_k_7_r_indication_use_case]) -> str:
-	return "; ".join([ unk_if_none(getattr(x, "g_k_7_r_1_indication_primary_source", None)) for x in use_cases ])
+	return "; ".join([ unk_if_none(_getattr(x, "g_k_7_r_1_indication_primary_source", None)) for x in use_cases ])
 
 
-#def convert_reaction_to_narrative(reaction: models.E_i_reaction_event) -> str:
-#	reaction_text = getattr(reaction, ""
+def convert_reaction_to_narrative(reaction: models.E_i_reaction_event) -> str:
+	reaction_text = unk_if_none(_getattr(reaction, "e_i_1_1a_reaction_primary_source_native_language", ""))
+	outcome = _getattr(reaction, "e_i_7_outcome_reaction_last_observation", "")
+	translation = _getattr(reaction, "e_i_1_2_reaction_primary_source_translation", "")
+
+	return f"Reaction:\n{reaction_text}" \
+			+ (f" (translation {translation})" if translation != "" else "")\
+			+ (f"\noutcome of the reaction: {outcome}" if outcome != "" else "") + "\n"
+
+def convert_reactions_to_narrative(reactions: List[models.E_i_reaction_event]) -> str:
+	if len(reactions) == 0:
+		return "No reacions"
+	if len(reactions) == 1:
+		return convert_reaction_to_narrative(reactions[0])
+
+	res = ""
+	for i, reaction in enumerate(reactions):
+		res += f"#{i+1}" + convert_reaction_to_narrative(reaction)
+
+	return res
+
+def convert_drug_aciton_to_narrative(drug: models.G_k_drug_information) -> str:
+	print(f"{drug=}")
+
+	drug_name = _getattr(drug, "g_k_2_2_medicinal_product_name_primary_source", None)
+	action = _getattr(drug, "g_k_8_action_taken_drug", None)
+
+	if action is None:
+		return ""
+
+	return f"{unk_if_none(drug_name)} - {unk_if_none(action)}"
+
+
+def convert_drug_actions_to_narrative(drugs: List[models.G_k_drug_information]) -> str:
+	if len(drugs) == 0:
+		return ""
+	
+	if len(drugs) == 1:
+		return convert_drug_aciton_to_narrative(drugs[0])
+
+	res = ""
+	for i, drug in enumerate(drugs):
+		narrative = convert_drug_aciton_to_narrative(drug)
+		if narrative == "":
+			continue
+
+		res += f"#{i+1}: {narrative}"
+
+	return res
+
+
+def convert_lab_test(lab_test: models.F_r_results_tests_procedures_investigation_patient) -> str:
+	result_data = _getattr(lab_test, "f_r_3_4_result_unstructured_data", None)
+	return unk_if_none(result_data)
+
+
+def convert_lab_tests(lab_tests: List[models.F_r_results_tests_procedures_investigation_patient]) -> str:
+	if len(lab_tests) == 0:
+		return ""
+
+	if len(lab_tests) == 1:
+		return convert_lab_test(lab_tests[0])
+
+	res = ""
+	for i, lab_test in enumerate(lab_tests):
+		narrative = convert_lab_test(lab_test)
+		res += f"#{i+1}: {narrative}"
+
+	return res
+
+
 
 def convert_to_cioms(icsr: models.ICSR) -> CIOMS:
 	# I REACTION INFORMATION
 
-	#print(getattr(icsr.d_patient_characteristics, "d_1_patient"))
+	#print(_getattr(icsr.d_patient_characteristics, "d_1_patient"))
 	#print(icsr.d_patient_characteristics.d_1_patient)
 
-	p1 = unk_if_none(getattr(icsr.d_patient_characteristics, "d_1_patient", None))
-	print(f"{p1=}")
+	p1 = unk_if_none(_getattr(icsr.d_patient_characteristics, "d_1_patient", None))
+	print(f"{icsr=}")
 
 	p1a = unk_if_none(','.join([unk_if_none(x.e_i_9_identification_country_reaction) for x in icsr.e_i_reaction_event]))
 
-	date_of_birth = getattr(icsr.d_patient_characteristics, "d_2_1_date_birth", None)
+	date_of_birth = _getattr(icsr.d_patient_characteristics, "d_2_1_date_birth", None)
 	year, month, day = get_date(date_of_birth)
 	p2 = (day, month, year)
 
-	p2a_num = unk_if_none(getattr(icsr.d_patient_characteristics, "d_2_2a_age_onset_reaction_num", None))
-	p2a_unit = unk_if_none(getattr(icsr.d_patient_characteristics, "d_2_2b_age_onset_reaction_unit", None))
+	p2a_num = unk_if_none(_getattr(icsr.d_patient_characteristics, "d_2_2a_age_onset_reaction_num", None))
+	p2a_unit = unk_if_none(_getattr(icsr.d_patient_characteristics, "d_2_2b_age_onset_reaction_unit", None))
 
 	if 'year' in p2a_unit:
 		p2a_unit = ""
@@ -136,19 +213,19 @@ def convert_to_cioms(icsr: models.ICSR) -> CIOMS:
 	if p2a == "[UNK] [UNK]":
 		p2a = "[UNK]"
 
-	p3 = convert_sex(unk_if_none(getattr(icsr.d_patient_characteristics, "d_5_sex", None)))
+	p3 = convert_sex(unk_if_none(_getattr(icsr.d_patient_characteristics, "d_5_sex", None)))
 
 	main_reaction = icsr.e_i_reaction_event[0] if len(icsr.e_i_reaction_event) > 0 else None # assume that the main reaction is the first one
 
-	reaction_onset = get_date(getattr(main_reaction, "e_i_4_date_start_reaction", None))
+	reaction_onset = get_date(_getattr(main_reaction, "e_i_4_date_start_reaction", None))
 	p4 = reaction_onset[2]
 	p5 = reaction_onset[1]
 	p6 = reaction_onset[0]
 
-	p8 = any( [event.e_i_3_2a_results_death for event in icsr.e_i_reaction_event ] )
-	p9 = any( [event.e_i_3_2c_caused_prolonged_hospitalisation for event in icsr.e_i_reaction_event ] )
-	p10 = any( [event.e_i_3_2d_disabling_incapacitating for event in icsr.e_i_reaction_event ] )
-	p11 = any( [event.e_i_3_2b_life_threatening for event in icsr.e_i_reaction_event ] )
+	p8 = any( [event.e_i_3_2a_results_death == True for event in icsr.e_i_reaction_event ] )
+	p9 = any( [event.e_i_3_2c_caused_prolonged_hospitalisation == True for event in icsr.e_i_reaction_event ] )
+	p10 = any( [event.e_i_3_2d_disabling_incapacitating == True for event in icsr.e_i_reaction_event ] )
+	p11 = any( [event.e_i_3_2b_life_threatening == True for event in icsr.e_i_reaction_event ] )
 
 	#p7_andp13 = 
 
@@ -222,20 +299,20 @@ def convert_to_cioms(icsr: models.ICSR) -> CIOMS:
 
 	p22 = p22.strip()
 
-	p23 = unk_if_none(getattr(icsr.d_patient_characteristics, "d_7_2_text_medical_history", None))
+	p23 = unk_if_none(_getattr(icsr.d_patient_characteristics, "d_7_2_text_medical_history", None))
 
 	# MANUFACTURER INFORMATION
 
-	p24a = ";\n".join([ unk_if_none(getattr(src_case_id, "c_1_9_1_r_1_source_case_id", None)) \
-			for src_case_id in getattr(icsr.c_1_identification_case_safety_report, "c_1_9_1_r_source_case_id", []) ])
+	p24a = ";\n".join([ unk_if_none(_getattr(src_case_id, "c_1_9_1_r_1_source_case_id", None)) \
+			for src_case_id in _getattr(icsr.c_1_identification_case_safety_report, "c_1_9_1_r_source_case_id", []) ])
 
-	
-	other_ids = getattr(icsr.c_1_identification_case_safety_report, "c_1_9_1_r_source_case_id", [])
+
+	other_ids = _getattr(icsr.c_1_identification_case_safety_report, "c_1_9_1_r_source_case_id", [])
 	if len(other_ids) > 0:
 		p24b = unk_if_none( other_ids[0].c_1_9_1_r_2_case_id )
 	else:
 		p24b = " "
-	p24c = unk_if_none(getattr(icsr.c_1_identification_case_safety_report, "c_1_5_date_most_recent_information", None))
+	p24c = unk_if_none(_getattr(icsr.c_1_identification_case_safety_report, "c_1_5_date_most_recent_information", None))
 
 	# TODO
 	p24d = []
@@ -243,17 +320,22 @@ def convert_to_cioms(icsr: models.ICSR) -> CIOMS:
 
 
 	p7_and_p13 = ""
+	p7_and_p13 += convert_reactions_to_narrative(icsr.e_i_reaction_event) + "\n"
 
-#	if len(icsr.e_i_reaction_event) == 1:
-#		reaction = icsr.e_i_reaction_event[0]
-#		p7_and_p13 += reaction.e_i_1_reaction_primary_source + "\n\n"
-#		p7_and_p13 += "outcome of the reaction:\n"
-#		p7_and_p13 += reaction.e_i_7_outcome_reaction_last_observation + "\n\n"
+	actions_narrative = convert_drug_actions_to_narrative(icsr.g_k_drug_information)
+	if actions_narrative != "":
+		p7_and_p13 += "Actions taken with drug(s):\n"
+		p7_and_p13 += actions_narrative + "\n"
 
-#	if len(icsr.e_i_reaction_event) > 1:
-#		for i, reaction in enumerate(icsr.e_i_reaction_event):
-			
+	case_narrative = _getattr(icsr.h_narrative_case_summary, "h_1_case_narrative", None)
+	if case_narrative is not None:
+		p7_and_p13 += "Case narrative:\n"
+		p7_and_p13 += case_narrative + "\n"
 
+	lab_tests = convert_lab_tests(icsr.f_r_results_tests_procedures_investigation_patient)
+	if lab_tests != "":
+		p7_and_p13 += "Lab data:\n"
+		p7_and_p13 += lab_tests + "\n"
 
 	cioms = CIOMS(
 		p1=p1,
