@@ -133,6 +133,8 @@ def convert_to_cioms(icsr: models.ICSR) -> CIOMS:
 		p2a_unit = ""
 
 	p2a = (str(p2a_num) + " " + p2a_unit).strip()
+	if p2a == "[UNK] [UNK]":
+		p2a = "[UNK]"
 
 	p3 = convert_sex(unk_if_none(getattr(icsr.d_patient_characteristics, "d_5_sex", None)))
 
