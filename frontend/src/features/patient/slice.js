@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { AutopsyData, CauseOfDeath, DrugHistory, MedHistory, ParentChildData, ParentData, ParentDrugHistory, ParentHistoryData, PatientInfo } from './patient';
 import { nullFlavors } from '@src/components/nullFlavours';
-import { changeData, getData, revertAll, saveData } from '../display/slice';
+import { changeData, getData, getJsonFromXml, revertAll, saveData } from '../display/slice';
 import { e2bCaseKeys } from '../common/changekeys';
 
 export const patientSelector = (state) => state.patient;
@@ -324,6 +324,59 @@ const patientSlice = createSlice({
         });
 
 		builder.addCase(changeData.fulfilled, (state, action) => {
+			const data = e2bCaseKeys(action.payload.d_patient_characteristics);
+            console.log('patient', data);
+			
+			let patientData = new PatientInfo();
+			patientData['id'] = data['id'];
+			patientData['D_1_Patient'] = data['D_1_Patient'];          
+			patientData['D_1_1_1_MedicalRecordNumberSourceGP'] = data['D_1_1_1_MedicalRecordNumberSourceGp'];
+			patientData['D_1_1_2_MedicalRecordNumberSourceSpecialist'] = data['D_1_1_2_MedicalRecordNumberSourceSpecialist'];
+			patientData['D_1_1_3_MedicalRecordNumberSourceHospital'] = data['D_1_1_3_MedicalRecordNumberSourceHospital'];
+			patientData['D_1_1_4_MedicalRecordNumberSourceInvestigation'] = data['D_1_1_4_MedicalRecordNumberSourceInvestigation'];
+			patientData['D_2_1_DateBirth'] = data['D_2_1_DateBirth'];
+			patientData['D_2_2a_AgeOnsetReactionNum'] = data['D_2_2a_AgeOnsetReactionNum'];
+			patientData['D_2_2b_AgeOnsetReactionUnit'] = data['D_2_2b_AgeOnsetReactionUnit'];
+			patientData['D_2_2_1a_GestationPeriodReactionFoetusNum'] = data['D_2_2_1a_GestationPeriodReactionFoetusNum'];
+			patientData['D_2_2_1b_GestationPeriodReactionFoetusUnit'] = data['D_2_2_1b_GestationPeriodReactionFoetusUnit'];
+			patientData['D_2_3_PatientAgeGroup'] = data['D_2_3_PatientAgeGroup'];
+			patientData['D_3_BodyWeight'] = data['D_3_BodyWeight'];
+			patientData['D_4_Height'] = data['D_4_Height'];
+			patientData['D_5_Sex'] = data['D_5_Sex'];
+			patientData['D_6_LastMenstrualPeriodDate'] = data['D_6_LastMenstrualPeriodDate'];
+			patientData['D_7_2_TextMedicalHistory'] = data['D_7_2_TextMedicalHistory'];
+			patientData['D_7_3_ConcomitantTherapies'] = data['D_7_3_ConcomitantTherapies'];
+			patientData['D_9_1_DateDeath'] = data['D_9_1_DateDeath'];
+			patientData['D_9_3_Autopsy'] = data['D_9_3_Autopsy'];
+			state.patientData = patientData;
+
+			state.medicalHistory = data['D_7_1_r_StructuredInformationMedicalHistory'];
+			state.drugHistory = data['D_8_r_PastDrugHistory'];
+			state.causeOfDeath = data['D_9_2_r_CauseDeath']
+			state.autopsy = data['D_9_4_r_AutopsyDeterminedCauseDeath']
+
+			let parentChildData = new ParentChildData();
+			parentChildData['D_10_1_ParentIdentification'] = data['D_10_1_ParentIdentification'];
+			parentChildData['D_10_2_1_DateBirthParent'] = data['D_10_2_1_DateBirthParent'];
+			parentChildData['D_10_2_2a_AgeParentNum'] = data['D_10_2_2a_AgeParentNum'];
+			parentChildData['D_10_2_2b_AgeParentUnit'] = data['D_10_2_2b_AgeParentUnit'];
+			parentChildData['D_10_3_LastMenstrualPeriodDateParent'] = data['D_10_3_LastMenstrualPeriodDateParent'];
+			parentChildData['D_10_4_BodyWeightParent'] = data['D_10_4_BodyWeightParent'];
+			parentChildData['D_10_5_HeightParent'] = data['D_10_5_HeightParent'];
+			parentChildData['D_10_6_SexParent'] = data['D_10_6_SexParent'];
+			state.parentChildData = parentChildData;
+
+			let parentHistoryData = new ParentHistoryData();
+			parentHistoryData['D_10_7_2_TextMedicalHistoryParent'] = data['D_10_7_2_TextMedicalHistoryParent']
+			state.parentHistoryData = parentHistoryData;
+
+			state.parentData = data['D_10_7_1_r_StructuredInformationParentMedDRACode'];
+
+			state.parentDrugHistory = data['D_10_8_r_PastDrugHistoryParent'];
+
+        });
+
+		builder.addCase(getJsonFromXml.fulfilled, (state, action) => {
 			const data = e2bCaseKeys(action.payload.d_patient_characteristics);
             console.log('patient', data);
 			

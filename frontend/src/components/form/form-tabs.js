@@ -5,10 +5,10 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { displaySelector, getXmlFromJson, setCurrentSaved, setCurrentTab } from '@src/features/display/slice';
+import { displaySelector, getJsonFromXml, getXmlFromJson, setCurrentSaved, setCurrentTab } from '@src/features/display/slice';
 import { Results } from './results';
 import { Reactions } from './reactions';
-import { FormLabel, IconButton, Tooltip } from '@mui/material';
+import { Button, FormLabel, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Tooltip } from '@mui/material';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import { Patient } from './patient-info/patient';
 import { ParentChild } from './patient-info/parent-child/parent-child';
@@ -34,12 +34,24 @@ import { getPrimarySources } from '@src/features/primary-source/slice';
 import { getInfoSender } from '@src/features/info-sender/slice';
 import { getIdentification } from '@src/features/identification/slice';
 import { getNarrative } from '@src/features/narrative/slice';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import MenuIcon from '@mui/icons-material/Menu';
+
 
 export const FormTabs = () => {
     const dispatch = useDispatch();
-    const { currentTab, currentSaved, currentId } = useSelector(displaySelector);
+    const { currentTab, currentSaved, currentId, xml } = useSelector(displaySelector);
 
     const { enqueueSnackbar } = useSnackbar();
+
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     useEffect(() => {
         if (currentSaved === 1) {
@@ -151,16 +163,35 @@ export const FormTabs = () => {
                     <NarrativeComp></NarrativeComp>
                 </TabPanel>
 
-                <Save></Save>
                 <FormLabel sx={{ position: 'fixed', bottom: '2%', right: '2%',
                 zIndex: 10000, fontSize: 25,  color: 'black'}}>Report id: {currentId}</FormLabel>
 
-                <Tooltip title="Get XML">
-                    <IconButton color = 'primary' onClick={getXml}
-                        sx={{ position: "fixed", top: 50, right: 30 }}>
-                        <DownloadIcon sx={{fontSize: 40}}></DownloadIcon>
+                <Box sx={{ position: "fixed", top: '2%', right: '2%' }} >
+                    <IconButton edge="end" aria-label="delete">
+                        <MenuIcon onClick={handleClick} fontSize='large' color='primary'/>
                     </IconButton>
-                </Tooltip>
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                        'aria-labelledby': 'basic-button',
+                        }}
+                    >
+                        
+                        <Save></Save>
+                        <MenuItem onClick={getXml}>
+                            <ListItemIcon><DownloadIcon sx={{fontSize: 35}} color='primary'/></ListItemIcon>
+                            <ListItemText>Get XML</ListItemText>
+                        </MenuItem>
+                        <MenuItem onClick={() => { window.open(`/api/api/cioms/${currentId}`); }}>
+                            <ListItemIcon><PictureAsPdfIcon sx={{fontSize: 35}} color='primary'/></ListItemIcon>
+                            <ListItemText>Get CIOMS</ListItemText>
+                        </MenuItem>
+
+                    </Menu>
+                </Box>
 
             </TabContext>
         </Box>

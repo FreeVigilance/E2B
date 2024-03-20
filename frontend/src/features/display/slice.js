@@ -125,6 +125,7 @@ const displaySlice = createSlice({
         });
         builder.addCase(getJsonFromXml.fulfilled, (state, action) => {
             console.log('getJsonFromXml yes');
+            state.currentId = action.payload['id'];
             console.log(action.payload);
         });
         builder.addCase(getJsonFromXml.rejected, (state, action) => {

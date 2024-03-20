@@ -172,7 +172,7 @@ export const Patient = () => {
                         </Box>
                         {patientData['D_2_1_DateBirth']['nullFlavor'] !== -1 ? 
                             <TextField sx={{ width: '80%' }}
-                            label="Test Date"
+                            label="Date of birth"
                             variant="outlined"
                             value = {patientData['D_2_1_DateBirth'].value}
                             onChange={handleChange('D_2_1_DateBirth')}
