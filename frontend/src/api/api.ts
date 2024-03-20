@@ -266,7 +266,7 @@ export class HTTP {
         }
 
         function serializeHeader(method: METHOD, data: T) {
-            return { 'Content-Type': 'text/plain' };
+            return { 'Content-Type': 'application/xml' };
         }
 
         const { method, data, responseFormat = 'json' } = options;

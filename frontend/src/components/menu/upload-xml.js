@@ -23,17 +23,23 @@ export const UploadXml = () => {
 
     const handleUpload = async () => {
         if (file) {
-            var reader = new FileReader();
+            // var reader = new FileReader();
             let readXml=null;
-            reader.onload = function(e) {
-                readXml = e.target.result;
-                dispatch(revertAll());
-                dispatch(setUploadedFile(readXml));
-                dispatch(getJsonFromXml(readXml));
-                dispatch(setShowUpload(false));
-                dispatch(setOpenNewReport(true));
-            }
-            reader.readAsText(file);
+            // reader.onload = function(e) {
+            //     readXml = e.target.result;
+            //     dispatch(revertAll());
+            //     dispatch(setUploadedFile(readXml));
+            //     dispatch(getJsonFromXml(readXml));
+            //     dispatch(setShowUpload(false));
+            //     dispatch(setOpenNewReport(true));
+            // }
+            // reader.readAsText(file);
+
+            dispatch(revertAll());
+            dispatch(setUploadedFile(file));
+            dispatch(getJsonFromXml(file));
+            dispatch(setShowUpload(false));
+            dispatch(setOpenNewReport(true));
         }
     };
 
