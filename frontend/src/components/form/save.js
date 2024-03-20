@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import SaveIcon from "@mui/icons-material/Save";
-import { IconButton, Tooltip } from '@mui/material';
+import { IconButton, ListItemIcon, ListItemText, MenuItem, Tooltip } from '@mui/material';
 import { getResults } from '@src/features/results/slice';
 import { getReaction } from '@src/features/reactions/slice';
 import { getPatient } from '@src/features/patient/slice';
@@ -57,12 +57,10 @@ export const Save = () => {
     }
 
     return(
-        <Tooltip title="Save">
-            <IconButton color = 'primary'
-				sx={{ position: "fixed", top: 5, right: 30 }}
-                onClick = {save}>
-					<SaveIcon sx={{fontSize: 40}}></SaveIcon>
-			</IconButton>
-        </Tooltip>
+        <MenuItem onClick = {save}>
+            <ListItemIcon><SaveIcon sx={{fontSize: 35}} color='primary'/></ListItemIcon>
+            <ListItemText>Save</ListItemText>
+        </MenuItem>
+
     );
 }
