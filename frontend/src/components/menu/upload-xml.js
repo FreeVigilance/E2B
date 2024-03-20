@@ -24,7 +24,7 @@ export const UploadXml = () => {
     const handleUpload = async () => {
         if (file) {
             // var reader = new FileReader();
-            let readXml=null;
+            // let readXml=null;
             // reader.onload = function(e) {
             //     readXml = e.target.result;
             //     dispatch(revertAll());
@@ -34,12 +34,7 @@ export const UploadXml = () => {
             //     dispatch(setOpenNewReport(true));
             // }
             // reader.readAsText(file);
-
-            dispatch(revertAll());
-            dispatch(setUploadedFile(file));
             dispatch(getJsonFromXml(file));
-            dispatch(setShowUpload(false));
-            dispatch(setOpenNewReport(true));
         }
     };
 

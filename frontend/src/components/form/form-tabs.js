@@ -40,7 +40,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 export const FormTabs = () => {
     const dispatch = useDispatch();
-    const { currentTab, currentSaved, currentId, xml } = useSelector(displaySelector);
+    const { currentTab, currentSaved, currentId } = useSelector(displaySelector);
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -62,6 +62,10 @@ export const FormTabs = () => {
             dispatch(setCurrentSaved(0));
         }
     }, [currentSaved]);
+
+    // useEffect(() => {
+    //     dispatch(getJsonFromXml(xml));
+    // }, [xml]);
 
     const handleChange = (event, newValue) => {
         dispatch(setCurrentTab(newValue));
