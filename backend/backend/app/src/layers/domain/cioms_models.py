@@ -75,7 +75,7 @@ def convert_sex(x: enums.D_5_sex | Any) -> str:
 
 def convert_dosage(dosage: models.G_k_4_r_dosage_information) -> str:
 	dosage_text = unk_if_none(getattr(dosage, "g_k_4_r_8_dosage_text", None))
-	simple = (str(getattr(dosage, "g_k_4_r_1a_dose_num", "")) + getattr(dosage, "g_k_4_r_1b_dose_unit", "")).strip()
+	simple = (str(unk_if_none(getattr(dosage, "g_k_4_r_1a_dose_num", ""))) + unk_if_none(getattr(dosage, "g_k_4_r_1b_dose_unit", ""))).strip()
 	simple = f"({simple})" if simple != "" else ""
 	return f"{dosage_text}{simple}"
 
