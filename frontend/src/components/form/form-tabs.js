@@ -189,10 +189,17 @@ export const FormTabs = () => {
                             <ListItemIcon><DownloadIcon sx={{fontSize: 35}} color='primary'/></ListItemIcon>
                             <ListItemText>Get XML</ListItemText>
                         </MenuItem>
-                        <MenuItem onClick={() => { window.open(`/api/api/cioms/${currentId}`); }}>
-                            <ListItemIcon><PictureAsPdfIcon sx={{fontSize: 35}} color='primary'/></ListItemIcon>
-                            <ListItemText>Get CIOMS</ListItemText>
-                        </MenuItem>
+                        {currentId === null ?
+                            <MenuItem disabled={true} onClick={() => { window.open(`/api/api/cioms/${currentId}`); }}>
+                                <ListItemIcon><PictureAsPdfIcon sx={{fontSize: 35}} color='primary'/></ListItemIcon>
+                                <ListItemText>Get CIOMS</ListItemText>
+                            </MenuItem>
+                        :   <MenuItem onClick={() => { window.open(`/api/api/cioms/${currentId}`); }}>
+                                <ListItemIcon><PictureAsPdfIcon sx={{fontSize: 35}} color='primary'/></ListItemIcon>
+                                <ListItemText>Get CIOMS</ListItemText>
+                            </MenuItem>}
+
+                        
 
                     </Menu>
                 </Box>
