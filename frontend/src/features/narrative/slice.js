@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { e2bCaseKeys } from '../common/changekeys';
-import { changeData, getData, revertAll, saveData } from '../display/slice';
+import { changeData, getData, getJsonFromXml, revertAll, saveData } from '../display/slice';
 import { NarrativeCaseSummary } from './narrative';
 
 export const narrativeSelector = (state) => state.narrative;
@@ -92,6 +92,28 @@ const narrativeSlice = createSlice({
 
 		builder.addCase(changeData.fulfilled, (state, action) => {
             const data = e2bCaseKeys(action.payload.h_narrative_case_summary);
+            if (data) {
+                console.log('narrative', data);
+                let narrativeCaseSummary = new NarrativeCaseSummary();
+                if (data['id'])
+                    narrativeCaseSummary['id'] = data['id'];
+                if (data['H_1_CaseNarrative'])
+                    narrativeCaseSummary['H_1_CaseNarrative'] = data['H_1_CaseNarrative'];
+                if (data['H_2_ReporterComments'])
+                    narrativeCaseSummary['H_2_ReporterComments'] = data['H_2_ReporterComments'];
+                if (data['H_4_SenderComments'])
+                    narrativeCaseSummary['H_4_SenderComments'] = data['H_4_SenderComments'];
+
+                state.narrativeCaseSummary = narrativeCaseSummary;
+                if (data['H_3_r_SenderDiagnosisMeddraCode'])
+                    state.diagnosis = data['H_3_r_SenderDiagnosisMedDRACode'];
+                if (data['H_5_r_CaseSummaryReporterCommentsNativeLanguage'])
+                    state.summaryComments = data['H_5_r_CaseSummaryReporterCommentsNativeLanguage'];
+            }
+        });
+
+        builder.addCase(getJsonFromXml.fulfilled, (state, action) => {
+			const data = e2bCaseKeys(action.payload.h_narrative_case_summary);
             if (data) {
                 console.log('narrative', data);
                 let narrativeCaseSummary = new NarrativeCaseSummary();

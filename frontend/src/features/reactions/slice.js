@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { nullFlavors } from '@src/components/nullFlavours';
 import { e2bCaseKeys } from '../common/changekeys';
-import { changeData, getData, revertAll, saveData } from '../display/slice';
+import { changeData, getData, getJsonFromXml, revertAll, saveData } from '../display/slice';
 import { Reaction } from './reaction';
 
 export const reactionsSelector = (state) => state.reactions;
@@ -98,6 +98,14 @@ const reactionsSlice = createSlice({
         });
 
 		builder.addCase(changeData.fulfilled, (state, action) => {
+			if (action.payload.e_i_reaction_event) {
+				const data = e2bCaseKeys(action.payload.e_i_reaction_event);
+				console.log('reactions', data);
+				state.reactionsData = data;
+			}
+        });
+
+		builder.addCase(getJsonFromXml.fulfilled, (state, action) => {
 			if (action.payload.e_i_reaction_event) {
 				const data = e2bCaseKeys(action.payload.e_i_reaction_event);
 				console.log('reactions', data);
