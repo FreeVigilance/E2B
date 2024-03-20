@@ -161,6 +161,12 @@ export const FormTabs = () => {
                         <DownloadIcon sx={{fontSize: 40}}></DownloadIcon>
                     </IconButton>
                 </Tooltip>
+                <Tooltip title="Make CIOMS form pdf">
+                    <IconButton color = 'primary' onClick={() => { window.open(`/api/api/cioms/${currentId}`); }}
+                        sx={{ position: "fixed", top: 100, right: 30 }}>
+                        CIOMS
+                    </IconButton>
+                </Tooltip>
 
             </TabContext>
         </Box>

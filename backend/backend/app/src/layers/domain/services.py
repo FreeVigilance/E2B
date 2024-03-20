@@ -30,6 +30,7 @@ class CIOMSService:
 	def read(self, pk: int) -> CIOMS:
 		icsr = self.repository.read(ICSR, pk)
 		cioms = convert_to_cioms(icsr)
+		print(cioms, flush=True)
 		return cioms
 
 
