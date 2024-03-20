@@ -8,9 +8,12 @@ from app.src.layers.domain import cioms_models
 CIOMS_PDF_PATH = os.path.join(os.path.dirname(__file__), "cioms-form1.pdf")
 CIOMS_CONTINUE_PATH = os.path.join(os.path.dirname(__file__), "cioms-continuation2.pdf")
 
+
+CONTINUED_FMT = "(Continued on additional information page)"
+
 # FIRST PAGE
 # inclusive
-lens = {"1": 20, "1a": 20, "2a": 5, "3": 5, "4": 5, "5": 5, "6": 5, "7+13":500, "14": 100, "15": 45, "16": 20, "17": 60, "18": 45, "19": 45, "22": 160, "23": 160, "24a": 140, "24c": 20, "DATE OF THIS REPORT": 20, "24b": 45}
+lens = {"1": 20, "1a": 20, "2a": 7, "3": 7, "4": 5, "5": 5, "6": 5, "7+13":500, "14": 100, "15": 45, "16": 20, "17": 60, "18": 45, "19": 45, "22": 160, "23": 160, "24a": 140, "24c": 20, "DATE OF THIS REPORT": 20, "24b": 45}
 
 one_line_fields = ["1", "1a", "2a", "3", "4", "5", "6", "15", "16", "17", "18", "19", "24b", "24c", "DATE OF THIS REPORT"]
 how_many_lines = {"7+13": 11, "14":2, "22": 3, "23": 3, "24a": 4}
@@ -182,7 +185,7 @@ def cut_first_page(inp: dict) -> tuple[dict, dict | None]:
 			r1 = "\n".join(lines[:-1])
 			#print(f"{r1=} {count_lines(r1, field)=} {r2=}")
 
-		i1[field] = (r1 + "\n(see cont.)").strip()
+		i1[field] = (r1 + "\n" + CONTINUED_FMT).strip()
 		if r2.strip() != "":
 			i2[field] = r2
 
@@ -206,7 +209,7 @@ def cut_second_page(inp: dict) -> tuple[dict, dict | None]:
 			r2 = "\n".join([lines[-1]] + r2.split("\n"))
 			r1 = "\n".join(lines[:-1])
 
-		i1[field] = r1.strip() + "\n(see cont.)"
+		i1[field] = r1.strip() + "\n" + CONTINUED_FMT
 		if r2 != "":
 			i2[field] = r2
 
