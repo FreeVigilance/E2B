@@ -266,7 +266,7 @@ export class HTTP {
         }
 
         function serializeHeader(method: METHOD, data: T) {
-            return { 'Content-Type': 'multipart/form-data' };
+            return { 'Content-Type': 'text/plain' };
         }
 
         const { method, data, responseFormat = 'json' } = options;
