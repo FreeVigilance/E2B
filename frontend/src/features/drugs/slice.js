@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import {AdditionalInfo, Dosage, Drug, DrugReactionMatrix, IndicationForUse, Relatedness, Substance} from './drugs';
 import { nullFlavors } from '@src/components/nullFlavours';
-import { changeData, getData, revertAll, saveData } from '../display/slice';
+import { changeData, getData, getJsonFromXml, revertAll, saveData } from '../display/slice';
 import { e2bCaseKeys } from '../common/changekeys';
 
 export const drugsSelector = (state) => state.drugs;
@@ -275,6 +275,22 @@ const drugsSlice = createSlice({
 				state.additionalInfo = res[6];
 			}
         });
+
+		builder.addCase(getJsonFromXml.fulfilled, (state, action) => {
+			if (action.payload.g_k_drug_information) {
+				const data = e2bCaseKeys(action.payload.g_k_drug_information);
+				console.log('drugs', data);
+				let res = parseDrug(data);
+				state.drugs = res[0];
+				state.substances = res[1];
+				state.dosages = res[2];
+				state.indications = res[3];
+				state.drugReactionMatrix = res[4];
+				state.relatedness = res[5];
+				state.additionalInfo = res[6];
+			}
+        });
+
     },
 })
 

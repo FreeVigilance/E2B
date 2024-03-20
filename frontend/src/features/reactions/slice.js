@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { nullFlavors } from '@src/components/nullFlavours';
 import { e2bCaseKeys } from '../common/changekeys';
-import { changeData, getData, revertAll, saveData } from '../display/slice';
+import { changeData, getData, getJsonFromXml, revertAll, saveData } from '../display/slice';
 import { Reaction } from './reaction';
 
 export const reactionsSelector = (state) => state.reactions;
@@ -31,28 +31,28 @@ export const getReaction = () => {
 
 			itemData['E_i_3_2a_ResultsDeath'] =  (item['E_i_3_2a_ResultsDeath']['value'] === false ||item['E_i_3_2a_ResultsDeath']['value'] === null
 						? {'value': null, 'nullFlavor': 'NI'}
-						: item['E_i_3_2a_ResultsDeath']);
+						: {'value': item['E_i_3_2a_ResultsDeath']['value'], 'nullFlavor': null});
 			itemData['E_i_3_2b_LifeThreatening'] =  (item['E_i_3_2b_LifeThreatening']['value'] === false || item['E_i_3_2b_LifeThreatening']['value'] === null
 						? {'value': null, 'nullFlavor': 'NI'}
-						: item['E_i_3_2b_LifeThreatening']);
+						: {'value': item['E_i_3_2b_LifeThreatening']['value'], 'nullFlavor': null});
 			itemData['E_i_3_2c_CausedProlongedHospitalisation'] =  (item['E_i_3_2c_CausedProlongedHospitalisation']['value'] === false || item['E_i_3_2c_CausedProlongedHospitalisation']['value'] === null
 						? {'value': null, 'nullFlavor': 'NI'}
-						: item['E_i_3_2c_CausedProlongedHospitalisation']);
+						: {'value': item['E_i_3_2c_CausedProlongedHospitalisation']['value'], 'nullFlavor': null});
 			itemData['E_i_3_2d_DisablingIncapacitating'] =  (item['E_i_3_2d_DisablingIncapacitating']['value'] === false || item['E_i_3_2d_DisablingIncapacitating']['value'] === null
 						? {'value': null, 'nullFlavor': 'NI'}
-						: item['E_i_3_2d_DisablingIncapacitating']);	
+						: {'value': item['E_i_3_2d_DisablingIncapacitating']['value'], 'nullFlavor': null});	
 			itemData['E_i_3_2e_CongenitalAnomalyBirthDefect'] =  (item['E_i_3_2e_CongenitalAnomalyBirthDefect']['value'] === false || item['E_i_3_2e_CongenitalAnomalyBirthDefect']['value'] === null
 						? {'value': null, 'nullFlavor': 'NI'}
-						: item['E_i_3_2e_CongenitalAnomalyBirthDefect']);
+						: {'value': item['E_i_3_2e_CongenitalAnomalyBirthDefect']['value'], 'nullFlavor': null});
 			itemData['E_i_3_2f_OtherMedicallyImportantCondition'] =  (item['E_i_3_2f_OtherMedicallyImportantCondition']['value'] === false || item['E_i_3_2f_OtherMedicallyImportantCondition']['value'] === null
 						? {'value': null, 'nullFlavor': 'NI'}
-						: item['E_i_3_2f_OtherMedicallyImportantCondition']);
+						: {'value': item['E_i_3_2f_OtherMedicallyImportantCondition']['value'], 'nullFlavor': null});
 			itemData['E_i_4_DateStartReaction'] = (item['E_i_4_DateStartReaction']['nullFlavor'] !== null
 				? {'value': null, 'nullFlavor': nullFlavors[item['E_i_4_DateStartReaction']['nullFlavor']]}
-				: item['E_i_4_DateStartReaction'])
+				: {'value': item['E_i_4_DateStartReaction']['value'], 'nullFlavor': null})
 			itemData['E_i_5_DateEndReaction'] = (item['E_i_5_DateEndReaction']['nullFlavor'] !== null
 				? {'value': null, 'nullFlavor': nullFlavors[item['E_i_5_DateEndReaction']['nullFlavor']]}
-				: item['E_i_5_DateEndReaction'])
+				: {'value': item['E_i_5_DateEndReaction']['value'], 'nullFlavor': null})
 			itemData['E_i_6a_DurationReactionNum'] = item['E_i_6a_DurationReactionNum'];
 			itemData['E_i_6b_DurationReactionUnit'] = item['E_i_6b_DurationReactionUnit'];
 			itemData['E_i_7_OutcomeReactionLastObservation'] = item['E_i_7_OutcomeReactionLastObservation']
@@ -98,6 +98,14 @@ const reactionsSlice = createSlice({
         });
 
 		builder.addCase(changeData.fulfilled, (state, action) => {
+			if (action.payload.e_i_reaction_event) {
+				const data = e2bCaseKeys(action.payload.e_i_reaction_event);
+				console.log('reactions', data);
+				state.reactionsData = data;
+			}
+        });
+
+		builder.addCase(getJsonFromXml.fulfilled, (state, action) => {
 			if (action.payload.e_i_reaction_event) {
 				const data = e2bCaseKeys(action.payload.e_i_reaction_event);
 				console.log('reactions', data);
