@@ -5,10 +5,10 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { displaySelector, setCurrentSaved, setCurrentTab } from '@src/features/display/slice';
+import { displaySelector, getXmlFromJson, setCurrentSaved, setCurrentTab } from '@src/features/display/slice';
 import { Results } from './results';
 import { Reactions } from './reactions';
-import { FormLabel, IconButton } from '@mui/material';
+import { FormLabel, IconButton, Tooltip } from '@mui/material';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import { Patient } from './patient-info/patient';
 import { ParentChild } from './patient-info/parent-child/parent-child';
@@ -23,6 +23,17 @@ import { IdentificationComp } from './identification/identification';
 import { StudyIdentificationComp } from './study-identification/study-identification';
 import { useSnackbar } from 'notistack';
 import { NarrativeComp } from './narrative/narrative';
+import DownloadIcon from '@mui/icons-material/Download';
+import { getResults } from '@src/features/results/slice';
+import { getDrug } from '@src/features/drugs/slice';
+import { getPatient } from '@src/features/patient/slice';
+import { getReaction } from '@src/features/reactions/slice';
+import { getReferences } from '@src/features/references/slice';
+import { getStudyIdentification } from '@src/features/study-identification/slice';
+import { getPrimarySources } from '@src/features/primary-source/slice';
+import { getInfoSender } from '@src/features/info-sender/slice';
+import { getIdentification } from '@src/features/identification/slice';
+import { getNarrative } from '@src/features/narrative/slice';
 
 export const FormTabs = () => {
     const dispatch = useDispatch();
@@ -43,6 +54,38 @@ export const FormTabs = () => {
     const handleChange = (event, newValue) => {
         dispatch(setCurrentTab(newValue));
     };
+
+    const getXml = () => {
+        const results = dispatch(getResults());
+        const grugs = dispatch(getDrug());
+        const patient = dispatch(getPatient());
+        const reactions = dispatch(getReaction());
+        const reference = dispatch(getReferences());
+        const studyIdent = dispatch(getStudyIdentification());
+        const primarySource = dispatch(getPrimarySources());
+        const infoSender = dispatch(getInfoSender());
+        const identification = dispatch(getIdentification());
+        const narrative = dispatch(getNarrative());
+
+        let data = {
+            'id': currentId,
+            'F_r_ResultsTestsProceduresInvestigationPatient': results,
+            'G_k_DrugInformation': grugs,
+            'D_PatientCharacteristics': patient['D_PatientCharacteristics'],
+            'E_i_ReactionEvent': reactions,
+            'C_4_r_LiteratureReference': reference,
+            'C_5_StudyIdentification': studyIdent,
+            'C_2_r_PrimarySourceInformation': primarySource,
+            'C_3_InformationSenderCaseSafetyReport': infoSender,
+            'C_1_IdentificationCaseSafetyReport': identification['C_1_IdentificationCaseSafetyReport'],
+            'H_NarrativeCaseSummary': narrative,
+        }
+        
+        var snakecaseKeys = require('snakecase-keys');
+        data = snakecaseKeys(data);
+        console.log(data);
+        dispatch(getXmlFromJson(data));
+    }
 
     return (
         <Box sx={{ width: '95%', typography: 'body1' }}>
@@ -111,10 +154,14 @@ export const FormTabs = () => {
                 <Save></Save>
                 <FormLabel sx={{ position: 'fixed', bottom: '2%', right: '2%',
                 zIndex: 10000, fontSize: 25,  color: 'black'}}>Report id: {currentId}</FormLabel>
-                {/* <IconButton color = 'primary'
-                    sx={{ position: 'fixed', top: 5, right: 80, zIndex: 10000 }}>
-                    <VerifiedUserIcon size='large'></VerifiedUserIcon>
-                </IconButton> */}
+
+                <Tooltip title="Get XML">
+                    <IconButton color = 'primary' onClick={getXml}
+                        sx={{ position: "fixed", top: 50, right: 30 }}>
+                        <DownloadIcon sx={{fontSize: 40}}></DownloadIcon>
+                    </IconButton>
+                </Tooltip>
+
             </TabContext>
         </Box>
     );

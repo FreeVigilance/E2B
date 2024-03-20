@@ -26,7 +26,10 @@ view_shared_args = dict(
 
 urlpatterns = [
     path('test', lambda *args, **kwargs: http.HttpResponse('This is a test')),
+
     path('icsr', views.ModelClassView.as_view(**view_shared_args)),
     path('icsr/<int:pk>', views.ModelInstanceView.as_view(**view_shared_args)),
-	path('cioms/<int:pk>', views.CIOMSView.as_view(cioms_service=cioms_domain_service))
+	path('cioms/<int:pk>', views.CIOMSView.as_view(cioms_service=cioms_domain_service)),
+    path('icsr/to-xml', views.ModelToXmlView.as_view(**view_shared_args)),
+    path('icsr/from-xml', views.ModelFromXmlView.as_view(**view_shared_args))
 ]

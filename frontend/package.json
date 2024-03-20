@@ -75,6 +75,7 @@
     "@mui/x-tree-view": "6.17.0",
     "@reduxjs/toolkit": "1.9.3",
     "axios": "^1.6.8",
+    "buffer": "^6.0.3",
     "change-case-all": "2.1.0",
     "connected-react-router": "^6.9.1",
     "crypto-pbkdf2": "^0.1.2",

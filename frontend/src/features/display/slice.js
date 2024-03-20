@@ -35,6 +35,21 @@ export const deleteReport = createAsyncThunk(
     },
 );
 
+export const getXmlFromJson = createAsyncThunk(
+    'display/getXmlFromJson',
+    (data) => {
+        return api.getXmlFromJson(data);
+    },
+);
+
+export const getJsonFromXml = createAsyncThunk(
+    'display/getJsonFromXml',
+    (data) => {
+        console.log('xml', data);
+        return api.getJsonFromXml(data);
+    },
+);
+
 
 const initialState = {
     showSideMenu: false,
@@ -44,6 +59,7 @@ const initialState = {
     currentId: null,
     currentSaved: 0,
     uploadedFile: null,
+    showUpload: false,
 };
 
 const displaySlice = createSlice({
@@ -57,6 +73,8 @@ const displaySlice = createSlice({
         setCurrentId: (state, action) => { state.currentId = action.payload; },
         setCurrentSaved: (state, action) => { state.currentSaved = action.payload; },
         setUploadedFile: (state, action) => { state.uploadedFile = action.payload; },
+        setShowUpload: (state, action) => { state.showUpload = action.payload; },
+
     },
     extraReducers: (builder) => {
         builder.addCase(revertAll, () => initialState);
@@ -91,6 +109,29 @@ const displaySlice = createSlice({
             console.log(action.payload);
             state.currentSaved = 2;
         });
+        builder.addCase(getXmlFromJson.fulfilled, (state, action) => {
+            console.log('getXmlFromJson yes');
+            console.log(action.payload);
+            const element = document.createElement("a");
+            const file = new Blob([action.payload], {type: 'text/plain'});
+            element.href = URL.createObjectURL(file);
+            element.download = `${state.currentId}.xml`;
+            document.body.appendChild(element); // Required for this to work in FireFox
+            element.click();
+        });
+        builder.addCase(getXmlFromJson.rejected, (state, action) => {
+            console.log('getXmlFromJson no');
+            console.log(action.payload);
+        });
+        builder.addCase(getJsonFromXml.fulfilled, (state, action) => {
+            console.log('getJsonFromXml yes');
+            console.log(action.payload);
+        });
+        builder.addCase(getJsonFromXml.rejected, (state, action) => {
+            console.log('getJsonFromXml no');
+            console.log(action.payload);
+        });
+
     },
 
 });
@@ -103,6 +144,7 @@ export const {
     setCurrentTab,
     setCurrentId,
     setCurrentSaved,
-    setUploadedFile
+    setUploadedFile,
+    setShowUpload
 
 } = displaySlice.actions;

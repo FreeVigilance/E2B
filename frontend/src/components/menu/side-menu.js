@@ -5,7 +5,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import { displaySelector, getData, revertAll, setCurrentId, setOpenNewReport, setShowCasesList, setShowSideMenu } from '@src/features/display/slice';
+import { displaySelector, getData, revertAll, setCurrentId, setOpenNewReport, setShowCasesList, setShowSideMenu, setShowUpload } from '@src/features/display/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { Fab } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -16,14 +16,14 @@ import { Result } from '@src/features/results/result';
 import { AutopsyData, CauseOfDeath, DrugHistory, MedHistory, ParentDrugHistory } from '@src/features/patient/patient';
 import { patientSelector, setAutopsy, setCauseOfDeath, setDrugHistory, setMedicalHistory, setParentDrugHistory } from '@src/features/patient/slice';
 import { getCasesList } from '@src/features/cases-list/slice';
-// import { UploadXml } from './upload-xml';
+import { UploadXml } from './upload-xml';
 
 const drawerWidth = 240;
 
 export const SideMenu = () => {
     const dispatch = useDispatch();
 
-    const { showSideMenu, openNewReport } = useSelector(displaySelector);
+    const { showSideMenu, openNewReport, showUpload } = useSelector(displaySelector);
     const { reactionsData } = useSelector(reactionsSelector);
     const { resultsData } = useSelector(resultsSelector);
     const { medicalHistory, drugHistory, causeOfDeath, parentHistoryData, parentDrugHistory, autopsy } = useSelector(patientSelector);
@@ -46,6 +46,13 @@ export const SideMenu = () => {
         dispatch(revertAll());
         dispatch(setCurrentId(null));
         dispatch(setOpenNewReport(true));
+    };
+
+    const handleUploadClick = () => {
+        dispatch(revertAll());
+        dispatch(setShowSideMenu(true));
+        dispatch(setCurrentId(null));
+        dispatch(setShowUpload(true))
     };
 
     const handleToggleMenuClick = () => {
@@ -77,12 +84,12 @@ export const SideMenu = () => {
                         </ListItemButton>
                     </ListItem>
 
-                    {/* <ListItem key={'Import XML'} disablePadding>
-                        <ListItemButton>
+                    <ListItem key={'Import XML'} disablePadding>
+                        <ListItemButton
+                            onClick={handleUploadClick}>
                             <ListItemText primary={'Import XML'} />
                         </ListItemButton>
-                    </ListItem> */}
-                    {/* <UploadXml></UploadXml> */}
+                    </ListItem>
                 </List>
             </SwipeableDrawer>
             <Fab variant="contained"
@@ -90,6 +97,7 @@ export const SideMenu = () => {
                 onClick={handleToggleMenuClick}>
                 <MenuIcon></MenuIcon>
             </Fab>
+            {showUpload ? <UploadXml></UploadXml> : null}
         </Box>
     );
 };
