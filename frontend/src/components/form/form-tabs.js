@@ -40,7 +40,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 export const FormTabs = () => {
     const dispatch = useDispatch();
-    const { currentTab, currentSaved, currentId, xml } = useSelector(displaySelector);
+    const { currentTab, currentSaved, currentId } = useSelector(displaySelector);
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -62,6 +62,10 @@ export const FormTabs = () => {
             dispatch(setCurrentSaved(0));
         }
     }, [currentSaved]);
+
+    // useEffect(() => {
+    //     dispatch(getJsonFromXml(xml));
+    // }, [xml]);
 
     const handleChange = (event, newValue) => {
         dispatch(setCurrentTab(newValue));
@@ -185,10 +189,17 @@ export const FormTabs = () => {
                             <ListItemIcon><DownloadIcon sx={{fontSize: 35}} color='primary'/></ListItemIcon>
                             <ListItemText>Get XML</ListItemText>
                         </MenuItem>
-                        <MenuItem onClick={() => { window.open(`/api/api/cioms/${currentId}`); }}>
-                            <ListItemIcon><PictureAsPdfIcon sx={{fontSize: 35}} color='primary'/></ListItemIcon>
-                            <ListItemText>Get CIOMS</ListItemText>
-                        </MenuItem>
+                        {currentId === null ?
+                            <MenuItem disabled={true} onClick={() => { window.open(`/api/api/cioms/${currentId}`); }}>
+                                <ListItemIcon><PictureAsPdfIcon sx={{fontSize: 35}} color='primary'/></ListItemIcon>
+                                <ListItemText>Get CIOMS</ListItemText>
+                            </MenuItem>
+                        :   <MenuItem onClick={() => { window.open(`/api/api/cioms/${currentId}`); }}>
+                                <ListItemIcon><PictureAsPdfIcon sx={{fontSize: 35}} color='primary'/></ListItemIcon>
+                                <ListItemText>Get CIOMS</ListItemText>
+                            </MenuItem>}
+
+                        
 
                     </Menu>
                 </Box>
