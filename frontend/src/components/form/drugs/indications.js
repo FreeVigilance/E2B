@@ -75,6 +75,7 @@ export const Indications = ({drugIndex}) => {
                                                 value = {item['G_k_7_r_1_IndicationPrimarySource'].value}
                                                 sx={{ width: '100%' }}
                                                 multiline
+                                                inputProps={{ maxLength: 250}}
                                                 rows={5}/>
                                             : <FormControl sx={{ width: '100%' }}>
                                                 <InputLabel>Null Flavor</InputLabel>
@@ -93,10 +94,22 @@ export const Indications = ({drugIndex}) => {
 
                             <TextField label="MedDRA Version for Indication" variant="outlined"
                                     onChange={handleChange('G_k_7_r_2a_MedDRAVersionIndication', index)}
+                                    inputProps={{ maxLength: 4}}
+                                    type='number'
+                                    onKeyDown={(evt) =>
+                                        (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === ",") &&
+                                        evt.preventDefault()
+                                    }
                                     value = {item['G_k_7_r_2a_MedDRAVersionIndication'].value}/>
 
                             <TextField label="Indication (MedDRA code)" variant="outlined"
                                     onChange={handleChange('G_k_7_r_2b_IndicationMedDRACode', index)}
+                                    inputProps={{ maxLength: 8}}
+                                    type='number'
+                                    onKeyDown={(evt) =>
+                                        (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                        evt.preventDefault()
+                                    }
                                     value = {item['G_k_7_r_2b_IndicationMedDRACode'].value}/>
                         
                         <Stack direction="row" justifyContent="flex-start">  

@@ -70,6 +70,7 @@ export const StudyRegistrationComp = () => {
                                             {item['C_5_1_r_1_StudyRegistrationNumber']['nullFlavor'] === null ? 
                                                 <TextField label="Study Registration Number" variant="outlined"
                                                     sx={{ width: '80%' }}
+                                                    inputProps={{ maxLength: 50}}
                                                     onChange={handleChange('C_5_1_r_1_StudyRegistrationNumber', index)}
                                                     value = {item['C_5_1_r_1_StudyRegistrationNumber'].value}/>
                                         :   <FormControl sx={{ width: '20%' }}>
@@ -98,6 +99,7 @@ export const StudyRegistrationComp = () => {
                                             {item['C_5_1_r_2_StudyRegistrationCountry']['nullFlavor'] === null ? 
                                                 <TextField label="Study Registration Country" variant="outlined"
                                                     sx={{ width: '80%' }}
+                                                    inputProps={{ maxLength: 2}}
                                                     onChange={handleChange('C_5_1_r_2_StudyRegistrationCountry', index)}
                                                     value = {item['C_5_1_r_2_StudyRegistrationCountry'].value}/>
                                         :   <FormControl sx={{ width: '20%' }}>

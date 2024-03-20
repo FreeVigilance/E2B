@@ -25,7 +25,7 @@ export const DosageTabs = () => {
     const formTabsList = () => {
         let list = [];
         Object.values(drugs).forEach((item, index) => {
-            list.push(<Tab value={index} label={index}/>);
+            list.push(<Tab value={index} label={`drug ${index}`}/>);
         });
         return list;
     }

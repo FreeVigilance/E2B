@@ -46,16 +46,19 @@ export const Relatednesses = ({drugIndex, matrixIndex}) => {
                                         onChange={handleChange('G_k_9_i_2_r_1_SourceAssessment', index)}
                                         value = {item['G_k_9_i_2_r_1_SourceAssessment'].value}
                                         multiline
+                                        inputProps={{ maxLength: 60}}
                                         rows={2}/>
                             <TextField label="Method of Assessment" variant="outlined"
                                         onChange={handleChange('G_k_9_i_2_r_2_MethodAssessment', index)}
                                         value = {item['G_k_9_i_2_r_2_MethodAssessment'].value}
                                         multiline
+                                        inputProps={{ maxLength: 60}}
                                         rows={2}/>
                             <TextField label="Result of Assessment" variant="outlined"
                                         onChange={handleChange('G_k_9_i_2_r_3_ResultAssessment', index)}
                                         value = {item['G_k_9_i_2_r_3_ResultAssessment'].value}
                                         multiline
+                                        inputProps={{ maxLength: 60}}
                                         rows={2}/>
 
                             {index === relatedness[drugIndex][matrixIndex].length - 1 ?

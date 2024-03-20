@@ -6,5 +6,5 @@ export const nullFlavors = {
     4: 'NINF',
     5: 'PINF',
     6: 'NA',
-    6: 'NI'
+    7: 'NI'
 }

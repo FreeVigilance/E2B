@@ -9,7 +9,7 @@ import { drugsSelector, setAdditionalInfo, setDosages, setDrugReactionMatrix, se
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const DrugTabs = () => {
 	const dispatch = useDispatch();
@@ -59,10 +59,45 @@ export const DrugTabs = () => {
         dispatch(setAdditionalInfo(additionalInfoCopy));
     }
 
+    const deleteDrug = (index) => {
+        let answer = window.confirm(`Are you sure you want to remove drug ${index}?`);
+        if (!answer) return;
+        
+        const drugsCopy = JSON.parse(JSON.stringify(drugs));
+        const substancesCopy = JSON.parse(JSON.stringify(substances));
+        const dosagesCopy = JSON.parse(JSON.stringify(dosages));
+        const indicationsCopy = JSON.parse(JSON.stringify(indications));
+        const drugReactionMatrixCopy = JSON.parse(JSON.stringify(drugReactionMatrix));
+        const relatednessCopy = JSON.parse(JSON.stringify(relatedness));
+        const additionalInfoCopy = JSON.parse(JSON.stringify(additionalInfo));
+
+        drugsCopy.splice(index, 1);
+        delete substancesCopy[index];
+        delete dosagesCopy[index];
+        delete indicationsCopy[index];
+        delete additionalInfoCopy[index];
+
+        dispatch(setDrugs(drugsCopy));
+        dispatch(setSubstances(substancesCopy));
+        dispatch(setDosages(dosagesCopy));
+        dispatch(setIndications(indicationsCopy));
+        dispatch(setDrugReactionMatrix(drugReactionMatrixCopy));
+        dispatch(setRelatedness(relatednessCopy));
+        dispatch(setAdditionalInfo(additionalInfoCopy));
+    }
+
     const formTabsList = () => {
         let list = [];
         Object.values(drugs).forEach((item, index) => {
-            list.push(<Tab value={index} label={index}/>);
+            list.push(<Tab label={
+                <span>
+                          {`drug ${index}`}
+                          <IconButton sx={{ color: "#1976d2", marginLeft: 1}}
+                          onClick = {() => deleteDrug(index)}>
+                            <DeleteIcon />
+                          </IconButton>
+                        </span>
+              } />);
         });
         console.log("AAAAAAAA")
         console.log(list);
@@ -82,9 +117,10 @@ export const DrugTabs = () => {
     }
 
 	return (
-            <Box sx={{ width: '100%' }}>
+            <Box sx={{ width: '100%'}}>
                 <TabContext value={value}>
-                <TabList
+                <TabList indicatorColor="primary"
+                variant="fullWidth"
                     onChange={handleChange}
                     aria-label="Drugs"
                 >

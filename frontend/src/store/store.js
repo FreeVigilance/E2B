@@ -12,6 +12,7 @@ import infoSenderReducer from '../features/info-sender/slice';
 import referencesReducer from '../features/references/slice';
 import identificationReducer from '../features/identification/slice';
 import studyIdentificationReducer from '../features/study-identification/slice';
+import narrativeReducer from '../features/narrative/slice';
 
 export const store = configureStore({
     reducer: {
@@ -27,6 +28,7 @@ export const store = configureStore({
         references: referencesReducer,
         identification: identificationReducer,
         studyIdentification: studyIdentificationReducer,
+        narrative: narrativeReducer,
     },
 
     middleware: getDefaultMiddleware({ serializableCheck: false }).concat(thunk),

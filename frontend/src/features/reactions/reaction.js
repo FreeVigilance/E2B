@@ -19,5 +19,6 @@ export class Reaction {
         this.E_i_7_OutcomeReactionLastObservation = { value: null };
         this.E_i_8_MedicalConfirmationHealthcareProfessional = { value: null };
         this.E_i_9_IdentificationCountryReaction = { value: null };
+        this.id = null;
     }
 }

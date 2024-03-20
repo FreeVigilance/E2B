@@ -15,5 +15,6 @@ export class InfoSender {
         this.C_3_4_6_SenderTelephone = {"value": null}
         this.C_3_4_7_SenderFax = {"value": null}
         this.C_3_4_8_SenderEmail = {"value": null}
+        this.id = null
     }
 }

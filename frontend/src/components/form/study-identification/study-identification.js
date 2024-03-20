@@ -62,6 +62,7 @@ export const StudyIdentificationComp = () => {
                                             onChange={handleChange('C_5_2_StudyName')}
                                             value = {studyIdentification['C_5_2_StudyName'].value}
                                             multiline
+                                            inputProps={{ maxLength: 2000}}
                                             rows={5}/>
                                     :   <FormControl sx={{ width: '20%' }}>
                                             <InputLabel>Null Flavor</InputLabel>
@@ -88,7 +89,8 @@ export const StudyIdentificationComp = () => {
                                 label="No Info"/>
                                     {studyIdentification['C_5_3_SponsorStudyNumber']['nullFlavor'] === null ? 
                                         <TextField label="Sponsor Study Number" variant="outlined"
-                                        sx={{ width: '20%' }}
+                                            sx={{ width: '20%' }}
+                                            inputProps={{ maxLength: 50}}
                                             onChange={handleChange('C_5_3_SponsorStudyNumber')}
                                             value = {studyIdentification['C_5_3_SponsorStudyNumber'].value}/>
                                     :   <FormControl sx={{ width: '20%' }}>

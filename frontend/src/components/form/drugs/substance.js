@@ -47,6 +47,7 @@ export const Substances = ({drugIndex}) => {
                                     onChange={handleChange('G_k_2_3_r_1_SubstanceName', index)}
                                     value = {item['G_k_2_3_r_1_SubstanceName'].value}
                                     multiline
+                                    inputProps={{ maxLength: 250}}
                                     rows={3}/> 
                             <TextField label="Substance TermID Version Date/Number" variant="outlined"
                                     onChange={handleChange('G_k_2_3_r_2a_SubstanceTermIDVersion', index)}
@@ -55,9 +56,16 @@ export const Substances = ({drugIndex}) => {
                                     onChange={handleChange('G_k_2_3_r_2b_SubstanceTermID', index)}
                                     value = {item['G_k_2_3_r_2b_SubstanceTermID'].value}/>
                             <TextField label="Strength" variant="outlined"
+                                    inputProps={{ maxLength: 10}}
+                                    type='number'
+                                    onKeyDown={(evt) =>
+                                        (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                        evt.preventDefault()
+                                    }
                                     onChange={handleChange('G_k_2_3_r_3a_StrengthNum', index)}
                                     value = {item['G_k_2_3_r_3a_StrengthNum'].value}/>
                             <TextField label="Strength (unit)" variant="outlined"
+                                    inputProps={{ maxLength: 50}}
                                     onChange={handleChange('G_k_2_3_r_3b_StrengthUnit', index)}
                                     value = {item['G_k_2_3_r_3b_StrengthUnit'].value}/>
 

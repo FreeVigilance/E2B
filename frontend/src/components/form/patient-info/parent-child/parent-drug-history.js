@@ -61,37 +61,13 @@ export const ParentDrugsHistory = () => {
                 boxShadow: "5px 5px #356BA0",
                 marginBottom: 5}}>
                     <CardContent>
-                            <Stack direction="row" spacing={2} justifyContent="flex-start"> 
-                                    <Box className="text-small" style={{ padding: 0 }}>
-                                        <FormControlLabel
-                                        control={<Checkbox
-                                                    checked = {item['D_10_8_r_1_NameDrug'].nullFlavor !== null}
-                                                    onChange={setUnknown('D_10_8_r_1_NameDrug', index)}
-                                                    sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                                    style={{padding: 1, marginLeft: 5, marginTop: 2 }}
-                                                    />}
-                                                label="No Info"/>
-                                    </Box>
-                                    {parentDrugHistory[index]['D_10_8_r_1_NameDrug']['nullFlavor'] === null ? 
-                                            <TextField label="Name of Drug" variant="outlined"
+                            <TextField label="Name of Drug" variant="outlined"
                                             onChange={handleChange('D_10_8_r_1_NameDrug', index)}
                                             value = {item['D_10_8_r_1_NameDrug'].value}
                                             multiline
+                                            inputProps={{ maxLength: 250}}
                                             rows={3}
                                             sx={{ width: '100%' }}/>
-                                            : <FormControl sx={{ width: '100%' }}>
-                                                <InputLabel>Null Flavor</InputLabel>
-                                                <Select
-                                                    defaultValue = {0}
-                                                    value = {item['D_10_8_r_1_NameDrug'].nullFlavor}
-                                                    onChange={setNullFlavor('D_10_8_r_1_NameDrug', index)}
-                                                >
-                                                    <MenuItem value={3}>Unknown</MenuItem>
-                                                    <MenuItem value={6}>Not applicable</MenuItem>
-                                                </Select>
-                                                </FormControl>
-                                    }
-                            </Stack>
                             <Grid container direction="row" columnGap={4} sx={{padding: 2}}>
                                 <Grid container item xs direction="column" rowGap={1}>
 
@@ -115,18 +91,42 @@ export const ParentDrugsHistory = () => {
                                 <Grid container item xs direction="column" rowGap={1}>
                                     <TextField label="MedDRA Version for Indication" variant="outlined"
                                             onChange={handleChange('D_10_8_r_6a_MedDRAVersionIndication', index)}
+                                            inputProps={{ maxLength: 4}}
+                                            type='number'
+                                            onKeyDown={(evt) =>
+                                                (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === ",") &&
+                                                evt.preventDefault()
+                                            }
                                             value = {item['D_10_8_r_6a_MedDRAVersionIndication'].value}/>
 
                                     <TextField label="Indication (MedDRA code)" variant="outlined"
                                             onChange={handleChange('D_10_8_r_6b_IndicationMedDRACode', index)}
+                                            inputProps={{ maxLength: 8}}
+                                            type='number'
+                                            onKeyDown={(evt) =>
+                                                (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                                evt.preventDefault()
+                                            }
                                             value = {item['D_10_8_r_6b_IndicationMedDRACode'].value}/>
 
                                     <TextField label="MedDRA Version for Reaction" variant="outlined"
                                             onChange={handleChange('D_10_8_r_7a_MedDRAVersionReaction', index)}
+                                            inputProps={{ maxLength: 4}}
+                                            type='number'
+                                            onKeyDown={(evt) =>
+                                                (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === ",") &&
+                                                evt.preventDefault()
+                                            }
                                             value = {item['D_10_8_r_7a_MedDRAVersionReaction'].value}/>
 
                                     <TextField label="Reaction (MedDRA code)" variant="outlined"
                                             onChange={handleChange('D_10_8_r_7b_ReactionsMedDRACode', index)}
+                                            inputProps={{ maxLength: 8}}
+                                            type='number'
+                                            onKeyDown={(evt) =>
+                                                (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                                evt.preventDefault()
+                                            }
                                             value = {item['D_10_8_r_7b_ReactionsMedDRACode'].value}/>
                                 </Grid>
                             </Grid>

@@ -12,5 +12,6 @@ export class Result {
         this.F_r_5_NormalHighValue = {"value": null}
         this.F_r_6_Comments = {"value": null}
         this.F_r_7_MoreInformationAvailable = {"value": null}
+        this.id = null
     }
 }
