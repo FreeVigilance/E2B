@@ -108,6 +108,9 @@ def convert_usecases(use_cases: List[models.G_k_7_r_indication_use_case]) -> str
 	return "; ".join([ unk_if_none(getattr(x, "g_k_7_r_1_indication_primary_source", None)) for x in use_cases ])
 
 
+#def convert_reaction_to_narrative(reaction: models.E_i_reaction_event) -> str:
+#	reaction_text = getattr(reaction, ""
+
 def convert_to_cioms(icsr: models.ICSR) -> CIOMS:
 	# I REACTION INFORMATION
 
@@ -223,13 +226,32 @@ def convert_to_cioms(icsr: models.ICSR) -> CIOMS:
 
 	p24a = ";\n".join([ unk_if_none(getattr(src_case_id, "c_1_9_1_r_1_source_case_id", None)) \
 			for src_case_id in getattr(icsr.c_1_identification_case_safety_report, "c_1_9_1_r_source_case_id", []) ])
-	p24b = unk_if_none(getattr(icsr.c_1_identification_case_safety_report, "c_1_9_1_other_case_ids_previous_transmissions", None))
+
+	
+	other_ids = getattr(icsr.c_1_identification_case_safety_report, "c_1_9_1_r_source_case_id", [])
+	if len(other_ids) > 0:
+		p24b = unk_if_none( other_ids[0].c_1_9_1_r_2_case_id )
+	else:
+		p24b = " "
 	p24c = unk_if_none(getattr(icsr.c_1_identification_case_safety_report, "c_1_5_date_most_recent_information", None))
 
 	# TODO
 	p24d = []
 	is_follow_up = False
-	p7_and_p13 = "test"
+
+
+	p7_and_p13 = ""
+
+#	if len(icsr.e_i_reaction_event) == 1:
+#		reaction = icsr.e_i_reaction_event[0]
+#		p7_and_p13 += reaction.e_i_1_reaction_primary_source + "\n\n"
+#		p7_and_p13 += "outcome of the reaction:\n"
+#		p7_and_p13 += reaction.e_i_7_outcome_reaction_last_observation + "\n\n"
+
+#	if len(icsr.e_i_reaction_event) > 1:
+#		for i, reaction in enumerate(icsr.e_i_reaction_event):
+			
+
 
 	cioms = CIOMS(
 		p1=p1,
