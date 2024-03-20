@@ -48,7 +48,7 @@ def _getattr(obj, key, default=None):
 	return x
 
 def unk_if_none(x) -> str:
-	if x is None or x == "":
+	if x is None or str(x).strip() == "":
 		return "[UNK]"
 
 	return x
@@ -88,14 +88,14 @@ def convert_dosage(dosage: models.G_k_4_r_dosage_information) -> str:
 	return f"{dosage_text}{simple}"
 
 def convert_dosages(dosages: List[models.G_k_4_r_dosage_information]) -> str:
-	return "; ".join(map( convert_dosage, dosages ))
+	return "; ".join(map( unk_if_none, map( convert_dosage, dosages )))
 
 
 def convert_route_of_adm(dosage: models.G_k_4_r_dosage_information) -> str:
 	return unk_if_none(_getattr(dosage, "g_k_4_r_10_1_route_administration", None))
 
 def convert_routes_of_adm(dosages: List[models.G_k_4_r_dosage_information]) -> str:
-	return "; ".join(map( convert_route_of_adm, dosages ))
+	return "; ".join(map( unk_if_none, map( convert_route_of_adm, dosages )))
 
 def convert_therapy_dates(dosage: models.G_k_4_r_dosage_information) -> str:
 	return unk_if_none(_getattr(dosage, "g_k_4_r_4_date_time_drug", None)) + \
@@ -103,14 +103,14 @@ def convert_therapy_dates(dosage: models.G_k_4_r_dosage_information) -> str:
 			unk_if_none(_getattr(dosage, "g_k_4_r_5_date_time_last_administration", None))
 
 def convert_therapies_dates(dosages: List[models.G_k_4_r_dosage_information]) -> str:
-	return "; ".join(map( convert_therapy_dates, dosages ))
+	return "; ".join(map( unk_if_none, map( convert_therapy_dates, dosages )))
 
 def convert_therapy_duration(dosage: models.G_k_4_r_dosage_information) -> str:
 	return str(unk_if_none(_getattr(dosage, "g_k_4_r_6a_duration_drug_administration_num", None))) + \
 			unk_if_none(_getattr(dosage, "g_k_4_r_6b_duration_drug_administration_unit", None))
 
 def convert_therapies_duration(dosages: List[models.G_k_4_r_dosage_information]) -> str:
-	return "; ".join(map( convert_therapy_duration, dosages ))
+	return "; ".join(map( unk_if_none, map( convert_therapy_duration, dosages )))
 
 def convert_usecases(use_cases: List[models.G_k_7_r_indication_use_case]) -> str:
 	return "; ".join([ unk_if_none(_getattr(x, "g_k_7_r_1_indication_primary_source", None)) for x in use_cases ])
@@ -133,7 +133,7 @@ def convert_reactions_to_narrative(reactions: List[models.E_i_reaction_event]) -
 
 	res = ""
 	for i, reaction in enumerate(reactions):
-		res += f"#{i+1}" + convert_reaction_to_narrative(reaction)
+		res += f"#{i+1} " + convert_reaction_to_narrative(reaction)
 
 	return res
 
@@ -251,11 +251,11 @@ def convert_to_cioms(icsr: models.ICSR) -> CIOMS:
 	if len(suspect_drugs) > 1:
 		for i, drug in enumerate(suspect_drugs):
 			p14 += f"#{i+1}: " + unk_if_none(drug.g_k_2_2_medicinal_product_name_primary_source) + "\n" # TODO substances + strength
-			p15 += f"#{i+1}: " + convert_dosages(drug.g_k_4_r_dosage_information) + " "
-			p16 += f"#{i+1}: " + convert_routes_of_adm(drug.g_k_4_r_dosage_information) + " "
-			p17 += f"#{i+1}: " + convert_usecases(drug.g_k_7_r_indication_use_case) + " "
-			p18 += f"#{i+1}: " + convert_therapies_dates(drug.g_k_4_r_dosage_information) + " "
-			p19 += f"#{i+1}: " + convert_therapies_duration(drug.g_k_4_r_dosage_information) + " "
+			p15 += f"#{i+1}: " + unk_if_none(convert_dosages(drug.g_k_4_r_dosage_information)) + " "
+			p16 += f"#{i+1}: " + unk_if_none(convert_routes_of_adm(drug.g_k_4_r_dosage_information)) + " "
+			p17 += f"#{i+1}: " + unk_if_none(convert_usecases(drug.g_k_7_r_indication_use_case)) + " "
+			p18 += f"#{i+1}: " + unk_if_none(convert_therapies_dates(drug.g_k_4_r_dosage_information)) + " "
+			p19 += f"#{i+1}: " + unk_if_none(convert_therapies_duration(drug.g_k_4_r_dosage_information)) + " "
 
 	p14 = unk_if_none(p14).strip()
 	p15 = unk_if_none(p15).strip()
