@@ -89,8 +89,7 @@ class ModelToXmlView(BaseView):
 
 class ModelFromXmlView(BaseView):
     def post(self, request: http.HttpRequest) -> http.HttpResponse:
-        xml = request.body
-        xml = xml.decode()[1 : len(xml) - 1].replace('\\n', '').replace('\\', '')  # Crutch
+        xml = json.loads(request.body)['value']
         model_dict = xmltodict.parse(xml)
         model_dict = model_dict[self.model_class.__name__]
         self.reduce_lists(model_dict)
