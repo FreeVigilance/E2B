@@ -21,7 +21,7 @@ export const getIdentification = () => {
                 'C_1_6_1_AdditionalDocumentsAvailable': identificationData['C_1_6_1_AdditionalDocumentsAvailable'],
                 'C_1_7_FulfilLocalCriteriaExpeditedReport': (identificationData['C_1_7_FulfilLocalCriteriaExpeditedReport']['value'] === null
                 ? {'value': null, 'nullFlavor': 'NI'}
-                : identificationData['C_1_7_FulfilLocalCriteriaExpeditedReport']),
+                : {'value': identificationData['C_1_7_FulfilLocalCriteriaExpeditedReport']['value'], 'nullFlavor': null}),
                 'C_1_8_WorldwideUniqueCaseIdentification': identificationData['C_1_8_WorldwideUniqueCaseIdentification'],
                 'C_1_8_1_WorldwideUniqueCaseIdentificationNumber': identificationData['C_1_8_1_WorldwideUniqueCaseIdentificationNumber'],
                 'C_1_8_2_FirstSender': identificationData['C_1_8_2_FirstSender'],
@@ -29,7 +29,7 @@ export const getIdentification = () => {
                 'C_1_9_1_OtherCaseIdsPreviousTransmissions': (identificationData['C_1_9_1_OtherCaseIdsPreviousTransmissions']['value'] === false ||
                 identificationData['C_1_9_1_OtherCaseIdsPreviousTransmissions']['value'] === null 
                 ? {'value': null, 'nullFlavor': 'NI'}
-                : identificationData['C_1_9_1_OtherCaseIdsPreviousTransmissions']),
+                : {'value': identificationData['C_1_9_1_OtherCaseIdsPreviousTransmissions']['value'], 'nullFlavor': null}),
                 'C_1_11_ReportNullificationAmendment': identificationData['C_1_11_ReportNullificationAmendment'],
                 'C_1_11_1_ReportNullificationAmendment': identificationData['C_1_11_1_ReportNullificationAmendment'],
                 'C_1_11_2_ReasonNullificationAmendment': identificationData['C_1_11_2_ReasonNullificationAmendment'],

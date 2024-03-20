@@ -5,7 +5,7 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { displaySelector, getXmlFromJson, setCurrentSaved, setCurrentTab } from '@src/features/display/slice';
+import { displaySelector, getJsonFromXml, getXmlFromJson, setCurrentSaved, setCurrentTab } from '@src/features/display/slice';
 import { Results } from './results';
 import { Reactions } from './reactions';
 import { FormLabel, IconButton, Tooltip } from '@mui/material';
@@ -37,7 +37,7 @@ import { getNarrative } from '@src/features/narrative/slice';
 
 export const FormTabs = () => {
     const dispatch = useDispatch();
-    const { currentTab, currentSaved, currentId } = useSelector(displaySelector);
+    const { currentTab, currentSaved, currentId, xml } = useSelector(displaySelector);
 
     const { enqueueSnackbar } = useSnackbar();
 

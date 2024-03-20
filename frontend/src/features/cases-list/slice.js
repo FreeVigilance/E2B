@@ -24,8 +24,7 @@ const casesListSlice = createSlice({
         cases: [],
     },
     reducers: {
-        setCases: (state, action) => { state.isAuth = action.payload; },
-
+        setCases: (state, action) => { state.cases = action.payload; },
     },
     extraReducers: (builder) => {
         builder.addCase(getCasesList.fulfilled, (state, action) => {
