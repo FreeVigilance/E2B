@@ -3,7 +3,7 @@ from django.urls import path
 
 from app.src.layers.api import models as api_models
 from app.src.layers.api import views
-from app.src.layers.domain.services import DomainService
+from app.src.layers.domain.services import CIOMSService, DomainService
 from app.src.layers.storage.services import StorageService
 from app.src.model_converters.api_to_domain import ApiToDomainModelConverter
 from app.src.model_converters.domain_to_storage import DomainToStorageModelConverter
@@ -17,6 +17,7 @@ storage_service_adapter = ServiceAdapter(storage_service, domain_to_storage_mode
 domain_service = DomainService(storage_service_adapter)
 api_to_domain_model_converter = ApiToDomainModelConverter()
 domain_service_adapter = ServiceAdapter(domain_service, api_to_domain_model_converter)
+cioms_domain_service = CIOMSService(storage_service_adapter)
 
 view_shared_args = dict(
     domain_service=domain_service_adapter,
@@ -27,4 +28,5 @@ urlpatterns = [
     path('test', lambda *args, **kwargs: http.HttpResponse('This is a test')),
     path('icsr', views.ModelClassView.as_view(**view_shared_args)),
     path('icsr/<int:pk>', views.ModelInstanceView.as_view(**view_shared_args)),
+	path('cioms/<int:pk>', views.CIOMSView.as_view(cioms_service=cioms_domain_service))
 ]

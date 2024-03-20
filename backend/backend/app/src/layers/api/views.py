@@ -5,6 +5,7 @@ from django import http
 from django.views import View
 
 from app.src.layers.api.models import ApiModel
+from app.src.layers.domain.services import CIOMSService
 from app.src.shared.protocols import SupportsServiceMethods
 
 
@@ -48,3 +49,13 @@ class ModelInstanceView(BaseView):
     def delete(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
         self.domain_service.delete(self.model_class, pk)
         return self.respond_with_object_json(True)
+
+
+class CIOMSView(View):
+	cioms_service: CIOMSService
+
+	def get(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
+		model = self.cioms_service.read(pk)
+		# run pdf generator
+		return http.HttpResponse(model.model_dump_json(), content_type='application/json')
+
