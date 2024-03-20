@@ -29,11 +29,14 @@ export const UploadXml = () => {
                 readXml = e.target.result;
                 dispatch(revertAll());
                 dispatch(setUploadedFile(readXml));
-                dispatch(getJsonFromXml(readXml));
+                const data = {'value': readXml}
+                dispatch(getJsonFromXml(data));
                 dispatch(setShowUpload(false));
                 dispatch(setOpenNewReport(true));
             }
             reader.readAsText(file);
+            // dispatch(getJsonFromXml(file));
+
         }
     };
 

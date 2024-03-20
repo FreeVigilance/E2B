@@ -60,6 +60,7 @@ const initialState = {
     currentSaved: 0,
     uploadedFile: null,
     showUpload: false,
+    // xml: null,
 };
 
 const displaySlice = createSlice({
@@ -118,6 +119,7 @@ const displaySlice = createSlice({
             element.download = `${state.currentId}.xml`;
             document.body.appendChild(element); // Required for this to work in FireFox
             element.click();
+            // state.xml = action.payload;
         });
         builder.addCase(getXmlFromJson.rejected, (state, action) => {
             console.log('getXmlFromJson no');

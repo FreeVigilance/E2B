@@ -87,12 +87,6 @@ export const Drugs = ({index}) => {
 
                                 </Grid>
                                 <Grid container item xs direction="column" rowGap={1}>
-                                    <TextField label="Substance / Specified Substance Name" variant="outlined"
-                                            onChange={handleChange('G_k_2_1_2b_PhPID', index)}
-                                            value = {drugs[index]['G_k_2_1_2b_PhPID'].value}
-                                            multiline
-                                            rows={3}/>
-
                                     <TextField label="Identification of the Country Where the Drug Was Obtained" variant="outlined"
                                             onChange={handleChange('G_k_2_4_IdentificationCountryDrugObtained', index)}
                                             inputProps={{ maxLength: 2}}
