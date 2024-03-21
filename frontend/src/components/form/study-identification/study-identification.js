@@ -107,7 +107,7 @@ export const StudyIdentificationComp = () => {
                         </Box>
                     </Stack>
 
-                    <FormControl sx={{ width: '20%' }}>
+                    <FormControl sx={{ width: '25%', marginLeft: '25%' }}>
                         <InputLabel>Study Type Where Reaction(s) Were Observed</InputLabel>
                         <Select
                             value = {studyIdentification['C_5_4_StudyTypeReaction'].value}
@@ -125,8 +125,11 @@ export const StudyIdentificationComp = () => {
         <Grid container direction="row" columnGap={4}>
             <Grid container item xs direction="column" rowGap={1}>
                 <FormLabel sx={{ fontSize: 30, marginLeft: '35%', color: 'black' }}>Study Registration</FormLabel>
+
                 <StudyRegistrationComp></StudyRegistrationComp>
-            </Grid>        
+            </Grid>      
+            <Grid container item xs direction="column" rowGap={1}>
+            </Grid>  
         </Grid>
     </>
 

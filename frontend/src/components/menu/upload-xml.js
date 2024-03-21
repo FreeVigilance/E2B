@@ -35,8 +35,6 @@ export const UploadXml = () => {
                 dispatch(setOpenNewReport(true));
             }
             reader.readAsText(file);
-            // dispatch(getJsonFromXml(file));
-
         }
     };
 
