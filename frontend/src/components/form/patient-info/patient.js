@@ -440,19 +440,19 @@ export const Patient = () => {
 
         <Grid container direction="row" columnGap={4}>
             <Grid container item xs direction="column" rowGap={1}>
-                <FormLabel sx={{ fontSize: 30, marginLeft: '35%', color: 'black' }}>Medical History</FormLabel>
+                <FormLabel sx={{ fontSize: 30, marginLeft: '30%', color: 'black' }}>Medical History</FormLabel>
                 <MedicalHistory></MedicalHistory>
             </Grid>
             <Grid container item xs direction="column" rowGap={1}>
-                <FormLabel sx={{ fontSize: 30, marginLeft: '35%', color: 'black' }}>Drugs History</FormLabel>
+                <FormLabel sx={{ fontSize: 30, marginLeft: '33%', color: 'black' }}>Drugs History</FormLabel>
                 <DrugsHistory></DrugsHistory>
             </Grid>
             <Grid container item xs direction="column" rowGap={1}>
-                <FormLabel sx={{ fontSize: 30, marginLeft: '35%', color: 'black' }}>Causes Of Death</FormLabel>
+                <FormLabel sx={{ fontSize: 30, marginLeft: '27%', color: 'black' }}>Causes Of Death</FormLabel>
                 <CausesOfDeath></CausesOfDeath>
             </Grid>
             <Grid container item xs direction="column" rowGap={1}>
-                <FormLabel sx={{ fontSize: 30, marginLeft: '35%', color: 'black' }}>Autopsy-determined Cause of Deat</FormLabel>
+                <FormLabel sx={{ fontSize: 27, marginLeft: '5%', color: 'black' }}>Autopsy-determined Cause of Deat</FormLabel>
                 <Autopsy></Autopsy>
             </Grid>
         </Grid>
