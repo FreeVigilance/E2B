@@ -58,14 +58,12 @@ class ModelInstanceView(BaseView):
 
 
 class CIOMSView(View):
-	cioms_service: CIOMSService = ...
+    cioms_service: CIOMSService = ...
 
-	def get(self, request: http.HttpRequest, pk: int) -> http.FileResponse:
-		model = self.cioms_service.read(pk)
-		
-		out_file = cioms.create_cioms_pdf(model)
-
-		return http.FileResponse(open(out_file, "rb"))
+    def get(self, request: http.HttpRequest, pk: int) -> http.FileResponse:
+        model = self.cioms_service.read(pk)
+        out_file = cioms.create_cioms_pdf(model)
+        return http.FileResponse(open(out_file, "rb"))
 
 
 class ModelToXmlView(BaseView):
