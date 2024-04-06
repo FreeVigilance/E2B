@@ -51,7 +51,7 @@ class ApiToDomainModelConverter(ModelConverter[ApiModel, DomainModel]):
                 continue
 
             if key == 'id':
-                 result_value = value
+                result_value = value
 
             else:
                 pure_value = None

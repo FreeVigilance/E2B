@@ -54,7 +54,7 @@ class ModelInstanceView(BaseView):
 
     def delete(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
         self.domain_service.delete(self.model_class, pk)
-        return self.respond_with_object_json(True)
+        return self.respond_with_object_as_json(True)
 
 
 class CIOMSView(View):

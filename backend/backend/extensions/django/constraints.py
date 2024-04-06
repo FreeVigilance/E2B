@@ -48,7 +48,7 @@ def add_choices_constraint(meta_cls: type[t.Any], field_name: str, choices: t.It
     add_constraint(meta_cls, constraint)
 
 
-def add_unique_together_constraint(meta_cls: type[t.Any], *field_names: str) -> None:
+def add_unique_constraint(meta_cls: type[t.Any], *field_names: str) -> None:
     constraint = models.UniqueConstraint(
         fields=field_names,
         name=make_constraint_name(meta_cls, UNIQUE_TOGETHER_CONSTRAINT_LABEL, *field_names)
