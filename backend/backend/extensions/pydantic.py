@@ -49,7 +49,6 @@ class SafeValidatableModel(pd.BaseModel):
     """
 
     _SELF_ERRORS_KEY: t.ClassVar = '_self'
-    _PARSE_CLASS: t.ClassVar = pd.BaseModel
 
     _errors: dict[str, t.Any] = {}
     _exception: pd.ValidationError | None = None
@@ -126,14 +125,14 @@ class SafeValidatableModel(pd.BaseModel):
 
             # Check if model
             if isinstance(val, dict):
-                if isinstance(field_type, type) and issubclass(field_type, cls._PARSE_CLASS):
+                if isinstance(field_type, type) and issubclass(field_type, SafeValidatableModel):
                     parsed_data[key] = field_type.model_parse(val)
 
                 # Actually check `Optional[T]`, `T | None`, `Union[T, None]`
                 elif (field_type_origin in [t.Union, types.UnionType]
                         and len(field_type_args) == 2
                         and field_type_args[1] == type(None)
-                        and issubclass(field_type_first_arg, cls._PARSE_CLASS)):
+                        and issubclass(field_type_first_arg, SafeValidatableModel)):
                 
                     parsed_data[key] = field_type_first_arg.model_parse(val)
             
@@ -147,7 +146,9 @@ class SafeValidatableModel(pd.BaseModel):
 
                 for item in val:
                     parsed_item = item
-                    if isinstance(item, dict) and issubclass(field_type_first_arg, cls._PARSE_CLASS):
+                    if (isinstance(item, dict) 
+                            and isinstance(field_type_first_arg, type)
+                            and issubclass(field_type_first_arg, SafeValidatableModel)):
                         parsed_item = field_type_first_arg.model_parse(item)
                     parsed_list.append(parsed_item)
 
@@ -236,8 +237,8 @@ class PostValidationProcessor:
 
     def _build_error(
         self, 
-        type: str, 
-        message: str, 
+        type: t.LiteralString, 
+        message: t.LiteralString, 
         loc: tuple[int | str, ...] | None, 
         input: t.Any, 
         ctx: dict[str, t.Any] | None
