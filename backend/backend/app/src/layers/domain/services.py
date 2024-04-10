@@ -1,9 +1,9 @@
 from app.src.layers.domain.cioms_models import CIOMS, convert_to_cioms
 from app.src.layers.domain.models import ICSR, DomainModel
-from app.src.shared.protocols import SupportsServiceMethods
+from app.src.shared.services import SupportsServiceMethods
 
 
-class DomainService:
+class DomainService(SupportsServiceMethods[DomainModel]):
 	def __init__(self, storage_service: SupportsServiceMethods[DomainModel]) -> None:
 		self.storage_service = storage_service
 

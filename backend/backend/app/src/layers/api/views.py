@@ -9,7 +9,7 @@ import xmltodict
 
 from app.src.layers.api.models import ApiModel
 from app.src.layers.domain.services import CIOMSService
-from app.src.shared.protocols import SupportsServiceMethods
+from app.src.shared.services import SupportsServiceMethods
 from app.src.pdf.cioms import fill_cioms2 as cioms
 from extensions import utils
 

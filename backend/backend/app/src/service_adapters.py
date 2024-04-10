@@ -1,8 +1,8 @@
 from app.src.model_converters.base import ModelConverter
-from app.src.shared.protocols import SupportsServiceMethods
+from app.src.shared.services import SupportsServiceMethods
 
 
-class ServiceAdapter[H, L]:
+class ServiceAdapter[H, L](SupportsServiceMethods[H]):
     def __init__(self, adapted_service: SupportsServiceMethods[L], model_converter: ModelConverter[H, L]) -> None:
         self.adapted_service = adapted_service
         self.model_converter = model_converter
