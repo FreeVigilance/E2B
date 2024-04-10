@@ -8,9 +8,7 @@ from django.views import View
 import xmltodict
 
 from app.src.layers.api.models import ApiModel
-from app.src.layers.domain.services import CIOMSService
 from app.src.shared.services import SupportsServiceMethods
-from app.src.pdf.cioms import fill_cioms2 as cioms
 from extensions import utils
 
 
@@ -72,15 +70,6 @@ class ModelInstanceView(BaseView):
     def delete(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
         self.domain_service.delete(self.model_class, pk)
         return http.HttpResponse(status=StatusCode.OK)
-
-
-class CIOMSView(View):
-    cioms_service: CIOMSService = ...
-
-    def get(self, request: http.HttpRequest, pk: int) -> http.FileResponse:
-        model = self.cioms_service.read(pk)
-        out_file = cioms.create_cioms_pdf(model)
-        return http.FileResponse(open(out_file, "rb"))
 
 
 class ModelToXmlView(BaseView):
