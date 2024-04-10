@@ -28,6 +28,4 @@ urlpatterns = [
 
     path('icsr', views.ModelClassView.as_view(**view_shared_args)),
     path('icsr/<int:pk>', views.ModelInstanceView.as_view(**view_shared_args)),
-    path('icsr/to-xml', views.ModelToXmlView.as_view(**view_shared_args)),
-    path('icsr/from-xml', views.ModelFromXmlView.as_view(**view_shared_args))
 ]

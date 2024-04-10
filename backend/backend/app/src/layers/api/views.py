@@ -5,8 +5,6 @@ import typing as t
 from django import http
 from django.views import View
 
-import xmltodict
-
 from app.src.layers.api.models import ApiModel
 from app.src.shared.services import SupportsServiceMethods
 from extensions import utils
@@ -70,41 +68,3 @@ class ModelInstanceView(BaseView):
     def delete(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
         self.domain_service.delete(self.model_class, pk)
         return http.HttpResponse(status=StatusCode.OK)
-
-
-class ModelToXmlView(BaseView):
-    def post(self, request: http.HttpRequest) -> http.HttpResponse:
-        model = self.get_model_from_request(request)
-        model_dict = model.model_dump()
-        self.extend_lists(model_dict)
-        model_dict = {self.model_class.__name__: model_dict}
-        result = xmltodict.unparse(model_dict)
-        return http.HttpResponse(result, content_type='application/xml')
-
-    # Is needed to fix issue with single item list in xmltodict lib
-    @classmethod
-    def extend_lists(cls, model_dict: dict[str, t.Any]) -> None:
-        for value in model_dict.values():
-            if isinstance(value, dict):
-                cls.extend_lists(value)
-            if isinstance(value, list) and len(value) == 1:
-                value.append(dict())
-
-
-class ModelFromXmlView(BaseView):
-    def post(self, request: http.HttpRequest) -> http.HttpResponse:
-        xml = json.loads(request.body)['value']
-        model_dict = xmltodict.parse(xml)
-        model_dict = model_dict[self.model_class.__name__]
-        self.reduce_lists(model_dict)
-        model = self.model_class(**model_dict)
-        return self.respond_with_model_as_json(model)
-
-    # Is needed to fix issue with single item list in xmltodict lib
-    @classmethod
-    def reduce_lists(cls, model_dict: dict[str, t.Any]) -> None:
-        for value in model_dict.values():
-            if isinstance(value, dict):
-                cls.reduce_lists(value)
-            if isinstance(value, list) and len(value) == 2 and value[1] is None:
-                value.pop(1)
