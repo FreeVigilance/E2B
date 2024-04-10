@@ -1,31 +1,29 @@
 from decimal import Decimal
 import typing as t
 
-from pydantic import BaseModel, model_validator
-from pydantic_core import PydanticCustomError
-
 from app.src.shared import enums
 from app.src.shared.enums import NullFlavor as NF
+from extensions import pydantic as pde
 
 
-# TODO: check if whole model layer is needed
-
-
-class Value[T](BaseModel):
+class Value[T](pde.PostValidatableModel, pde.SafeValidatableModel):
     value: T | None = None
 
 
 class NullableValue[T, N](Value[T]):
     null_flavor: N | None = None
 
-    @model_validator(mode='after')
-    def _check_value_and_null_flavor_are_not_present_together(self) -> 'NullableValue':
-        if self.null_flavor is not None and self.value is not None:
-            raise PydanticCustomError('data_error', 'Null flavor should not be present if value is present')
-        return self
+    @classmethod
+    def _post_validate(cls, processor: pde.PostValidationProcessor):
+        processor.try_validate(
+            ('value', 'null_flavor'),
+            'Null flavor should not be specified if value is specified',
+            lambda value, null_flavor:
+                value is None or null_flavor is None
+        )
 
 
-class ApiModel(BaseModel):
+class ApiModel(pde.PostValidatableModel, pde.SafeValidatableModel):
     id: int | None = None
 
 

@@ -1,13 +1,12 @@
 from decimal import Decimal
 import typing as t
 
-from pydantic import BaseModel
-
 from app.src.shared import enums
 from app.src.shared.enums import NullFlavor as NF
+from extensions import pydantic as pde
 
 
-class DomainModel(BaseModel):
+class DomainModel(pde.PostValidatableModel, pde.SafeValidatableModel):    
     id: int | None = None
 
 

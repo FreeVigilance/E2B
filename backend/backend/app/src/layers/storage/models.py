@@ -100,7 +100,7 @@ class C_1_6_1_r_documents_held_sender(StorageModel):
 class C_1_9_1_r_source_case_id(StorageModel):
     class Meta: pass
 
-    ext_cons.add_unique_together_constraint(
+    ext_cons.add_unique_constraint(
         Meta,
         'c_1_identification_case_safety_report',
         'c_1_9_1_r_2_case_id'
@@ -119,7 +119,7 @@ class C_1_9_1_r_source_case_id(StorageModel):
 class C_1_10_r_identification_number_report_linked(StorageModel):
     class Meta: pass
 
-    ext_cons.add_unique_together_constraint(
+    ext_cons.add_unique_constraint(
         Meta,
         'c_1_identification_case_safety_report',
         'c_1_10_r_identification_number_report_linked'
@@ -140,7 +140,7 @@ class C_1_10_r_identification_number_report_linked(StorageModel):
 class C_2_r_primary_source_information(StorageModel):
     class Meta: pass
 
-    ext_cons.add_unique_together_constraint(
+    ext_cons.add_unique_constraint(
         Meta,
         'icsr',
         'c_2_r_5_primary_source_regulatory_purposes'
