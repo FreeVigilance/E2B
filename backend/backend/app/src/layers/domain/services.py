@@ -5,22 +5,26 @@ from app.src.shared.protocols import SupportsServiceMethods
 
 class DomainService:
 	def __init__(self, storage_service: SupportsServiceMethods[DomainModel]) -> None:
-		self.repository = storage_service
+		self.storage_service = storage_service
 
 	def list(self, model_class: type[DomainModel]) -> list[int]:
-		return self.repository.list(model_class)
+		return self.storage_service.list(model_class)
 
 	def read(self, model_class: type[DomainModel], pk: int) -> DomainModel:
-		return self.repository.read(model_class, pk)
+		return self.storage_service.read(model_class, pk)
 
 	def create(self, model: DomainModel) -> DomainModel:
-		return self.repository.create(model)
+		if not model.is_valid:
+			return model
+		return self.storage_service.create(model)
 
 	def update(self, model: DomainModel, pk: int) -> DomainModel:
-		return self.repository.update(model, pk)
+		if not model.is_valid:
+			return model
+		return self.storage_service.update(model, pk)
 
 	def delete(self, model_class: type[DomainModel], pk: int) -> None:
-		return self.repository.delete(model_class, pk)
+		return self.storage_service.delete(model_class, pk)
 
 
 class CIOMSService:
