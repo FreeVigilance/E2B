@@ -8,20 +8,20 @@ class Elem(pde.SafeValidatableModel):
 
     @classmethod
     def _post_validate(cls, processor: pde.PostValidationProcessor):
-        processor.try_validate(
+        processor.try_validate_fields(
             ('num',),
             'len <= 2',
             lambda num:
                 len(str(num)) > 2
         )
-        processor.try_validate(
+        processor.try_validate_fields(
             ('num',),
             'len <= 3',
             lambda num:
                 len(str(num)) > 3,
             is_abort_next=True,
         )
-        processor.try_validate(
+        processor.try_validate_fields(
             ('num',),
             'len <= 4',
             lambda num:
@@ -36,7 +36,7 @@ class Cont(pde.SafeValidatableModel):
 
     @classmethod
     def _post_validate(cls, processor: pde.PostValidationProcessor):
-        processor.try_validate(
+        processor.try_validate_fields(
             ('num1', 'num2'),
             'num1 != num2',
             lambda num1, num2:
