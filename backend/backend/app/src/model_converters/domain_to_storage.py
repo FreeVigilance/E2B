@@ -20,7 +20,7 @@ class DomainToStorageModelConverter(ModelConverter[DomainModel, StorageModel]):
         return StorageModel
 
     @classmethod
-    def get_higher_model_base_class(cls):
+    def get_upper_model_base_class(cls):
         return DomainModel
 
     def convert_to_lower_model(self, source_model: DomainModel, **kwargs) -> StorageModel:
@@ -74,16 +74,16 @@ class DomainToStorageModelConverter(ModelConverter[DomainModel, StorageModel]):
         
         return False
 
-    def convert_to_higher_model(
+    def convert_to_upper_model(
             self,
             source_model: StorageModel,
             include_related: bool = INCLUDE_RELATED_DEFAULT,
             **kwargs
     ) -> DomainModel:
-        target_model, target_dict = self.convert_to_higher_model_and_dict(source_model, include_related)
+        target_model, target_dict = self.convert_to_upper_model_and_dict(source_model, include_related)
         return target_model.model_safe_validate(target_dict)
 
-    def convert_to_higher_model_and_dict(
+    def convert_to_upper_model_and_dict(
             self,
             source_model: StorageModel,
             include_related: bool = INCLUDE_RELATED_DEFAULT
@@ -123,7 +123,7 @@ class DomainToStorageModelConverter(ModelConverter[DomainModel, StorageModel]):
                 target_list_with_dicts = []
 
                 for related_source_model in related_source_models:
-                    model, dict_ = self.convert_to_higher_model_and_dict(related_source_model, include_related)
+                    model, dict_ = self.convert_to_upper_model_and_dict(related_source_model, include_related)
                     target_list_with_models.append(model)
                     target_list_with_dicts.append(dict_)
 
@@ -133,10 +133,10 @@ class DomainToStorageModelConverter(ModelConverter[DomainModel, StorageModel]):
             elif field.one_to_one:
                 related_source_model = getattr(source_model, field_name, None)
                 if related_source_model:
-                    model, dict_ = self.convert_to_higher_model_and_dict(related_source_model, include_related)
+                    model, dict_ = self.convert_to_upper_model_and_dict(related_source_model, include_related)
                     target_dict_with_models[field_name] = model
                     target_dict_with_dicts[field_name] = dict_
 
-        target_model_class = self.get_higher_model_class(type(source_model))
+        target_model_class = self.get_upper_model_class(type(source_model))
         target_model = pmc.PydanticModelConverter.construct_pydantic_model(target_model_class, target_dict_with_models)
         return target_model, target_dict_with_dicts

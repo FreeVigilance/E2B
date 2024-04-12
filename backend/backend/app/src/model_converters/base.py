@@ -3,7 +3,7 @@ import functools
 import inspect
 
 
-class ModelConverter[H, L](abc.ABC):
+class ModelConverter[U, L](abc.ABC):
     @classmethod
     @abc.abstractmethod
     def get_lower_model_base_class(cls) -> type[L]:
@@ -11,41 +11,41 @@ class ModelConverter[H, L](abc.ABC):
     
     @classmethod
     @abc.abstractmethod
-    def get_higher_model_base_class(cls) -> type[H]:
+    def get_upper_model_base_class(cls) -> type[U]:
         raise NotImplementedError()
     
     @abc.abstractmethod
-    def convert_to_lower_model(self, source_model: H, **kwargs) -> L:
+    def convert_to_lower_model(self, source_model: U, **kwargs) -> L:
         raise NotImplementedError()
     
     @abc.abstractmethod
-    def convert_to_higher_model(self, source_model: L, **kwargs) -> H:
+    def convert_to_upper_model(self, source_model: L, **kwargs) -> U:
         raise NotImplementedError()
 
-    def get_lower_model_class(self, source_model_class: type[H]) -> type[L]:
-        return self._get_higher_to_lower_model_class_map()[source_model_class]
+    def get_lower_model_class(self, source_model_class: type[U]) -> type[L]:
+        return self._get_upper_to_lower_model_class_map()[source_model_class]
     
-    def get_higher_model_class(self, source_model_class: type[L]) -> type[H]:
-        return self._get_lower_to_higher_model_class_map()[source_model_class]
-    
-    @classmethod
-    @functools.cache
-    def _get_lower_to_higher_model_class_map(cls) -> dict[type[L], type[H]]:
-        return {v: k for k, v in cls._get_higher_to_lower_model_class_map().items()}
+    def get_upper_model_class(self, source_model_class: type[L]) -> type[U]:
+        return self._get_lower_to_upper_model_class_map()[source_model_class]
     
     @classmethod
     @functools.cache
-    def _get_higher_to_lower_model_class_map(cls) -> dict[type[H], type[L]]:
-        higher_class = cls.get_higher_model_base_class()
+    def _get_lower_to_upper_model_class_map(cls) -> dict[type[L], type[U]]:
+        return {v: k for k, v in cls._get_upper_to_lower_model_class_map().items()}
+    
+    @classmethod
+    @functools.cache
+    def _get_upper_to_lower_model_class_map(cls) -> dict[type[U], type[L]]:
+        upper_class = cls.get_upper_model_base_class()
         lower_class = cls.get_lower_model_base_class()
-        higher_module = inspect.getmodule(higher_class)
+        upper_module = inspect.getmodule(upper_class)
         lower_module = inspect.getmodule(lower_class)
         class_map = dict()
 
-        for higher_attr_name, higher_attr in vars(higher_module).items():
-            if inspect.isclass(higher_attr) and issubclass(higher_attr, higher_class) and higher_attr != higher_class:
-                lower_attr = getattr(lower_module, higher_attr_name)
+        for upper_attr_name, upper_attr in vars(upper_module).items():
+            if inspect.isclass(upper_attr) and issubclass(upper_attr, upper_class) and upper_attr != upper_class:
+                lower_attr = getattr(lower_module, upper_attr_name)
                 if issubclass(lower_attr, lower_class):
-                    class_map[higher_attr] = lower_attr
+                    class_map[upper_attr] = lower_attr
 
         return class_map

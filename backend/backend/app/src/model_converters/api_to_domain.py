@@ -11,7 +11,7 @@ class ApiToDomainModelConverter(ModelConverter[ApiModel, DomainModel]):
         return DomainModel
     
     @classmethod
-    def get_higher_model_base_class(cls):
+    def get_upper_model_base_class(cls):
         return ApiModel
     
     def convert_to_lower_model(self, source_model: ApiModel, **kwargs) -> DomainModel:
@@ -43,11 +43,11 @@ class ApiToDomainModelConverter(ModelConverter[ApiModel, DomainModel]):
         
         return False
     
-    def convert_to_higher_model(self, source_model: DomainModel, **kwargs) -> ApiModel:
+    def convert_to_upper_model(self, source_model: DomainModel, **kwargs) -> ApiModel:
         converter = pmc.PydanticModelConverter(
             source_model_base_class=DomainModel,
-            get_target_model_class=self.get_higher_model_class,  
-            post_convert_field=self.post_convert_to_higher_field          
+            get_target_model_class=self.get_upper_model_class,  
+            post_convert_field=self.post_convert_to_upper_field          
         )
         target_model, target_dict = converter.convert_to_model_and_dict(source_model)
 
@@ -59,7 +59,7 @@ class ApiToDomainModelConverter(ModelConverter[ApiModel, DomainModel]):
             return target_model.model_safe_validate(target_dict)
 
     @staticmethod
-    def post_convert_to_higher_field(
+    def post_convert_to_upper_field(
         field_data: pmc.FieldData,
         model_data: pmc.TargetModelData
     ) -> bool:
