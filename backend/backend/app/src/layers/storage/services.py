@@ -20,7 +20,8 @@ class StorageService(SupportsServiceMethods[StorageModel]):
 
     @transaction.atomic
     def create(self, new_model: StorageModel) -> StorageModel:
-        assert new_model.id is None, 'Id can not be specified when creating a new entity'
+        if new_model.id is not None:
+            raise ValueError('Id can not be specified when creating a new entity')
         self._save_with_related(new_model, self.SaveOperation.INSERT)
         return new_model
 
@@ -52,7 +53,8 @@ class StorageService(SupportsServiceMethods[StorageModel]):
         return new_model
 
     def _save_with_related(self, source_model: StorageModel, save_operation: SaveOperation) -> None:
-        assert save_operation is not None and isinstance(save_operation, self.SaveOperation)
+        if not isinstance(save_operation, self.SaveOperation):
+            raise ValueError('Expected save_operation to be an instance of SaveOperation')
 
         source_model.save(
             # To prevent django from inserting an entity with the id that does not exist

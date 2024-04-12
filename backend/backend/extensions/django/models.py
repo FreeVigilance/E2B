@@ -7,8 +7,8 @@ from extensions.django.fields import temp_relation_field_utils
 
 
 def get_meta_attr_or_raise_exc(attrs: t.Dict[str, t.Any], class_name: str, meta_attr_usage: str) -> type[t.Any]:
-    assert 'Meta' in attrs, \
-        f'Model class {class_name} must contain explicit inner class Meta for {meta_attr_usage} usage'
+    if 'Meta' not in attrs:
+        raise RuntimeError(f'Model class {class_name} must contain explicit inner class Meta for {meta_attr_usage} usage')
     return attrs['Meta']
 
 
