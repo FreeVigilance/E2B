@@ -48,7 +48,7 @@ def test():
     from testing import pydantic_extended_model as pde
     data = dict(num1=1, num2=1, elems=[dict(num='1')])
     try:
-        model = pde.Cont.model_parse(data)
+        model = pde.Cont.model_dict_construct(data)
         model.model_safe_validate(data, context={'temp': 1})
         if model.exception:
             raise model.exception

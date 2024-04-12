@@ -18,7 +18,7 @@ class ApiToDomainModelConverter(ModelConverter[ApiModel, DomainModel]):
     def convert_to_lower_model(self, source_model: ApiModel, **kwargs) -> DomainModel:
         target_model_class = self.get_lower_model_class(type(source_model))
         target_model_dict = self._convert_to_lower_model_dict(source_model)
-        target_model = target_model_class.model_parse(target_model_dict)
+        target_model = target_model_class.model_dict_construct(target_model_dict)
         return target_model.model_safe_validate(target_model_dict)
 
     def _convert_to_lower_model_dict(self, source_model: ApiModel, **kwargs) -> dict[str, t.Any]:
@@ -45,7 +45,7 @@ class ApiToDomainModelConverter(ModelConverter[ApiModel, DomainModel]):
     def convert_to_higher_model(self, source_model: DomainModel, **kwargs) -> ApiModel:
         target_model_class = self.get_higher_model_class(type(source_model))
         target_model_dict = self._convert_to_higher_model_dict(source_model)
-        target_model = target_model_class.model_parse(target_model_dict)
+        target_model = target_model_class.model_dict_construct(target_model_dict)
         # If domain model is invalid, validation for api model is not needed
         if not source_model.is_valid:
             target_model.errors = source_model.errors
