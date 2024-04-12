@@ -1,51 +1,49 @@
 import abc
 import functools
 import inspect
+import typing as t
 
 
-class ModelConverter[U, L](abc.ABC):
+class BaseModelConverter[S, T](abc.ABC):
     @classmethod
     @abc.abstractmethod
-    def get_lower_model_base_class(cls) -> type[L]:
+    def convert(cls, source_model: S, **kwargs) -> T:
         raise NotImplementedError()
     
     @classmethod
-    @abc.abstractmethod
-    def get_upper_model_base_class(cls) -> type[U]:
-        raise NotImplementedError()
+    def get_source_model_base_class(cls) -> type[S]:
+        """Returns bound of S declared in the derived class."""
+        return cls._get_type_param_bound(0)
     
-    @abc.abstractmethod
-    def convert_to_lower_model(self, source_model: U, **kwargs) -> L:
-        raise NotImplementedError()
+    @classmethod
+    def get_target_model_base_class(cls) -> type[T]:
+        """Returns bound of T declared in the derived class."""
+        return cls._get_type_param_bound(1)
     
-    @abc.abstractmethod
-    def convert_to_upper_model(self, source_model: L, **kwargs) -> U:
-        raise NotImplementedError()
-
-    def get_lower_model_class(self, source_model_class: type[U]) -> type[L]:
-        return self._get_upper_to_lower_model_class_map()[source_model_class]
-    
-    def get_upper_model_class(self, source_model_class: type[L]) -> type[U]:
-        return self._get_lower_to_upper_model_class_map()[source_model_class]
+    @classmethod
+    def get_target_model_class(cls, source_model_class: type[S]) -> type[T]:
+        return cls._get_source_to_target_model_class_map()[source_model_class]
     
     @classmethod
     @functools.cache
-    def _get_lower_to_upper_model_class_map(cls) -> dict[type[L], type[U]]:
-        return {v: k for k, v in cls._get_upper_to_lower_model_class_map().items()}
-    
-    @classmethod
-    @functools.cache
-    def _get_upper_to_lower_model_class_map(cls) -> dict[type[U], type[L]]:
-        upper_class = cls.get_upper_model_base_class()
-        lower_class = cls.get_lower_model_base_class()
-        upper_module = inspect.getmodule(upper_class)
-        lower_module = inspect.getmodule(lower_class)
+    def _get_source_to_target_model_class_map(cls) -> dict[type[T], type[S]]:
+        source_class = cls.get_source_model_base_class()
+        target_class = cls.get_target_model_base_class()
+        source_module = inspect.getmodule(source_class)
+        target_module = inspect.getmodule(target_class)
         class_map = dict()
 
-        for upper_attr_name, upper_attr in vars(upper_module).items():
-            if inspect.isclass(upper_attr) and issubclass(upper_attr, upper_class) and upper_attr != upper_class:
-                lower_attr = getattr(lower_module, upper_attr_name)
-                if issubclass(lower_attr, lower_class):
-                    class_map[upper_attr] = lower_attr
+        for source_attr_name, source_attr in vars(source_module).items():
+            if inspect.isclass(source_attr) and issubclass(source_attr, source_class) and source_attr != source_class:
+                target_attr = getattr(target_module, source_attr_name)
+                if issubclass(target_attr, target_class):
+                    class_map[source_attr] = target_attr
 
         return class_map
+    
+    @classmethod
+    def _get_type_param_bound(cls, pos: t.Literal[0, 1]):
+        bound = cls.__type_params__[pos].__bound__
+        if bound is None:
+            raise TypeError('Derived class must declare type var bound')
+        return bound

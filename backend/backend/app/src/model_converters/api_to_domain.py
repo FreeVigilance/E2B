@@ -1,33 +1,27 @@
+import typing as t
+
 from app.src.layers.api.models import ApiModel, Value
 from app.src.layers.domain.models import DomainModel
 from app.src.model_converters import pydantic as pmc
-from app.src.model_converters.base import ModelConverter
+from app.src.model_converters.base import BaseModelConverter
 from app.src.shared.enums import NullFlavor
 
 
-class ApiToDomainModelConverter(ModelConverter[ApiModel, DomainModel]):
+class ApiToDomainModelConverter[S: ApiModel, T: DomainModel](
+    BaseModelConverter[S, T], 
+    pmc.PydanticSourceModelConverter[S, T]
+):    
     @classmethod
-    def get_lower_model_base_class(cls):
-        return DomainModel
-    
-    @classmethod
-    def get_upper_model_base_class(cls):
-        return ApiModel
-    
-    def convert_to_lower_model(self, source_model: ApiModel, **kwargs) -> DomainModel:
-        converter = pmc.PydanticModelConverter(
-            source_model_base_class=ApiModel,
-            get_target_model_class=self.get_lower_model_class,  
-            post_convert_field=self.post_convert_to_lower_field          
-        )
-        target_model, target_dict = converter.convert_to_model_and_dict(source_model)
+    def convert(cls, source_model: S, **kwargs) -> T:
+        target_model, target_dict = cls.convert_to_model_and_dict(source_model)
         return target_model.model_safe_validate(target_dict)
     
-    @staticmethod
-    def post_convert_to_lower_field(
-        field_data: pmc.FieldData,
-        model_data: pmc.TargetModelData
-    ) -> bool:
+    @classmethod
+    def construct_target_model(cls, clazz: type[T], dict_: dict[str, t.Any]) -> T:
+        return cls.construct_pydantic_model(clazz, dict_)
+    
+    @classmethod
+    def _post_convert_field(cls, field_data: pmc.FieldData, model_data: pmc.TargetModelData) -> bool:
         if field_data.is_converted:
             return True
         
@@ -43,13 +37,14 @@ class ApiToDomainModelConverter(ModelConverter[ApiModel, DomainModel]):
         
         return False
     
-    def convert_to_upper_model(self, source_model: DomainModel, **kwargs) -> ApiModel:
-        converter = pmc.PydanticModelConverter(
-            source_model_base_class=DomainModel,
-            get_target_model_class=self.get_upper_model_class,  
-            post_convert_field=self.post_convert_to_upper_field          
-        )
-        target_model, target_dict = converter.convert_to_model_and_dict(source_model)
+
+class DomainToApiModelConverter[S: DomainModel, T: ApiModel](
+    BaseModelConverter[S, T], 
+    pmc.PydanticSourceModelConverter[S, T]
+):
+    @classmethod
+    def convert(cls, source_model: S, **kwargs) -> T:
+        target_model, target_dict = cls.convert_to_model_and_dict(source_model)
 
         # If domain model is invalid, validation for api model is not needed
         if not source_model.is_valid:
@@ -57,12 +52,13 @@ class ApiToDomainModelConverter(ModelConverter[ApiModel, DomainModel]):
             return target_model
         else:
             return target_model.model_safe_validate(target_dict)
+        
+    @classmethod
+    def construct_target_model(cls, clazz: type[T], dict_: dict[str, t.Any]) -> T:
+        return cls.construct_pydantic_model(clazz, dict_)
 
-    @staticmethod
-    def post_convert_to_upper_field(
-        field_data: pmc.FieldData,
-        model_data: pmc.TargetModelData
-    ) -> bool:
+    @classmethod
+    def _post_convert_field(cls, field_data: pmc.FieldData, model_data: pmc.TargetModelData) -> bool:
         if field_data.is_converted:
             return True
         
