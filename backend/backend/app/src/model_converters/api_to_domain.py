@@ -2,86 +2,95 @@ import typing as t
 
 from app.src.layers.api.models import ApiModel, Value
 from app.src.layers.domain.models import DomainModel
-from app.src.model_converters.base import ModelConverter
+from app.src.model_converters import pydantic as pmc
+from app.src.model_converters.base import BaseModelConverter
 from app.src.shared.enums import NullFlavor
 
 
-class ApiToDomainModelConverter(ModelConverter[ApiModel, DomainModel]):
+class ApiToDomainModelConverter[S: ApiModel, T: DomainModel](
+    BaseModelConverter[S, T], 
+    pmc.PydanticSourceModelConverter[S, T]
+):    
     @classmethod
-    def get_higher_model_base_class(cls):
-        return ApiModel
-
+    def convert(cls, source_model: S, **kwargs) -> T:
+        target_model, target_dict = cls.convert_to_model_and_dict(source_model)
+        return target_model.model_safe_validate(target_dict)
+    
     @classmethod
-    def get_lower_model_base_class(cls):
-        return DomainModel
+    def construct_target_model(cls, clazz: type[T], dict_: dict[str, t.Any]) -> T:
+        return cls.construct_pydantic_model(clazz, dict_)
     
-    def convert_to_lower_model(self, source_model: ApiModel, **kwargs) -> DomainModel:
-        target_model_class = self.get_lower_model_class(type(source_model))
-        target_model_dict = self._convert_to_lower_model_dict(source_model)
-        target_model = target_model_class.model_parse(target_model_dict)
-        return target_model.model_safe_validate(target_model_dict)
+    @classmethod
+    def _post_convert_field(
+        cls, 
+        field_data: pmc.FieldData, 
+        model_data: pmc.ModelData, 
+        shared_data: pmc.SharedData
+    ) -> bool:
+        
+        if field_data.is_converted:
+            return True
+        
+        value = field_data.initial_value
 
-    def _convert_to_lower_model_dict(self, source_model: ApiModel, **kwargs) -> dict[str, t.Any]:
-        target_model_dict = dict()
+        if isinstance(value, Value):
+            null_flavor = getattr(value, 'null_flavor', None)
+            pure_value = getattr(value, 'value', None)
+            result_value = null_flavor if null_flavor else pure_value
 
-        iterator = self._get_pydantic_model_attr_conversion_iterator(
-            source_model,
-            target_model_dict,
-            ApiModel,
-            self._convert_to_lower_model_dict,
-        )
-
-        for key, value, is_default_conditions_met in iterator:
-            if is_default_conditions_met:
-                continue
-
-            if isinstance(value, Value):
-                null_flavor = getattr(value, 'null_flavor', None)
-                pure_value = getattr(value, 'value', None)
-                target_model_dict[key] = null_flavor if null_flavor else pure_value
-
-        return target_model_dict
+            model_data.update(field_data.name, result_value)
+            return True
+        
+        return False
     
-    def convert_to_higher_model(self, source_model: DomainModel, **kwargs) -> ApiModel:
-        target_model_class = self.get_higher_model_class(type(source_model))
-        target_model_dict = self._convert_to_higher_model_dict(source_model)
-        target_model = target_model_class.model_parse(target_model_dict)
+
+class DomainToApiModelConverter[S: DomainModel, T: ApiModel](
+    BaseModelConverter[S, T], 
+    pmc.PydanticSourceModelConverter[S, T]
+):
+    @classmethod
+    def convert(cls, source_model: S, **kwargs) -> T:
+        target_model, target_dict = cls.convert_to_model_and_dict(source_model)
         # If domain model is invalid, validation for api model is not needed
         if not source_model.is_valid:
             target_model.errors = source_model.errors
             return target_model
         else:
-            return target_model.model_safe_validate(target_model_dict)
+            return target_model.model_safe_validate(target_dict)
+        
+    @classmethod
+    def construct_target_model(cls, clazz: type[T], dict_: dict[str, t.Any]) -> T:
+        return cls.construct_pydantic_model(clazz, dict_)
 
-    def _convert_to_higher_model_dict(self, source_model: DomainModel, **kwargs) -> dict[str, t.Any]:
-        target_model_dict = dict()
+    @classmethod
+    def _post_convert_field(
+        cls, 
+        field_data: pmc.FieldData, 
+        model_data: pmc.ModelData, 
+        shared_data: pmc.SharedData
+    ) -> bool:
+        
+        if field_data.is_converted:
+            return True
+        
+        value = field_data.initial_value
+        field_name = field_data.name
 
-        iterator = self._get_pydantic_model_attr_conversion_iterator(
-            source_model,
-            target_model_dict,
-            DomainModel,
-            self._convert_to_higher_model_dict,
-        )
+        if field_name in ['id', 'uuid', 'g_k_9_i_1_reaction_assessed']:
+            result_value = value
 
-        for key, value, is_default_conditions_met in iterator:
-            if is_default_conditions_met:
-                continue
-
-            if key == 'id':
-                result_value = value
-
+        else:
+            pure_value = None
+            null_flavor = None
+            if isinstance(value, NullFlavor):
+                null_flavor = value
             else:
-                pure_value = None
-                null_flavor = None
-                if isinstance(value, NullFlavor):
-                    null_flavor = value
-                else:
-                    pure_value = value
-                result_value = {
-                    'value': pure_value,
-                    'null_flavor': null_flavor
-                }
+                pure_value = value
 
-            target_model_dict[key] = result_value
+            result_value = {
+                'value': pure_value,
+                'null_flavor': null_flavor
+            }
 
-        return target_model_dict
+        model_data.update(field_name, result_value)
+        return True

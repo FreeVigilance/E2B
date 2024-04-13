@@ -21,7 +21,7 @@ class BaseView(View):
 
     def get_model_from_request(self, request: http.HttpRequest) -> ApiModel:
         data = json.loads(request.body)
-        model = self.model_class.model_parse(data)
+        model = self.model_class.model_dict_construct(data)
         return model.model_safe_validate(data)
     
     def respond_with_model_as_json_after_write(self, model: ApiModel) -> http.HttpResponse:

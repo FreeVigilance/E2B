@@ -1,5 +1,6 @@
 import enum
 import functools
+import inspect
 import types
 import typing as t
 
@@ -14,11 +15,44 @@ class ErrorType(enum.StrEnum):
 
 
 class PostValidatableModel(pd.BaseModel):
+    """Allows custom validation to avoid problems with basic pydantic consequential field validation."""
+
+    _CURRENT_CONTEXT_KEY: t.ClassVar = '_context'
+    _VALID_DATA_KEY: t.ClassVar = '_validated_data'
+
+    tech_mock: t.Any = pd.Field(default=None, exclude=True)
+
+    @classmethod
+    def model_validate(
+        cls: type[t.Self],
+        obj: t.Any,
+        *,
+        strict: bool | None = None,
+        from_attributes: bool | None = None,
+        context: dict[str, t.Any] | None = None,
+    ) -> t.Self:
+        # Note that this won't be called from __init__
+        if context is None: 
+            context = {}
+        return super().model_validate(obj, strict=strict, from_attributes=from_attributes, context=context)
+
     @pd.model_validator(mode='wrap')
     @classmethod
-    def _model_validate_wrap(cls, data: t.Any, handler: pd.ValidatorFunctionWrapHandler) -> t.Self:
+    def _post_validate_wrap(cls, data: t.Any, handler: pd.ValidatorFunctionWrapHandler, info: pd.ValidationInfo) -> t.Self:
+        """
+        Allows custom validation and concatenates custom errors with catched basic pydantic errors.
+        Note that other model_validator declared in a derived model will be called outside this method.
+        """
+        data['tech_mock'] = None
+
+        context = cls._get_deepest_context(info)
+        if context is not None:
+            # Create deeper context to isolate current model context
+            context[cls._CURRENT_CONTEXT_KEY] = {cls._VALID_DATA_KEY: None}
+
         error_fields = set()
         errors = list()
+        unexpected_exception = None
 
         try:
             return handler(data)
@@ -30,26 +64,60 @@ class PostValidatableModel(pd.BaseModel):
                 if loc:
                     error_fields.add(loc[0])
 
+        except BaseException as exc:
+            unexpected_exception = exc
+
         finally:
-            processor = PostValidationProcessor(data, errors)
-            cls._post_validate(processor)
-            errors = processor.errors
+            if unexpected_exception:
+                raise unexpected_exception
+
+            if context is not None:
+                valid_data = context[cls._CURRENT_CONTEXT_KEY][cls._VALID_DATA_KEY]
+                if valid_data:
+                    processor = PostValidationProcessor(valid_data, data, errors)
+                    cls._post_validate(processor)
+                    errors = processor.errors
+
+                # Delete the current context so that the upper models will see their context and not the current one
+                del context[cls._CURRENT_CONTEXT_KEY]
+
             if errors:
                 raise pd.ValidationError.from_exception_data(title=cls.__name__, line_errors=errors)
             
+    @pd.field_validator('tech_mock', mode='after')
     @classmethod
-    def _post_validate(cls, processor: 'PostValidationProcessor'):
+    def _save_data(cls, val: t.Any, info: pd.ValidationInfo) -> t.Any:
+        """
+        Saves validated data into the current model context.
+        Needed because pydantic doesn't allow to get succesfully validated data if at least one error has occurred.
+        """
+        context = cls._get_deepest_context(info)
+        if context is not None:
+            # Data is saved by reference, thus will be avaiable in model validator being filled with all valid fields
+            context[cls._VALID_DATA_KEY] = info.data
+        return val
+            
+    @classmethod
+    def _get_deepest_context(cls, info: pd.ValidationInfo) -> dict[t.Any, t.Any] | None:
+        context = info.context
+        if context is None:
+            return None
+        while cls._CURRENT_CONTEXT_KEY in context:
+            context = context[cls._CURRENT_CONTEXT_KEY]
+        return context
+            
+    @classmethod
+    def _post_validate(cls, processor: 'PostValidationProcessor') -> None:
         """Override it for custom validation after basic pydantic validation."""
 
 
 class SafeValidatableModel(pd.BaseModel):
     """
     Allows parsing models from dicts and then safe validating them.
-    All models in the hierarchy must have this class among their supers for algorithm to work.
+    All models in the hierarchy must have this class among their bases for algorithm to work.
     """
 
     _SELF_ERRORS_KEY: t.ClassVar = '_self'
-    _PARSE_CLASS: t.ClassVar = pd.BaseModel
 
     _errors: dict[str, t.Any] = {}
     _exception: pd.ValidationError | None = None
@@ -57,7 +125,7 @@ class SafeValidatableModel(pd.BaseModel):
     @pd.computed_field(alias='_errors')
     @property
     def errors(self) -> dict[str, t.Any]:
-        return self._errors
+        return self._errors.copy()
     
     @errors.setter
     def errors(self, val: dict[str, t.Any]) -> None:
@@ -77,19 +145,23 @@ class SafeValidatableModel(pd.BaseModel):
         *, 
         context: dict[str, t.Any] | None = None
     ) -> t.Self:
+        """Validates model without throwing an error and saving it instead."""
         
-        if initial_data == None:
+        if initial_data is None:
             # Dump model as pydantic will not validate the model itself
             # and ignore warnings about wrong data format and etc.
             initial_data = utils.exec_without_warnings(lambda: self.model_dump())     
 
         result_self = self
+        unexpected_exception = None
+
         try:
             result_self = self.model_validate(initial_data, context=context)
 
         except pd.ValidationError as e:
             self._exception = e
 
+            # Saving errors as dict of dicts (of dicts and so on) with max depth = max len of loc
             for err in e.errors():
                 loc = err['loc']
                 msg = err['msg']
@@ -98,15 +170,32 @@ class SafeValidatableModel(pd.BaseModel):
                     utils.update_or_create_list_in_dict(self._errors, self._SELF_ERRORS_KEY, msg)
 
                 errors = self._errors
+                context_data = initial_data
+
                 for key in loc:
+                    if isinstance(key, int):
+                        context_data = context_data[key]
+                    else:  # dict
+                        # If key not in data, then pydntic generated specific error, which will be saved on field level
+                        # (e.g. several erros for union type conversion)
+                        if key not in context_data:
+                            break
+                        context_data = context_data[key]
+
                     errors = utils.get_or_create_dict_in_dict(errors, key)
+
                 utils.update_or_create_list_in_dict(errors, self._SELF_ERRORS_KEY, msg)
 
+        except BaseException as e:
+            unexpected_exception = e
+
         finally:
+            if unexpected_exception:
+                raise unexpected_exception
             return result_self
 
     @classmethod
-    def model_parse(cls, data: dict[str, t.Any]) -> t.Self:
+    def model_dict_construct(cls, data: dict[str, t.Any]) -> t.Self:
         """Converts model dicts to model instances without validation and calls the super."""
 
         type_hints = cls.get_type_hints()
@@ -126,29 +215,40 @@ class SafeValidatableModel(pd.BaseModel):
 
             # Check if model
             if isinstance(val, dict):
-                if isinstance(field_type, type) and issubclass(field_type, cls._PARSE_CLASS):
-                    parsed_data[key] = field_type.model_parse(val)
+                if (
+                    isinstance(field_type, type)
+                    and issubclass(field_type, SafeValidatableModel)
+                ):
+                    parsed_data[key] = field_type.model_dict_construct(val)
 
                 # Actually check `Optional[T]`, `T | None`, `Union[T, None]`
-                elif (field_type_origin in [t.Union, types.UnionType]
-                        and len(field_type_args) == 2
-                        and field_type_args[1] == type(None)
-                        and issubclass(field_type_first_arg, cls._PARSE_CLASS)):
-                
-                    parsed_data[key] = field_type_first_arg.model_parse(val)
+                elif (
+                    field_type_origin in [t.Union, types.UnionType]
+                    and len(field_type_args) == 2
+                    and field_type_args[1] == type(None)
+                    and issubclass(field_type_first_arg, SafeValidatableModel)
+                ):
+                    parsed_data[key] = field_type_first_arg.model_dict_construct(val)
             
             # Check if list of models
-            if (isinstance(val, list)
-                    and isinstance(field_type, types.GenericAlias)
-                    and issubclass(field_type_origin, list)
-                    and field_type_args):
-
+            if (
+                isinstance(val, list)
+                and isinstance(field_type, types.GenericAlias)
+                and issubclass(field_type_origin, list)
+                and field_type_args
+            ):
                 parsed_list = []
 
                 for item in val:
                     parsed_item = item
-                    if isinstance(item, dict) and issubclass(field_type_first_arg, cls._PARSE_CLASS):
-                        parsed_item = field_type_first_arg.model_parse(item)
+
+                    if (
+                        isinstance(item, dict) 
+                        and isinstance(field_type_first_arg, type)
+                        and issubclass(field_type_first_arg, SafeValidatableModel)
+                    ):
+                        parsed_item = field_type_first_arg.model_dict_construct(item)
+
                     parsed_list.append(parsed_item)
 
                 parsed_data[key] = parsed_list
@@ -162,93 +262,117 @@ class SafeValidatableModel(pd.BaseModel):
 
 
 class PostValidationProcessor:
-    def __init__(self, data: dict[str, t.Any], errors: list[pdc.ErrorDetails]) -> None:
-        self._data = data
+    """Manages custom validation."""
+
+    def __init__(
+        self, 
+        valid_data: dict[str, t.Any], 
+        initial_data: dict[str, t.Any],
+        errors: list[pdc.ErrorDetails]
+    ) -> None:
+        self._valid_data = valid_data.copy()
+        self._initial_data = initial_data.copy()
 
         self._errors = []
         for error in errors: 
             error_type = error.get('type')
             if error_type in ErrorType:
                 # Crutch for error with custom type because of the bug in pydantic
-                self._errors.append(
-                    self._build_error(
-                        error_type,
-                        error.get('msg'),
-                        error.get('loc'),
-                        error.get('input'),
-                        error.get('ctx')
-                    )
+                self.add_error(
+                    type=error_type,
+                    message=error.get('msg'),
+                    loc=error.get('loc'),
+                    input=error.get('input'),
+                    ctx=error.get('ctx')
                 )
             else:
                 self._errors.append(error)
 
-        self._error_field_names = set()
-        for e in errors:
-            loc = e['loc']
-            if loc:
-                self._error_field_names.add(loc[0])
-
     @property
     def errors(self) -> list[pdc.ErrorDetails | pdc.InitErrorDetails]:
-        return self._errors
+        return self._errors.copy()
 
-    def try_validate(
-        self, 
-        field_names: tuple[str, ...], 
-        error_message: str, 
-        validate: t.Callable[[t.Any], bool], 
-        *, 
-        is_abort_next: bool = False
+    def try_validate_fields(
+        self,
+        *,
+        validate: t.Callable[..., bool],
+        error_message: str | None = None,
+        is_abort_next: bool = False,
+        is_add_single_error: bool = False,
+        is_add_error_manually: bool = False,
     ) -> None:
-        
-        field_names_set = set(field_names)
-        
-        # If errors were founnd before for these fields
-        # (after basic pydantic validation, 
-        #  or custom validation on embedded models, 
-        #  or previous custom validation for this model with `is_abort_next = True`),
-        # validation shouldn't be done
-        if self._error_field_names & field_names_set:
-            return
-        
+        """
+        Calls validation for fields.
+        Fields are extracted from func params, thus their names must equal field names.
+        If validate func params len > 1, logically it's integration validation.  
+        If is_add_error_manually is True, first validate func param must be PostValidationProcessor.
+        Enable is_add_single_error to display a single error on model level and not on each field level.
+        """
+        if not is_add_error_manually and error_message is None:
+            raise ValueError('Required error_message if is_add_error_manually is disabled')
+
+        field_names = inspect.getfullargspec(validate).args
+        if is_add_error_manually:
+            field_names.pop(0)
+
+        valid_data = {}
+        initial_data = {}
         try:
-            data = {f: self._data[f] for f in field_names}
+            for field_name in field_names:
+                valid_data[field_name] = self._valid_data[field_name]
+                initial_data[field_name] = self._initial_data[field_name]
         except KeyError:
-            # If some data is missing, valdiaion shouldn't be done
+            # If some data is missing, it haven't been parsed and valdiaion shouldn't be done
             return
         
-        is_valid = validate(*data.values())
+        args = valid_data.values()
+        if is_add_error_manually:
+            is_valid = validate(self, *args) 
+        else:
+            is_valid = validate(*args)
 
-        if not is_valid:
-            for field_name in field_names:
-                self._errors.append(
-                    self._build_error(
-                        ErrorType.CUSTOM,
-                        error_message,
-                        (field_name,),
-                        data,
-                        {}
-                    )
+        if is_valid:
+            return
+        
+        if not is_add_error_manually:
+            if is_add_single_error:
+                self.add_error(
+                    type=ErrorType.CUSTOM,
+                    message=error_message,
+                    loc=tuple(),
+                    input=initial_data
                 )
-            # Prevents further validation for these fields 
-            if is_abort_next:
-                self._error_field_names |= field_names_set
+            else:
+                for field_name in field_names:
+                    self.add_error(
+                        type=ErrorType.CUSTOM,
+                        message=error_message,
+                        loc=(field_name,),
+                        input=initial_data
+                    )
 
-    def _build_error(
+        # Prevent further validation for these fields 
+        if is_abort_next:
+            for field_name in field_names:
+                self._valid_data.pop(field_name)
+
+    def add_error(
         self, 
+        *,
         type: str, 
         message: str, 
-        loc: tuple[int | str, ...] | None, 
+        loc: tuple[int | str, ...], 
         input: t.Any, 
-        ctx: dict[str, t.Any] | None
-    ) -> pdc.InitErrorDetails:
-        
-        return pdc.InitErrorDetails(
-            type=pdc.PydanticCustomError(
-                type,
-                message
-            ),
-            loc=loc,
-            input=input,
-            ctx=ctx
+        ctx: dict[str, t.Any] | None = None
+    ) -> None:
+        self._errors.append(
+            pdc.InitErrorDetails(
+                type=pdc.PydanticCustomError(
+                    type,
+                    message
+                ),
+                loc=loc,
+                input=input,
+                ctx=ctx
+            )
         )

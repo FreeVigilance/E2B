@@ -5,18 +5,24 @@ from app.src.layers.api import models as api_models
 from app.src.layers.api import views
 from app.src.layers.domain.services import DomainService
 from app.src.layers.storage.services import StorageService
-from app.src.model_converters.api_to_domain import ApiToDomainModelConverter
-from app.src.model_converters.domain_to_storage import DomainToStorageModelConverter
+from app.src.model_converters import api_to_domain as admc
+from app.src.model_converters import domain_to_storage as dsmc
 from app.src.service_adapters import ServiceAdapter
 
 
 # Dependency injection
 storage_service = StorageService()
-domain_to_storage_model_converter = DomainToStorageModelConverter()
-storage_service_adapter = ServiceAdapter(storage_service, domain_to_storage_model_converter)
+storage_service_adapter = ServiceAdapter(
+    storage_service, 
+    lower_to_upper_model_converter=dsmc.StorageToDomainModelConverter(),
+    upper_to_lower_model_converter=dsmc.DomainToStorageModelConverter()
+)
 domain_service = DomainService(storage_service_adapter)
-api_to_domain_model_converter = ApiToDomainModelConverter()
-domain_service_adapter = ServiceAdapter(domain_service, api_to_domain_model_converter)
+domain_service_adapter = ServiceAdapter(
+    domain_service,
+    lower_to_upper_model_converter=admc.DomainToApiModelConverter(),
+    upper_to_lower_model_converter=admc.ApiToDomainModelConverter()
+)
 
 view_shared_args = dict(
     domain_service=domain_service_adapter,
