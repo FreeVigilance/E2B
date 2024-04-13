@@ -21,7 +21,13 @@ class ApiToDomainModelConverter[S: ApiModel, T: DomainModel](
         return cls.construct_pydantic_model(clazz, dict_)
     
     @classmethod
-    def _post_convert_field(cls, field_data: pmc.FieldData, model_data: pmc.TargetModelData) -> bool:
+    def _post_convert_field(
+        cls, 
+        field_data: pmc.FieldData, 
+        model_data: pmc.ModelData, 
+        shared_data: pmc.SharedData
+    ) -> bool:
+        
         if field_data.is_converted:
             return True
         
@@ -45,7 +51,6 @@ class DomainToApiModelConverter[S: DomainModel, T: ApiModel](
     @classmethod
     def convert(cls, source_model: S, **kwargs) -> T:
         target_model, target_dict = cls.convert_to_model_and_dict(source_model)
-
         # If domain model is invalid, validation for api model is not needed
         if not source_model.is_valid:
             target_model.errors = source_model.errors
@@ -58,14 +63,20 @@ class DomainToApiModelConverter[S: DomainModel, T: ApiModel](
         return cls.construct_pydantic_model(clazz, dict_)
 
     @classmethod
-    def _post_convert_field(cls, field_data: pmc.FieldData, model_data: pmc.TargetModelData) -> bool:
+    def _post_convert_field(
+        cls, 
+        field_data: pmc.FieldData, 
+        model_data: pmc.ModelData, 
+        shared_data: pmc.SharedData
+    ) -> bool:
+        
         if field_data.is_converted:
             return True
         
         value = field_data.initial_value
         field_name = field_data.name
 
-        if field_name == 'id':
+        if field_name in ['id', 'uuid', 'g_k_9_i_1_reaction_assessed']:
             result_value = value
 
         else:

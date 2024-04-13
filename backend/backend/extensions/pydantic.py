@@ -295,7 +295,7 @@ class PostValidationProcessor:
     def try_validate_fields(
         self,
         *,
-        validate: t.Callable[[t.Any], bool],
+        validate: t.Callable[..., bool],
         error_message: str | None = None,
         is_abort_next: bool = False,
         is_add_single_error: bool = False,

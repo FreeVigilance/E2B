@@ -30,6 +30,7 @@ class StorageService(SupportsServiceMethods[StorageModel]):
         new_model.id = pk
         old_model = self.read(type(new_model), pk)
 
+        # Delete old related models if they are missing in new model
         for key, new_value in vars(new_model).items():
             if not temp_relation_field_utils.is_special_field_name(key):
                 continue
@@ -45,35 +46,37 @@ class StorageService(SupportsServiceMethods[StorageModel]):
                     self.delete_model(old_value)
             else:
                 old_id_to_model_dict = {v.id: v for v in old_value.all()}
+                old_ids = old_id_to_model_dict.keys()
                 new_ids = set(v.id for v in new_value) if new_value else set()
-                for old_id in old_id_to_model_dict.keys() - new_ids:
+                for old_id in old_ids - new_ids:
                     self.delete_model(old_id_to_model_dict[old_id])
 
         self._save_with_related(new_model, self.SaveOperation.UPDATE)
         return new_model
 
-    def _save_with_related(self, source_model: StorageModel, save_operation: SaveOperation) -> None:
+    def _save_with_related(self, new_model: StorageModel, save_operation: SaveOperation) -> None:
         if not isinstance(save_operation, self.SaveOperation):
             raise ValueError('Expected save_operation to be an instance of SaveOperation')
 
-        source_model.save(
+        new_model.save(
             # To prevent django from inserting an entity with the id that does not exist
             force_insert=save_operation == self.SaveOperation.INSERT,
             force_update=save_operation == self.SaveOperation.UPDATE
         )
 
-        for key, value in vars(source_model).items():
+        # Create or update related models
+        for key, value in vars(new_model).items():
             if not temp_relation_field_utils.is_special_field_name(key):
                 continue
 
             field_name = temp_relation_field_utils.get_base_field_name(key)
-            related_field_name = source_model._meta.get_field(field_name).remote_field.name
+            related_field_name = new_model._meta.get_field(field_name).remote_field.name
             related_models = value if isinstance(value, list) else [value]
 
             for related_model in related_models:
                 if related_model is None:
                     continue
-                setattr(related_model, related_field_name, source_model)
+                setattr(related_model, related_field_name, new_model)
                 if related_model.id is None:
                     self.create(related_model)
                 else:

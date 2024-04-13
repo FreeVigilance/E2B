@@ -1,4 +1,4 @@
-from app.src.layers.domain.models import ICSR, DomainModel
+from app.src.layers.domain.models import DomainModel
 from app.src.shared.services import SupportsServiceMethods
 
 

@@ -28,45 +28,6 @@ class NullableValue[T, N](Value[T]):
 
 class ApiModel(pde.PostValidatableModel, pde.SafeValidatableModel):
     id: int | None = None
-
-    @classmethod
-    def _post_validate(cls, processor: pde.PostValidationProcessor) -> None:
-        processor.try_validate_fields(
-            validate=cls._validate_uuids,
-            is_add_error_manually=True
-        )
-
-    @staticmethod
-    def _validate_uuids(
-        processor: pde.PostValidationProcessor,
-        e_i_reaction_event: list['E_i_reaction_event'], 
-        g_k_drug_information: list['G_k_drug_information']
-    ) -> bool:
-        is_valid = True
-
-        reaction_ids = set()
-        for reaction in e_i_reaction_event:
-            if reaction.id:
-                reaction_ids.add(reaction.id)
-            if reaction.uuid:
-                reaction_ids.add(reaction.uuid)
-
-        for k, drug in enumerate(g_k_drug_information):
-            for i, link in enumerate(drug.g_k_9_i_drug_reaction_matrix):
-                reaction_id = link.g_k_9_i_1_reaction_assessed
-
-                if reaction_id in reaction_ids:
-                    continue
-
-                processor.add_error(
-                    type=pde.ErrorType.CUSTOM,
-                    message='Technical id was not found among possible related entities',
-                    loc=('g_k_drug_information', k, 'g_k_9_i_drug_reaction_matrix', i, 'g_k_9_i_1_reaction_assessed'),
-                    input=reaction_id
-                )
-                is_valid = False
-
-        return is_valid
                 
 
 class ICSR(ApiModel):
@@ -382,15 +343,6 @@ class E_i_reaction_event(ApiModel):
     e_i_7_outcome_reaction_last_observation: Value[enums.E_i_7_outcome_reaction_last_observation] = Value()
     e_i_8_medical_confirmation_healthcare_professional: Value[bool] = Value()
     e_i_9_identification_country_reaction: Value[str] = Value()  # st
-
-    @classmethod
-    def _post_validate(cls, processor: pde.PostValidationProcessor) -> None:
-        processor.try_validate_fields(
-            error_message='Both id and uuid cannot be specified',
-            is_add_single_error=True,
-            validate=lambda id, uuid:
-                id is None or uuid is None
-        )
 
 
 # F_r_results_tests_procedures_investigation_patient

@@ -1,5 +1,6 @@
 from decimal import Decimal
 import typing as t
+from uuid import UUID
 
 from app.src.shared import enums
 from app.src.shared.enums import NullFlavor as NF
@@ -21,6 +22,45 @@ class ICSR(DomainModel):
     f_r_results_tests_procedures_investigation_patient: list['F_r_results_tests_procedures_investigation_patient'] = []
     g_k_drug_information: list['G_k_drug_information'] = []
     h_narrative_case_summary: t.Optional['H_narrative_case_summary'] = None
+
+    @classmethod
+    def _post_validate(cls, processor: pde.PostValidationProcessor) -> None:
+        processor.try_validate_fields(
+            validate=cls._validate_uuids,
+            is_add_error_manually=True
+        )
+
+    @staticmethod
+    def _validate_uuids(
+        processor: pde.PostValidationProcessor,
+        e_i_reaction_event: list['E_i_reaction_event'], 
+        g_k_drug_information: list['G_k_drug_information']
+    ) -> bool:
+        is_valid = True
+
+        reaction_ids = set()
+        for reaction in e_i_reaction_event:
+            if reaction.id:
+                reaction_ids.add(reaction.id)
+            if reaction.uuid:
+                reaction_ids.add(reaction.uuid)
+
+        for k, drug in enumerate(g_k_drug_information):
+            for i, link in enumerate(drug.g_k_9_i_drug_reaction_matrix):
+                reaction_id = link.g_k_9_i_1_reaction_assessed
+
+                if reaction_id in reaction_ids:
+                    continue
+
+                processor.add_error(
+                    type=pde.ErrorType.CUSTOM,
+                    message='Technical id was not found among possible related entities',
+                    loc=('g_k_drug_information', k, 'g_k_9_i_drug_reaction_matrix', i, 'g_k_9_i_1_reaction_assessed'),
+                    input=reaction_id
+                )
+                is_valid = False
+
+        return is_valid
 
 
 # C_1_identification_case_safety_report
@@ -289,6 +329,8 @@ class D_10_8_r_past_drug_history_parent(DomainModel):
 
 
 class E_i_reaction_event(DomainModel):
+    uuid: UUID | None = None
+
     # e_i_1_reaction_primary_source
 
     # e_i_1_1_reaction_primary_source_native_language
@@ -321,6 +363,15 @@ class E_i_reaction_event(DomainModel):
     e_i_7_outcome_reaction_last_observation: enums.E_i_7_outcome_reaction_last_observation | None = None
     e_i_8_medical_confirmation_healthcare_professional: bool | None = None
     e_i_9_identification_country_reaction: str | None = None  # st
+
+    @classmethod
+    def _post_validate(cls, processor: pde.PostValidationProcessor) -> None:
+        processor.try_validate_fields(
+            error_message='Both id and uuid cannot be specified',
+            is_add_single_error=True,
+            validate=lambda id, uuid:
+                id is None or uuid is None
+        )
 
 
 # F_r_results_tests_procedures_investigation_patient
@@ -390,6 +441,15 @@ class G_k_drug_information(DomainModel):
 
     g_k_11_additional_information_drug: str | None = None
 
+    @classmethod
+    def _post_validate(cls, processor: pde.PostValidationProcessor):
+        processor.try_validate_fields(
+            error_message='Cannot have duplicate drug to reaction relations',
+            validate=lambda g_k_9_i_drug_reaction_matrix:
+                len(g_k_9_i_drug_reaction_matrix) == 
+                len(set(x.g_k_9_i_1_reaction_assessed for x in g_k_9_i_drug_reaction_matrix))
+        )
+
 
 class G_k_2_3_r_substance_id_strength(DomainModel):
     g_k_2_3_r_1_substance_name: str | None = None
@@ -443,7 +503,7 @@ class G_k_9_i_drug_reaction_matrix(DomainModel):
     g_k_9_i_2_r_assessment_relatedness_drug_reaction: list['G_k_9_i_2_r_assessment_relatedness_drug_reaction'] = []
 
     # This field stores id of related reaction
-    g_k_9_i_1_reaction_assessed: int | None = None
+    g_k_9_i_1_reaction_assessed: int | UUID
 
     # g_k_9_i_3_interval_drug_administration_reaction
     g_k_9_i_3_1a_interval_drug_administration_reaction_num: Decimal | None = None
