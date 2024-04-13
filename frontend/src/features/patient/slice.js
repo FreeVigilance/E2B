@@ -25,19 +25,19 @@ export const getPatient = () => {
 				'D_1_Patient': getNullFlavor(patientData, 'D_1_Patient'),
 				'D_1_1_1_MedicalRecordNumberSourceGP': (patientData['D_1_1_1_MedicalRecordNumberSourceGP']['value'] === null
 						? {'value': null, 'nullFlavor': 'MSK'}
-						: patientData['D_1_1_1_MedicalRecordNumberSourceGP']),
+						: {'value': patientData['D_1_1_1_MedicalRecordNumberSourceGP']['value'], 'nullFlavor': null}),
 				'D_1_1_2_MedicalRecordNumberSourceSpecialist': patientData['D_1_1_2_MedicalRecordNumberSourceSpecialist']['value'] === null
 						? {'value': null, 'nullFlavor': 'MSK'}
-						: patientData['D_1_1_2_MedicalRecordNumberSourceSpecialist'],
+						: {'value': patientData['D_1_1_2_MedicalRecordNumberSourceSpecialist']['value'], 'nullFlavor': null},
 				'D_1_1_3_MedicalRecordNumberSourceHospital': patientData['D_1_1_3_MedicalRecordNumberSourceHospital']['value'] === null
 						? {'value': null, 'nullFlavor': 'MSK'}
-						: patientData['D_1_1_3_MedicalRecordNumberSourceHospital'],
+						: {'value': patientData['D_1_1_3_MedicalRecordNumberSourceHospital']['value'], 'nullFlavor': null},
 				'D_1_1_4_MedicalRecordNumberSourceInvestigation': patientData['D_1_1_4_MedicalRecordNumberSourceInvestigation']['value'] === null
 						? {'value': null, 'nullFlavor': 'MSK'}
-						: patientData['D_1_1_4_MedicalRecordNumberSourceInvestigation'],
+						: {'value': patientData['D_1_1_4_MedicalRecordNumberSourceInvestigation']['value'], 'nullFlavor': null},
 				'D_2_1_DateBirth': patientData['D_2_1_DateBirth']['value'] === null
 					? {'value': null, 'nullFlavor': 'MSK'}
-					: patientData['D_2_1_DateBirth'],
+					: {'value': patientData['D_2_1_DateBirth']['value'], 'nullFlavor': null},
 				'D_2_2a_AgeOnsetReactionNum': patientData['D_2_2a_AgeOnsetReactionNum'],
 				'D_2_2b_AgeOnsetReactionUnit': patientData['D_2_2b_AgeOnsetReactionUnit'],
 				'D_2_2_1a_GestationPeriodReactionFoetusNum': patientData['D_2_2_1a_GestationPeriodReactionFoetusNum'],
