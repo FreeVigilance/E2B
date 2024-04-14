@@ -10,19 +10,57 @@ import Checkbox from '@mui/material/Checkbox';
 import { patientSelector, setParentChildData } from '@src/features/patient/slice';
 import { ParentDrugsHistory } from './parent-drug-history';
 import { ParentHistory } from './parent-history';
+import {makeStyles} from '@mui/styles';
+import { FieldLabel } from '../../fieldLabel';
+
+const useStyles = makeStyles({
+    margin: {
+      marginTop: '10px',
+      marginLeft: '10px',
+      marginBottom: '5px'
+    },
+    textXshort: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '35%',
+    },
+    textShort: {
+      marginLeft: 1,
+      marginRight: 1,
+      width: '70%',
+    },
+    textMedium: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '90%',
+    },
+    textLong: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '100%',
+    },
+    label: {
+        color: 'black'
+    },
+    checkbox: {
+        paddingTop: '15px',
+        paddingRight: '10px',
+    }
+})
 
 export const ParentChild = () => {
+    const classes = useStyles();
 	const dispatch = useDispatch();
     const {parentChildData} = useSelector(patientSelector);
 
-    useEffect(() => {
-        console.log("STATE");
-        console.log(parentChildData);
-    });
-
-    const handleChange = (fieldName) => (event) => {
+    const handleChange = (fieldName, isNumber = false, length = 1) => (event) => {
+        let value = event.target.value
+        if (isNumber) {
+            if (value.length > length)
+                value = value.slice(0, length)
+        }
         let parentChildDataCopy = JSON.parse(JSON.stringify(parentChildData));
-        parentChildDataCopy[fieldName].value = event.target.value;
+        parentChildDataCopy[fieldName].value = value;
         dispatch(setParentChildData(parentChildDataCopy));
     };
 
@@ -44,84 +82,93 @@ export const ParentChild = () => {
 
 	return (
         <>
-            <Grid container direction="row" columnGap={2}>
-                <Grid container item xs direction="column" rowGap={1}>
-                    <Stack direction="row" spacing={2} justifyContent="flex-start">
-                        <Box className="text-small" style={{ padding: 0 }} sx={{ width: '100%' }}>
+        <Stack direction={'row'}>
+            <Grid container spacing={2}>
+                <Grid item xs={3}>
+                    <FieldLabel label="Parent Identification"></FieldLabel>
+                </Grid>
+                <Grid item xs={9}>
+                    <Stack direction="row">
+                        <Box className="text-small">
                             <FormControlLabel
                                 control={<Checkbox
                                 checked = {parentChildData['D_10_1_ParentIdentification'].nullFlavor !== null}
                                 onChange={setUnknown('D_10_1_ParentIdentification')}
-                                sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                 />}
                                 label="No Info"/>
-                        {parentChildData['D_10_1_ParentIdentification']['nullFlavor'] === null ? 
-                            <TextField label="Parent Identification" variant="outlined"
-                            sx={{ width: '80%' }}
-                            inputProps={{ maxLength: 60}}
-                            onChange={handleChange('D_10_1_ParentIdentification')}
-                            value = {parentChildData['D_10_1_ParentIdentification'].value}/>
-                        :   
-                            <FormControl>
-                            <InputLabel>Null Flavor</InputLabel><Select
-                                value = {parentChildData['D_10_1_ParentIdentification'].nullFlavor}
-                                onChange={setNullFlavor('D_10_1_ParentIdentification')}
-                            >
-                                <MenuItem value={0}>Masked</MenuItem>
-                                <MenuItem value={1}>Asked but unknown</MenuItem>
-                                <MenuItem value={2}>Not asked</MenuItem>
-                                <MenuItem value={3}>Unknown</MenuItem>
-                            </Select>
-                            </FormControl>}
                         </Box>
-                    </Stack>
 
-                    <Stack direction="row" spacing={2} justifyContent="flex-start">   
-                        <Box className="text-small" style={{ padding: 0 }} sx={{ width: '100%' }}>
+                        {parentChildData['D_10_1_ParentIdentification']['nullFlavor'] === null ? 
+                            <TextField variant="outlined"
+                                className={classes.textShort}
+                                inputProps={{ maxLength: 60}}
+                                onChange={handleChange('D_10_1_ParentIdentification')}
+                                value = {parentChildData['D_10_1_ParentIdentification'].value}/>
+                        :   
+                            <FormControl className={classes.textXshort}>
+                                <InputLabel>Null Flavor</InputLabel>
+                                <Select
+                                    value = {parentChildData['D_10_1_ParentIdentification'].nullFlavor}
+                                    onChange={setNullFlavor('D_10_1_ParentIdentification')}>
+                                    <MenuItem value={0}>Masked</MenuItem>
+                                    <MenuItem value={1}>Asked but unknown</MenuItem>
+                                    <MenuItem value={2}>Not asked</MenuItem>
+                                    <MenuItem value={3}>Unknown</MenuItem>
+                                </Select>
+                            </FormControl>}
+                    </Stack>
+                </Grid>
+
+                <Grid item xs={3}>
+                    <FieldLabel label="Date of Birth of Parent"></FieldLabel>
+                </Grid>
+                <Grid item xs={9}>
+                    <Stack direction={'row'}>   
+                        <Box className="text-small">
                                 <FormControlLabel
                                     control={<Checkbox
                                     checked = {parentChildData['D_10_2_1_DateBirthParent'].nullFlavor !== null}
                                     onChange={setUnknown('D_10_2_1_DateBirthParent')}
-                                    sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                    style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                     />}
                                     label="No Info"/>
-                            {parentChildData['D_10_2_1_DateBirthParent']['nullFlavor'] === null ? 
-                                <TextField sx={{ width: '80%' }}
-                                label="Date of Birth of Parent"
-                                variant="outlined"
-                                value = {parentChildData['D_10_2_1_DateBirthParent'].value}
-                                onChange={handleChange('D_10_2_1_DateBirthParent')}
-                                />
-                            : <FormControl>
-                            <InputLabel>Null Flavor</InputLabel><Select
-                                value = {parentChildData['D_10_2_1_DateBirthParent'].nullFlavor}
-                                onChange={setNullFlavor('D_10_2_1_DateBirthParent')}
-                            >
-                                <MenuItem value={0}>Masked</MenuItem>
-                                <MenuItem value={1}>Asked but unknown</MenuItem>
-                                <MenuItem value={2}>Not asked</MenuItem>
-                            </Select>
-                            </FormControl>}
                         </Box>
+                            {parentChildData['D_10_2_1_DateBirthParent']['nullFlavor'] === null ? 
+                                <TextField
+                                    className={classes.textShort}
+                                    variant="outlined"
+                                    value = {parentChildData['D_10_2_1_DateBirthParent'].value}
+                                    onChange={handleChange('D_10_2_1_DateBirthParent')}
+                                />
+                            : <FormControl className={classes.textXshort}>
+                                <InputLabel>Null Flavor</InputLabel>
+                                <Select
+                                    value = {parentChildData['D_10_2_1_DateBirthParent'].nullFlavor}
+                                    onChange={setNullFlavor('D_10_2_1_DateBirthParent')}>
+                                    <MenuItem value={0}>Masked</MenuItem>
+                                    <MenuItem value={1}>Asked but unknown</MenuItem>
+                                    <MenuItem value={2}>Not asked</MenuItem>
+                                </Select>
+                            </FormControl>}
                     </Stack>
+                </Grid>
 
-                    <Stack direction="row" spacing={2} justifyContent="flex-start">   
-                        <Box className="text-small" style={{ padding: 0 }} sx={{ width: '100%' }}>
+                <Grid item xs={3}>
+                    <FieldLabel label="Sex of Parent"></FieldLabel>
+                </Grid>
+                <Grid item xs={9}>
+                    <Stack direction="row">   
+                        <Box className="text-small">
                             <FormControlLabel
                                 control={<Checkbox
                                 checked = {parentChildData['D_10_6_SexParent'].nullFlavor !== null}
                                 onChange={setUnknown('D_10_6_SexParent')}
-                                sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                 />}
                                 label="No Info"/>
+                        </Box>
                         
                             {parentChildData['D_10_6_SexParent']['nullFlavor'] === null ? 
-                                <FormControl sx={{ width: '80%' }}>
-                                <InputLabel>Sex of Parent</InputLabel>
                                 <Select
+                                    className={classes.textShort}
                                     label="Sex of Parent"
                                     defaultValue={0}
                                     onChange={handleChange('D_10_6_SexParent')}
@@ -129,8 +176,7 @@ export const ParentChild = () => {
                                         <MenuItem value={1}>1 = Male</MenuItem>
                                         <MenuItem value={2}>2 = Female (Preterm and Term newborns)</MenuItem>
                                 </Select>
-                                </FormControl>
-                            :   <FormControl sx={{ width: '80%' }}>
+                            :   <FormControl className={classes.textXshort}>
                                 <InputLabel>Null Flavor</InputLabel>
                                 <Select
                                     value = {parentChildData['D_10_6_SexParent'].nullFlavor}
@@ -142,82 +188,103 @@ export const ParentChild = () => {
                                     <MenuItem value={3}>Unknown</MenuItem>
                                 </Select>
                                 </FormControl>}
-                        </Box>
                     </Stack>
+                </Grid>
 
-                    <Stack direction="row" spacing={2} justifyContent="flex-start">   
-                        <Box className="text-small" style={{ padding: 0 }} sx={{ width: '100%' }}>
+                <Grid item xs={3}>
+                    <FieldLabel label="Last Menstrual Period Date of Parent"></FieldLabel>
+                </Grid>
+                <Grid item xs={9}>
+                    <Stack direction="row">   
+                        <Box className="text-small">
                             <FormControlLabel
                                 control={<Checkbox
                                 checked = {parentChildData['D_10_3_LastMenstrualPeriodDateParent'].nullFlavor !== null}
                                 onChange={setUnknown('D_10_3_LastMenstrualPeriodDateParent')}
-                                sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                 />}
                                 label="No Info"/>
+                        </Box>
                         {parentChildData['D_10_3_LastMenstrualPeriodDateParent']['nullFlavor'] === null ? 
-                            <TextField sx={{ width: '80%' }}
-                            label="Last Menstrual Period Date of Parent"
-                            variant="outlined"
-                            value = {parentChildData['D_10_3_LastMenstrualPeriodDateParent'].value}
-                            onChange={handleChange('D_10_3_LastMenstrualPeriodDateParent')}
+                            <TextField
+                                className={classes.textShort}
+                                variant="outlined"
+                                value = {parentChildData['D_10_3_LastMenstrualPeriodDateParent'].value}
+                                onChange={handleChange('D_10_3_LastMenstrualPeriodDateParent')}
                             />
-                        : <FormControl sx={{ width: '80%' }}>
-                            <InputLabel>Null Flavor</InputLabel><Select
+                        : <FormControl className={classes.textXshort}>
+                            <InputLabel>Null Flavor</InputLabel>
+                            <Select
                                 value = {parentChildData['D_10_3_LastMenstrualPeriodDateParent'].nullFlavor}
-                                onChange={setNullFlavor('D_10_3_LastMenstrualPeriodDateParent')}
-                            >
+                                onChange={setNullFlavor('D_10_3_LastMenstrualPeriodDateParent')}>
                                 <MenuItem value={0}>Masked</MenuItem>
                                 <MenuItem value={1}>Asked but unknown</MenuItem>
                                 <MenuItem value={2}>Not asked</MenuItem>
                             </Select>
                             </FormControl>}
-                        </Box>
                     </Stack>
                 </Grid>
 
-                <Grid container item xs direction="column" rowGap={1}>
 
-                    <TextField label="Age of Parent" variant="outlined"
-                        sx={{ width: '100%' }}
-                        onChange={handleChange('D_10_2_2a_AgeParentNum')}
-                        inputProps={{ maxLength: 3}}
+            </Grid>
+            <Grid container spacing={2}>
+
+                <Grid item xs={3}>
+                    <FieldLabel label="Age of Parent"></FieldLabel>
+                </Grid>
+                <Grid item xs={9}>
+                    <TextField variant="outlined"
+                        className={classes.textXshort}
+                        onChange={handleChange('D_10_2_2a_AgeParentNum', true, 3)}
                         type='number'
                         onKeyDown={(evt) =>
                             (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
                             evt.preventDefault()
                         }
                         value = {parentChildData['D_10_2_2a_AgeParentNum'].value}/>
+                </Grid>
 
-                    <TextField label="Age of Parent (unit)" variant="outlined"
-                        sx={{ width: '100%' }}
+                <Grid item xs={3}>
+                    <FieldLabel label="Age of Parent (unit)"></FieldLabel>
+                </Grid>
+                <Grid item xs={9}>
+                    <TextField variant="outlined"
+                        className={classes.textMedium}
                         inputProps={{ maxLength: 50}}
                         onChange={handleChange('D_10_2_2b_AgeParentUnit')}
                         value = {parentChildData['D_10_2_2b_AgeParentUnit'].value}/>
+                </Grid>
 
-                    <TextField label="Body Weight (kg) of Parent" variant="outlined"
-                        sx={{ width: '100%' }}
-                        inputProps={{ maxLength: 6}}
+                <Grid item xs={3}>
+                    <FieldLabel label="Body Weight (kg) of Parent"></FieldLabel>
+                </Grid>
+                <Grid item xs={9}>
+                    <TextField variant="outlined"
+                        className={classes.textXshort}
                         type='number'
                         onKeyDown={(evt) =>
                             (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === ",") &&
                             evt.preventDefault()
                         }
-                        onChange={handleChange('D_10_4_BodyWeightParent')}
+                        onChange={handleChange('D_10_4_BodyWeightParent', true, 6)}
                         value = {parentChildData['D_10_4_BodyWeightParent'].value}/>
+                </Grid>
                     
-                    <TextField label="Height (cm) of Parent" variant="outlined"
-                        sx={{ width: '100%' }}
-                        inputProps={{ maxLength: 3}}
+                <Grid item xs={3}>
+                    <FieldLabel label="Height (cm) of Parent"></FieldLabel>
+                </Grid>
+                <Grid item xs={9}>
+                    <TextField variant="outlined"
+                        className={classes.textXshort}
                         type='number'
                         onKeyDown={(evt) =>
                             (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
                             evt.preventDefault()
                         }
-                        onChange={handleChange('D_10_5_HeightParent')}
+                        onChange={handleChange('D_10_5_HeightParent', true, 3)}
                         value = {parentChildData['D_10_5_HeightParent'].value}/>
                 </Grid>
-        </Grid>
+            </Grid>
+        </Stack>
 
         <Divider sx={{ borderBottomWidth: 5, padding: 2 }}/>
 

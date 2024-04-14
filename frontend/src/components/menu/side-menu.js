@@ -93,7 +93,7 @@ export const SideMenu = () => {
                 </List>
             </SwipeableDrawer>
             <Fab variant="contained"
-                sx={{ position: 'fixed', bottom: '2%', left: '1%', zIndex: 10000 }}
+                sx={{ position: 'fixed', top: '10px', left: '0', zIndex: 10000 }}
                 onClick={handleToggleMenuClick}>
                 <MenuIcon></MenuIcon>
             </Fab>

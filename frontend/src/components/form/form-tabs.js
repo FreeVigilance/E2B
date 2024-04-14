@@ -36,6 +36,7 @@ import { getIdentification } from '@src/features/identification/slice';
 import { getNarrative } from '@src/features/narrative/slice';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import MenuIcon from '@mui/icons-material/Menu';
+import { PatientDeath } from './patient-info/patient-death/patient-death';
 
 
 export const FormTabs = () => {
@@ -114,9 +115,10 @@ export const FormTabs = () => {
                         <Tab label="Results" value="0" />
                         <Tab label="Reactions" value="1" />
                         <Tab label="Patient" value="2" />
-                        <Tab label="Parent-child" value="3" />
-                        <Tab label="Drugs" value="4" />
-                        <Tab label="Dosages" value="5" />
+                        <Tab label="Patient death" value="3" />
+                        <Tab label="Parent-child" value="4" />
+                        <Tab label="Drugs" value="5" />
+                        <Tab label="Dosages" value="6" />
                         {/* <Tab label="Drug Reaction Matrix" value="6" /> */}
                         <Tab label="Primary Source" value="7" />
                         <Tab label="Sender Information" value="8" />
@@ -137,12 +139,15 @@ export const FormTabs = () => {
                     <Patient></Patient>
                 </TabPanel>
                 <TabPanel value="3">
-                    <ParentChild></ParentChild>
+                    <PatientDeath></PatientDeath>
                 </TabPanel>
                 <TabPanel value="4">
-                    <DrugTabs></DrugTabs>
+                    <ParentChild></ParentChild>
                 </TabPanel>
                 <TabPanel value="5">
+                    <DrugTabs></DrugTabs>
+                </TabPanel>
+                <TabPanel value="6">
                     <DosageTabs></DosageTabs>
                 </TabPanel>
                 {/* <TabPanel value="6">

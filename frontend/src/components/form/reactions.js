@@ -14,21 +14,60 @@ import { Reaction } from '@src/features/reactions/reaction';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import DeleteIcon from '@mui/icons-material/Delete';
+import {makeStyles} from '@mui/styles';
+import { FieldLabel } from './fieldLabel';
+
 
 var snakecaseKeys = require('snakecase-keys')
 
+const useStyles = makeStyles({
+    margin: {
+      marginTop: '10px',
+      marginLeft: '10px',
+      marginBottom: '5px'
+    },
+    textXshort: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '35%',
+    },
+    textShort: {
+      marginLeft: 1,
+      marginRight: 1,
+      width: '70%',
+    },
+    textMedium: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '90%',
+    },
+    textLong: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '100%',
+    },
+    label: {
+        color: 'black'
+    },
+    checkbox: {
+        paddingTop: '15px',
+        paddingRight: '10px',
+    }
+})
+
 export const Reactions = () => {
+    const classes = useStyles();
 	const dispatch = useDispatch();
     const {reactionsData} = useSelector(reactionsSelector);
 
-    useEffect(() => {
-        console.log("STATE");
-        console.log(snakecaseKeys(reactionsData));
-    });
-
-    const handleChange = (fieldName, index) => (event) => {
+    const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
+        let value = event.target.value
+        if (isNumber) {
+            if (value.length > length)
+                value = value.slice(0, length)
+        }
         let reactionsDataCopy = JSON.parse(JSON.stringify(reactionsData));
-        reactionsDataCopy[index][fieldName].value = event.target.value;
+        reactionsDataCopy[index][fieldName].value = value;
         dispatch(setReactionsData(reactionsDataCopy));
     };
 
@@ -65,80 +104,106 @@ export const Reactions = () => {
                 boxShadow: "5px 5px #356BA0",
                 marginBottom: 5}}>
                     <CardContent>
-                <Stack direction="column" spacing={4} justifyContent="flex-start">
-                    <Stack direction="row" spacing={2} maxWidth={true} justifyContent="center">
-                        <TextField label="Reported by the Primary Source in Native Language" variant="outlined"
-                            onChange={handleChange('E_i_1_1a_ReactionPrimarySourceNativeLanguage', index)}
-                            value = {item['E_i_1_1a_ReactionPrimarySourceNativeLanguage'].value}
-                            multiline
-                            inputProps={{ maxLength: 250}}
-                            sx={{ width: '35%' }}
-                            rows={4}/>
-                        <TextField label="Reported by the Primary Source Language" variant="outlined"
-                            onChange={handleChange('E_i_1_1b_ReactionPrimarySourceLanguage', index)}
-                            value = {item['E_i_1_1b_ReactionPrimarySourceLanguage'].value}
-                            multiline
-                            inputProps={{ maxLength: 3}}
-                            sx={{ width: '35%' }}
-                            rows={4}/>
-                        <TextField label="Reported by the Primary Source for Translation" variant="outlined"
-                            onChange={handleChange('E_i_1_2_ReactionPrimarySourceTranslation', index)}
-                            value = {item['E_i_1_2_ReactionPrimarySourceTranslation'].value}
-                            multiline
-                            inputProps={{ maxLength: 250}}
-                            sx={{ width: '35%' }}
-                            rows={4}/>
-                    </Stack>
+                    <Grid container spacing={2}>
 
-                    <Divider  orientation='horizontal' flexItem></Divider>
+                        <Grid item xs={3}>
+                            <FieldLabel label="Reported by the Primary Source in Native Language"></FieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField variant="outlined"
+                                className={classes.textLong}
+                                onChange={handleChange('E_i_1_1a_ReactionPrimarySourceNativeLanguage', index)}
+                                value = {item['E_i_1_1a_ReactionPrimarySourceNativeLanguage'].value}
+                                multiline
+                                inputProps={{ maxLength: 250}}
+                                rows={2}/>
+                        </Grid>
 
-                    <Grid container direction="row" columnGap={4}>
-                        <Grid container item xs direction="column" rowGap={1} >
+                        <Grid item xs={3}>
+                            <FieldLabel label="Reported by the Primary Source Language" ></FieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField variant="outlined"
+                                className={classes.textLong}
+                                onChange={handleChange('E_i_1_1b_ReactionPrimarySourceLanguage', index)}
+                                value = {item['E_i_1_1b_ReactionPrimarySourceLanguage'].value}
+                                multiline
+                                inputProps={{ maxLength: 250}}
+                                rows={2}/>
+                        </Grid>
+
+                        <Grid item xs={3}>
+                            <FieldLabel label="Reported by the Primary Source for Translation"></FieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField variant="outlined"
+                                className={classes.textLong}
+                                onChange={handleChange('E_i_1_2_ReactionPrimarySourceTranslation', index)}
+                                value = {item['E_i_1_2_ReactionPrimarySourceTranslation'].value}
+                                multiline
+                                inputProps={{ maxLength: 250}}
+                                rows={2}/>
+                        </Grid>
+                    </Grid>
+
+                    <Divider sx={{ borderWidth: 0, padding: 2 }}></Divider>
+
+                    <Stack direction={'row'}>
+                    <Grid container spacing={2}>
+
+                        <Grid item xs={4}>
+                            <FieldLabel label="MedDRA Version for Reaction"></FieldLabel>
+                        </Grid>
+                        <Grid item xs={8}>
                             <TextField
-                                    autoComplete="off"
-                                    label="MedDRA Version for Reaction"
-                                    value = {item['E_i_2_1a_MedDRAVersionReaction'].value}
-                                    onChange={handleChange('E_i_2_1a_MedDRAVersionReaction', index)}
-                                    inputProps={{ maxLength: 4}}
-                                    type='number'
-                                    onKeyDown={(evt) =>
-                                        (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === ",") &&
-                                        evt.preventDefault()
-                                    }
+                                className={classes.textXshort}
+                                autoComplete="off"
+                                value = {item['E_i_2_1a_MedDRAVersionReaction'].value}
+                                onChange={handleChange('E_i_2_1a_MedDRAVersionReaction', index, true, 4)}
+                                type='number'
+                                onKeyDown={(evt) =>
+                                    (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === ",") &&
+                                    evt.preventDefault()
+                                }
                                 />
+                        </Grid>
+                        <Grid item xs={4}>
+                            <FieldLabel label="Reaction / Event MedDRA Code"></FieldLabel>
+                        </Grid>
+                        <Grid item xs={8}>
                             <TextField
-                                    onChange={handleChange('E_i_2_1b_ReactionMedDRACode', index)}
-                                    value = {item['E_i_2_1b_ReactionMedDRACode'].value}
-                                    autoComplete="off"
-                                    inputProps={{ maxLength: 8}}
-                                    type='number'
-                                    onKeyDown={(evt) =>
-                                        (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
-                                        evt.preventDefault()
-                                    }
-                                    label="Reaction / Event MedDRA Code"
+                                className={classes.textXshort}
+                                onChange={handleChange('E_i_2_1b_ReactionMedDRACode', index, true, 8)}
+                                value = {item['E_i_2_1b_ReactionMedDRACode'].value}
+                                autoComplete="off"
+                                type='number'
+                                onKeyDown={(evt) =>
+                                    (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                    evt.preventDefault()
+                                }
                                 />
-                            <FormControl sx={{ width: '100%' }}>
-                                <InputLabel>Term Highlighted by the Reporter</InputLabel>
-                                <Select
-                                    value = {item['E_i_3_1_TermHighlightedReporter'].value}
-                                    label="Term Highlighted by the Reporter"
-                                    onChange={handleChange('E_i_3_1_TermHighlightedReporter', index)}
-                                >
-                                    <MenuItem value={1}>1 = Yes, highlighted by the reporter, NOT serious</MenuItem>
-                                    <MenuItem value={2}>2 = No, not highlighted by the reporter, NOT serious</MenuItem>
-                                    <MenuItem value={3}>3 = Yes, highlighted by the reporter, SERIOUS</MenuItem>
-                                    <MenuItem value={4}>4 = No, not highlighted by the reporter, SERIOUS</MenuItem>
-                            </Select>
-                            </FormControl>
-
-                            <Divider sx={{ color: "white", margin: "14px 0" }}></Divider>
-
-                            <FormControl sx={{ width: '100%' }}>
-                                <InputLabel>Outcome of Reaction at the Time of Last Observation</InputLabel>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <FieldLabel label="Term Highlighted by the Reporter"></FieldLabel>
+                        </Grid>
+                        <Grid item xs={8}>
                             <Select
-                                label="Outcome of Reaction at the Time of Last Observation"
-                                defaultValue={0}
+                                className={classes.textMedium}
+                                value = {item['E_i_3_1_TermHighlightedReporter'].value}
+                                onChange={handleChange('E_i_3_1_TermHighlightedReporter', index)}>
+                                <MenuItem value={1}>1 = Yes, highlighted by the reporter, NOT serious</MenuItem>
+                                <MenuItem value={2}>2 = No, not highlighted by the reporter, NOT serious</MenuItem>
+                                <MenuItem value={3}>3 = Yes, highlighted by the reporter, SERIOUS</MenuItem>
+                                <MenuItem value={4}>4 = No, not highlighted by the reporter, SERIOUS</MenuItem>
+                            </Select>
+                        </Grid>
+
+                        <Grid item xs={4}>
+                            <FieldLabel label='Outcome of Reaction at the Time of Last Observation'></FieldLabel>
+                        </Grid>
+                        <Grid item xs={8}>
+                            <Select
+                                className={classes.textMedium}
                                 onChange={handleChange('E_i_7_OutcomeReactionLastObservation', index)}
                                 value = {item['E_i_7_OutcomeReactionLastObservation'].value}
                                 >
@@ -149,235 +214,244 @@ export const Reactions = () => {
                                 <MenuItem value={5}>5 = fatal</MenuItem>
                                 <MenuItem value={0}>0 = unknown</MenuItem>
                             </Select>
-                            </FormControl>
+                        </Grid>
 
-                            <FormControl sx={{ width: '100%' }}>
-                                <InputLabel>Medical Confirmation by Healthcare Professional</InputLabel>
+                        <Grid item xs={4}>
+                            <FieldLabel label='Medical Confirmation by Healthcare Professional'></FieldLabel>
+                        </Grid>
+                        <Grid item xs={8}>
                             <Select
-                                label="Medical Confirmation by Healthcare Professional"
+                                className={classes.textMedium}
                                 onChange={handleChange('E_i_8_MedicalConfirmationHealthcareProfessional', index)}
                                 value = {item['E_i_8_MedicalConfirmationHealthcareProfessional'].value}
-                                defaultValue = {0}
-                            >
+                                defaultValue = {0}>
                                 <MenuItem value={1}>Confirmed</MenuItem>
                                 <MenuItem value={0}>NOT confirmed</MenuItem>
                             </Select>
-                            </FormControl>
+                        </Grid>
 
+                        <Grid item xs={4}>
+                            <FieldLabel label="Identification of the Country Where the Reaction Occurred"></FieldLabel>
+                        </Grid>
+                        <Grid item xs={8}>
                             <TextField
-                                label="Identification of the Country Where the Reaction Occurred"
+                                className={classes.textXshort}
                                 variant="outlined"
                                 inputProps={{ maxLength: 2}}
                                 onChange={handleChange('E_i_9_IdentificationCountryReaction', index)}
                                 value = {item['E_i_9_IdentificationCountryReaction'].value}
                                 />
-
-                        </Grid>
-                        <Divider orientation='vertical' flexItem ></Divider>
-
-                        <Grid container item xs direction="column" rowGap={2}>
-                            <FormControl sx={{ width: '100%' }}>
-                                <InputLabel >Results in Death</InputLabel>
-                            <Select 
-                                value = {item['E_i_3_2a_ResultsDeath'].value}
-                                label="Results in Death"
-                                defaultValue = {0}
-                                onChange={handleChange('E_i_3_2a_ResultsDeath', index)}
-                            >
-                                <MenuItem value={true}>Yes</MenuItem>
-                                <MenuItem value={false}>No</MenuItem>
-                            </Select>
-                            </FormControl>
-
-                            <FormControl sx={{ width: '100%' }}>
-                                <InputLabel >Life Threatening</InputLabel>
-                            <Select 
-                                value = {item['E_i_3_2b_LifeThreatening'].value}
-                                label="Life Threatening"
-                                defaultValue = {0}
-                                onChange={handleChange('E_i_3_2b_LifeThreatening', index)}
-                            >
-                                <MenuItem value={true}>Yes</MenuItem>
-                                <MenuItem value={false}>No</MenuItem>
-                            </Select>
-                            </FormControl>
-
-                            <FormControl sx={{ width: '100%' }}>
-                                <InputLabel>Caused / Prolonged Hospitalisation</InputLabel>
-                            <Select
-                                value = {item['E_i_3_2c_CausedProlongedHospitalisation'].value}
-                                defaultValue = {0}
-                                label="Caused / Prolonged Hospitalisation"
-                                onChange={handleChange('E_i_3_2c_CausedProlongedHospitalisation', index)}
-                            >
-                                <MenuItem value={true}>Yes</MenuItem>
-                                <MenuItem value={false}>No</MenuItem>
-                            </Select>
-                            </FormControl>
-
-                            <FormControl sx={{ width: '100%' }}>
-                                <InputLabel>Disabling / Incapacitating</InputLabel>
-                            <Select
-                                value = {item['E_i_3_2d_DisablingIncapacitating'].value}
-                                defaultValue = {0}
-                                label="Disabling / Incapacitating"
-                                onChange={handleChange('E_i_3_2d_DisablingIncapacitating', index)}
-                            >
-                                <MenuItem value={true}>Yes</MenuItem>
-                                <MenuItem value={false}>No</MenuItem>
-                            </Select>
-                            </FormControl>
-
-                            <FormControl sx={{ width: '100%' }}>
-                                <InputLabel>Congenital Anomaly / Birth Defect</InputLabel>
-                            <Select
-                                defaultValue = {0}
-                                value = {item['E_i_3_2e_CongenitalAnomalyBirthDefect'].value}
-                                label="Congenital Anomaly / Birth Defect"
-                                onChange={handleChange('E_i_3_2e_CongenitalAnomalyBirthDefect', index)}
-                            >
-                                <MenuItem value={true}>Yes</MenuItem>
-                                <MenuItem value={false}>No</MenuItem>
-                            </Select>
-                            </FormControl>
-
-                            <FormControl sx={{ width: '100%' }}>
-                                <InputLabel>Other Medically Important Condition</InputLabel>
-                            <Select
-                                defaultValue = {0}
-                                value = {item['E_i_3_2f_OtherMedicallyImportantCondition'].value}
-                                label="Other Medically Important Condition"
-                                onChange={handleChange('E_i_3_2f_OtherMedicallyImportantCondition', index)}
-                            >
-                                <MenuItem value={true}>Yes</MenuItem>
-                                <MenuItem value={false}>No</MenuItem>
-                            </Select>
-                            </FormControl>
                         </Grid>
                         
-                        <Divider  orientation='vertical' flexItem sx={{ borderBottomWidth: 5 }}></Divider>
-
-
-                        <Grid container item xs direction="column" rowGap={2}>
-                            <Stack direction="row" flexItem spacing={2}>
-                                <Box className="text-small" style={{ padding: 0 }}>
-                                    <FormControlLabel
-                                    control={<Checkbox
-                                        checked = {item['E_i_4_DateStartReaction'].nullFlavor !== null}
-                                        onChange={setUnknown('E_i_4_DateStartReaction', index)}
-                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                        style={{padding: 1, marginLeft: 5, marginTop: 2 }}
-                                        />}
-                                    label="No Info"/>
-                                </Box>
+                        <Grid item xs={4}>
+                            <FieldLabel label="Start Date of Reaction"></FieldLabel>
+                        </Grid>
+                        <Grid item xs={8}>  
+                            <Stack direction={'row'}>
+                                <Box className="text-small">
+                                            <FormControlLabel
+                                            control={<Checkbox
+                                                checked = {item['E_i_4_DateStartReaction'].nullFlavor !== null}
+                                                onChange={setUnknown('E_i_4_DateStartReaction', index)}
+                                                />}
+                                            label="No Info"/>
+                                    </Box>
                                 {reactionsData[index]['E_i_4_DateStartReaction']['nullFlavor'] === null ? 
+                                    <TextField
+                                    className={classes.textShort}
+                                    variant="outlined"
+                                    value = {item['E_i_4_DateStartReaction'].value}
+                                    onChange={handleChange('E_i_4_DateStartReaction', index)}
+                                    />
+                                    :   
+                                        <FormControl className={classes.textXshort}>
+                                            <InputLabel>Null Flavor</InputLabel>
+                                            <Select
+                                                value = {item['E_i_4_DateStartReaction'].nullFlavor}
+                                                onChange={setNullFlavor('E_i_4_DateStartReaction', index)}>
+                                                <MenuItem value={0}>Masked</MenuItem>
+                                                <MenuItem value={1}>Asked, but not known</MenuItem>
+                                                <MenuItem value={2}>Not asked</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    }
+                                </Stack> 
+                        </Grid>
 
-                                <TextField
-                                label="Start Date of Reaction"
-                                variant="outlined"
-                                value = {item['E_i_4_DateStartReaction'].value}
-                                onChange={handleChange('E_i_4_DateStartReaction', index)}
-                                />
-                                : <FormControl sx={{ width: '100%' }}>
-                                    <InputLabel>Null Flavor</InputLabel>
-                                    <Select
-                                        defaultValue = {0}
-                                        value = {item['E_i_4_DateStartReaction'].nullFlavor}
-                                        onChange={setNullFlavor('E_i_4_DateStartReaction', index)}
-                                    >
-                                        <MenuItem value={0}>Masked</MenuItem>
-                                        <MenuItem value={1}>Asked, but not known</MenuItem>
-                                        <MenuItem value={2}>Not asked</MenuItem>
-                                    </Select>
-                                    </FormControl>
-                                }
-                            </Stack>
-
-                            <Stack direction="row" flexItem spacing={2}>
-                                <Box className="text-small" style={{ padding: 0 }}>
+                        <Grid item xs={4}>
+                            <FieldLabel label='End Date of Reaction'></FieldLabel>
+                        </Grid>
+                        <Grid item xs={8}>
+                            <Stack direction={'row'}>
+                                <Box className="text-small">
                                     <FormControlLabel
                                     control={<Checkbox
                                         checked = {item['E_i_5_DateEndReaction'].nullFlavor !== null}
                                         onChange={setUnknown('E_i_5_DateEndReaction', index)}
-                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                        style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                         />}
                                     label="No Info"/>
                                 </Box>
-                            {reactionsData[index]['E_i_5_DateEndReaction']['nullFlavor'] === null ? 
-                                // <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                //         <DateTimePicker
-                                //             value = {item['E_i_5_DateEndReaction'].value}
-                                //             renderInput={(props) => <TextField  {...props} />}
-                                //             label="End Date of Reaction"
-                                //             onChange={handleChange('E_i_5_DateEndReaction', index)}
-                                //             />
-                                // </LocalizationProvider>
-                                <TextField
-                                label="End Date of Reaction"
-                                variant="outlined"
-                                value = {item['E_i_5_DateEndReaction'].value}
-                                onChange={handleChange('E_i_5_DateEndReaction', index)}
-                                />
-                                : <FormControl sx={{ width: '100%' }}>
-                                    <InputLabel>Null Flavor</InputLabel>
-                                    <Select
-                                        defaultValue = {0}
-                                        value = {item['E_i_5_DateEndReaction'].nullFlavor}
-                                        onChange={setNullFlavor('E_i_5_DateEndReaction', index)}
-                                    >
-                                        <MenuItem value={0}>Masked</MenuItem>
-                                        <MenuItem value={1}>Asked, but not known</MenuItem>
-                                        <MenuItem value={2}>Not asked</MenuItem>
-                                    </Select>
-                                    </FormControl>
-                            }
+
+                                {reactionsData[index]['E_i_5_DateEndReaction']['nullFlavor'] === null ? 
+                                    <TextField
+                                    className={classes.textShort}
+                                    variant="outlined"
+                                    value = {item['E_i_5_DateEndReaction'].value}
+                                    onChange={handleChange('E_i_5_DateEndReaction', index)}
+                                    />
+                                    : <FormControl className={classes.textXshort}>
+                                        <InputLabel>Null Flavor</InputLabel>
+                                        <Select
+                                            value = {item['E_i_5_DateEndReaction'].nullFlavor}
+                                            onChange={setNullFlavor('E_i_5_DateEndReaction', index)}
+                                        >
+                                            <MenuItem value={0}>Masked</MenuItem>
+                                            <MenuItem value={1}>Asked, but not known</MenuItem>
+                                            <MenuItem value={2}>Not asked</MenuItem>
+                                        </Select>
+                                        </FormControl>
+                                }
                             </Stack>
+                        </Grid>
 
-                            <Divider sx={{ color: "white", margin: "5px 0" }}></Divider>
 
+                    </Grid>
+
+                    <Grid container spacing={2}>
+
+
+                        <Grid item xs={4}>
+                            <FieldLabel label='Results in Death'></FieldLabel>
+                        </Grid>
+                        <Grid item xs={8}>
+                            <Select 
+                                className={classes.textXshort}
+                                value = {item['E_i_3_2a_ResultsDeath'].value}
+                                defaultValue = {false}
+                                onChange={handleChange('E_i_3_2a_ResultsDeath', index)}>
+                                <MenuItem value={true}>Yes</MenuItem>
+                                <MenuItem value={false}>No</MenuItem>
+                            </Select>
+                        </Grid>
+
+                        <Grid item xs={4}>
+                            <FieldLabel label='Life Threatening'></FieldLabel>
+                        </Grid>
+                        <Grid item xs={8}>
+                            <Select 
+                                className={classes.textXshort}
+                                value = {item['E_i_3_2b_LifeThreatening'].value}
+                                defaultValue = {false}
+                                onChange={handleChange('E_i_3_2b_LifeThreatening', index)}>
+                                <MenuItem value={true}>Yes</MenuItem>
+                                <MenuItem value={false}>No</MenuItem>
+                            </Select>
+                        </Grid>
+
+                        <Grid item xs={4}>
+                            <FieldLabel label='Caused / Prolonged Hospitalisation'></FieldLabel>
+                        </Grid>
+                        <Grid item xs={8}>
+                            <Select
+                                className={classes.textXshort}
+                                value = {item['E_i_3_2c_CausedProlongedHospitalisation'].value}
+                                defaultValue = {false}
+                                onChange={handleChange('E_i_3_2c_CausedProlongedHospitalisation', index)}>
+                                <MenuItem value={true}>Yes</MenuItem>
+                                <MenuItem value={false}>No</MenuItem>
+                            </Select>
+                        </Grid>
+
+                        <Grid item xs={4}>
+                            <FieldLabel label='Disabling / Incapacitating'></FieldLabel>
+                        </Grid>
+                        <Grid item xs={8}>
+                            <Select
+                                className={classes.textXshort}
+                                value = {item['E_i_3_2d_DisablingIncapacitating'].value}
+                                defaultValue = {false}
+                                onChange={handleChange('E_i_3_2d_DisablingIncapacitating', index)}>
+                                <MenuItem value={true}>Yes</MenuItem>
+                                <MenuItem value={false}>No</MenuItem>
+                            </Select>
+                        </Grid>
+
+                        <Grid item xs={4}>
+                            <FieldLabel label='Congenital Anomaly / Birth Defect'></FieldLabel>
+                        </Grid>
+                        <Grid item xs={8}>
+                            <Select
+                                className={classes.textXshort}
+                                defaultValue = {false}
+                                value = {item['E_i_3_2e_CongenitalAnomalyBirthDefect'].value}
+                                onChange={handleChange('E_i_3_2e_CongenitalAnomalyBirthDefect', index)}>
+                                <MenuItem value={true}>Yes</MenuItem>
+                                <MenuItem value={false}>No</MenuItem>
+                            </Select>
+                        </Grid>
+
+                        <Grid item xs={4}>
+                            <FieldLabel label='Other Medically Important Condition'></FieldLabel>
+                        </Grid>
+                        <Grid item xs={8}>
+                            <Select
+                                className={classes.textXshort}
+                                defaultValue = {false}
+                                value = {item['E_i_3_2f_OtherMedicallyImportantCondition'].value}
+                                onChange={handleChange('E_i_3_2f_OtherMedicallyImportantCondition', index)}>
+                                <MenuItem value={true}>Yes</MenuItem>
+                                <MenuItem value={false}>No</MenuItem>
+                            </Select>
+                        </Grid>
+
+                        <Grid item xs={4}>
+                            <FieldLabel label='Duration of Reaction (number)'></FieldLabel>
+                        </Grid>
+                        <Grid item xs={8}>
                             <TextField
-                                    value = {item['E_i_6a_DurationReactionNum'].value}
-                                    onChange={handleChange('E_i_6a_DurationReactionNum', index)}
-                                    autoComplete="off"
-                                    InputProps={{ inputProps: { min: 1, max: 4 } }}
-                                    inputProps={{ maxLength: 5}}
-                                    type='number'
-                                    onKeyDown={(evt) =>
-                                        (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
-                                        evt.preventDefault()
-                                    }
-                                    label="Duration of Reaction (number)"
-                                />
+                                className={classes.textXshort}
+                                value = {item['E_i_6a_DurationReactionNum'].value}
+                                onChange={handleChange('E_i_6a_DurationReactionNum', index, true, 5)}
+                                autoComplete="off"
+                                InputProps={{ inputProps: { min: 1, max: 4 } }}
+                                type='number'
+                                onKeyDown={(evt) =>
+                                    (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                    evt.preventDefault()
+                                }
+                            />
+                        </Grid>
 
+                        <Grid item xs={4}>
+                            <FieldLabel label="Duration of Reaction (unit)"></FieldLabel>
+                        </Grid>
+                        <Grid item xs={8}>
                             <TextField 
+                                className={classes.textMedium}
                                 value = {item['E_i_6b_DurationReactionUnit'].value}
-                                label="Duration of Reaction (unit)"
                                 variant="outlined"
                                 inputProps={{ maxLength: 50}}
                                 onChange={handleChange('E_i_6b_DurationReactionUnit', index)}
                                 />
                         </Grid>
                     </Grid>
+                    </Stack>
 
-                </Stack>
-                <span>
-                            <IconButton size='large' style= {{ top: '10px', right: '10px'}}
-                            sx={{ color: "white", backgroundColor: "#1976d2"}}
-                                    onClick={() => removeForm(index)}><DeleteIcon/>
-                            </IconButton>
-                </span>
                 {index === reactionsData.length - 1 ?
                     <span>
-                        <IconButton size='large' style= {{ top: '10px'}}
+                        <IconButton size='large' style= {{ top: '10px', right: '10px'}}
                         sx={{ color: "white", backgroundColor: "#1976d2"}}
                                     onClick={addForm}><AddIcon/></IconButton>
                     </span> : null}
+                <span>
+                            <IconButton size='large' style= {{ top: '10px'}}
+                            sx={{ color: "white", backgroundColor: "#000066"}}
+                                    onClick={() => removeForm(index)}><DeleteIcon/>
+                            </IconButton>
+                </span>
             </CardContent>
         </Card>);
         });
-        console.log('list');
-        console.log(list);
         return list;
     }
 

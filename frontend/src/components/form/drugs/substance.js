@@ -7,9 +7,47 @@ import AddIcon from '@mui/icons-material/Add';
 import { drugsSelector, setSubstances } from '@src/features/drugs/slice';
 import { Substance } from '@src/features/drugs/drugs';
 import DeleteIcon from '@mui/icons-material/Delete';
+import {makeStyles} from '@mui/styles';
+import { FieldLabel } from '../fieldLabel';
 
+const useStyles = makeStyles({
+    margin: {
+      marginTop: '10px',
+      marginLeft: '10px',
+      marginBottom: '5px'
+    },
+    textXshort: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '35%',
+    },
+    textShort: {
+      marginLeft: 1,
+      marginRight: 1,
+      width: '70%',
+    },
+    textMedium: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '90%',
+    },
+    textLong: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '100%',
+    },
+    label: {
+        color: 'black'
+    },
+    checkbox: {
+        paddingTop: '15px',
+        paddingRight: '10px',
+    }
+})
 
 export const Substances = ({drugIndex}) => {
+    const classes = useStyles();
+
 	const dispatch = useDispatch();
     const {substances} = useSelector(drugsSelector);
 
@@ -18,9 +56,14 @@ export const Substances = ({drugIndex}) => {
         console.log(substances);
     });
 
-    const handleChange = (fieldName, index) => (event) => {
+    const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
+        let value = event.target.value
+        if (isNumber) {
+            if (value.length > length)
+                value = value.slice(0, length)
+        }
         let substancesCopy = JSON.parse(JSON.stringify(substances));
-        substancesCopy[drugIndex][index][fieldName].value = event.target.value;
+        substancesCopy[drugIndex][index][fieldName].value = value;
         dispatch(setSubstances(substancesCopy));
     };
 
