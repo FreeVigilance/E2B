@@ -10,7 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { narrativeSelector, setDiagnosis, setSummaryComments } from '@src/features/narrative/slice';
 import { Diagnosis, SummaryComments } from '@src/features/narrative/narrative';
 import {makeStyles} from '@mui/styles';
-import { FieldLabel } from '../fieldLabel';
+import { SummaryCommentsFieldLabel } from '@src/components/field-labels/narrative/summary-comments-label';
 
 const useStyles = makeStyles({
     margin: {
@@ -77,7 +77,8 @@ export const SummaryCommentsComp = () => {
                     <CardContent>
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
-                            <FieldLabel label="Case Summary and Reporter’s Comments Language"></FieldLabel>
+                            <SummaryCommentsFieldLabel label="Case Summary and Reporter’s Comments Language"
+                            field = 'H_5_r_1b_CaseSummaryReporterCommentsLanguage' index={index}></SummaryCommentsFieldLabel>
                         </Grid>
                         <Grid item xs={6}>
                             <TextField variant="outlined"
@@ -89,7 +90,8 @@ export const SummaryCommentsComp = () => {
                     </Grid>
 
                         <Stack direction={'column'}>
-                        <FieldLabel label="Case Summary and Reporter’s Comments"></FieldLabel>                           
+                        <SummaryCommentsFieldLabel label="Case Summary and Reporter’s Comments"
+                        field = 'H_5_r_1a_CaseSummaryReporterCommentsText' index={index}></SummaryCommentsFieldLabel>                           
                             <TextField variant="outlined"
                                 className={classes.textLong}
                                 inputProps={{ maxLength: 100000}}

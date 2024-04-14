@@ -15,6 +15,7 @@ import { Dosage, Substance } from '@src/features/drugs/drugs';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {makeStyles} from '@mui/styles';
 import { DosageFieldLabel } from '@src/components/field-labels/drugs/dosage-label';
+import InputMask from 'react-input-mask'
 
 const useStyles = makeStyles({
     margin: {
@@ -161,12 +162,13 @@ export const Dosages = ({drugIndex}) => {
                                                 label="No Info"/>
                                     </Box>
                                     {dosages[drugIndex][index]['G_k_4_r_4_DateTimeDrug']['nullFlavor'] === null ? 
-                                            <TextField
+                                        <InputMask mask="9999-99-99 99:99:99" maskChar='_'
                                             className={classes.textShort}
-                                            variant="outlined"
                                             value = {item['G_k_4_r_4_DateTimeDrug'].value}
-                                            onChange={handleChange('G_k_4_r_4_DateTimeDrug', index)}
-                                            />
+                                            onChange={handleChange('G_k_4_r_4_DateTimeDrug', index)}>
+                                            {(inputProps) => <TextField  {...inputProps}
+                                                                variant="outlined"/>}
+                                        </InputMask>
                                             : <FormControl className={classes.textXshort}>
                                                 <InputLabel>Null Flavor</InputLabel>
                                                 <Select
@@ -197,12 +199,13 @@ export const Dosages = ({drugIndex}) => {
                                                 label="No Info"/>
                                     </Box>
                                     {dosages[drugIndex][index]['G_k_4_r_5_DateTimeLastAdministration']['nullFlavor'] === null ? 
-                                            <TextField
+                                        <InputMask mask="9999-99-99 99:99:99" maskChar='_'
                                             className={classes.textShort}
-                                            variant="outlined"
                                             value = {item['G_k_4_r_5_DateTimeLastAdministration'].value}
-                                            onChange={handleChange('G_k_4_r_5_DateTimeLastAdministration', index)}
-                                            />
+                                            onChange={handleChange('G_k_4_r_5_DateTimeLastAdministration', index)}>
+                                            {(inputProps) => <TextField  {...inputProps}
+                                                                variant="outlined"/>}
+                                        </InputMask>
                                             : <FormControl className={classes.textXshort}>
                                                 <InputLabel>Null Flavor</InputLabel>
                                                 <Select

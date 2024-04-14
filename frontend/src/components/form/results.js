@@ -13,6 +13,8 @@ import { Result } from '@src/features/results/result';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ResultFieldLabel } from '../field-labels/result-field-label';
+import InputMask from 'react-input-mask'
+
 
 const useStyles = makeStyles({
     margin: {
@@ -172,12 +174,24 @@ export const Results = () => {
                                         label="No Info"/>
                                     </Box>
                                     {resultsData[index]['F_r_1_TestDate']['nullFlavor'] === null ? 
-                                        <TextField
-                                            className={classes.textShort}
-                                            variant="outlined"
-                                            value = {item['F_r_1_TestDate'].value}
-                                            onChange={handleChange('F_r_1_TestDate', index)}
-                                            />
+
+                                    <InputMask mask="9999-99-99 99:99:99" maskChar='_'
+                                        className={classes.textShort}
+                                        value = {item['F_r_1_TestDate'].value}
+                                        onChange={handleChange('F_r_1_TestDate', index)}>
+                                        {(inputProps) => <TextField  {...inputProps}
+                                                            variant="outlined"/>}
+                                    </InputMask>
+
+                                    // <InputMask mask="99/99/9999">
+                                    //     <TextField
+                                    //         className={classes.textShort}
+                                    //         variant="outlined"
+                                    //         type="text"
+                                    //         value = {item['F_r_1_TestDate'].value}
+                                    //         onChange={handleChange('F_r_1_TestDate', index)}
+                                    //         />
+                                    // </InputMask>
                                     : null}
                                 </Stack>
                             </Grid>

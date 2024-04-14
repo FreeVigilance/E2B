@@ -10,6 +10,7 @@ import { ParentData } from '@src/features/patient/patient';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {makeStyles} from '@mui/styles';
 import { ParentInfoFieldLabel } from '@src/components/field-labels/patient/parent-child/parent-info-label';
+import InputMask from 'react-input-mask'
 
 const useStyles = makeStyles({
     margin: {
@@ -143,12 +144,14 @@ export const ParentInfo = () => {
                                             label="No Info"/>
                                 </Box>
                                 {parentData[index]['D_10_7_1_r_2_StartDate']['nullFlavor'] === null ? 
-                                        <TextField
-                                            className={classes.textShort}
-                                            variant="outlined"
-                                            value = {item['D_10_7_1_r_2_StartDate'].value}
-                                            onChange={handleChange('D_10_7_1_r_2_StartDate', index)}
-                                        />
+                                    <InputMask mask="9999-99-99 99:99:99" maskChar='_'
+                                        className={classes.textShort}
+                                        value = {item['D_10_7_1_r_2_StartDate'].value}
+                                        onChange={handleChange('D_10_7_1_r_2_StartDate', index)}>
+                                        {(inputProps) => <TextField  {...inputProps}
+                                                            variant="outlined"/>}
+                                    </InputMask>
+
                                         : <FormControl className={classes.textXshort}>
                                             <InputLabel>Null Flavor</InputLabel>
                                             <Select
@@ -179,13 +182,15 @@ export const ParentInfo = () => {
                                                 />}
                                             label="No Info"/>
                                 </Box>
-                                {parentData[index]['D_10_7_1_r_4_EndDate']['nullFlavor'] === null ? 
-                                        <TextField
-                                            className={classes.textShort}
-                                            variant="outlined"
-                                            value = {item['D_10_7_1_r_4_EndDate'].value}
-                                            onChange={handleChange('D_10_7_1_r_4_EndDate', index)}
-                                        />
+                                {parentData[index]['D_10_7_1_r_4_EndDate']['nullFlavor'] === null ?
+                                    <InputMask mask="9999-99-99 99:99:99" maskChar='_'
+                                        className={classes.textShort}
+                                        value = {item['D_10_7_1_r_4_EndDate'].value}
+                                        onChange={handleChange('D_10_7_1_r_4_EndDate', index)}>
+                                        {(inputProps) => <TextField  {...inputProps}
+                                                            variant="outlined"/>}
+                                    </InputMask> 
+
                                         : <FormControl className={classes.textXshort}>
                                             <InputLabel>Null Flavor</InputLabel>
                                             <Select

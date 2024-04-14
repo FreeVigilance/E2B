@@ -2,9 +2,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import {Stack, FormControlLabel, Select, MenuItem, FormControl, InputLabel, Grid, Divider, IconButton, FormLabel} from '@mui/material';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import AddIcon from '@mui/icons-material/Add';
@@ -17,6 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {makeStyles} from '@mui/styles';
 import { drugsSelector, setDrugReactionMatrix, setRelatedness } from '@src/features/drugs/slice';
 import { ReactionFieldLabel } from '../field-labels/reaction-field-label';
+import InputMask from 'react-input-mask'
 
 
 var snakecaseKeys = require('snakecase-keys')
@@ -282,12 +280,14 @@ export const Reactions = () => {
                                             label="No Info"/>
                                     </Box>
                                 {reactionsData[index]['E_i_4_DateStartReaction']['nullFlavor'] === null ? 
-                                    <TextField
+                                <InputMask mask="9999-99-99 99:99:99" maskChar='_'
                                     className={classes.textShort}
-                                    variant="outlined"
                                     value = {item['E_i_4_DateStartReaction'].value}
-                                    onChange={handleChange('E_i_4_DateStartReaction', index)}
-                                    />
+                                    onChange={handleChange('E_i_4_DateStartReaction', index)}>
+                                    {(inputProps) => <TextField  {...inputProps}
+                                                        variant="outlined"/>}
+                                </InputMask>
+
                                     :   
                                         <FormControl className={classes.textXshort}>
                                             <InputLabel>Null Flavor</InputLabel>
@@ -319,12 +319,13 @@ export const Reactions = () => {
                                 </Box>
 
                                 {reactionsData[index]['E_i_5_DateEndReaction']['nullFlavor'] === null ? 
-                                    <TextField
+                                <InputMask mask="9999-99-99 99:99:99" maskChar='_'
                                     className={classes.textShort}
-                                    variant="outlined"
                                     value = {item['E_i_5_DateEndReaction'].value}
-                                    onChange={handleChange('E_i_5_DateEndReaction', index)}
-                                    />
+                                    onChange={handleChange('E_i_5_DateEndReaction', index)}>
+                                    {(inputProps) => <TextField  {...inputProps}
+                                                        variant="outlined"/>}
+                                </InputMask>
                                     : <FormControl className={classes.textXshort}>
                                         <InputLabel>Null Flavor</InputLabel>
                                         <Select

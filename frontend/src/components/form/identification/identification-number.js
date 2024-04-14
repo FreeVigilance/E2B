@@ -8,7 +8,7 @@ import { identificationSelector, setIdentificationNumber } from '@src/features/i
 import { IdentificationNumber } from '@src/features/identification/identification';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {makeStyles} from '@mui/styles';
-import { FieldLabel } from '../fieldLabel';
+import { IdentificationNumberFieldLabel } from '@src/components/field-labels/identification/identification-number-label';
 
 const useStyles = makeStyles({
     margin: {
@@ -74,7 +74,8 @@ export const IdentificationNumberComp = () => {
                 marginBottom: 5}}>
                     <CardContent>
                     <Stack direction={'column'} gap={2}>
-                        <FieldLabel label="Identification Number of the Report Which Is Linked to This Report"></FieldLabel>
+                        <IdentificationNumberFieldLabel label="Identification Number of the Report Which Is Linked to This Report"
+                        field = 'C_1_10_r_IdentificationNumberReportLinked' index={index}></IdentificationNumberFieldLabel>
                         <TextField variant="outlined"
                             onChange={handleChange('C_1_10_r_IdentificationNumberReportLinked', index)}
                             value = {item['C_1_10_r_IdentificationNumberReportLinked'].value}

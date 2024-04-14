@@ -10,7 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { narrativeSelector, setDiagnosis } from '@src/features/narrative/slice';
 import { Diagnosis } from '@src/features/narrative/narrative';
 import {makeStyles} from '@mui/styles';
-import { FieldLabel } from '../fieldLabel';
+import { DiagnosisFieldLabel } from '@src/components/field-labels/narrative/diagnosis-label';
 
 const useStyles = makeStyles({
     margin: {
@@ -82,7 +82,8 @@ export const DiagnosisComp = () => {
                     <CardContent>
                     <Grid container spacing={2}>
                         <Grid item xs={5}>
-                            <FieldLabel label="MedDRA Version for Sender's Diagnosis"></FieldLabel>
+                            <DiagnosisFieldLabel label="MedDRA Version for Sender's Diagnosis"
+                            field = 'H_3_r_1a_MedDRAVersionSenderDiagnosis' index={index}></DiagnosisFieldLabel>
                         </Grid>
                         <Grid item xs={7}>
                             <TextField variant="outlined"
@@ -97,7 +98,8 @@ export const DiagnosisComp = () => {
                         </Grid>
 
                         <Grid item xs={5}>
-                            <FieldLabel label="Sender's Diagnosis (MedDRA code)"></FieldLabel>
+                            <DiagnosisFieldLabel label="Sender's Diagnosis (MedDRA code)"
+                            field = 'H_3_r_1b_SenderDiagnosisMedDRAcode' index={index}></DiagnosisFieldLabel>
                         </Grid>
                         <Grid item xs={7}>
                             <TextField variant="outlined"

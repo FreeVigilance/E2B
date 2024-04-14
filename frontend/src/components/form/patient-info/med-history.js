@@ -11,6 +11,7 @@ import { patientSelector, setMedicalHistory } from '@src/features/patient/slice'
 import AddIcon from '@mui/icons-material/Add';
 import { MedHistory } from '@src/features/patient/patient';
 import DeleteIcon from '@mui/icons-material/Delete';
+import InputMask from 'react-input-mask'
 
 import {makeStyles} from '@mui/styles';
 import { MedHistoryFieldLabel } from '@src/components/field-labels/patient/med-history-label';
@@ -162,12 +163,13 @@ export const MedicalHistory = () => {
                                                 label="No Info"/>
                                     </Box>
                                     {medicalHistory[index]['D_7_1_r_2_StartDate']['nullFlavor'] === null ? 
-                                            <TextField
-                                            variant="outlined"
-                                            className={classes.textShort}
-                                            value = {item['D_7_1_r_2_StartDate'].value}
-                                            onChange={handleChange('D_7_1_r_2_StartDate', index)}
-                                            />
+                                    <InputMask mask="9999-99-99 99:99:99" maskChar='_'
+                                        className={classes.textShort}
+                                        value = {item['D_7_1_r_2_StartDate'].value}
+                                        onChange={handleChange('D_7_1_r_2_StartDate', index)}>
+                                        {(inputProps) => <TextField  {...inputProps}
+                                                            variant="outlined"/>}
+                                    </InputMask>
                                             : <FormControl className={classes.textXshort}>
                                                 <InputLabel>Null Flavor</InputLabel>
                                                 <Select
@@ -199,12 +201,14 @@ export const MedicalHistory = () => {
                                                 label="No Info"/>
                                     </Box>
                                     {medicalHistory[index]['D_7_1_r_4_EndDate']['nullFlavor'] === null ? 
-                                            <TextField
-                                            className={classes.textShort}
-                                            variant="outlined"
-                                            value = {item['D_7_1_r_4_EndDate'].value}
-                                            onChange={handleChange('D_7_1_r_4_EndDate', index)}
-                                            />
+                                    <InputMask mask="9999-99-99 99:99:99" maskChar='_'
+                                        className={classes.textShort}
+                                        value = {item['D_7_1_r_4_EndDate'].value}
+                                        onChange={handleChange('D_7_1_r_4_EndDate', index)}>
+                                        {(inputProps) => <TextField  {...inputProps}
+                                                        variant="outlined"/>}
+                                    </InputMask>
+
                                             : <FormControl className={classes.textXshort}>
                                                 <InputLabel>Null Flavor</InputLabel>
                                                 <Select

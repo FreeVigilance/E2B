@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import {Stack, Card, CardContent, IconButton, Grid} from '@mui/material';
@@ -8,7 +7,7 @@ import { identificationSelector, setDocumentsHeldBySender } from '@src/features/
 import { DocumentsHeldBySender } from '@src/features/identification/identification';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {makeStyles} from '@mui/styles';
-import { FieldLabel } from '../fieldLabel';
+import { DocumentsSenderFieldLabel } from '@src/components/field-labels/identification/documents-sender-label';
 
 const useStyles = makeStyles({
     margin: {
@@ -76,7 +75,8 @@ export const DocumentsHeldBySenderComp = () => {
                     <CardContent>
                     <Grid container spacing={2}>
                         <Grid item xs={3}>
-                            <FieldLabel label="Documents Held by Sender"></FieldLabel>
+                            <DocumentsSenderFieldLabel label="Documents Held by Sender"
+                            field = 'C_1_6_1_r_1_DocumentsHeldSender' index={index}></DocumentsSenderFieldLabel>
                         </Grid>
                         <Grid item xs={9}>
                             <TextField variant="outlined"

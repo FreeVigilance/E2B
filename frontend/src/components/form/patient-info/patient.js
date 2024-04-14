@@ -12,6 +12,8 @@ import { MedicalHistory } from './med-history';
 import { DrugsHistory } from './drug-history';
 import {makeStyles} from '@mui/styles';
 import { PatientFieldLabel } from '@src/components/field-labels/patient/patient-field-label';
+import InputMask from 'react-input-mask'
+
 
 const useStyles = makeStyles({
     margin: {
@@ -238,12 +240,13 @@ export const Patient = () => {
                                 label="No Info"/>
                         </Box>
                         {patientData['D_2_1_DateBirth']['nullFlavor'] !== -1 ? 
-                            <TextField
+                        <InputMask mask="9999-99-99 99:99:99" maskChar='_'
                             className={classes.textShort}
-                            variant="outlined"
                             value = {patientData['D_2_1_DateBirth'].value}
-                            onChange={handleChange('D_2_1_DateBirth')}
-                            />
+                            onChange={handleChange('D_2_1_DateBirth')}>
+                            {(inputProps) => <TextField  {...inputProps}
+                                                variant="outlined"/>}
+                        </InputMask>
                         : <FormLabel>No Date of Birth</FormLabel>}
                     </Stack>
                 </Grid>
@@ -416,12 +419,13 @@ export const Patient = () => {
                                 label="No Info"/>
                         </Box>
                     {patientData['D_6_LastMenstrualPeriodDate']['nullFlavor'] === null ? 
-                        <TextField
-                            className={classes.textShort}
-                            variant="outlined"
-                            value = {patientData['D_6_LastMenstrualPeriodDate'].value}
-                            onChange={handleChange('D_6_LastMenstrualPeriodDate')}
-                        />
+                    <InputMask mask="9999-99-99 99:99:99" maskChar='_'
+                        className={classes.textShort}
+                        value = {patientData['D_6_LastMenstrualPeriodDate'].value}
+                            onChange={handleChange('D_6_LastMenstrualPeriodDate')}>
+                        {(inputProps) => <TextField  {...inputProps}
+                                            variant="outlined"/>}
+                    </InputMask>
                     : null}
                     </Stack>
                 </Grid>
@@ -441,12 +445,13 @@ export const Patient = () => {
                                 label="No Info"/>
                         </Box>
                         {patientData['D_9_1_DateDeath']['nullFlavor'] === null ? 
-                            <TextField
-                                className={classes.textShort}
-                                variant="outlined"
-                                value = {patientData['D_9_1_DateDeath'].value}
-                                onChange={handleChange('D_9_1_DateDeath')}
-                                />
+                        <InputMask mask="9999-99-99 99:99:99" maskChar='_'
+                            className={classes.textShort}
+                            value = {patientData['D_9_1_DateDeath'].value}
+                            onChange={handleChange('D_9_1_DateDeath')}>
+                            {(inputProps) => <TextField  {...inputProps}
+                                                variant="outlined"/>}
+                        </InputMask>
                         :   <FormControl className={classes.textXshort}>
                             <InputLabel>Null Flavor</InputLabel>
                             <Select

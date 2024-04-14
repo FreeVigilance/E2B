@@ -8,7 +8,7 @@ import { Box } from '@mui/system';
 import { setStudyIdentification, studyIdentificationSelector } from '@src/features/study-identification/slice';
 import { StudyRegistrationComp } from './study-registration';
 import {makeStyles} from '@mui/styles';
-import { FieldLabel } from '../fieldLabel';
+import { StudyIdentificationFieldLabel } from '@src/components/field-labels/study-identification/study-identification-label';
 
 const useStyles = makeStyles({
     margin: {
@@ -82,7 +82,8 @@ export const StudyIdentificationComp = () => {
         <Stack direction="column" spacing={2} justifyContent="flex-start">
             <Grid container spacing={2}>
                 <Grid item xs={3}>
-                    <FieldLabel label="Study Name"></FieldLabel>
+                    <StudyIdentificationFieldLabel label="Study Name"
+                    field = 'C_5_2_StudyName'></StudyIdentificationFieldLabel>
                 </Grid>
                 <Grid item xs={9}> 
                     <Stack direction={'row'}>
@@ -115,7 +116,8 @@ export const StudyIdentificationComp = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Sponsor Study Number"></FieldLabel>
+                    <StudyIdentificationFieldLabel label="Sponsor Study Number"
+                    field = 'C_5_3_SponsorStudyNumber'></StudyIdentificationFieldLabel>
                 </Grid>
                 <Grid item xs={9}> 
                     <Stack direction="row">   
@@ -146,7 +148,8 @@ export const StudyIdentificationComp = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Study Type Where Reaction(s) Were Observed"></FieldLabel>
+                    <StudyIdentificationFieldLabel label="Study Type Where Reaction(s) Were Observed"
+                    field = 'C_5_4_StudyTypeReaction'></StudyIdentificationFieldLabel>
                 </Grid>
                 <Grid item xs={9}> 
                     <Select

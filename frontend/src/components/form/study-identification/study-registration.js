@@ -9,7 +9,7 @@ import { setStudyRegistration, studyIdentificationSelector } from '@src/features
 import { StudyRegistration } from '@src/features/study-identification/study-identification';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {makeStyles} from '@mui/styles';
-import { FieldLabel } from '../fieldLabel';
+import { StudyRegistrationFieldLabel } from '@src/components/field-labels/study-identification/study-registration-label';
 
 const useStyles = makeStyles({
     margin: {
@@ -92,7 +92,8 @@ export const StudyRegistrationComp = () => {
                     <CardContent>
                     <Grid container spacing={2}>
                         <Grid item xs={3}>
-                            <FieldLabel label="Study Registration Number"></FieldLabel>
+                            <StudyRegistrationFieldLabel label="Study Registration Number"
+                            field = 'C_5_1_r_1_StudyRegistrationNumber' index={index}></StudyRegistrationFieldLabel>
                         </Grid>
                         <Grid item xs={9}> 
                             <Stack direction="row" spacing={2}>   
@@ -123,7 +124,8 @@ export const StudyRegistrationComp = () => {
                         </Grid>
 
                         <Grid item xs={3}>
-                            <FieldLabel label="Study Registration Country"></FieldLabel>
+                            <StudyRegistrationFieldLabel label="Study Registration Country"
+                            field = 'C_5_1_r_2_StudyRegistrationCountry' index={index}></StudyRegistrationFieldLabel>
                         </Grid>
                         <Grid item xs={9}> 
                             <Stack direction="row" spacing={2} justifyContent="flex-start">   

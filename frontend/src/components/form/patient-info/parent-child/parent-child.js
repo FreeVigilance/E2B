@@ -12,6 +12,7 @@ import { ParentDrugsHistory } from './parent-drug-history';
 import { ParentHistory } from './parent-history';
 import {makeStyles} from '@mui/styles';
 import { ParentChildFieldLabel } from '@src/components/field-labels/patient/parent-child/parent-child-label';
+import InputMask from 'react-input-mask'
 
 const useStyles = makeStyles({
     margin: {
@@ -134,13 +135,15 @@ export const ParentChild = () => {
                                     />}
                                     label="No Info"/>
                         </Box>
-                            {parentChildData['D_10_2_1_DateBirthParent']['nullFlavor'] === null ? 
-                                <TextField
+                            {parentChildData['D_10_2_1_DateBirthParent']['nullFlavor'] === null ?
+                                <InputMask mask="9999-99-99 99:99:99" maskChar='_'
                                     className={classes.textShort}
-                                    variant="outlined"
                                     value = {parentChildData['D_10_2_1_DateBirthParent'].value}
-                                    onChange={handleChange('D_10_2_1_DateBirthParent')}
-                                />
+                                    onChange={handleChange('D_10_2_1_DateBirthParent')}>
+                                    {(inputProps) => <TextField  {...inputProps}
+                                                        variant="outlined"/>}
+                                </InputMask> 
+
                             : <FormControl className={classes.textXshort}>
                                 <InputLabel>Null Flavor</InputLabel>
                                 <Select
@@ -209,12 +212,13 @@ export const ParentChild = () => {
                                 label="No Info"/>
                         </Box>
                         {parentChildData['D_10_3_LastMenstrualPeriodDateParent']['nullFlavor'] === null ? 
-                            <TextField
+                            <InputMask mask="9999-99-99 99:99:99" maskChar='_'
                                 className={classes.textShort}
-                                variant="outlined"
                                 value = {parentChildData['D_10_3_LastMenstrualPeriodDateParent'].value}
-                                onChange={handleChange('D_10_3_LastMenstrualPeriodDateParent')}
-                            />
+                                onChange={handleChange('D_10_3_LastMenstrualPeriodDateParent')}>
+                                {(inputProps) => <TextField  {...inputProps}
+                                                    variant="outlined"/>}
+                            </InputMask> 
                         : <FormControl className={classes.textXshort}>
                             <InputLabel>Null Flavor</InputLabel>
                             <Select

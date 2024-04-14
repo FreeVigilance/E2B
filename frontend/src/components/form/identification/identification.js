@@ -12,7 +12,8 @@ import { DocumentsHeldBySenderComp } from './documents-held-by-sender';
 import { OtherIdentifiersComp } from './other-identifiers';
 import { IdentificationNumberComp } from './identification-number';
 import {makeStyles} from '@mui/styles';
-import { FieldLabel } from '../fieldLabel';
+import { IdentificationFieldLabel } from '@src/components/field-labels/identification/identification-label';
+import InputMask from 'react-input-mask'
 
 const useStyles = makeStyles({
     margin: {
@@ -82,7 +83,8 @@ export const IdentificationComp = () => {
         <Stack direction={'row'} gap={2}>
             <Grid container spacing={2}>
                 <Grid item xs={3}>
-                    <FieldLabel label="Sender’s (case) Safety Report Unique Identifier"></FieldLabel>
+                    <IdentificationFieldLabel label="Sender’s (case) Safety Report Unique Identifier"
+                    field = 'C_1_1_SenderSafetyReportUniqueId'></IdentificationFieldLabel>
                 </Grid>
                 <Grid item xs={9}>   
                     <TextField variant="outlined"
@@ -95,7 +97,8 @@ export const IdentificationComp = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Worldwide Unique Case Identification Number"></FieldLabel>
+                    <IdentificationFieldLabel label="Worldwide Unique Case Identification Number"
+                    field = 'C_1_8_1_WorldwideUniqueCaseIdentificationNumber'></IdentificationFieldLabel>
                 </Grid>
                 <Grid item xs={9}>   
                     <TextField variant="outlined"
@@ -108,18 +111,22 @@ export const IdentificationComp = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Date of Creation"></FieldLabel>
+                    <IdentificationFieldLabel label="Date of Creation"
+                    field = 'C_1_2_DateCreation'></IdentificationFieldLabel>
                 </Grid>
                 <Grid item xs={9}>   
-                    <TextField variant="outlined"
-                    className={classes.textShort}
+                    <InputMask mask="9999-99-99 99:99:99" maskChar='_'
+                        className={classes.textShort}
                         value = {identification['C_1_2_DateCreation'].value}
-                        onChange={handleChange('C_1_2_DateCreation')}
-                        />
+                        onChange={handleChange('C_1_2_DateCreation')}>
+                        {(inputProps) => <TextField  {...inputProps}
+                                            variant="outlined"/>}
+                    </InputMask>
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Type of Report"></FieldLabel>
+                    <IdentificationFieldLabel label="Type of Report"
+                    field = 'C_1_3_TypeReport'></IdentificationFieldLabel>
                 </Grid>
                 <Grid item xs={9}>   
                     <Select
@@ -135,30 +142,37 @@ export const IdentificationComp = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Date Report Was First Received from Source"></FieldLabel>
+                    <IdentificationFieldLabel label="Date Report Was First Received from Source"
+                    field = 'C_1_4_DateReportFirstReceivedSource'></IdentificationFieldLabel>
                 </Grid>
                 <Grid item xs={9}>   
-                        <TextField variant="outlined"
+                    <InputMask mask="9999-99-99 99:99:99" maskChar='_'
                         className={classes.textShort}
-                            value = {identification['C_1_4_DateReportFirstReceivedSource'].value}
-                            onChange={handleChange('C_1_4_DateReportFirstReceivedSource')}
-                            />
+                        value = {identification['C_1_4_DateReportFirstReceivedSource'].value}
+                        onChange={handleChange('C_1_4_DateReportFirstReceivedSource')}>
+                        {(inputProps) => <TextField  {...inputProps}
+                                            variant="outlined"/>}
+                    </InputMask>
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Date of Most Recent Information for This Report"></FieldLabel>
+                    <IdentificationFieldLabel label="Date of Most Recent Information for This Report"
+                    field = 'C_1_5_DateMostRecentInformation'></IdentificationFieldLabel>
                 </Grid>
                 <Grid item xs={9}>   
-                        <TextField variant="outlined"
+                    <InputMask mask="9999-99-99 99:99:99" maskChar='_'
                         className={classes.textShort}
-                            value = {identification['C_1_5_DateMostRecentInformation'].value}
-                            onChange={handleChange('C_1_5_DateMostRecentInformation')}
-                            />
+                        value = {identification['C_1_5_DateMostRecentInformation'].value}
+                        onChange={handleChange('C_1_5_DateMostRecentInformation')}>
+                        {(inputProps) => <TextField  {...inputProps}
+                                            variant="outlined"/>}
+                    </InputMask>
                 </Grid>
 
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Are Additional Documents Available?"></FieldLabel>
+                    <IdentificationFieldLabel label="Are Additional Documents Available?"
+                    field = 'C_1_6_1_AdditionalDocumentsAvailable'></IdentificationFieldLabel>
                 </Grid>
                 <Grid item xs={9}>   
                     <Select
@@ -177,7 +191,8 @@ export const IdentificationComp = () => {
 
 
                 <Grid item xs={3}>
-                    <FieldLabel label="First Sender of This Case"></FieldLabel>
+                    <IdentificationFieldLabel label="First Sender of This Case"
+                    field = 'C_1_8_2_FirstSender'></IdentificationFieldLabel>
                 </Grid>
                 <Grid item xs={9}>   
                     <Select
@@ -191,7 +206,8 @@ export const IdentificationComp = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Report Nullification / Amendment"></FieldLabel>
+                    <IdentificationFieldLabel label="Report Nullification / Amendment"
+                    field = 'C_1_11_1_ReportNullificationAmendment'></IdentificationFieldLabel>
                 </Grid>
                 <Grid item xs={9}>   
                     <Select
@@ -205,7 +221,8 @@ export const IdentificationComp = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Does This Case Fulfil the Local Criteria for an Expedited Report?"></FieldLabel>
+                    <IdentificationFieldLabel label="Does This Case Fulfil the Local Criteria for an Expedited Report?"
+                    field = 'C_1_7_FulfilLocalCriteriaExpeditedReport'></IdentificationFieldLabel>
                 </Grid>
                 <Grid item xs={9}>   
                         <Stack direction="row" spacing={2} justifyContent="flex-start">
@@ -231,6 +248,8 @@ export const IdentificationComp = () => {
                 </Grid>
 
                 <Grid item xs={3}>
+                <IdentificationFieldLabel label="Other Case Identifiers in Previous Transmissions"
+                    field = 'C_1_9_1_OtherCaseIdsPreviousTransmissions'></IdentificationFieldLabel>
                 </Grid>
                 <Grid item xs={9}>   
                         <FormControlLabel
@@ -242,7 +261,8 @@ export const IdentificationComp = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Reason for Nullification / Amendment"></FieldLabel>
+                    <IdentificationFieldLabel label="Reason for Nullification / Amendment"
+                    field = 'C_1_11_2_ReasonNullificationAmendment'></IdentificationFieldLabel>
                 </Grid>
                 <Grid item xs={9}>   
                 <TextField variant="outlined"

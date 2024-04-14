@@ -8,7 +8,7 @@ import { identificationSelector, setOtherIdentifiers } from '@src/features/ident
 import { OtherIdentifiers } from '@src/features/identification/identification';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {makeStyles} from '@mui/styles';
-import { FieldLabel } from '../fieldLabel';
+import { OtherIdentifiersFieldLabel } from '@src/components/field-labels/identification/other-identifiers-label';
 
 const useStyles = makeStyles({
     margin: {
@@ -75,7 +75,8 @@ export const OtherIdentifiersComp = () => {
                     <CardContent>
                     <Grid container spacing={2}>
                         <Grid item xs={3}>
-                            <FieldLabel label="Source(s) of the Case Identifier"></FieldLabel>
+                            <OtherIdentifiersFieldLabel label="Source(s) of the Case Identifier"
+                            field = 'C_1_9_1_r_1_SourceCaseId' index={index}></OtherIdentifiersFieldLabel>
                         </Grid>
                         <Grid item xs={9}>
                             <TextField variant="outlined"
@@ -88,7 +89,8 @@ export const OtherIdentifiersComp = () => {
                         </Grid>
 
                          <Grid item xs={3}>
-                            <FieldLabel label="Case Identifier(s)"></FieldLabel>
+                            <OtherIdentifiersFieldLabel label="Case Identifier(s)"
+                            field = 'C_1_9_1_r_2_CaseId' index={index}></OtherIdentifiersFieldLabel>
                         </Grid>
                         <Grid item xs={9}>
                             <TextField variant="outlined"

@@ -6,7 +6,7 @@ import { narrativeSelector, setNarrativeCaseSummary } from '@src/features/narrat
 import { DiagnosisComp } from './diagnosis';
 import { SummaryCommentsComp } from './summaryComments';
 import {makeStyles} from '@mui/styles';
-import { FieldLabel } from '../fieldLabel';
+import { NarrativeFieldLabel } from '@src/components/field-labels/narrative/narrative-label';
 
 const useStyles = makeStyles({
     margin: {
@@ -61,8 +61,9 @@ export const NarrativeComp = () => {
         <>
         <Stack direction="column" spacing={2} justifyContent="flex-start">
             
-            <FieldLabel label="Case Narrative Including Clinical Course, Therapeutic Measures, Outcome and 
-            Additional Relevant Information"></FieldLabel>
+            <NarrativeFieldLabel label="Case Narrative Including Clinical Course, Therapeutic Measures, Outcome and 
+            Additional Relevant Information"
+            field = 'H_1_CaseNarrative'></NarrativeFieldLabel>
             <TextField variant="outlined"
                 className={classes.textLong}
                 inputProps={{ maxLength: 100000}}
@@ -71,7 +72,8 @@ export const NarrativeComp = () => {
                 multiline
                 rows={15}/>
 
-            <FieldLabel label="Reporter's Comments"></FieldLabel>
+            <NarrativeFieldLabel label="Reporter's Comments"
+            field = 'H_2_ReporterComments'></NarrativeFieldLabel>
             <TextField variant="outlined"
                 className={classes.textLong}
                 inputProps={{ maxLength: 20000}}
@@ -80,7 +82,8 @@ export const NarrativeComp = () => {
                 multiline
                 rows={15}/>
 
-            <FieldLabel label="Sender's Comments"></FieldLabel>
+            <NarrativeFieldLabel label="Sender's Comments"
+            field = 'H_4_SenderComments'></NarrativeFieldLabel>
             <TextField variant="outlined"
                 className={classes.textLong}
                 inputProps={{ maxLength: 20000}}
