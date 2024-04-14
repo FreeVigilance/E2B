@@ -11,17 +11,51 @@ import CardContent from '@mui/material/CardContent';
 import { primarySourceSelector, setPrimarySourceData } from '@src/features/primary-source/slice';
 import { PrimarySource } from '@src/features/primary-source/primary-source';
 import DeleteIcon from '@mui/icons-material/Delete';
+import {makeStyles} from '@mui/styles';
+import { PrimarySourceFieldLabel } from '../field-labels/primary-source-label';
+
+const useStyles = makeStyles({
+    margin: {
+      marginTop: '10px',
+      marginLeft: '10px',
+      marginBottom: '5px'
+    },
+    textXshort: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '35%',
+    },
+    textShort: {
+      marginLeft: 1,
+      marginRight: 1,
+      width: '70%',
+    },
+    textMedium: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '90%',
+    },
+    textLong: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '100%',
+    },
+    label: {
+        color: 'black'
+    },
+    checkbox: {
+        paddingTop: '15px',
+        paddingRight: '10px',
+    }
+})
 
 var snakecaseKeys = require('snakecase-keys')
 
 export const PrimarySourceComp = () => {
+    const classes = useStyles();
+
 	const dispatch = useDispatch();
     const {primarySourceData} = useSelector(primarySourceSelector);
-
-    useEffect(() => {
-        console.log("STATE");
-        console.log(snakecaseKeys(primarySourceData));
-    });
 
     const handleChange = (fieldName, index) => (event) => {
         let primarySourceDataCopy = JSON.parse(JSON.stringify(primarySourceData));
@@ -67,31 +101,31 @@ export const PrimarySourceComp = () => {
                 boxShadow: "5px 5px #356BA0",
                 marginBottom: 5}}>
                     <CardContent>     
-                    <Grid container direction="row" columnGap={4}>
-                        <Grid container item xs direction="column" rowGap={1}>          
+                    <Stack direction={'row'} gap={2}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={3}>
+                            <PrimarySourceFieldLabel label="Reporter’s Title"
+                            field = 'C_2_r_1_1_ReporterTitle' index={index}></PrimarySourceFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>      
                             <Stack direction="row" flexItem spacing={2}>
-                                <Box className="text-small" style={{ padding: 0 }}>
+                                <Box className="text-small">
                                     <FormControlLabel
                                     control={<Checkbox
                                         checked = {item['C_2_r_1_1_ReporterTitle'].nullFlavor !== null}
                                         onChange={setUnknown('C_2_r_1_1_ReporterTitle', index)}
-                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                        style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                         />}
                                     label="No Info"/>
                                 </Box>
                                 {primarySourceData[index]['C_2_r_1_1_ReporterTitle']['nullFlavor'] === null ? 
-                                    <TextField label="Reporter’s Title" variant="outlined"
+                                    <TextField variant="outlined"
+                                        className={classes.textMedium}
                                         onChange={handleChange('C_2_r_1_1_ReporterTitle', index)}
                                         value = {item['C_2_r_1_1_ReporterTitle'].value}
-                                        sx={{ width: '100%' }}
-                                        inputProps={{ maxLength: 50}}
-                                        multiline
-                                        rows={2}/>
-                                : <FormControl sx={{ width: '100%' }}>
+                                        inputProps={{ maxLength: 50}}/>
+                                : <FormControl className={classes.textXshort}>
                                     <InputLabel>Null Flavor</InputLabel>
                                     <Select
-                                        defaultValue = {0}
                                         value = {item['C_2_r_1_1_ReporterTitle'].nullFlavor}
                                         onChange={setNullFlavor('C_2_r_1_1_ReporterTitle', index)}
                                     >
@@ -103,30 +137,31 @@ export const PrimarySourceComp = () => {
                                     </FormControl>
                                 }
                             </Stack>
+                        </Grid>
 
+                        <Grid item xs={3}>
+                            <PrimarySourceFieldLabel label="Reporter’s Given Name"
+                            field = 'C_2_r_1_2_ReporterGivenName' index={index}></PrimarySourceFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>  
                             <Stack direction="row" flexItem spacing={2}>
-                                <Box className="text-small" style={{ padding: 0 }}>
+                                <Box className="text-small">
                                     <FormControlLabel
                                     control={<Checkbox
                                         checked = {item['C_2_r_1_2_ReporterGivenName'].nullFlavor !== null}
                                         onChange={setUnknown('C_2_r_1_2_ReporterGivenName', index)}
-                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                        style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                         />}
                                     label="No Info"/>
                                 </Box>
                                 {primarySourceData[index]['C_2_r_1_2_ReporterGivenName']['nullFlavor'] === null ? 
-                                    <TextField label="Reporter’s Given Name" variant="outlined"
+                                    <TextField variant="outlined"
+                                    className={classes.textMedium}
                                         onChange={handleChange('C_2_r_1_2_ReporterGivenName', index)}
                                         value = {item['C_2_r_1_2_ReporterGivenName'].value}
-                                        sx={{ width: '100%' }}
-                                        multiline
-                                        inputProps={{ maxLength: 60}}
-                                        rows={2}/>
-                                : <FormControl sx={{ width: '100%' }}>
+                                        inputProps={{ maxLength: 60}}/>
+                                : <FormControl className={classes.textXshort}>
                                     <InputLabel>Null Flavor</InputLabel>
                                     <Select
-                                        defaultValue = {0}
                                         value = {item['C_2_r_1_2_ReporterGivenName'].nullFlavor}
                                         onChange={setNullFlavor('C_2_r_1_2_ReporterGivenName', index)}
                                     >
@@ -137,30 +172,31 @@ export const PrimarySourceComp = () => {
                                     </FormControl>
                                 }
                             </Stack>
+                        </Grid>
 
+                        <Grid item xs={3}>
+                            <PrimarySourceFieldLabel label="Reporter’s Middle Name"
+                            field = 'C_2_r_1_3_ReporterMiddleName' index={index}></PrimarySourceFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>  
                             <Stack direction="row" flexItem spacing={2}>
-                                <Box className="text-small" style={{ padding: 0 }}>
+                                <Box className="text-small">
                                     <FormControlLabel
                                     control={<Checkbox
                                         checked = {item['C_2_r_1_3_ReporterMiddleName'].nullFlavor !== null}
                                         onChange={setUnknown('C_2_r_1_3_ReporterMiddleName', index)}
-                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                        style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                         />}
                                     label="No Info"/>
                                 </Box>
                                 {primarySourceData[index]['C_2_r_1_3_ReporterMiddleName']['nullFlavor'] === null ? 
-                                    <TextField label="Reporter’s Middle Name" variant="outlined"
+                                    <TextField variant="outlined"
                                         onChange={handleChange('C_2_r_1_3_ReporterMiddleName', index)}
                                         value = {item['C_2_r_1_3_ReporterMiddleName'].value}
-                                        sx={{ width: '100%' }}
                                         inputProps={{ maxLength: 60}}
-                                        multiline
-                                        rows={2}/>
-                                : <FormControl sx={{ width: '100%' }}>
+                                        className={classes.textMedium}/>
+                                : <FormControl className={classes.textXshort}>
                                     <InputLabel>Null Flavor</InputLabel>
                                     <Select
-                                        defaultValue = {0}
                                         value = {item['C_2_r_1_3_ReporterMiddleName'].nullFlavor}
                                         onChange={setNullFlavor('C_2_r_1_3_ReporterMiddleName', index)}
                                     >
@@ -171,30 +207,31 @@ export const PrimarySourceComp = () => {
                                     </FormControl>
                                 }
                             </Stack>
+                        </Grid>
 
+                        <Grid item xs={3}>
+                            <PrimarySourceFieldLabel label="Reporter’s Family Name"
+                            field = 'C_2_r_1_4_ReporterFamilyName' index={index}></PrimarySourceFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>  
                             <Stack direction="row" flexItem spacing={2}>
-                                <Box className="text-small" style={{ padding: 0 }}>
+                                <Box className="text-small">
                                     <FormControlLabel
                                     control={<Checkbox
                                         checked = {item['C_2_r_1_4_ReporterFamilyName'].nullFlavor !== null}
                                         onChange={setUnknown('C_2_r_1_4_ReporterFamilyName', index)}
-                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                        style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                         />}
                                     label="No Info"/>
                                 </Box>
                                 {primarySourceData[index]['C_2_r_1_4_ReporterFamilyName']['nullFlavor'] === null ? 
-                                    <TextField label="Reporter’s Family Name" variant="outlined"
+                                    <TextField variant="outlined"
                                         onChange={handleChange('C_2_r_1_4_ReporterFamilyName', index)}
                                         value = {item['C_2_r_1_4_ReporterFamilyName'].value}
-                                        sx={{ width: '100%' }}
                                         inputProps={{ maxLength: 60}}
-                                        multiline
-                                        rows={2}/>
-                                : <FormControl sx={{ width: '100%' }}>
+                                        className={classes.textMedium}/>
+                                : <FormControl className={classes.textXshort}>
                                     <InputLabel>Null Flavor</InputLabel>
                                     <Select
-                                        defaultValue = {0}
                                         value = {item['C_2_r_1_4_ReporterFamilyName'].nullFlavor}
                                         onChange={setNullFlavor('C_2_r_1_4_ReporterFamilyName', index)}
                                     >
@@ -205,30 +242,31 @@ export const PrimarySourceComp = () => {
                                     </FormControl>
                                 }
                             </Stack>
+                        </Grid>
                                
+                        <Grid item xs={3}>
+                            <PrimarySourceFieldLabel label="Reporter’s Organisation"
+                            field = 'C_2_r_2_1_ReporterOrganisation' index={index}></PrimarySourceFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>  
                             <Stack direction="row" flexItem spacing={2}>
-                                <Box className="text-small" style={{ padding: 0 }}>
+                                <Box className="text-small">
                                     <FormControlLabel
                                     control={<Checkbox
                                         checked = {item['C_2_r_2_1_ReporterOrganisation'].nullFlavor !== null}
                                         onChange={setUnknown('C_2_r_2_1_ReporterOrganisation', index)}
-                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                        style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                         />}
                                     label="No Info"/>
                                 </Box>
                                 {primarySourceData[index]['C_2_r_2_1_ReporterOrganisation']['nullFlavor'] === null ? 
-                                    <TextField label="Reporter’s Organisation" variant="outlined"
+                                    <TextField variant="outlined"
                                         onChange={handleChange('C_2_r_2_1_ReporterOrganisation', index)}
                                         value = {item['C_2_r_2_1_ReporterOrganisation'].value}
-                                        sx={{ width: '100%' }}
-                                        multiline
                                         inputProps={{ maxLength: 60}}
-                                        rows={2}/>
-                                : <FormControl sx={{ width: '100%' }}>
+                                        className={classes.textMedium}/>
+                                : <FormControl className={classes.textXshort}>
                                     <InputLabel>Null Flavor</InputLabel>
                                     <Select
-                                        defaultValue = {0}
                                         value = {item['C_2_r_2_1_ReporterOrganisation'].nullFlavor}
                                         onChange={setNullFlavor('C_2_r_2_1_ReporterOrganisation', index)}
                                     >
@@ -240,30 +278,30 @@ export const PrimarySourceComp = () => {
                                 }
                             </Stack> 
                         </Grid>
-                        <Grid container item xs direction="column" rowGap={1}>      
+                        
+                        <Grid item xs={3}>
+                            <PrimarySourceFieldLabel label="Reporter’s Department"
+                            field = 'C_2_r_2_2_ReporterDepartment' index={index}></PrimarySourceFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>       
                             <Stack direction="row" flexItem spacing={2}>
-                                <Box className="text-small" style={{ padding: 0 }}>
+                                <Box className="text-small">
                                     <FormControlLabel
                                     control={<Checkbox
                                         checked = {item['C_2_r_2_2_ReporterDepartment'].nullFlavor !== null}
                                         onChange={setUnknown('C_2_r_2_2_ReporterDepartment', index)}
-                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                        style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                         />}
                                     label="No Info"/>
                                 </Box>
                                 {primarySourceData[index]['C_2_r_2_2_ReporterDepartment']['nullFlavor'] === null ? 
-                                    <TextField label="Reporter’s Department" variant="outlined"
+                                    <TextField variant="outlined"
                                         onChange={handleChange('C_2_r_2_2_ReporterDepartment', index)}
                                         value = {item['C_2_r_2_2_ReporterDepartment'].value}
-                                        sx={{ width: '100%' }}
                                         inputProps={{ maxLength: 60}}
-                                        multiline
-                                        rows={2}/>
-                                : <FormControl sx={{ width: '100%' }}>
+                                        className={classes.textMedium}/>
+                                : <FormControl className={classes.textXshort}>
                                     <InputLabel>Null Flavor</InputLabel>
                                     <Select
-                                        defaultValue = {0}
                                         value = {item['C_2_r_2_2_ReporterDepartment'].nullFlavor}
                                         onChange={setNullFlavor('C_2_r_2_2_ReporterDepartment', index)}
                                     >
@@ -274,30 +312,33 @@ export const PrimarySourceComp = () => {
                                     </FormControl>
                                 }
                             </Stack>  
+                        </Grid>
 
+                        <Grid item xs={3}>
+                            <PrimarySourceFieldLabel label="Reporter’s Street"
+                            field = 'C_2_r_2_3_ReporterStreet' index={index}></PrimarySourceFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>  
                             <Stack direction="row" flexItem spacing={2}>
-                                <Box className="text-small" style={{ padding: 0 }}>
+                                <Box className="text-small">
                                     <FormControlLabel
                                     control={<Checkbox
                                         checked = {item['C_2_r_2_3_ReporterStreet'].nullFlavor !== null}
                                         onChange={setUnknown('C_2_r_2_3_ReporterStreet', index)}
-                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                        style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                         />}
                                     label="No Info"/>
                                 </Box>
                                 {primarySourceData[index]['C_2_r_2_3_ReporterStreet']['nullFlavor'] === null ? 
-                                    <TextField label="Reporter’s Street" variant="outlined"
+                                    <TextField variant="outlined"
                                         onChange={handleChange('C_2_r_2_3_ReporterStreet', index)}
                                         value = {item['C_2_r_2_3_ReporterStreet'].value}
-                                        sx={{ width: '100%' }}
+                                        className={classes.textMedium}
                                         multiline
                                         inputProps={{ maxLength: 100}}
                                         rows={2}/>
-                                : <FormControl sx={{ width: '100%' }}>
+                                : <FormControl className={classes.textXshort}>
                                     <InputLabel>Null Flavor</InputLabel>
                                     <Select
-                                        defaultValue = {0}
                                         value = {item['C_2_r_2_3_ReporterStreet'].nullFlavor}
                                         onChange={setNullFlavor('C_2_r_2_3_ReporterStreet', index)}
                                     >
@@ -308,30 +349,34 @@ export const PrimarySourceComp = () => {
                                     </FormControl>
                                 }
                             </Stack>  
+                        </Grid>
 
+                    </Grid>
+                    <Grid container spacing={2}>
+
+                        <Grid item xs={3}>
+                            <PrimarySourceFieldLabel label="Reporter’s City"
+                            field = 'C_2_r_2_4_ReporterCity' index={index}></PrimarySourceFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>  
                             <Stack direction="row" flexItem spacing={2}>
-                                <Box className="text-small" style={{ padding: 0 }}>
+                                <Box className="text-small">
                                     <FormControlLabel
                                     control={<Checkbox
                                         checked = {item['C_2_r_2_4_ReporterCity'].nullFlavor !== null}
                                         onChange={setUnknown('C_2_r_2_4_ReporterCity', index)}
-                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                        style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                         />}
                                     label="No Info"/>
                                 </Box>
                                 {primarySourceData[index]['C_2_r_2_4_ReporterCity']['nullFlavor'] === null ? 
-                                    <TextField label="Reporter’s City" variant="outlined"
+                                    <TextField variant="outlined"
                                         onChange={handleChange('C_2_r_2_4_ReporterCity', index)}
                                         value = {item['C_2_r_2_4_ReporterCity'].value}
-                                        sx={{ width: '100%' }}
-                                        multiline
                                         inputProps={{ maxLength: 35}}
-                                        rows={2}/>
-                                : <FormControl sx={{ width: '100%' }}>
+                                        className={classes.textShort}/>
+                                : <FormControl className={classes.textXshort}>
                                     <InputLabel>Null Flavor</InputLabel>
                                     <Select
-                                        defaultValue = {0}
                                         value = {item['C_2_r_2_4_ReporterCity'].nullFlavor}
                                         onChange={setNullFlavor('C_2_r_2_4_ReporterCity', index)}
                                     >
@@ -341,31 +386,32 @@ export const PrimarySourceComp = () => {
                                     </Select>
                                     </FormControl>
                                 }
-                            </Stack>    
+                            </Stack> 
+                        </Grid>   
 
+                        <Grid item xs={3}>
+                            <PrimarySourceFieldLabel label="Reporter’s State or Province"
+                            field = 'C_2_r_2_5_ReporterStateProvince' index={index}></PrimarySourceFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>  
                             <Stack direction="row" flexItem spacing={2}>
-                                <Box className="text-small" style={{ padding: 0 }}>
+                                <Box className="text-small">
                                     <FormControlLabel
                                     control={<Checkbox
                                         checked = {item['C_2_r_2_5_ReporterStateProvince'].nullFlavor !== null}
                                         onChange={setUnknown('C_2_r_2_5_ReporterStateProvince', index)}
-                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                        style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                         />}
                                     label="No Info"/>
                                 </Box>
                                 {primarySourceData[index]['C_2_r_2_5_ReporterStateProvince']['nullFlavor'] === null ? 
-                                    <TextField label="Reporter’s State or Province" variant="outlined"
+                                    <TextField variant="outlined"
                                         onChange={handleChange('C_2_r_2_5_ReporterStateProvince', index)}
                                         value = {item['C_2_r_2_5_ReporterStateProvince'].value}
-                                        sx={{ width: '100%' }}
-                                        multiline
-                                        inputProps={{ maxLength: 40}}
-                                        rows={2}/>
-                                : <FormControl sx={{ width: '100%' }}>
+                                        className={classes.textMedium}
+                                        inputProps={{ maxLength: 40}}/>
+                                : <FormControl className={classes.textXshort}>
                                     <InputLabel>Null Flavor</InputLabel>
                                     <Select
-                                        defaultValue = {0}
                                         value = {item['C_2_r_2_5_ReporterStateProvince'].nullFlavor}
                                         onChange={setNullFlavor('C_2_r_2_5_ReporterStateProvince', index)}
                                     >
@@ -376,30 +422,31 @@ export const PrimarySourceComp = () => {
                                     </FormControl>
                                 }
                             </Stack>  
+                        </Grid>
 
+                        <Grid item xs={3}>
+                            <PrimarySourceFieldLabel label="Reporter’s Telephone"
+                            field = 'C_2_r_2_7_ReporterTelephone' index={index}></PrimarySourceFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>  
                             <Stack direction="row" flexItem spacing={2}>
-                                <Box className="text-small" style={{ padding: 0 }}>
+                                <Box className="text-small">
                                     <FormControlLabel
                                     control={<Checkbox
                                         checked = {item['C_2_r_2_7_ReporterTelephone'].nullFlavor !== null}
                                         onChange={setUnknown('C_2_r_2_7_ReporterTelephone', index)}
-                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                        style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                         />}
                                     label="No Info"/>
                                 </Box>
                                 {primarySourceData[index]['C_2_r_2_7_ReporterTelephone']['nullFlavor'] === null ? 
-                                    <TextField label="Reporter’s Telephone" variant="outlined"
+                                    <TextField variant="outlined"
                                         onChange={handleChange('C_2_r_2_7_ReporterTelephone', index)}
                                         value = {item['C_2_r_2_7_ReporterTelephone'].value}
-                                        sx={{ width: '100%' }}
                                         inputProps={{ maxLength: 33}}
-                                        multiline
-                                        rows={2}/>
-                                : <FormControl sx={{ width: '100%' }}>
+                                        className={classes.textShort}/>
+                                : <FormControl className={classes.textXshort}>
                                     <InputLabel>Null Flavor</InputLabel>
                                     <Select
-                                        defaultValue = {0}
                                         value = {item['C_2_r_2_7_ReporterTelephone'].nullFlavor}
                                         onChange={setNullFlavor('C_2_r_2_7_ReporterTelephone', index)}
                                     >
@@ -411,30 +458,30 @@ export const PrimarySourceComp = () => {
                                 }
                             </Stack>
                         </Grid>
-                        <Grid container item xs direction="column" rowGap={1}>    
+                        
+                        <Grid item xs={3}>
+                            <PrimarySourceFieldLabel label="Reporter’s Postcode"
+                            field = 'C_2_r_2_6_ReporterPostcode' index={index}></PrimarySourceFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>  
                             <Stack direction="row" flexItem spacing={2}>
-                                <Box className="text-small" style={{ padding: 0 }}>
+                                <Box className="text-small">
                                     <FormControlLabel
                                     control={<Checkbox
                                         checked = {item['C_2_r_2_6_ReporterPostcode'].nullFlavor !== null}
                                         onChange={setUnknown('C_2_r_2_6_ReporterPostcode', index)}
-                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                        style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                         />}
                                     label="No Info"/>
                                 </Box>
                                 {primarySourceData[index]['C_2_r_2_6_ReporterPostcode']['nullFlavor'] === null ? 
-                                    <TextField label="Reporter’s Postcode" variant="outlined"
+                                    <TextField variant="outlined"
                                         onChange={handleChange('C_2_r_2_6_ReporterPostcode', index)}
                                         value = {item['C_2_r_2_6_ReporterPostcode'].value}
-                                        sx={{ width: '100%' }}
                                         inputProps={{ maxLength: 15}}
-                                        multiline
-                                        rows={2}/>
-                                : <FormControl sx={{ width: '100%' }}>
+                                        className={classes.textXshort}/>
+                                : <FormControl className={classes.textXshort}>
                                     <InputLabel>Null Flavor</InputLabel>
                                     <Select
-                                        defaultValue = {0}
                                         value = {item['C_2_r_2_6_ReporterPostcode'].nullFlavor}
                                         onChange={setNullFlavor('C_2_r_2_6_ReporterPostcode', index)}
                                     >
@@ -445,27 +492,37 @@ export const PrimarySourceComp = () => {
                                     </FormControl>
                                 }
                             </Stack>
+                        </Grid>
 
-                            <TextField label="Reporter’s Country Code" variant="outlined"
+                        <Grid item xs={3}>
+                            <PrimarySourceFieldLabel label="Reporter’s Country Code"
+                            field = 'C_2_r_3_ReporterCountryCode' index={index}></PrimarySourceFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>  
+                            <TextField variant="outlined"
+                            className={classes.textXshort}
                                 onChange={handleChange('C_2_r_3_ReporterCountryCode', index)}
                                 value = {item['C_2_r_3_ReporterCountryCode'].value}
                                 inputProps={{ maxLength: 2}}/>
+                        </Grid>
 
+                        <Grid item xs={3}>
+                            <PrimarySourceFieldLabel label="Qualification"
+                            field = 'C_2_r_4_Qualification' index={index}></PrimarySourceFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>  
                             <Stack direction="row" flexItem spacing={2}>
-                                <Box className="text-small" style={{ padding: 0 }}>
+                                <Box className="text-small">
                                     <FormControlLabel
                                     control={<Checkbox
                                         checked = {item['C_2_r_4_Qualification'].nullFlavor !== null}
                                         onChange={setUnknown('C_2_r_4_Qualification', index)}
-                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                        style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                         />}
                                     label="No Info"/>
                                 </Box>
                                 {primarySourceData[index]['C_2_r_4_Qualification']['nullFlavor'] === null ? 
-                                    <FormControl sx={{ width: '100%' }}>
-                                    <InputLabel>Qualification</InputLabel>
                                     <Select
+                                    className={classes.textShort}
                                         label="Qualification"
                                         defaultValue={0}
                                         onChange={handleChange('C_2_r_4_Qualification', index)}
@@ -477,32 +534,37 @@ export const PrimarySourceComp = () => {
                                         <MenuItem value={4}>4 = Lawyer</MenuItem>
                                         <MenuItem value={5}>5 = Consumer or other non health professional</MenuItem>
                                     </Select>
-                                    </FormControl>
                                 : null}
                             </Stack>
+                        </Grid>
 
+                        <Grid item xs={3}>
+                        </Grid>
+                        <Grid item xs={9}>  
                             <FormControlLabel
                                 control={<Checkbox
                                         checked = {item['C_2_r_5_PrimarySourceRegulatoryPurposes'].value}
                                         onChange={handleChange('C_2_r_5_PrimarySourceRegulatoryPurposes', index)}
-                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                        style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                         />}
                                 label="Primary Source for Regulatory Purposes"/>
                         </Grid>
                     </Grid>
-                    <span>
-                            <IconButton size='large' style= {{ top: '10px', right: '10px'}}
-                            sx={{ color: "white", backgroundColor: "#1976d2"}}
-                                    onClick={() => removeForm(index)}><DeleteIcon/>
-                            </IconButton>
-                    </span>
+                    </Stack>
+
                     {index === primarySourceData.length - 1 ?
                         <span>
-                            <IconButton size='large' style= {{ top: '10px'}}
+                            <IconButton size='large' style= {{ top: '10px', right: '10px'}}
                             sx={{ color: "white", backgroundColor: "#1976d2"}}
                                         onClick={addForm}><AddIcon/></IconButton>
                         </span> : null}
+
+                    <span>
+                            <IconButton size='large' style= {{ top: '10px'}}
+                            sx={{ color: "white", backgroundColor: "#000066"}}
+                                    onClick={() => removeForm(index)}><DeleteIcon/>
+                            </IconButton>
+                    </span>
+                    
                     </CardContent>
         </Card>);
         });

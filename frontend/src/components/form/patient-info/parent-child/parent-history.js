@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import { patientSelector, setParentHistoryData } from '@src/features/patient/slice';
 import { ParentInfo } from './parent-info';
 import {makeStyles} from '@mui/styles';
-import { FieldLabel } from '../../fieldLabel';
+import { ParentHistoryFieldLabel } from '@src/components/field-labels/patient/parent-child/parent-history';
 
 const useStyles = makeStyles({
     margin: {
@@ -56,7 +56,8 @@ export const ParentHistory = () => {
     const formList = () => {
         return (
             <Grid container spacing={2}>
-                    <FieldLabel label="Text for Relevant Medical History and Concurrent Conditions of Parent"></FieldLabel>
+                    <ParentHistoryFieldLabel label="Text for Relevant Medical History and Concurrent Conditions of Parent"
+                    field = 'D_10_7_2_TextMedicalHistoryParent'></ParentHistoryFieldLabel>
                     <TextField variant="outlined"
                         sx={{ width: '100%' }}
                         onChange={handleChange('D_10_7_2_TextMedicalHistoryParent')}

@@ -1,14 +1,14 @@
 
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import {Stack, Card, CardContent, IconButton} from '@mui/material';
+import {Stack, Card, CardContent, IconButton, Grid} from '@mui/material';
 import TextField from '@mui/material/TextField';
 import AddIcon from '@mui/icons-material/Add';
 import { drugsSelector, setSubstances } from '@src/features/drugs/slice';
 import { Substance } from '@src/features/drugs/drugs';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {makeStyles} from '@mui/styles';
-import { FieldLabel } from '../fieldLabel';
+import { SubstanceFieldLabel } from '@src/components/field-labels/drugs/substance-label';
 
 const useStyles = makeStyles({
     margin: {
@@ -85,49 +85,86 @@ export const Substances = ({drugIndex}) => {
                 boxShadow: "5px 5px #356BA0",
                 marginBottom: 5}}>
                     <CardContent>
-                        <Stack direction="column" spacing={1} justifyContent="flex-start">  
-                            <TextField label="Substance Name" variant="outlined"
+                    <Grid container spacing={2}>
+                        <Grid item xs={3}>
+                            <SubstanceFieldLabel label="Substance Name"
+                            field = 'G_k_2_3_r_1_SubstanceName' drugIndex={drugIndex} index={index}></SubstanceFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField variant="outlined"
+                                    className={classes.textLong}
                                     onChange={handleChange('G_k_2_3_r_1_SubstanceName', index)}
                                     value = {item['G_k_2_3_r_1_SubstanceName'].value}
                                     multiline
                                     inputProps={{ maxLength: 250}}
-                                    rows={3}/> 
-                            <TextField label="Substance TermID Version Date/Number" variant="outlined"
+                                    rows={4}/> 
+                        </Grid>
+
+                        <Grid item xs={3}>
+                            <SubstanceFieldLabel label="Substance TermID Version Date/Number"
+                            field = 'G_k_2_3_r_2a_SubstanceTermIDVersion' drugIndex={drugIndex} index={index}></SubstanceFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField variant="outlined"
+                                    className={classes.textShort}
                                     onChange={handleChange('G_k_2_3_r_2a_SubstanceTermIDVersion', index)}
                                     value = {item['G_k_2_3_r_2a_SubstanceTermIDVersion'].value}/>
-                            <TextField label="Substance TermID" variant="outlined"
+                        </Grid>
+
+                        <Grid item xs={3}>
+                            <SubstanceFieldLabel label="Substance TermID"
+                            field = 'G_k_2_3_r_2b_SubstanceTermID' drugIndex={drugIndex} index={index}></SubstanceFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField variant="outlined"
+                                className={classes.textShort}
                                     onChange={handleChange('G_k_2_3_r_2b_SubstanceTermID', index)}
                                     value = {item['G_k_2_3_r_2b_SubstanceTermID'].value}/>
-                            <TextField label="Strength" variant="outlined"
-                                    inputProps={{ maxLength: 10}}
+                        </Grid>
+
+                        <Grid item xs={3}>
+                            <SubstanceFieldLabel label="Strength"
+                            field = 'G_k_2_3_r_3a_StrengthNum' drugIndex={drugIndex} index={index}></SubstanceFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField variant="outlined"
                                     type='number'
+                                    className={classes.textXshort}
                                     onKeyDown={(evt) =>
                                         (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
                                         evt.preventDefault()
                                     }
-                                    onChange={handleChange('G_k_2_3_r_3a_StrengthNum', index)}
+                                    onChange={handleChange('G_k_2_3_r_3a_StrengthNum', index, true, 10)}
                                     value = {item['G_k_2_3_r_3a_StrengthNum'].value}/>
-                            <TextField label="Strength (unit)" variant="outlined"
+                        </Grid>
+
+                        <Grid item xs={3}>
+                            <SubstanceFieldLabel label="Strength (unit)"
+                            field = 'G_k_2_3_r_3b_StrengthUnit' drugIndex={drugIndex} index={index}></SubstanceFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField variant="outlined"
+                                    className={classes.textLong}
                                     inputProps={{ maxLength: 50}}
                                     onChange={handleChange('G_k_2_3_r_3b_StrengthUnit', index)}
                                     value = {item['G_k_2_3_r_3b_StrengthUnit'].value}/>
+                        </Grid>
 
-                        <Stack direction="row" justifyContent="flex-start">  
+                    </Grid>
 
-                            <span>
-                                        <IconButton size='large' style= {{ top: '10px', right: '10px'}}
-                                        sx={{ color: "white", backgroundColor: "#1976d2"}}
-                                                onClick={() => removeForm(index)}><DeleteIcon/>
-                                        </IconButton>
-                                    </span>  
+                           
                             {index === substances[drugIndex].length - 1 ?
                                 <span>
-                                    <IconButton size='large' style= {{ top: '10px'}}
+                                    <IconButton size='large' style= {{ top: '10px', right: '10px'}}
                                     sx={{ color: "white", backgroundColor: "#1976d2"}}
                                                 onClick={addForm}><AddIcon/></IconButton>
                                 </span> : null}
-                        </Stack>
-                        </Stack>
+                            <span>
+                                    <IconButton size='large' style= {{ top: '10px'}}
+                                    sx={{ color: "white", backgroundColor: "#000066"}}
+                                            onClick={() => removeForm(index)}><DeleteIcon/>
+                                    </IconButton>
+                                </span>  
                 </CardContent>
             </Card>);
         });

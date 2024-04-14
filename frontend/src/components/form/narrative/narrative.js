@@ -5,17 +5,51 @@ import TextField from '@mui/material/TextField';
 import { narrativeSelector, setNarrativeCaseSummary } from '@src/features/narrative/slice';
 import { DiagnosisComp } from './diagnosis';
 import { SummaryCommentsComp } from './summaryComments';
+import {makeStyles} from '@mui/styles';
+import { FieldLabel } from '../fieldLabel';
+
+const useStyles = makeStyles({
+    margin: {
+      marginTop: '10px',
+      marginLeft: '10px',
+      marginBottom: '5px'
+    },
+    textXshort: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '35%',
+    },
+    textShort: {
+      marginLeft: 1,
+      marginRight: 1,
+      width: '70%',
+    },
+    textMedium: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '90%',
+    },
+    textLong: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '100%',
+    },
+    label: {
+        color: 'black'
+    },
+    checkbox: {
+        paddingTop: '15px',
+        paddingRight: '10px',
+    }
+})
 
 var snakecaseKeys = require('snakecase-keys')
 
 export const NarrativeComp = () => {
+    const classes = useStyles();
+
 	const dispatch = useDispatch();
     const {narrativeCaseSummary} = useSelector(narrativeSelector);
-
-    useEffect(() => {
-        console.log("STATE");
-        console.log(snakecaseKeys(narrativeCaseSummary));
-    });
 
     const handleChange = (fieldName) => (event) => {
         let narrativeCaseSummaryCopy = JSON.parse(JSON.stringify(narrativeCaseSummary));
@@ -25,32 +59,35 @@ export const NarrativeComp = () => {
 
 	return (
         <>
-        <Stack direction="row" spacing={2} justifyContent="flex-start">
+        <Stack direction="column" spacing={2} justifyContent="flex-start">
             
-            <TextField label="Case Narrative Including Clinical Course, Therapeutic Measures, Outcome and 
-            Additional Relevant Information" variant="outlined"
-                sx={{ width: '100%' }}
+            <FieldLabel label="Case Narrative Including Clinical Course, Therapeutic Measures, Outcome and 
+            Additional Relevant Information"></FieldLabel>
+            <TextField variant="outlined"
+                className={classes.textLong}
                 inputProps={{ maxLength: 100000}}
                 onChange={handleChange('H_1_CaseNarrative')}
                 value = {narrativeCaseSummary['H_1_CaseNarrative'].value}
                 multiline
-                rows={10}/>
+                rows={15}/>
 
-            <TextField label="Reporter's Comments" variant="outlined"
-                sx={{ width: '100%' }}
+            <FieldLabel label="Reporter's Comments"></FieldLabel>
+            <TextField variant="outlined"
+                className={classes.textLong}
                 inputProps={{ maxLength: 20000}}
                 onChange={handleChange('H_2_ReporterComments')}
                 value = {narrativeCaseSummary['H_2_ReporterComments'].value}
                 multiline
-                rows={10}/>
+                rows={15}/>
 
-            <TextField label="Sender's Comments" variant="outlined"
-                sx={{ width: '100%' }}
+            <FieldLabel label="Sender's Comments"></FieldLabel>
+            <TextField variant="outlined"
+                className={classes.textLong}
                 inputProps={{ maxLength: 20000}}
                 onChange={handleChange('H_4_SenderComments')}
                 value = {narrativeCaseSummary['H_4_SenderComments'].value}
                 multiline
-                rows={10}/>
+                rows={15}/>
 
         </Stack>
 

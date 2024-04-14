@@ -9,7 +9,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { ParentData } from '@src/features/patient/patient';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {makeStyles} from '@mui/styles';
-import { FieldLabel } from '../../fieldLabel';
+import { ParentInfoFieldLabel } from '@src/components/field-labels/patient/parent-child/parent-info-label';
 
 const useStyles = makeStyles({
     margin: {
@@ -97,7 +97,8 @@ export const ParentInfo = () => {
                     <CardContent>
                     <Grid container spacing={2}>
                         <Grid item xs={3}>
-                            <FieldLabel label="MedDRA Version for Medical History"></FieldLabel>
+                            <ParentInfoFieldLabel label="MedDRA Version for Medical History"
+                            field = 'D_10_7_1_r_1a_MedDRAVersionMedicalHistory' index={index}></ParentInfoFieldLabel>
                         </Grid>
                         <Grid item xs={9}>
                             <TextField variant="outlined"
@@ -112,7 +113,8 @@ export const ParentInfo = () => {
                         </Grid>
 
                         <Grid item xs={3}>
-                            <FieldLabel label=" Medical History (MedDRA code)"></FieldLabel>
+                            <ParentInfoFieldLabel label=" Medical History (MedDRA code)"
+                            field = 'D_10_7_1_r_1b_MedicalHistoryMedDRACode' index={index}></ParentInfoFieldLabel>
                         </Grid>
                         <Grid item xs={9}>
                             <TextField variant="outlined"
@@ -127,7 +129,8 @@ export const ParentInfo = () => {
                         </Grid>
 
                         <Grid item xs={3}>
-                            <FieldLabel label="Start Date"></FieldLabel>
+                            <ParentInfoFieldLabel label="Start Date"
+                            field = 'D_10_7_1_r_2_StartDate' index={index}></ParentInfoFieldLabel>
                         </Grid>
                         <Grid item xs={9}>                        
                             <Stack direction="row" spacing={2} justifyContent="flex-start"> 
@@ -163,7 +166,8 @@ export const ParentInfo = () => {
                         </Grid>
 
                         <Grid item xs={3}>
-                            <FieldLabel label="End Date"></FieldLabel>
+                            <ParentInfoFieldLabel label="End Date"
+                            field = 'D_10_7_1_r_4_EndDate' index={index}></ParentInfoFieldLabel>
                         </Grid>
                         <Grid item xs={9}>
                             <Stack direction="row" spacing={2} justifyContent="flex-start"> 
@@ -199,7 +203,8 @@ export const ParentInfo = () => {
                         </Grid>
 
                         <Grid item xs={3}>
-                            <FieldLabel label="Continuing"></FieldLabel>
+                            <ParentInfoFieldLabel label="Continuing"
+                            field = 'D_10_7_1_r_3_Continuing' index={index}></ParentInfoFieldLabel>
                         </Grid>
                         <Grid item xs={9}>
                             <Stack direction="row" spacing={2} justifyContent="flex-start"> 
@@ -237,7 +242,8 @@ export const ParentInfo = () => {
                         </Grid>
 
                         <Grid item xs={3}>
-                            <FieldLabel label="Comments"></FieldLabel>
+                            <ParentInfoFieldLabel label="Comments"
+                            field = 'D_10_7_1_r_5_Comments' index={index}></ParentInfoFieldLabel>
                         </Grid>
                         <Grid item xs={9}>
                             <TextField variant="outlined"

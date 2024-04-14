@@ -1,15 +1,53 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import {Stack, FormControlLabel, Box, Select, MenuItem, FormControl, InputLabel, Card, CardContent, IconButton} from '@mui/material';
+import {Stack, FormControlLabel, Box, Select, MenuItem, FormControl, InputLabel, Card, CardContent, IconButton, Grid} from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import AddIcon from '@mui/icons-material/Add';
 import { drugsSelector, setIndications } from '@src/features/drugs/slice';
 import { IndicationForUse } from '@src/features/drugs/drugs';
 import DeleteIcon from '@mui/icons-material/Delete';
+import {makeStyles} from '@mui/styles';
+import { IndicationsFieldLabel } from '@src/components/field-labels/drugs/indications-label';
 
+const useStyles = makeStyles({
+    margin: {
+      marginTop: '10px',
+      marginLeft: '10px',
+      marginBottom: '5px'
+    },
+    textXshort: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '35%',
+    },
+    textShort: {
+      marginLeft: 1,
+      marginRight: 1,
+      width: '70%',
+    },
+    textMedium: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '90%',
+    },
+    textLong: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '100%',
+    },
+    label: {
+        color: 'black'
+    },
+    checkbox: {
+        paddingTop: '15px',
+        paddingRight: '10px',
+    }
+})
 
 export const Indications = ({drugIndex}) => {
+    const classes = useStyles();
+
 	const dispatch = useDispatch();
     const {indications} = useSelector(drugsSelector);
 
@@ -18,9 +56,14 @@ export const Indications = ({drugIndex}) => {
         console.log(indications);
     });
 
-    const handleChange = (fieldName, index) => (event) => {
+    const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
+        let value = event.target.value
+        if (isNumber) {
+            if (value.length > length)
+                value = value.slice(0, length)
+        }
         let indicationsCopy = JSON.parse(JSON.stringify(indications));
-        indicationsCopy[drugIndex][index][fieldName].value = event.target.value;
+        indicationsCopy[drugIndex][index][fieldName].value = value;
         dispatch(setIndications(indicationsCopy));
     };
 
@@ -56,31 +99,33 @@ export const Indications = ({drugIndex}) => {
                 boxShadow: "5px 5px #356BA0",
                 marginBottom: 5}}>
                     <CardContent>
-                        <Stack direction="column" spacing={1} justifyContent="flex-start">  
+                        <Grid container spacing={2}>
+                            <Grid item xs={3}>
+                                <IndicationsFieldLabel label="Indication as Reported by the Primary Source"
+                                field = 'G_k_7_r_1_IndicationPrimarySource' drugIndex={drugIndex} index={index}></IndicationsFieldLabel>
+                            </Grid>
+                            <Grid item xs={9}>
 
-                        <Stack direction="row" spacing={2} justifyContent="flex-start"> 
+                            <Stack direction="row" spacing={2} justifyContent="flex-start"> 
                                     <Box className="text-small" style={{ padding: 0 }}>
                                         <FormControlLabel
                                         control={<Checkbox
                                                     value = {item['G_k_7_r_1_IndicationPrimarySource'].nullFlavor === -1}
                                                     onChange={setUnknown('G_k_7_r_1_IndicationPrimarySource', index)}
-                                                    sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                                    style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                                     />}
                                                 label="No Info"/>
                                     </Box>
                                     {indications[drugIndex][index]['G_k_7_r_1_IndicationPrimarySource']['nullFlavor'] !== -1 ? 
-                                            <TextField label="Indication as Reported by the Primary Source" variant="outlined"
+                                            <TextField variant="outlined"
+                                                className={classes.textLong}
                                                 onChange={handleChange('G_k_7_r_1_IndicationPrimarySource', index)}
                                                 value = {item['G_k_7_r_1_IndicationPrimarySource'].value}
-                                                sx={{ width: '100%' }}
                                                 multiline
                                                 inputProps={{ maxLength: 250}}
                                                 rows={5}/>
-                                            : <FormControl sx={{ width: '100%' }}>
+                                            : <FormControl className={classes.textXshort}>
                                                 <InputLabel>Null Flavor</InputLabel>
                                                 <Select
-                                                    defaultValue = {0}
                                                     value = {item['G_k_7_r_1_IndicationPrimarySource'].nullFlavor}
                                                     onChange={setNullFlavor('G_k_7_r_1_IndicationPrimarySource', index)}
                                                 >
@@ -91,42 +136,54 @@ export const Indications = ({drugIndex}) => {
                                                 </FormControl>
                                     }
                             </Stack>
+                        </Grid>
 
-                            <TextField label="MedDRA Version for Indication" variant="outlined"
-                                    onChange={handleChange('G_k_7_r_2a_MedDRAVersionIndication', index)}
-                                    inputProps={{ maxLength: 4}}
+                        <Grid item xs={5}>
+                                <IndicationsFieldLabel label="MedDRA Version for Indication"
+                                field = 'G_k_7_r_2a_MedDRAVersionIndication' drugIndex={drugIndex} index={index}></IndicationsFieldLabel>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <TextField variant="outlined"
+                                    onChange={handleChange('G_k_7_r_2a_MedDRAVersionIndication', index, true, 4)}
                                     type='number'
+                                    className={classes.textXshort}
                                     onKeyDown={(evt) =>
                                         (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === ",") &&
                                         evt.preventDefault()
                                     }
                                     value = {item['G_k_7_r_2a_MedDRAVersionIndication'].value}/>
+                        </Grid>
 
-                            <TextField label="Indication (MedDRA code)" variant="outlined"
-                                    onChange={handleChange('G_k_7_r_2b_IndicationMedDRACode', index)}
-                                    inputProps={{ maxLength: 8}}
+                        <Grid item xs={5}>
+                                <IndicationsFieldLabel label="Indication (MedDRA code)"
+                                field = 'G_k_7_r_2b_IndicationMedDRACode' drugIndex={drugIndex} index={index}></IndicationsFieldLabel>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <TextField variant="outlined"
+                                    onChange={handleChange('G_k_7_r_2b_IndicationMedDRACode', index, true, 8)}
                                     type='number'
+                                    className={classes.textXshort}
                                     onKeyDown={(evt) =>
                                         (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
                                         evt.preventDefault()
                                     }
                                     value = {item['G_k_7_r_2b_IndicationMedDRACode'].value}/>
-                        
-                        <Stack direction="row" justifyContent="flex-start">  
-                                    <span>
-                                        <IconButton size='large' style= {{ top: '10px', right: '10px'}}
-                                        sx={{ color: "white", backgroundColor: "#1976d2"}}
-                                                onClick={() => removeForm(index)}><DeleteIcon/>
-                                        </IconButton>
-                                    </span>  
+                        </Grid>
+                    </Grid>
+                       
                             {index === indications[drugIndex].length - 1 ?
                                 <span>
-                                    <IconButton size='large' style= {{ top: '10px'}}
+                                    <IconButton size='large' style= {{ top: '10px',  right: '10px'}}
                                     sx={{ color: "white", backgroundColor: "#1976d2"}}
                                                 onClick={addForm}><AddIcon/></IconButton>
                                 </span> : null}
-                        </Stack>
-                        </Stack>
+
+                                <span>
+                                    <IconButton size='large' style= {{ top: '10px'}}
+                                    sx={{ color: "white", backgroundColor: "#000066"}}
+                                            onClick={() => removeForm(index)}><DeleteIcon/>
+                                    </IconButton>
+                                </span>  
                 </CardContent>
             </Card>);
         });

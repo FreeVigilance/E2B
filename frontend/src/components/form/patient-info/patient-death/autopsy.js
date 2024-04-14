@@ -8,7 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { AutopsyData } from '@src/features/patient/patient';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {makeStyles} from '@mui/styles';
-import { FieldLabel } from '../../fieldLabel';
+import { AutopsyFieldLabel } from '@src/components/field-labels/patient/autopsy-label';
 
 const useStyles = makeStyles({
     margin: {
@@ -85,7 +85,8 @@ export const Autopsy = () => {
                     <Grid container spacing={2}>
 
                         <Grid item xs={3}>
-                            <FieldLabel label="Autopsy-determined Cause of Death"></FieldLabel>
+                            <AutopsyFieldLabel label="Autopsy-determined Cause of Death"
+                            field = 'D_9_4_r_2_AutopsyDeterminedCauseDeath' index={index}></AutopsyFieldLabel>
                         </Grid>
                         <Grid item xs={9}>
                             <TextField variant="outlined"
@@ -98,7 +99,8 @@ export const Autopsy = () => {
                         </Grid>
 
                         <Grid item xs={3}>
-                            <FieldLabel label="MedDRA Version for Autopsy-determined Cause of Death"></FieldLabel>
+                            <AutopsyFieldLabel label="MedDRA Version for Autopsy-determined Cause of Death"
+                            field = 'D_9_4_r_1a_MedDRAVersionAutopsyDeterminedCauseDeath' index={index}></AutopsyFieldLabel>
                         </Grid>
                         <Grid item xs={9}>
                             <TextField variant="outlined"
@@ -113,7 +115,8 @@ export const Autopsy = () => {
                         </Grid>
 
                         <Grid item xs={3}>
-                            <FieldLabel label="Autopsy-determined Cause of Death (MedDRA code)"></FieldLabel>
+                            <AutopsyFieldLabel label="Autopsy-determined Cause of Death (MedDRA code)"
+                            field = 'D_9_4_r_1b_AutopsyDeterminedCauseDeathMedDRACode' index={index}></AutopsyFieldLabel>
                         </Grid>
                         <Grid item xs={9}>
                             <TextField variant="outlined"

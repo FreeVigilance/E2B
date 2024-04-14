@@ -7,7 +7,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import { displaySelector, getData, revertAll, setCurrentId, setOpenNewReport, setShowCasesList, setShowSideMenu, setShowUpload } from '@src/features/display/slice';
 import { useDispatch, useSelector } from 'react-redux';
-import { Fab } from '@mui/material';
+import { Button, Fab, ListItemIcon } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { reactionsSelector, setReactionsData } from '@src/features/reactions/slice';
 import { resultsSelector, setResultsData } from '@src/features/results/slice';
@@ -17,6 +17,8 @@ import { AutopsyData, CauseOfDeath, DrugHistory, MedHistory, ParentDrugHistory }
 import { patientSelector, setAutopsy, setCauseOfDeath, setDrugHistory, setMedicalHistory, setParentDrugHistory } from '@src/features/patient/slice';
 import { getCasesList } from '@src/features/cases-list/slice';
 import { UploadXml } from './upload-xml';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 const drawerWidth = 240;
 
@@ -56,7 +58,6 @@ export const SideMenu = () => {
     };
 
     const handleToggleMenuClick = () => {
-        console.log(showSideMenu);
         dispatch(setShowSideMenu(!showSideMenu));
     };
 
@@ -69,8 +70,16 @@ export const SideMenu = () => {
                     '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
                 }}
                 open={showSideMenu}>
-
+                
                 <List>
+
+                    <ListItem key={'toggle'}>
+                        <ListItemIcon onClick={handleToggleMenuClick} style={{paddingLeft: '80%'}}>
+                            <ArrowBackIosIcon fontSize='large'></ArrowBackIosIcon>
+                        </ListItemIcon>
+                    </ListItem>
+                
+
                     <ListItem key={'New Report'} disablePadding>
                         <ListItemButton onClick={handleNewReportClick}>
                             <ListItemText primary={'New Report'} />
@@ -92,11 +101,17 @@ export const SideMenu = () => {
                     </ListItem>
                 </List>
             </SwipeableDrawer>
-            <Fab variant="contained"
+
+
+            {!showSideMenu && !openNewReport?
+            <ArrowForwardIosIcon color='primary' fontSize='large' sx={{ position: 'fixed', top: '25px', left: '5px', zIndex: 10000 }}
+                onClick={handleToggleMenuClick}></ArrowForwardIosIcon>
+                : null }
+            {/* <Fab variant="contained"
                 sx={{ position: 'fixed', top: '10px', left: '0', zIndex: 10000 }}
                 onClick={handleToggleMenuClick}>
-                <MenuIcon></MenuIcon>
-            </Fab>
+                <ArrowForwardIosIcon></ArrowForwardIosIcon>
+            </Fab> */}
             {showUpload ? <UploadXml></UploadXml> : null}
         </Box>
     );

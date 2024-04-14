@@ -13,7 +13,7 @@ import { MedHistory } from '@src/features/patient/patient';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import {makeStyles} from '@mui/styles';
-import { FieldLabel } from '../fieldLabel';
+import { MedHistoryFieldLabel } from '@src/components/field-labels/patient/med-history-label';
 
 const useStyles = makeStyles({
     margin: {
@@ -102,7 +102,8 @@ export const MedicalHistory = () => {
                     <Grid container spacing={2}>
 
                             <Grid item xs={3}>
-                                <FieldLabel label="MedDRA Version for Medical History"></FieldLabel>
+                                <MedHistoryFieldLabel label="MedDRA Version for Medical History"
+                                field = 'D_7_1_r_1a_MedDRAVersionMedicalHistory' index={index}></MedHistoryFieldLabel>
                             </Grid>
                             <Grid item xs={9}>
                                 <TextField variant="outlined"
@@ -117,7 +118,8 @@ export const MedicalHistory = () => {
                             </Grid>
 
                             <Grid item xs={3}>
-                                <FieldLabel label="Medical History MedDRA code"></FieldLabel>
+                                <MedHistoryFieldLabel label="Medical History MedDRA code"
+                                field = 'D_7_1_r_1b_MedicalHistoryMedDRACode' index={index}></MedHistoryFieldLabel>
                             </Grid>
                             <Grid item xs={9}>
                                 <TextField variant="outlined"
@@ -132,7 +134,8 @@ export const MedicalHistory = () => {
                             </Grid>
 
                             <Grid item xs={3}>
-                                <FieldLabel label="Family History Present"></FieldLabel>
+                                <MedHistoryFieldLabel label="Family History Present"
+                                field = 'D_7_1_r_6_FamilyHistory' index={index}></MedHistoryFieldLabel>
                             </Grid>
                             <Grid item xs={9}>
                                 <Box className="text-small">
@@ -145,7 +148,8 @@ export const MedicalHistory = () => {
                             </Grid>
 
                             <Grid item xs={3}>
-                                <FieldLabel label="Start Date"></FieldLabel>
+                                <MedHistoryFieldLabel label="Start Date"
+                                field = 'D_7_1_r_2_StartDate' index={index}></MedHistoryFieldLabel>
                             </Grid>
                             <Grid item xs={9}>
                                 <Stack direction="row" spacing={2} justifyContent="flex-start"> 
@@ -181,7 +185,8 @@ export const MedicalHistory = () => {
                             </Grid>
 
                             <Grid item xs={3}>
-                                <FieldLabel label="End Date"></FieldLabel>
+                                <MedHistoryFieldLabel label="End Date"
+                                field = 'D_7_1_r_4_EndDate' index={index}></MedHistoryFieldLabel>
                             </Grid>
                             <Grid item xs={9}>
                                 <Stack direction="row" spacing={2} justifyContent="flex-start"> 
@@ -217,7 +222,8 @@ export const MedicalHistory = () => {
                             </Grid>
 
                             <Grid item xs={3}>
-                                <FieldLabel label="Continuing"></FieldLabel>
+                                <MedHistoryFieldLabel label="Continuing"
+                                field = 'D_7_1_r_3_Continuing' index={index}></MedHistoryFieldLabel>
                             </Grid>
                             <Grid item xs={9}>
                                 <Stack direction="row" spacing={2} justifyContent="flex-start"> 
@@ -255,7 +261,8 @@ export const MedicalHistory = () => {
                                     </Stack>
                             </Grid>
                             <Grid item xs={3}>
-                                <FieldLabel label="Comments"></FieldLabel>
+                                <MedHistoryFieldLabel label="Comments"
+                                field = 'D_7_1_r_5_Comments' index={index}></MedHistoryFieldLabel>
                             </Grid>
                             <Grid item xs={9}>
                                 <TextField variant="outlined"

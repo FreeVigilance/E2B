@@ -21,6 +21,7 @@ export const getReaction = () => {
 		Object.values(reactionsData).forEach((item, index) => {
 			let itemData = {}
 			itemData['id'] = item['id'];
+			itemData['uuid'] = item['uuid'];
 			itemData['E_i_1_1a_ReactionPrimarySourceNativeLanguage'] =  item['E_i_1_1a_ReactionPrimarySourceNativeLanguage'];
 			itemData['E_i_1_1b_ReactionPrimarySourceLanguage'] =  item['E_i_1_1b_ReactionPrimarySourceLanguage'];
 			itemData['E_i_1_2_ReactionPrimarySourceTranslation'] = item['E_i_1_2_ReactionPrimarySourceTranslation'];
@@ -66,6 +67,13 @@ export const getReaction = () => {
 	}
 }
 
+// export const parseErrors = (errors, stateReactionsData) => {
+// 	for (const [key, value] of Object.entries(errors)) {
+// 		console.log(key, value);
+// 		stateReactionsData[key]
+// 	}
+// }
+
 const initialState = {
 	reactionsData: []
 };
@@ -98,6 +106,13 @@ const reactionsSlice = createSlice({
         });
 
 		builder.addCase(changeData.fulfilled, (state, action) => {
+			// if (action.payload['_errors']) {
+            //     if (Object.keys(action.payload['_errors']).length !== 0) {
+			// 		const data = e2bCaseKeys(action.payload['_errors']);
+			// 		console.log('REACTION ERRORS');
+			// 		parseErrors(data['E_i_ReactionEvent'], state.reactionsData);
+            //     }
+            // }
 			if (action.payload.e_i_reaction_event) {
 				const data = e2bCaseKeys(action.payload.e_i_reaction_event);
 				console.log('reactions', data);

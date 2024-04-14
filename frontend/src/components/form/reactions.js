@@ -1,7 +1,7 @@
 
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import {Stack, FormControlLabel, Select, MenuItem, FormControl, InputLabel, Grid, Divider, IconButton} from '@mui/material';
+import {Stack, FormControlLabel, Select, MenuItem, FormControl, InputLabel, Grid, Divider, IconButton, FormLabel} from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -15,7 +15,8 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {makeStyles} from '@mui/styles';
-import { FieldLabel } from './fieldLabel';
+import { drugsSelector, setDrugReactionMatrix, setRelatedness } from '@src/features/drugs/slice';
+import { ReactionFieldLabel } from '../field-labels/reaction-field-label';
 
 
 var snakecaseKeys = require('snakecase-keys')
@@ -52,6 +53,11 @@ const useStyles = makeStyles({
     checkbox: {
         paddingTop: '15px',
         paddingRight: '10px',
+    },
+    idLabel: {
+        fontWeight: 600,
+        color: 'white',
+        paddingLeft: '10%',
     }
 })
 
@@ -59,6 +65,7 @@ export const Reactions = () => {
     const classes = useStyles();
 	const dispatch = useDispatch();
     const {reactionsData} = useSelector(reactionsSelector);
+    const {drugReactionMatrix, relatedness} = useSelector(drugsSelector);
 
     const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
         let value = event.target.value
@@ -104,10 +111,19 @@ export const Reactions = () => {
                 boxShadow: "5px 5px #356BA0",
                 marginBottom: 5}}>
                     <CardContent>
-                    <Grid container spacing={2}>
+                    <Stack direction={'column'} spacing={3}>
+                        <div style={{border: '2px solid', borderRadius: '5px', width: '30%', background: "#1976d2"}}>
+                            {item['id'] !== null 
+                                ? <FormLabel className={classes.idLabel}>Reaction id = {item['id']}</FormLabel>
+                                : <FormLabel className={classes.idLabel}>Reaction id = {item['uuid']}</FormLabel>
+                            }
+                        </div>
 
+                    <Grid container spacing={2}>
+                        
                         <Grid item xs={3}>
-                            <FieldLabel label="Reported by the Primary Source in Native Language"></FieldLabel>
+                            <ReactionFieldLabel label="Reported by the Primary Source in Native Language"
+                            field = 'E_i_1_1a_ReactionPrimarySourceNativeLanguage' index={index}></ReactionFieldLabel>
                         </Grid>
                         <Grid item xs={9}>
                             <TextField variant="outlined"
@@ -120,7 +136,8 @@ export const Reactions = () => {
                         </Grid>
 
                         <Grid item xs={3}>
-                            <FieldLabel label="Reported by the Primary Source Language" ></FieldLabel>
+                            <ReactionFieldLabel label="Reported by the Primary Source Language" 
+                            field = 'E_i_1_1b_ReactionPrimarySourceLanguage' index={index}></ReactionFieldLabel>
                         </Grid>
                         <Grid item xs={9}>
                             <TextField variant="outlined"
@@ -133,7 +150,8 @@ export const Reactions = () => {
                         </Grid>
 
                         <Grid item xs={3}>
-                            <FieldLabel label="Reported by the Primary Source for Translation"></FieldLabel>
+                            <ReactionFieldLabel label="Reported by the Primary Source for Translation"
+                            field = 'E_i_1_2_ReactionPrimarySourceTranslation' index={index}></ReactionFieldLabel>
                         </Grid>
                         <Grid item xs={9}>
                             <TextField variant="outlined"
@@ -152,7 +170,8 @@ export const Reactions = () => {
                     <Grid container spacing={2}>
 
                         <Grid item xs={4}>
-                            <FieldLabel label="MedDRA Version for Reaction"></FieldLabel>
+                            <ReactionFieldLabel label="MedDRA Version for Reaction"
+                            field = 'E_i_2_1a_MedDRAVersionReaction' index={index}></ReactionFieldLabel>
                         </Grid>
                         <Grid item xs={8}>
                             <TextField
@@ -168,7 +187,8 @@ export const Reactions = () => {
                                 />
                         </Grid>
                         <Grid item xs={4}>
-                            <FieldLabel label="Reaction / Event MedDRA Code"></FieldLabel>
+                            <ReactionFieldLabel label="Reaction / Event MedDRA Code"
+                            field = 'E_i_2_1b_ReactionMedDRACode' index={index}></ReactionFieldLabel>
                         </Grid>
                         <Grid item xs={8}>
                             <TextField
@@ -184,7 +204,8 @@ export const Reactions = () => {
                                 />
                         </Grid>
                         <Grid item xs={4}>
-                            <FieldLabel label="Term Highlighted by the Reporter"></FieldLabel>
+                            <ReactionFieldLabel label="Term Highlighted by the Reporter"
+                            field = 'E_i_3_1_TermHighlightedReporter' index={index}></ReactionFieldLabel>
                         </Grid>
                         <Grid item xs={8}>
                             <Select
@@ -199,7 +220,8 @@ export const Reactions = () => {
                         </Grid>
 
                         <Grid item xs={4}>
-                            <FieldLabel label='Outcome of Reaction at the Time of Last Observation'></FieldLabel>
+                            <ReactionFieldLabel label='Outcome of Reaction at the Time of Last Observation'
+                            field = 'E_i_7_OutcomeReactionLastObservation' index={index}></ReactionFieldLabel>
                         </Grid>
                         <Grid item xs={8}>
                             <Select
@@ -217,7 +239,8 @@ export const Reactions = () => {
                         </Grid>
 
                         <Grid item xs={4}>
-                            <FieldLabel label='Medical Confirmation by Healthcare Professional'></FieldLabel>
+                            <ReactionFieldLabel label='Medical Confirmation by Healthcare Professional'
+                            field = 'E_i_8_MedicalConfirmationHealthcareProfessional' index={index}></ReactionFieldLabel>
                         </Grid>
                         <Grid item xs={8}>
                             <Select
@@ -231,7 +254,8 @@ export const Reactions = () => {
                         </Grid>
 
                         <Grid item xs={4}>
-                            <FieldLabel label="Identification of the Country Where the Reaction Occurred"></FieldLabel>
+                            <ReactionFieldLabel label="Identification of the Country Where the Reaction Occurred"
+                            field = 'E_i_9_IdentificationCountryReaction' index={index}></ReactionFieldLabel>
                         </Grid>
                         <Grid item xs={8}>
                             <TextField
@@ -244,7 +268,8 @@ export const Reactions = () => {
                         </Grid>
                         
                         <Grid item xs={4}>
-                            <FieldLabel label="Start Date of Reaction"></FieldLabel>
+                            <ReactionFieldLabel label="Start Date of Reaction"
+                            field = 'E_i_4_DateStartReaction' index={index}></ReactionFieldLabel>
                         </Grid>
                         <Grid item xs={8}>  
                             <Stack direction={'row'}>
@@ -279,7 +304,8 @@ export const Reactions = () => {
                         </Grid>
 
                         <Grid item xs={4}>
-                            <FieldLabel label='End Date of Reaction'></FieldLabel>
+                            <ReactionFieldLabel label='End Date of Reaction'
+                            field = 'E_i_5_DateEndReaction' index={index}></ReactionFieldLabel>
                         </Grid>
                         <Grid item xs={8}>
                             <Stack direction={'row'}>
@@ -321,7 +347,8 @@ export const Reactions = () => {
 
 
                         <Grid item xs={4}>
-                            <FieldLabel label='Results in Death'></FieldLabel>
+                            <ReactionFieldLabel label='Results in Death'
+                            field = 'E_i_3_2a_ResultsDeath' index={index}></ReactionFieldLabel>
                         </Grid>
                         <Grid item xs={8}>
                             <Select 
@@ -335,7 +362,8 @@ export const Reactions = () => {
                         </Grid>
 
                         <Grid item xs={4}>
-                            <FieldLabel label='Life Threatening'></FieldLabel>
+                            <ReactionFieldLabel label='Life Threatening'
+                            field = 'E_i_3_2b_LifeThreatening' index={index}></ReactionFieldLabel>
                         </Grid>
                         <Grid item xs={8}>
                             <Select 
@@ -349,7 +377,8 @@ export const Reactions = () => {
                         </Grid>
 
                         <Grid item xs={4}>
-                            <FieldLabel label='Caused / Prolonged Hospitalisation'></FieldLabel>
+                            <ReactionFieldLabel label='Caused / Prolonged Hospitalisation'
+                            field = 'E_i_3_2c_CausedProlongedHospitalisation' index={index}></ReactionFieldLabel>
                         </Grid>
                         <Grid item xs={8}>
                             <Select
@@ -363,7 +392,8 @@ export const Reactions = () => {
                         </Grid>
 
                         <Grid item xs={4}>
-                            <FieldLabel label='Disabling / Incapacitating'></FieldLabel>
+                            <ReactionFieldLabel label='Disabling / Incapacitating'
+                            field = 'E_i_3_2d_DisablingIncapacitating' index={index}></ReactionFieldLabel>
                         </Grid>
                         <Grid item xs={8}>
                             <Select
@@ -377,7 +407,8 @@ export const Reactions = () => {
                         </Grid>
 
                         <Grid item xs={4}>
-                            <FieldLabel label='Congenital Anomaly / Birth Defect'></FieldLabel>
+                            <ReactionFieldLabel label='Congenital Anomaly / Birth Defect'
+                            field = 'E_i_3_2e_CongenitalAnomalyBirthDefect' index={index}></ReactionFieldLabel>
                         </Grid>
                         <Grid item xs={8}>
                             <Select
@@ -391,7 +422,8 @@ export const Reactions = () => {
                         </Grid>
 
                         <Grid item xs={4}>
-                            <FieldLabel label='Other Medically Important Condition'></FieldLabel>
+                            <ReactionFieldLabel label='Other Medically Important Condition'
+                            field = 'E_i_3_2f_OtherMedicallyImportantCondition' index={index}></ReactionFieldLabel>
                         </Grid>
                         <Grid item xs={8}>
                             <Select
@@ -405,7 +437,8 @@ export const Reactions = () => {
                         </Grid>
 
                         <Grid item xs={4}>
-                            <FieldLabel label='Duration of Reaction (number)'></FieldLabel>
+                            <ReactionFieldLabel label='Duration of Reaction (number)'
+                            field = 'E_i_6a_DurationReactionNum' index={index}></ReactionFieldLabel>
                         </Grid>
                         <Grid item xs={8}>
                             <TextField
@@ -414,7 +447,7 @@ export const Reactions = () => {
                                 onChange={handleChange('E_i_6a_DurationReactionNum', index, true, 5)}
                                 autoComplete="off"
                                 InputProps={{ inputProps: { min: 1, max: 4 } }}
-                                type='number'
+                                // type='number'
                                 onKeyDown={(evt) =>
                                     (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
                                     evt.preventDefault()
@@ -423,7 +456,8 @@ export const Reactions = () => {
                         </Grid>
 
                         <Grid item xs={4}>
-                            <FieldLabel label="Duration of Reaction (unit)"></FieldLabel>
+                            <ReactionFieldLabel label="Duration of Reaction (unit)"
+                            field = 'E_i_6b_DurationReactionUnit' index={index}></ReactionFieldLabel>
                         </Grid>
                         <Grid item xs={8}>
                             <TextField 
@@ -434,8 +468,9 @@ export const Reactions = () => {
                                 onChange={handleChange('E_i_6b_DurationReactionUnit', index)}
                                 />
                         </Grid>
-                    </Grid>
-                    </Stack>
+                        </Grid>
+                        </Stack>
+                </Stack>
 
                 {index === reactionsData.length - 1 ?
                     <span>
@@ -464,6 +499,40 @@ export const Reactions = () => {
 
     const removeForm = (index) => {
         let reactionsDataCopy = JSON.parse(JSON.stringify(reactionsData));
+        
+
+        let drugReactionMatrixCopy = JSON.parse(JSON.stringify(drugReactionMatrix));
+        let drugInd = null;
+        let matrixInd = null;
+        Object.values(drugReactionMatrixCopy).forEach((drug, drugIndex) => {
+            drug.forEach((matrix, matrixIndex) => {
+                if (matrix['G_k_9_i_1_ReactionAssessed'] === reactionsData[index]['id'] ||
+                    matrix['G_k_9_i_1_ReactionAssessed'] === reactionsData[index]['uuid'] ) {
+                        drugInd = drugIndex;
+                        matrixInd = matrixIndex;
+                        return;
+                    }
+            });
+            if (drugInd !== null && matrixInd !== null) {
+                return;
+            }
+        });
+
+        if (drugInd !== null && matrixInd !== null) {
+            drugReactionMatrixCopy[drugInd].splice(matrixInd, 1);
+
+            let relatednessCopy = JSON.parse(JSON.stringify(relatedness));
+            for (let ind = matrixInd; ind <= Object.keys(relatedness[drugInd]).length; ind++) {
+                relatednessCopy[drugInd][ind] = relatednessCopy[drugInd][ind + 1];
+            }
+            // relatednessCopy[drugInd].splice(relatednessCopy.length - 1, 1);
+
+            
+            dispatch(setDrugReactionMatrix(drugReactionMatrixCopy));
+            dispatch(setRelatedness(relatednessCopy));
+        }
+
+
         reactionsDataCopy.splice(index, 1);
         dispatch(setReactionsData(reactionsDataCopy));
     }

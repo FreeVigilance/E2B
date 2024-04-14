@@ -12,7 +12,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { ParentDrugHistory } from '@src/features/patient/patient';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {makeStyles} from '@mui/styles';
-import { FieldLabel } from '../../fieldLabel';
+import { ParentDrugHistoryFieldLabel } from '@src/components/field-labels/patient/parent-child/parent-deug-history';
 
 const useStyles = makeStyles({
     margin: {
@@ -100,7 +100,8 @@ export const ParentDrugsHistory = () => {
                     <CardContent>
                         <Grid container spacing={2}>
                             <Grid item xs={3}>
-                                <FieldLabel label="Name of Drug"></FieldLabel>
+                                <ParentDrugHistoryFieldLabel label="Name of Drug"
+                                field = 'D_10_8_r_1_NameDrug' index={index}></ParentDrugHistoryFieldLabel>
                             </Grid>
                             <Grid item xs={9}>
                                 <TextField variant="outlined"
@@ -114,7 +115,8 @@ export const ParentDrugsHistory = () => {
                             </Grid>
                             
                             <Grid item xs={3}>
-                                <FieldLabel label="MPID Version Date/Number"></FieldLabel>
+                                <ParentDrugHistoryFieldLabel label="MPID Version Date/Number"
+                                field = 'D_10_8_r_2a_MPIDVersion' index={index}></ParentDrugHistoryFieldLabel>
                             </Grid>
                             <Grid item xs={9}>
                                 <TextField variant="outlined"
@@ -124,7 +126,8 @@ export const ParentDrugsHistory = () => {
                             </Grid>
 
                             <Grid item xs={3}>
-                                <FieldLabel label="Medicinal Product Identifier"></FieldLabel>
+                                <ParentDrugHistoryFieldLabel label="Medicinal Product Identifier"
+                                field = 'D_10_8_r_2b_MPID' index={index}></ParentDrugHistoryFieldLabel>
                             </Grid>
                             <Grid item xs={9}>
                                 <TextField variant="outlined"
@@ -134,7 +137,8 @@ export const ParentDrugsHistory = () => {
                             </Grid>
 
                             <Grid item xs={3}>
-                                <FieldLabel label="PhPID Version Date/Number"></FieldLabel>
+                                <ParentDrugHistoryFieldLabel label="PhPID Version Date/Number"
+                                field = 'D_10_8_r_3a_PhPIDVersion' index={index}></ParentDrugHistoryFieldLabel>
                             </Grid>
                             <Grid item xs={9}>
                                 <TextField variant="outlined"
@@ -144,7 +148,8 @@ export const ParentDrugsHistory = () => {
                             </Grid>
 
                             <Grid item xs={3}>
-                                <FieldLabel label="Pharmaceutical Product Identifier"></FieldLabel>
+                                <ParentDrugHistoryFieldLabel label="Pharmaceutical Product Identifier"
+                                field = 'D_10_8_r_3b_PhPID' index={index}></ParentDrugHistoryFieldLabel>
                             </Grid>
                             <Grid item xs={9}>
                                 <TextField variant="outlined"
@@ -156,7 +161,8 @@ export const ParentDrugsHistory = () => {
 
 
                             <Grid item xs={3}>
-                                <FieldLabel label="MedDRA Version for Indication"></FieldLabel>
+                                <ParentDrugHistoryFieldLabel label="MedDRA Version for Indication"
+                                field = 'D_10_8_r_6a_MedDRAVersionIndication' index={index}></ParentDrugHistoryFieldLabel>
                             </Grid>
                             <Grid item xs={9}>
                                 <TextField variant="outlined"
@@ -171,7 +177,8 @@ export const ParentDrugsHistory = () => {
                             </Grid>
 
                             <Grid item xs={3}>
-                                <FieldLabel label="Indication (MedDRA code)"></FieldLabel>
+                                <ParentDrugHistoryFieldLabel label="Indication (MedDRA code)"
+                                field = 'D_10_8_r_6b_IndicationMedDRACode' index={index}></ParentDrugHistoryFieldLabel>
                             </Grid>
                             <Grid item xs={9}>
                                 <TextField variant="outlined"
@@ -186,7 +193,8 @@ export const ParentDrugsHistory = () => {
                             </Grid>
 
                             <Grid item xs={3}>
-                                <FieldLabel label="MedDRA Version for Reaction"></FieldLabel>
+                                <ParentDrugHistoryFieldLabel label="MedDRA Version for Reaction"
+                                field = 'D_10_8_r_7a_MedDRAVersionReaction' index={index}></ParentDrugHistoryFieldLabel>
                             </Grid>
                             <Grid item xs={9}>
                                 <TextField variant="outlined"
@@ -201,7 +209,8 @@ export const ParentDrugsHistory = () => {
                             </Grid>
 
                             <Grid item xs={3}>
-                                <FieldLabel label="Reaction (MedDRA code)"></FieldLabel>
+                                <ParentDrugHistoryFieldLabel label="Reaction (MedDRA code)"
+                                field = 'D_10_8_r_7b_ReactionsMedDRACode' index={index}></ParentDrugHistoryFieldLabel>
                             </Grid>
                             <Grid item xs={9}>
                                 <TextField variant="outlined"
@@ -216,7 +225,8 @@ export const ParentDrugsHistory = () => {
                             </Grid>
 
                             <Grid item xs={3}>
-                                <FieldLabel label="Start Date"></FieldLabel>
+                                <ParentDrugHistoryFieldLabel label="Start Date"
+                                field = 'D_10_8_r_4_StartDate' index={index}></ParentDrugHistoryFieldLabel>
                             </Grid>
                             <Grid item xs={9}>
                                 <Stack direction="row" spacing={2} justifyContent="flex-start"> 
@@ -252,7 +262,8 @@ export const ParentDrugsHistory = () => {
                             </Grid>
 
                             <Grid item xs={3}>
-                                <FieldLabel label="End Date"></FieldLabel>
+                                <ParentDrugHistoryFieldLabel label="End Date"
+                                field = 'D_10_8_r_5_EndDate' index={index}></ParentDrugHistoryFieldLabel>
                             </Grid>
                             <Grid item xs={9}>
                                 <Stack direction="row" spacing={2} justifyContent="flex-start"> 

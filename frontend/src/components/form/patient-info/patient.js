@@ -11,7 +11,7 @@ import { patientSelector, setPatientData } from '@src/features/patient/slice';
 import { MedicalHistory } from './med-history';
 import { DrugsHistory } from './drug-history';
 import {makeStyles} from '@mui/styles';
-import { FieldLabel } from '../fieldLabel';
+import { PatientFieldLabel } from '@src/components/field-labels/patient/patient-field-label';
 
 const useStyles = makeStyles({
     margin: {
@@ -54,11 +54,14 @@ export const Patient = () => {
     const {patientData} = useSelector(patientSelector);
 
     const handleChange = (fieldName, isNumber = false, length = 1) => (event) => {
-        let value = event.target.value
+        let value = event.target.value;
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)
         }
+        // if (value === '' || value.length === 0){
+        //     value = null;
+        // }
         let patientDataCopy = JSON.parse(JSON.stringify(patientData));
         patientDataCopy[fieldName].value = value;
         dispatch(setPatientData(patientDataCopy));
@@ -86,7 +89,8 @@ export const Patient = () => {
             <Grid container spacing={2}>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Patient Name"></FieldLabel>
+                    <PatientFieldLabel label="Patient Name"
+                    field = 'D_1_Patient' ></PatientFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <Stack direction={'row'}>
@@ -122,7 +126,8 @@ export const Patient = () => {
 
 
                 <Grid item xs={3}>
-                    <FieldLabel label="GP Medical Record Number"></FieldLabel>
+                    <PatientFieldLabel label="GP Medical Record Number"
+                    field = 'D_1_1_1_MedicalRecordNumberSourceGP' ></PatientFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <Stack direction={'row'}>
@@ -146,7 +151,8 @@ export const Patient = () => {
 
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Specialist Record Number"></FieldLabel>
+                    <PatientFieldLabel label="Specialist Record Number"
+                    field = 'D_1_1_2_MedicalRecordNumberSourceSpecialist' ></PatientFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <Stack direction={'row'}>
@@ -169,7 +175,8 @@ export const Patient = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Hospital Record Number"></FieldLabel>
+                    <PatientFieldLabel label="Hospital Record Number"
+                    field = 'D_1_1_3_MedicalRecordNumberSourceHospital' ></PatientFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <Stack direction={'row'}>
@@ -193,7 +200,8 @@ export const Patient = () => {
 
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Investigation Number"></FieldLabel>
+                    <PatientFieldLabel label="Investigation Number"
+                    field = 'D_1_1_4_MedicalRecordNumberSourceInvestigation' ></PatientFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <Stack direction={'row'}>
@@ -216,7 +224,8 @@ export const Patient = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Date of birth"></FieldLabel>
+                    <PatientFieldLabel label="Date of birth"
+                    field = 'D_2_1_DateBirth' ></PatientFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <Stack direction={'row'}>
@@ -240,7 +249,8 @@ export const Patient = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Age at Time of Reaction (number)"></FieldLabel>
+                    <PatientFieldLabel label="Age at Time of Reaction (number)"
+                    field = 'D_2_2a_AgeOnsetReactionNum' ></PatientFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <TextField variant="outlined"
@@ -255,7 +265,8 @@ export const Patient = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Age at Time of Reaction (unit)"></FieldLabel>
+                    <PatientFieldLabel label="Age at Time of Reaction (unit)"
+                    field = 'D_2_2b_AgeOnsetReactionUnit' ></PatientFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <TextField variant="outlined"
@@ -266,7 +277,8 @@ export const Patient = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Gestation Period (number)"></FieldLabel>
+                    <PatientFieldLabel label="Gestation Period (number)"
+                    field = 'D_2_2_1a_GestationPeriodReactionFoetusNum' ></PatientFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <TextField variant="outlined"
@@ -281,7 +293,8 @@ export const Patient = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Gestation Period (unit)"></FieldLabel>
+                    <PatientFieldLabel label="Gestation Period (unit)"
+                    field = 'D_2_2_1b_GestationPeriodReactionFoetusUnit' ></PatientFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <TextField variant="outlined"
@@ -292,7 +305,8 @@ export const Patient = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Patient Age Group"></FieldLabel>
+                    <PatientFieldLabel label="Patient Age Group"
+                    field = 'D_2_3_PatientAgeGroup' ></PatientFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <Select
@@ -311,7 +325,8 @@ export const Patient = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Body Weight"></FieldLabel>
+                    <PatientFieldLabel label="Body Weight"
+                    field = 'D_3_BodyWeight' ></PatientFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <TextField variant="outlined"
@@ -332,7 +347,8 @@ export const Patient = () => {
 
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Height"></FieldLabel>
+                    <PatientFieldLabel label="Height"
+                    field = 'D_4_Height' ></PatientFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <TextField variant="outlined"
@@ -347,7 +363,8 @@ export const Patient = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Sex"></FieldLabel>
+                    <PatientFieldLabel label="Sex"
+                    field = 'D_5_Sex' ></PatientFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <Stack direction={'row'}>
@@ -385,7 +402,8 @@ export const Patient = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Last Menstrual Period Date"></FieldLabel>
+                    <PatientFieldLabel label="Last Menstrual Period Date"
+                    field = 'D_6_LastMenstrualPeriodDate' ></PatientFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <Stack direction={'row'}>
@@ -404,21 +422,13 @@ export const Patient = () => {
                             value = {patientData['D_6_LastMenstrualPeriodDate'].value}
                             onChange={handleChange('D_6_LastMenstrualPeriodDate')}
                         />
-                    : <FormControl className={classes.textXshort}>
-                        <InputLabel>Null Flavor</InputLabel>
-                        <Select
-                            value = {patientData['D_1_Patient'].nullFlavor}
-                            onChange={setNullFlavor('D_1_Patient')}>
-                            <MenuItem value={0}>Masked</MenuItem>
-                            <MenuItem value={1}>Asked but unknown</MenuItem>
-                            <MenuItem value={2}>Not asked</MenuItem>
-                        </Select>
-                        </FormControl>}
+                    : null}
                     </Stack>
                 </Grid>
                               
                 <Grid item xs={3}>
-                    <FieldLabel label="Date Of Death"></FieldLabel>
+                    <PatientFieldLabel label="Date Of Death"
+                    field = 'D_9_1_DateDeath' ></PatientFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <Stack direction={'row'}>
@@ -452,7 +462,8 @@ export const Patient = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Was Autopsy Done"></FieldLabel>
+                    <PatientFieldLabel label="Was Autopsy Done"
+                    field = 'D_9_3_Autopsy' ></PatientFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <Stack direction={'row'}>
@@ -498,7 +509,8 @@ export const Patient = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Text for Relevant Medical History and Concurrent Conditions"></FieldLabel>
+                    <PatientFieldLabel label="Text for Relevant Medical History and Concurrent Conditions"
+                    field = 'D_7_2_TextMedicalHistory' ></PatientFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <Stack direction={'row'}>

@@ -1,7 +1,7 @@
 
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import {Stack, FormControlLabel, Select, MenuItem, FormControl, InputLabel, IconButton} from '@mui/material';
+import {Stack, FormControlLabel, Select, MenuItem, FormControl, InputLabel, IconButton, Grid} from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import AddIcon from '@mui/icons-material/Add';
@@ -11,17 +11,51 @@ import CardContent from '@mui/material/CardContent';
 import { referencesSelector, setReferencesData } from '@src/features/references/slice';
 import { Reference } from '@src/features/references/references';
 import DeleteIcon from '@mui/icons-material/Delete';
+import {makeStyles} from '@mui/styles';
+import { ReferencesFieldLabel } from '../field-labels/references-label';
+
+const useStyles = makeStyles({
+    margin: {
+      marginTop: '10px',
+      marginLeft: '10px',
+      marginBottom: '5px'
+    },
+    textXshort: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '35%',
+    },
+    textShort: {
+      marginLeft: 1,
+      marginRight: 1,
+      width: '70%',
+    },
+    textMedium: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '90%',
+    },
+    textLong: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '100%',
+    },
+    label: {
+        color: 'black'
+    },
+    checkbox: {
+        paddingTop: '15px',
+        paddingRight: '10px',
+    }
+})
 
 var snakecaseKeys = require('snakecase-keys')
 
 export const ReferencesComp = () => {
+    const classes = useStyles();
+
 	const dispatch = useDispatch();
     const {referencesData} = useSelector(referencesSelector);
-
-    useEffect(() => {
-        console.log("STATE");
-        console.log(snakecaseKeys(referencesData));
-    });
 
     const handleChange = (fieldName, index) => (event) => {
         let referencesDataCopy = JSON.parse(JSON.stringify(referencesData));
@@ -67,30 +101,32 @@ export const ReferencesComp = () => {
                 boxShadow: "5px 5px #356BA0",
                 marginBottom: 5}}>
                     <CardContent>     
-                    
+                    <Grid container spacing={2}>
+                        <Grid item xs={1}>
+                            <ReferencesFieldLabel label="Literature Reference(s)"
+                            field = 'C_4_r_1_LiteratureReference' index={index}></ReferencesFieldLabel>
+                        </Grid>
+                        <Grid item xs={11}>  
                             <Stack direction="row" flexItem spacing={2}>
-                                <Box className="text-small" style={{ padding: 0 }}>
+                                <Box className="text-small">
                                     <FormControlLabel
                                     control={<Checkbox
                                         checked = {item['C_4_r_1_LiteratureReference'].nullFlavor !== null}
                                         onChange={setUnknown('C_4_r_1_LiteratureReference', index)}
-                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                        style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                         />}
                                     label="No Info"/>
                                 </Box>
                                 {referencesData[index]['C_4_r_1_LiteratureReference']['nullFlavor'] === null ? 
-                                    <TextField label="Literature Reference(s)" variant="outlined"
+                                    <TextField variant="outlined"
+                                        className={classes.textMedium}
                                         onChange={handleChange('C_4_r_1_LiteratureReference', index)}
                                         value = {item['C_4_r_1_LiteratureReference'].value}
-                                        sx={{ width: '80%' }}
                                         inputProps={{ maxLength: 500}}
                                         multiline
-                                        rows={7}/>
-                                : <FormControl sx={{ width: '20%' }}>
+                                        rows={5}/>
+                                : <FormControl className={classes.textXshort}>
                                     <InputLabel>Null Flavor</InputLabel>
                                     <Select
-                                        defaultValue = {0}
                                         value = {item['C_4_r_1_LiteratureReference'].nullFlavor}
                                         onChange={setNullFlavor('C_4_r_1_LiteratureReference', index)}
                                     >
@@ -100,19 +136,23 @@ export const ReferencesComp = () => {
                                     </FormControl>
                                 }
                             </Stack>
-                    <span>
-                            <IconButton size='large' style= {{ top: '10px', right: '10px'}}
-                            sx={{ color: "white", backgroundColor: "#1976d2"}}
-                                    onClick={() => removeForm(index)}><DeleteIcon/>
-                            </IconButton>
-                    </span>  
+                        </Grid>
+                    </Grid>
+                     
                     
                     {index === referencesData.length - 1 ?
                         <span>
-                            <IconButton size='large' style= {{ top: '10px'}}
+                            <IconButton size='large' style= {{ top: '10px', right: '10px'}}
                             sx={{ color: "white", backgroundColor: "#1976d2"}}
                                         onClick={addForm}><AddIcon/></IconButton>
                         </span> : null}
+
+                    <span>
+                            <IconButton size='large' style= {{ top: '10px'}}
+                            sx={{ color: "white", backgroundColor: "#000066"}}
+                                    onClick={() => removeForm(index)}><DeleteIcon/>
+                            </IconButton>
+                    </span> 
                     </CardContent>
         </Card>);
         });

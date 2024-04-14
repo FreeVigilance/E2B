@@ -19,9 +19,12 @@ function changeKeysFactory (changeCase) {
             let changedKey = '';
             if (key === 'null_flavor') {
                 changedKey = 'nullFlavor';
-            } else if (key !== 'value' && key !== 'id') {
+            } else if (key !== 'value' && key !== 'id' && isNaN(key)) {
                 changedKey = changeCase(key, options);
             } else {
+                if (!isNaN(key)) {
+                    changedKey = Number.parseInt(key);
+                }
                 changedKey = key;
             }
 

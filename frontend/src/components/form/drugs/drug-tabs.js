@@ -47,7 +47,6 @@ export const DrugTabs = () => {
         dosagesCopy[newInd] = [];
         indicationsCopy[newInd] = [];
         drugReactionMatrixCopy[newInd] = [];
-        relatednessCopy[newInd] = {0: []};
         additionalInfoCopy[newInd] = [];
 
         dispatch(setDrugs(drugsCopy));
@@ -55,7 +54,6 @@ export const DrugTabs = () => {
         dispatch(setDosages(dosagesCopy));
         dispatch(setIndications(indicationsCopy));
         dispatch(setDrugReactionMatrix(drugReactionMatrixCopy));
-        dispatch(setRelatedness(relatednessCopy));
         dispatch(setAdditionalInfo(additionalInfoCopy));
     }
 
@@ -68,7 +66,6 @@ export const DrugTabs = () => {
         const dosagesCopy = JSON.parse(JSON.stringify(dosages));
         const indicationsCopy = JSON.parse(JSON.stringify(indications));
         const drugReactionMatrixCopy = JSON.parse(JSON.stringify(drugReactionMatrix));
-        const relatednessCopy = JSON.parse(JSON.stringify(relatedness));
         const additionalInfoCopy = JSON.parse(JSON.stringify(additionalInfo));
 
         drugsCopy.splice(index, 1);
@@ -82,7 +79,6 @@ export const DrugTabs = () => {
         dispatch(setDosages(dosagesCopy));
         dispatch(setIndications(indicationsCopy));
         dispatch(setDrugReactionMatrix(drugReactionMatrixCopy));
-        dispatch(setRelatedness(relatednessCopy));
         dispatch(setAdditionalInfo(additionalInfoCopy));
     }
 

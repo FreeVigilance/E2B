@@ -7,9 +7,48 @@ import { drugsSelector, setDrugReactionMatrix, setRelatedness } from '@src/featu
 import { DrugReactionMatrix, Relatedness } from '@src/features/drugs/drugs';
 import { Relatednesses } from './relatedness';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { ReactionSelect } from './reaction-select';
+import {makeStyles} from '@mui/styles';
+import { MatrixFieldLabel } from '@src/components/field-labels/drugs/matrix/matrix-label';
 
+const useStyles = makeStyles({
+    margin: {
+      marginTop: '10px',
+      marginLeft: '10px',
+      marginBottom: '5px'
+    },
+    textXshort: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '35%',
+    },
+    textShort: {
+      marginLeft: 1,
+      marginRight: 1,
+      width: '70%',
+    },
+    textMedium: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '90%',
+    },
+    textLong: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '100%',
+    },
+    label: {
+        color: 'black'
+    },
+    checkbox: {
+        paddingTop: '15px',
+        paddingRight: '10px',
+    }
+})
 
 export const DrugReactionsMatrix = ({drugIndex}) => {
+    const classes = useStyles();
+
 	const dispatch = useDispatch();
     const {drugReactionMatrix, relatedness} = useSelector(drugsSelector);
 
@@ -19,9 +58,14 @@ export const DrugReactionsMatrix = ({drugIndex}) => {
         console.log(relatedness);
     });
 
-    const handleChange = (fieldName, index) => (event) => {
+    const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
+        let value = event.target.value
+        if (isNumber) {
+            if (value.length > length)
+                value = value.slice(0, length)
+        }
         let drugReactionMatrixCopy = JSON.parse(JSON.stringify(drugReactionMatrix));
-        drugReactionMatrixCopy[drugIndex][index][fieldName].value = event.target.value;
+        drugReactionMatrixCopy[drugIndex][index][fieldName].value = value;
         dispatch(setDrugReactionMatrix(drugReactionMatrixCopy));
     };
 
@@ -41,70 +85,97 @@ export const DrugReactionsMatrix = ({drugIndex}) => {
                         boxShadow: "5px 5px #356BA0",
                         marginBottom: 5}}>
                     <CardContent>
-                        <Grid container direction="row" columnGap={4}>
-                            <Grid container item xs direction="column" rowGap={1}>
-                                <Stack direction="column" spacing={1} justifyContent="flex-start">  
+                    <Grid container item xs direction="row" rowGap={1}>
+                        <Grid container item xs direction="column" rowGap={1}>
+                            
+                        <ReactionSelect index={index} drugIndex={drugIndex}></ReactionSelect>
 
-                                    <FormLabel sx={{ fontSize: 30, marginLeft: '25%', color: 'black' }}>Drug-reaction Matrix</FormLabel>
-
-                                            <Stack direction="column" spacing={1} justifyContent="flex-start">  
-                                            
-                                            <TextField label="Time Interval Beginning of Drug Administration and Start of Reaction" variant="outlined"
-                                                        onChange={handleChange('G_k_9_i_3_1a_IntervalDrugAdministrationReactionNum', index)}
-                                                        inputProps={{ maxLength: 5}}
-                                                        type='number'
-                                                        onKeyDown={(evt) =>
-                                                            (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
-                                                            evt.preventDefault()
-                                                        }
-                                                        value = {item['G_k_9_i_3_1a_IntervalDrugAdministrationReactionNum'].value}/>
-
-                                            <TextField label="(unit) Time Interval Beginning of Drug Administration and Start of Reaction" variant="outlined"
-                                                        onChange={handleChange('G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit', index)}
-                                                        inputProps={{ maxLength: 50}}
-                                                        value = {item['G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit'].value}/>
-                                            
-                                            <TextField label="Time Interval Last Dose of Drug and Start of Reaction / Event" variant="outlined"
-                                                        onChange={handleChange('G_k_9_i_3_2a_IntervalLastDoseDrugReactionNum', index)}
-                                                        inputProps={{ maxLength: 5}}
-                                                        type='number'
-                                                        onKeyDown={(evt) =>
-                                                            (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
-                                                            evt.preventDefault()
-                                                        }
-                                                        value = {item['G_k_9_i_3_2a_IntervalLastDoseDrugReactionNum'].value}/>
-                                            
-                                            <TextField label="(unit) Time Interval Last Dose of Drug and Start of Reaction / Event" variant="outlined"
-                                                        onChange={handleChange('G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit', index)}
-                                                        inputProps={{ maxLength: 50}}
-                                                        value = {item['G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit'].value}/>
-
-                                            <FormControl>
-                                                <InputLabel>Did Reaction Recur on Re-administration</InputLabel>
-                                                    <Select
-                                                        defaultValue = {0}
-                                                        value = {item['G_k_9_i_4_ReactionRecurReadministration'].value}
-                                                        onChange={handleChange('G_k_9_i_4_ReactionRecurReadministration', index)}
-                                                    >
-                                                        <MenuItem value={1}>1 = yes – yes (rechallenge was done, reaction recurred)</MenuItem>
-                                                        <MenuItem value={2}>2 = yes – no (rechallenge was done, reaction did not recur)</MenuItem>
-                                                        <MenuItem value={3}>3 = yes – unk (rechallenge was done, outcome unknown)</MenuItem>
-                                                        <MenuItem value={4}>4 = no – n/a (no rechallenge was done, recurrence is not applicable)</MenuItem>
-                                                    </Select>
-                                            </FormControl>
-                                            </Stack>
-                                </Stack>
+                        <Grid container spacing={2}>
+                            <Grid item xs={4}>
+                                <MatrixFieldLabel label="Time Interval Beginning of Drug Administration and Start of Reaction"
+                                field = 'G_k_9_i_3_1a_IntervalDrugAdministrationReactionNum' drugIndex={drugIndex} index={index}></MatrixFieldLabel>
                             </Grid>
-                            <Grid container item xs direction="column" rowGap={1}>
+                            <Grid item xs={8}>     
+                                <TextField variant="outlined"
+                                    onChange={handleChange('G_k_9_i_3_1a_IntervalDrugAdministrationReactionNum', index, true, 5)}
+                                    type='number'
+                                    className={classes.textXshort}
+                                    onKeyDown={(evt) =>
+                                        (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                        evt.preventDefault()
+                                    }
+                                    value = {item['G_k_9_i_3_1a_IntervalDrugAdministrationReactionNum'].value}/>
+                            </Grid>
+
+                            <Grid item xs={4}>
+                                <MatrixFieldLabel label="(unit) Time Interval Beginning of Drug Administration and Start of Reaction"
+                                field = 'G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit' drugIndex={drugIndex} index={index}></MatrixFieldLabel>
+                            </Grid>
+                            <Grid item xs={8}>
+                                <TextField variant="outlined"
+                                    className={classes.textMedium}
+                                            onChange={handleChange('G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit', index)}
+                                            inputProps={{ maxLength: 50}}
+                                            value = {item['G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit'].value}/>
+                            </Grid>
+
+                            <Grid item xs={4}>
+                                <MatrixFieldLabel label="Time Interval Last Dose of Drug and Start of Reaction / Event"
+                                field = 'G_k_9_i_3_2a_IntervalLastDoseDrugReactionNum' drugIndex={drugIndex} index={index}></MatrixFieldLabel>
+                            </Grid>
+                            <Grid item xs={8}>
+                                <TextField variant="outlined"
+                                className={classes.textXshort}
+                                            onChange={handleChange('G_k_9_i_3_2a_IntervalLastDoseDrugReactionNum', index, true, 5)}
+                                            type='number'
+                                            onKeyDown={(evt) =>
+                                                (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
+                                                evt.preventDefault()
+                                            }
+                                            value = {item['G_k_9_i_3_2a_IntervalLastDoseDrugReactionNum'].value}/>
+                            </Grid>
+
+                            <Grid item xs={4}>
+                                <MatrixFieldLabel label="(unit) Time Interval Last Dose of Drug and Start of Reaction / Event"
+                                field = 'G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit' drugIndex={drugIndex} index={index}></MatrixFieldLabel>
+                            </Grid>
+                            <Grid item xs={8}>
+                                <TextField variant="outlined"
+                                            onChange={handleChange('G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit', index)}
+                                            inputProps={{ maxLength: 50}}
+                                            className={classes.textMedium}
+                                            value = {item['G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit'].value}/>
+                            </Grid>
+
+                            <Grid item xs={4}>
+                                <MatrixFieldLabel label="Did Reaction Recur on Re-administration"
+                                field = 'G_k_9_i_4_ReactionRecurReadministration' drugIndex={drugIndex} index={index}></MatrixFieldLabel>
+                            </Grid>
+                            <Grid item xs={8}>
+                                <Select
+                                className={classes.textMedium}
+                                    value = {item['G_k_9_i_4_ReactionRecurReadministration'].value}
+                                    onChange={handleChange('G_k_9_i_4_ReactionRecurReadministration', index)}
+                                >
+                                    <MenuItem value={1}>1 = yes – yes (rechallenge was done, reaction recurred)</MenuItem>
+                                    <MenuItem value={2}>2 = yes – no (rechallenge was done, reaction did not recur)</MenuItem>
+                                    <MenuItem value={3}>3 = yes – unk (rechallenge was done, outcome unknown)</MenuItem>
+                                    <MenuItem value={4}>4 = no – n/a (no rechallenge was done, recurrence is not applicable)</MenuItem>
+                                </Select>
+                            </Grid>        
+                        </Grid>
+                        </Grid>
+
+                        <Grid container item xs direction="column" rowGap={1}>
                                 <Stack direction="column" spacing={1} justifyContent="flex-start">  
                                     <FormLabel sx={{ fontSize: 30, marginLeft: '25%', color: 'black' }}>Assessment of Relatedness of Drug to reaction</FormLabel>
                                     <Relatednesses drugIndex={drugIndex} matrixIndex={index}></Relatednesses>
                                 </Stack>
-                            </Grid>
                         </Grid>
+                    </Grid>
                         <span>
                                         <IconButton size='large' style= {{ top: '10px', right: '10px'}}
-                                        sx={{ color: "white", backgroundColor: "#1976d2"}}
+                                        sx={{ color: "white", backgroundColor: "#000066"}}
                                                 onClick={() => removeForm(index)}><DeleteIcon/>
                                         </IconButton>
                                     </span> 
@@ -121,14 +192,24 @@ export const DrugReactionsMatrix = ({drugIndex}) => {
     }
 
     const addForm = () => {
+        console.log('ADDDDD');
+        console.log('drugReactionMatrix', drugReactionMatrix);
+        console.log('relatedness', relatedness);
+
         let drugReactionMatrixCopy = JSON.parse(JSON.stringify(drugReactionMatrix));
         let drugReactionMatrixNew = new DrugReactionMatrix();
         drugReactionMatrixCopy[drugIndex].push(drugReactionMatrixNew);
 
         const relatednessCopy = JSON.parse(JSON.stringify(relatedness));
         const newMatrixInd = drugReactionMatrix[drugIndex].length;
+        if (Object.keys(relatednessCopy).length <= drugIndex) {
+            relatednessCopy[drugIndex] = {};
+        }
+        let relatednessNew = new Relatedness();
         relatednessCopy[drugIndex][newMatrixInd] = [];
+        relatednessCopy[drugIndex][newMatrixInd].push(relatednessNew);
 
+        console.log('new relat', relatednessCopy)
         dispatch(setDrugReactionMatrix(drugReactionMatrixCopy));
         dispatch(setRelatedness(relatednessCopy));
     }
@@ -139,11 +220,7 @@ export const DrugReactionsMatrix = ({drugIndex}) => {
 
         let relatednessCopy = JSON.parse(JSON.stringify(relatedness));
 
-        console.log("!!!!!");
-        console.log(relatednessCopy);
-        console.log(index);
         for (let ind = index; ind <= Object.keys(relatedness[drugIndex]).length; ind++) {
-            console.log(ind);
             relatednessCopy[drugIndex][ind] = relatednessCopy[drugIndex][ind + 1];
         }
         console.log(relatednessCopy);

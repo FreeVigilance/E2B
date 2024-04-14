@@ -11,7 +11,7 @@ import { patientSelector, setParentChildData } from '@src/features/patient/slice
 import { ParentDrugsHistory } from './parent-drug-history';
 import { ParentHistory } from './parent-history';
 import {makeStyles} from '@mui/styles';
-import { FieldLabel } from '../../fieldLabel';
+import { ParentChildFieldLabel } from '@src/components/field-labels/patient/parent-child/parent-child-label';
 
 const useStyles = makeStyles({
     margin: {
@@ -80,12 +80,13 @@ export const ParentChild = () => {
         dispatch(setParentChildData(parentChildDataCopy));
     };
 
-	return (
+	return ( 
         <>
         <Stack direction={'row'}>
             <Grid container spacing={2}>
                 <Grid item xs={3}>
-                    <FieldLabel label="Parent Identification"></FieldLabel>
+                    <ParentChildFieldLabel label="Parent Identification"
+                    field = 'D_10_1_ParentIdentification'></ParentChildFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <Stack direction="row">
@@ -120,7 +121,8 @@ export const ParentChild = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Date of Birth of Parent"></FieldLabel>
+                    <ParentChildFieldLabel label="Date of Birth of Parent"
+                    field = 'D_10_2_1_DateBirthParent'></ParentChildFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <Stack direction={'row'}>   
@@ -153,7 +155,8 @@ export const ParentChild = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Sex of Parent"></FieldLabel>
+                    <ParentChildFieldLabel label="Sex of Parent"
+                    field = 'D_10_6_SexParent'></ParentChildFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <Stack direction="row">   
@@ -192,7 +195,8 @@ export const ParentChild = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Last Menstrual Period Date of Parent"></FieldLabel>
+                    <ParentChildFieldLabel label="Last Menstrual Period Date of Parent"
+                    field = 'D_10_3_LastMenstrualPeriodDateParent'></ParentChildFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <Stack direction="row">   
@@ -229,7 +233,8 @@ export const ParentChild = () => {
             <Grid container spacing={2}>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Age of Parent"></FieldLabel>
+                    <ParentChildFieldLabel label="Age of Parent"
+                    field = 'D_10_2_2a_AgeParentNum'></ParentChildFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <TextField variant="outlined"
@@ -244,7 +249,8 @@ export const ParentChild = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Age of Parent (unit)"></FieldLabel>
+                    <ParentChildFieldLabel label="Age of Parent (unit)"
+                    field = 'D_10_2_2b_AgeParentUnit'></ParentChildFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <TextField variant="outlined"
@@ -255,7 +261,8 @@ export const ParentChild = () => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Body Weight (kg) of Parent"></FieldLabel>
+                    <ParentChildFieldLabel label="Body Weight (kg) of Parent"
+                    field = 'D_10_4_BodyWeightParent'></ParentChildFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <TextField variant="outlined"
@@ -270,7 +277,8 @@ export const ParentChild = () => {
                 </Grid>
                     
                 <Grid item xs={3}>
-                    <FieldLabel label="Height (cm) of Parent"></FieldLabel>
+                    <ParentChildFieldLabel label="Height (cm) of Parent"
+                    field = 'D_10_5_HeightParent'></ParentChildFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <TextField variant="outlined"

@@ -13,19 +13,58 @@ import { MedHistory } from '@src/features/patient/patient';
 import { drugsSelector, setDosages, setSubstances } from '@src/features/drugs/slice';
 import { Dosage, Substance } from '@src/features/drugs/drugs';
 import DeleteIcon from '@mui/icons-material/Delete';
+import {makeStyles} from '@mui/styles';
+import { DosageFieldLabel } from '@src/components/field-labels/drugs/dosage-label';
+
+const useStyles = makeStyles({
+    margin: {
+      marginTop: '10px',
+      marginLeft: '10px',
+      marginBottom: '5px'
+    },
+    textXshort: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '35%',
+    },
+    textShort: {
+      marginLeft: 1,
+      marginRight: 1,
+      width: '70%',
+    },
+    textMedium: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '90%',
+    },
+    textLong: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '100%',
+    },
+    label: {
+        color: 'black'
+    },
+    checkbox: {
+        paddingTop: '15px',
+        paddingRight: '10px',
+    }
+})
 
 export const Dosages = ({drugIndex}) => {
+    const classes = useStyles();
+
 	const dispatch = useDispatch();
     const {dosages} = useSelector(drugsSelector);
 
-    useEffect(() => {
-        console.log("STATE");
-        console.log(dosages);
-    });
-
-    const handleChange = (fieldName, index) => (event) => {
+    const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
+        let value = event.target.value
+        if (isNumber) {
+            if (value.length > length)
+                value = value.slice(0, length)
+        }
         let dosagesCopy = JSON.parse(JSON.stringify(dosages));
-        dosagesCopy[drugIndex][index][fieldName].value = event.target.value;
+        dosagesCopy[drugIndex][index][fieldName].value = value;
         dispatch(setDosages(dosagesCopy));
     };
 
@@ -61,56 +100,76 @@ export const Dosages = ({drugIndex}) => {
                 boxShadow: "5px 5px #356BA0",
                 marginBottom: 5}}>
                     <CardContent>
-                    <Grid container direction="row" columnGap={2}>
-                        <Grid container item xs direction="column" rowGap={1}>
-                            <TextField label="Dose" variant="outlined"
-                                    onChange={handleChange('G_k_4_r_1a_DoseNum', index)}
-                                    inputProps={{ maxLength: 8}}
+                    <Stack direction={'row'} gap={2}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={3}>
+                            <DosageFieldLabel label="Dose"
+                            field = 'G_k_4_r_1a_DoseNum' drugIndex={drugIndex} index={index}></DosageFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField variant="outlined"
+                                    className={classes.textXshort}
+                                    onChange={handleChange('G_k_4_r_1a_DoseNum', index, true, 8)}
                                     type='number'
                                     onKeyDown={(evt) =>
                                         (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
                                         evt.preventDefault()
                                     }
-                                    value = {item['G_k_4_r_1a_DoseNum'].value}/> 
+                                    value = {item['G_k_4_r_1a_DoseNum'].value}/>
+                        </Grid> 
 
-                            <TextField label="Dose (unit)" variant="outlined"
+                        <Grid item xs={3}>
+                            <DosageFieldLabel label="Dose (unit)"
+                            field = 'G_k_4_r_1b_DoseUnit' drugIndex={drugIndex} index={index}></DosageFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField variant="outlined"
+                                className={classes.textShort}
                                     onChange={handleChange('G_k_4_r_1b_DoseUnit', index)}
                                     inputProps={{ maxLength: 50}}
                                     value = {item['G_k_4_r_1b_DoseUnit'].value}/> 
+                        </Grid>
 
-                            <TextField label="Number of Units in the Interval" variant="outlined"
-                                    onChange={handleChange('G_k_4_r_2_NumberUnitsInterval', index)}
-                                    inputProps={{ maxLength: 4}}
+                        <Grid item xs={3}>
+                            <DosageFieldLabel label="Number of Units in the Interval"
+                            field = 'G_k_4_r_2_NumberUnitsInterval' drugIndex={drugIndex} index={index}></DosageFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField variant="outlined"
+                                className={classes.textXshort}
+                                    onChange={handleChange('G_k_4_r_2_NumberUnitsInterval', index, true, 4)}
                                     type='number'
                                     onKeyDown={(evt) =>
                                         (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
                                         evt.preventDefault()
                                     }
                                     value = {item['G_k_4_r_2_NumberUnitsInterval'].value}/> 
-   
+                        </Grid>
 
-                            <Stack direction="row" spacing={2} justifyContent="flex-start"> 
-                                    <Box className="text-small" style={{ padding: 0 }}>
+                        <Grid item xs={3}>
+                            <DosageFieldLabel label="Date and Time of Start of Drug"
+                            field = 'G_k_4_r_4_DateTimeDrug' drugIndex={drugIndex} index={index}></DosageFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <Stack direction="row"> 
+                                    <Box className="text-small">
                                         <FormControlLabel
                                         control={<Checkbox
-                                                    value = {item['G_k_4_r_4_DateTimeDrug'].nullFlavor === -1}
+                                                    value = {item['G_k_4_r_4_DateTimeDrug'].nullFlavor !== null}
                                                     onChange={setUnknown('G_k_4_r_4_DateTimeDrug', index)}
-                                                    sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                                    style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                                     />}
                                                 label="No Info"/>
                                     </Box>
-                                    {dosages[drugIndex][index]['G_k_4_r_4_DateTimeDrug']['nullFlavor'] !== -1 ? 
+                                    {dosages[drugIndex][index]['G_k_4_r_4_DateTimeDrug']['nullFlavor'] === null ? 
                                             <TextField
-                                            label="Date and Time of Start of Drug"
+                                            className={classes.textShort}
                                             variant="outlined"
                                             value = {item['G_k_4_r_4_DateTimeDrug'].value}
                                             onChange={handleChange('G_k_4_r_4_DateTimeDrug', index)}
                                             />
-                                            : <FormControl sx={{ width: '70%' }}>
+                                            : <FormControl className={classes.textXshort}>
                                                 <InputLabel>Null Flavor</InputLabel>
                                                 <Select
-                                                    defaultValue = {0}
                                                     value = {item['G_k_4_r_4_DateTimeDrug'].nullFlavor}
                                                     onChange={setNullFlavor('D_7_1_r_4_EndDate', index)}
                                                 >
@@ -121,26 +180,30 @@ export const Dosages = ({drugIndex}) => {
                                                 </FormControl>
                                     }
                             </Stack>
+                        </Grid>
 
-                            <Stack direction="row" spacing={2} justifyContent="flex-start"> 
-                                    <Box className="text-small" style={{ padding: 0 }}>
+                        <Grid item xs={3}>
+                            <DosageFieldLabel label="Date and Time of Last Administration"
+                            field = 'G_k_4_r_5_DateTimeLastAdministration' drugIndex={drugIndex} index={index}></DosageFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <Stack direction={'row'}> 
+                                    <Box className="text-small">
                                         <FormControlLabel
                                         control={<Checkbox
-                                                    value = {item['G_k_4_r_5_DateTimeLastAdministration'].nullFlavor === -1}
+                                                    value = {item['G_k_4_r_5_DateTimeLastAdministration'].nullFlavor !== null}
                                                     onChange={setUnknown('G_k_4_r_5_DateTimeLastAdministration', index)}
-                                                    sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                                    style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                                     />}
                                                 label="No Info"/>
                                     </Box>
-                                    {dosages[drugIndex][index]['G_k_4_r_5_DateTimeLastAdministration']['nullFlavor'] !== -1 ? 
+                                    {dosages[drugIndex][index]['G_k_4_r_5_DateTimeLastAdministration']['nullFlavor'] === null ? 
                                             <TextField
-                                            label="Date and Time of Last Administration"
+                                            className={classes.textShort}
                                             variant="outlined"
                                             value = {item['G_k_4_r_5_DateTimeLastAdministration'].value}
                                             onChange={handleChange('G_k_4_r_5_DateTimeLastAdministration', index)}
                                             />
-                                            : <FormControl sx={{ width: '70%' }}>
+                                            : <FormControl className={classes.textXshort}>
                                                 <InputLabel>Null Flavor</InputLabel>
                                                 <Select
                                                     defaultValue = {0}
@@ -155,42 +218,58 @@ export const Dosages = ({drugIndex}) => {
                                     }
                             </Stack>
                         </Grid>
-                        <Grid container item xs direction="column" rowGap={1}>
-                            <TextField label="Duration of Drug Administration" variant="outlined"
-                                    onChange={handleChange('G_k_4_r_6a_DurationDrugAdministrationNum', index)}
-                                    inputProps={{ maxLength: 5}}
+                        
+                        <Grid item xs={3}>
+                            <DosageFieldLabel label="Duration of Drug Administration"
+                            field = 'G_k_4_r_6a_DurationDrugAdministrationNum' drugIndex={drugIndex} index={index}></DosageFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField variant="outlined"
+                            className={classes.textXshort}
+                                    onChange={handleChange('G_k_4_r_6a_DurationDrugAdministrationNum', index, true, 5)}
                                     type='number'
                                     onKeyDown={(evt) =>
                                         (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
                                         evt.preventDefault()
                                     }
                                     value = {item['G_k_4_r_6a_DurationDrugAdministrationNum'].value}/>
+                        </Grid>
 
-                            <TextField label="Duration of Drug Administration (unit)" variant="outlined"
+                        <Grid item xs={3}>
+                            <DosageFieldLabel label="Duration of Drug Administration (unit)"
+                            field = 'G_k_4_r_6b_DurationDrugAdministrationUnit' drugIndex={drugIndex} index={index}></DosageFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField variant="outlined"
+                            className={classes.textLong}
                                     onChange={handleChange('G_k_4_r_6b_DurationDrugAdministrationUnit', index)}
                                     inputProps={{ maxLength: 50}}
                                     value = {item['G_k_4_r_6b_DurationDrugAdministrationUnit'].value}/>
+                        </Grid>
 
-                            <Stack direction="row" spacing={2} justifyContent="flex-start"> 
-                                    <Box className="text-small" style={{ padding: 0 }}>
+                        <Grid item xs={3}>
+                            <DosageFieldLabel label="Pharmaceutical Dose Form"
+                            field = 'G_k_4_r_9_1_PharmaceuticalDoseForm' drugIndex={drugIndex} index={index}></DosageFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <Stack direction="row"> 
+                                    <Box className="text-small">
                                         <FormControlLabel
                                         control={<Checkbox
-                                                    value = {item['G_k_4_r_9_1_PharmaceuticalDoseForm'].nullFlavor === -1}
+                                                    value = {item['G_k_4_r_9_1_PharmaceuticalDoseForm'].nullFlavor !== null}
                                                     onChange={setUnknown('G_k_4_r_9_1_PharmaceuticalDoseForm', index)}
-                                                    sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                                    style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                                     />}
                                                 label="No Info"/>
                                     </Box>
-                                    {dosages[drugIndex][index]['G_k_4_r_9_1_PharmaceuticalDoseForm']['nullFlavor'] !== -1 ? 
-                                            <TextField label="Pharmaceutical Dose Form" variant="outlined"
+                                    {dosages[drugIndex][index]['G_k_4_r_9_1_PharmaceuticalDoseForm']['nullFlavor'] === null ? 
+                                            <TextField variant="outlined"
+                                            className={classes.textLong}
                                                 inputProps={{ maxLength: 60}}
                                                 onChange={handleChange('G_k_4_r_9_1_PharmaceuticalDoseForm', index)}
                                                 value = {item['G_k_4_r_9_1_PharmaceuticalDoseForm'].value}/> 
-                                            : <FormControl sx={{ width: '70%' }}>
+                                            : <FormControl className={classes.textXshort}>
                                                 <InputLabel>Null Flavor</InputLabel>
                                                 <Select
-                                                    defaultValue = {0}
                                                     value = {item['G_k_4_r_9_1_PharmaceuticalDoseForm'].nullFlavor}
                                                     onChange={setNullFlavor('G_k_4_r_9_1_PharmaceuticalDoseForm', index)}
                                                 >
@@ -201,37 +280,58 @@ export const Dosages = ({drugIndex}) => {
                                                 </FormControl>
                                     }
                             </Stack>
+                        </Grid>
 
-                            <TextField label="Pharmaceutical Dose Form TermID Version Date/Number" variant="outlined"
+                        <Grid item xs={3}>
+                            <DosageFieldLabel label="Pharmaceutical Dose Form TermID Version Date/Number"
+                            field = 'G_k_4_r_9_2a_PharmaceuticalDoseFormTermIDVersion' drugIndex={drugIndex} index={index}></DosageFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField variant="outlined"
+                            className={classes.textMedium}
                                     onChange={handleChange('G_k_4_r_9_2a_PharmaceuticalDoseFormTermIDVersion', index)}
                                     value = {item['G_k_4_r_9_2a_PharmaceuticalDoseFormTermIDVersion'].value}/> 
-                            <TextField label="Pharmaceutical Dose Form TermID" variant="outlined"
+                        </Grid>
 
+                        <Grid item xs={3}>
+                            <DosageFieldLabel label="Pharmaceutical Dose Form TermID"
+                            field = 'G_k_4_r_9_2b_PharmaceuticalDoseFormTermID' drugIndex={drugIndex} index={index}></DosageFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField variant="outlined"
+                            className={classes.textMedium}
                                     onChange={handleChange('G_k_4_r_9_2b_PharmaceuticalDoseFormTermID', index)}
                                     value = {item['G_k_4_r_9_2b_PharmaceuticalDoseFormTermID'].value}/> 
                         </Grid>
-                        <Grid container item xs direction="column" rowGap={1}>
 
-                            <Stack direction="row" spacing={2} justifyContent="flex-start"> 
-                                    <Box className="text-small" style={{ padding: 0 }}>
+
+                    </Grid>
+                    <Grid container spacing={2}>
+
+
+                        <Grid item xs={3}>
+                            <DosageFieldLabel label="Route of Administration"
+                            field = 'G_k_4_r_10_1_RouteAdministration' drugIndex={drugIndex} index={index}></DosageFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <Stack direction="row"> 
+                                    <Box className="text-small">
                                         <FormControlLabel
                                         control={<Checkbox
-                                                    value = {item['G_k_4_r_10_1_RouteAdministration'].nullFlavor === -1}
+                                                    value = {item['G_k_4_r_10_1_RouteAdministration'].nullFlavor !== null}
                                                     onChange={setUnknown('G_k_4_r_10_1_RouteAdministration', index)}
-                                                    sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                                    style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                                     />}
                                                 label="No Info"/>
                                     </Box>
-                                    {dosages[drugIndex][index]['G_k_4_r_10_1_RouteAdministration']['nullFlavor'] !== -1 ? 
-                                            <TextField label="Route of Administration" variant="outlined"
+                                    {dosages[drugIndex][index]['G_k_4_r_10_1_RouteAdministration']['nullFlavor'] === null ? 
+                                            <TextField variant="outlined"
+                                            className={classes.textLong}
                                                 onChange={handleChange('G_k_4_r_10_1_RouteAdministration', index)}
                                                 inputProps={{ maxLength: 60}}
                                                 value = {item['G_k_4_r_10_1_RouteAdministration'].value}/> 
-                                            : <FormControl sx={{ width: '70%' }}>
+                                            : <FormControl className={classes.textXshort}>
                                                 <InputLabel>Null Flavor</InputLabel>
                                                 <Select
-                                                    defaultValue = {0}
                                                     value = {item['G_k_4_r_10_1_RouteAdministration'].nullFlavor}
                                                     onChange={setNullFlavor('G_k_4_r_10_1_RouteAdministration', index)}
                                                 >
@@ -242,35 +342,53 @@ export const Dosages = ({drugIndex}) => {
                                                 </FormControl>
                                     }
                             </Stack>
+                        </Grid>
 
-                            <TextField label="Route of Administration TermID Version Date / Number" variant="outlined"
+                        <Grid item xs={3}>
+                            <DosageFieldLabel label="Route of Administration TermID Version Date / Number"
+                            field = 'G_k_4_r_10_2a_RouteAdministrationTermIDVersion' drugIndex={drugIndex} index={index}></DosageFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField variant="outlined"
+                            className={classes.textMedium}
                                     onChange={handleChange('G_k_4_r_10_2a_RouteAdministrationTermIDVersion', index)}
                                     value = {item['G_k_4_r_10_2a_RouteAdministrationTermIDVersion'].value}/> 
+                        </Grid>
 
-                            <TextField label="Route of Administration TermID" variant="outlined"
+                        <Grid item xs={3}>
+                            <DosageFieldLabel label="Route of Administration TermID"
+                            field = 'G_k_4_r_10_2b_RouteAdministrationTermID' drugIndex={drugIndex} index={index}></DosageFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField variant="outlined"
+                            className={classes.textMedium}
                                     onChange={handleChange('G_k_4_r_10_2b_RouteAdministrationTermID', index)}
                                     value = {item['G_k_4_r_10_2b_RouteAdministrationTermID'].value}/> 
+                        </Grid>
 
-                            <Stack direction="row" spacing={2} justifyContent="flex-start"> 
-                                    <Box className="text-small" style={{ padding: 0 }}>
+                        <Grid item xs={3}>
+                            <DosageFieldLabel label="Parent Route of Administration"
+                            field = 'G_k_4_r_11_1_ParentRouteAdministration' drugIndex={drugIndex} index={index}></DosageFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <Stack direction="row"> 
+                                    <Box className="text-small">
                                         <FormControlLabel
                                         control={<Checkbox
-                                                    value = {item['G_k_4_r_11_1_ParentRouteAdministration'].nullFlavor === -1}
+                                                    value = {item['G_k_4_r_11_1_ParentRouteAdministration'].nullFlavor !== null}
                                                     onChange={setUnknown('G_k_4_r_11_1_ParentRouteAdministration', index)}
-                                                    sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                                    style={{padding: 1, marginLeft: 5, marginTop: 2 }}
                                                     />}
                                                 label="No Info"/>
                                     </Box>
-                                    {dosages[drugIndex][index]['G_k_4_r_11_1_ParentRouteAdministration']['nullFlavor'] !== -1 ? 
-                                            <TextField label="Parent Route of Administration" variant="outlined"
+                                    {dosages[drugIndex][index]['G_k_4_r_11_1_ParentRouteAdministration']['nullFlavor'] === null ? 
+                                            <TextField variant="outlined"
+                                            className={classes.textLong}
                                                 onChange={handleChange('G_k_4_r_11_1_ParentRouteAdministration', index)}
                                                 inputProps={{ maxLength: 60}}
                                                 value = {item['G_k_4_r_11_1_ParentRouteAdministration'].value}/> 
-                                            : <FormControl sx={{ width: '70%' }}>
+                                            : <FormControl className={classes.textXshort}>
                                                 <InputLabel>Null Flavor</InputLabel>
                                                 <Select
-                                                    defaultValue = {0}
                                                     value = {item['G_k_4_r_11_1_ParentRouteAdministration'].nullFlavor}
                                                     onChange={setNullFlavor('G_k_4_r_11_1_ParentRouteAdministration', index)}
                                                 >
@@ -281,49 +399,82 @@ export const Dosages = ({drugIndex}) => {
                                                 </FormControl>
                                     }
                             </Stack>
+                        </Grid>
 
-                            <TextField label="Parent Route of Administration TermID Version Date / Number" variant="outlined"
+                        <Grid item xs={3}>
+                            <DosageFieldLabel label="Parent Route of Administration TermID Version Date / Number"
+                            field = 'G_k_4_r_11_2a_ParentRouteAdministrationTermIDVersion' drugIndex={drugIndex} index={index}></DosageFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField variant="outlined"
+                            className={classes.textMedium}
                                     onChange={handleChange('G_k_4_r_11_2a_ParentRouteAdministrationTermIDVersion', index)}
                                     value = {item['G_k_4_r_11_2a_ParentRouteAdministrationTermIDVersion'].value}/> 
+                        </Grid>
 
-                            <TextField label="Parent Route of Administration TermID" variant="outlined"
+                        <Grid item xs={3}>
+                            <DosageFieldLabel label="Parent Route of Administration TermID"
+                            field = 'G_k_4_r_11_2b_ParentRouteAdministrationTermID' drugIndex={drugIndex} index={index}></DosageFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField variant="outlined"
+                            className={classes.textMedium}
                                     onChange={handleChange('G_k_4_r_11_2b_ParentRouteAdministrationTermID', index)}
                                     value = {item['G_k_4_r_11_2b_ParentRouteAdministrationTermID'].value}/> 
-
                         </Grid>
-                        <Grid container item xs direction="column" rowGap={1}> 
-                            <TextField label="Batch / Lot Number" variant="outlined"
+                        
+                        <Grid item xs={3}>
+                            <DosageFieldLabel label="Batch / Lot Number"
+                            field = 'G_k_4_r_7_BatchLotNumber' drugIndex={drugIndex} index={index}></DosageFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField variant="outlined"
+                            className={classes.textShort}
                                     onChange={handleChange('G_k_4_r_7_BatchLotNumber', index)}
                                     inputProps={{ maxLength: 35}}
-                                    value = {item['G_k_4_r_7_BatchLotNumber'].value}/>                         
+                                    value = {item['G_k_4_r_7_BatchLotNumber'].value}/> 
+                        </Grid>                        
                             
-                            <TextField label="Dosage Text" variant="outlined"
+                        <Grid item xs={3}>
+                            <DosageFieldLabel label="Dosage Text"
+                            field = 'G_k_4_r_8_DosageText' drugIndex={drugIndex} index={index}></DosageFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField variant="outlined"
+                            className={classes.textLong}
                                     onChange={handleChange('G_k_4_r_8_DosageText', index)}
                                     value = {item['G_k_4_r_8_DosageText'].value}
                                     multiline
                                     inputProps={{ maxLength: 2000}}
-                                    rows={5}/> 
+                                    rows={7}/> 
+                        </Grid>
 
-                            <TextField label="Definition of the Time Interval Unit" variant="outlined"
+                        <Grid item xs={3}>
+                            <DosageFieldLabel label="Definition of the Time Interval Unit"
+                            field = 'G_k_4_r_3_DefinitionIntervalUnit' drugIndex={drugIndex} index={index}></DosageFieldLabel>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField variant="outlined"
+                            className={classes.textShort}
                                     onChange={handleChange('G_k_4_r_3_DefinitionIntervalUnit', index)}
                                     inputProps={{ maxLength: 50}}
-                                    value = {item['G_k_4_r_3_DefinitionIntervalUnit'].value}
-                                    multiline
-                                    rows={3}/> 
+                                    value = {item['G_k_4_r_3_DefinitionIntervalUnit'].value}/> 
                         </Grid>   
                     </Grid>
-                    <span>
-                                        <IconButton size='large' style= {{ top: '10px', right: '10px'}}
-                                        sx={{ color: "white", backgroundColor: "#1976d2"}}
-                                                onClick={() => removeForm(index)}><DeleteIcon/>
-                                        </IconButton>
-                                    </span> 
+                    </Stack>
+
                     {index === dosages[drugIndex].length - 1 ?
                                 <span>
-                                    <IconButton size='large' style= {{ top: '10px'}}
+                                    <IconButton size='large' style= {{ top: '10px', right: '10px'}}
                                     sx={{ color: "white", backgroundColor: "#1976d2"}}
                                                 onClick={addForm}><AddIcon/></IconButton>
                                 </span> : null}
+                    <span>
+                        <IconButton size='large' style= {{ top: '10px'}}
+                        sx={{ color: "white", backgroundColor: "#000066"}}
+                                onClick={() => removeForm(index)}><DeleteIcon/>
+                        </IconButton>
+                    </span> 
                 </CardContent>
             </Card>);
         });

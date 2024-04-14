@@ -71,11 +71,12 @@ const resultsSlice = createSlice({
         });
 
 		builder.addCase(changeData.rejected, (state, action) => {
-			if (action.payload.f_r_results_tests_procedures_investigation_patient) {
-				const data = e2bCaseKeys(action.payload.f_r_results_tests_procedures_investigation_patient);
-				console.log('results rejected', data);
-				state.resultsData = data;
-			}
+			console.log(action.payload);
+			// if (action.payload.f_r_results_tests_procedures_investigation_patient) {
+			// 	const data = e2bCaseKeys(action.payload.f_r_results_tests_procedures_investigation_patient);
+			// 	console.log('results rejected', data);
+			// 	state.resultsData = data;
+			// }
         });
 
 		builder.addCase(saveData.fulfilled, (state, action) => {
@@ -87,11 +88,12 @@ const resultsSlice = createSlice({
         });
 
 		builder.addCase(saveData.rejected, (state, action) => {
-			if (action.payload.f_r_results_tests_procedures_investigation_patient) {
-				const data = e2bCaseKeys(action.payload.f_r_results_tests_procedures_investigation_patient);
-				console.log('results rejected', data);
-				state.resultsData = data;
-			}
+			console.log(action.payload);
+			// if (action.payload.f_r_results_tests_procedures_investigation_patient) {
+			// 	const data = e2bCaseKeys(action.payload.f_r_results_tests_procedures_investigation_patient);
+			// 	console.log('results rejected', data);
+			// 	state.resultsData = data;
+			// }
         });
 
 		builder.addCase(getJsonFromXml.fulfilled, (state, action) => {

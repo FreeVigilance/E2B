@@ -98,6 +98,7 @@ export const getDrug = () => {
 			Object.values(drugReactionMatrix[index]).forEach((subItem, subIndex) => {
 				let data = {
 					'id': subItem['id'],
+					'G_k_9_i_1_ReactionAssessed': subItem['G_k_9_i_1_ReactionAssessed'],
 					'G_k_9_i_3_1a_IntervalDrugAdministrationReactionNum': subItem['G_k_9_i_3_1a_IntervalDrugAdministrationReactionNum'],
 					'G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit': subItem['G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit'],
 					'G_k_9_i_3_2a_IntervalLastDoseDrugReactionNum': subItem['G_k_9_i_3_2a_IntervalLastDoseDrugReactionNum'],
@@ -176,7 +177,10 @@ export const parseDrug = (data) => {
 			indications[index] = item['G_k_7_r_IndicationUseCase'];
 
 			drugReactionMatrix[index] = item['G_k_9_i_DrugReactionMatrix'];
-			relatedness[index] = item['G_k_9_i_DrugReactionMatrix']['G_k_9_i_2_AssessmentRelatednessDrugReaction'];
+			relatedness[index] = {};
+			Object.values(item['G_k_9_i_DrugReactionMatrix']).forEach((item, subIndex) => {
+				relatedness[index][subIndex] = item['G_k_9_i_2_r_AssessmentRelatednessDrugReaction']
+			});
 
 			additionalInfo[index] = item['G_k_10_r_AdditionalInformationDrug'];
 		});

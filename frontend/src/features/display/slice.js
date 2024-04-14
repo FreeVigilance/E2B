@@ -1,5 +1,6 @@
 import { createSlice, createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '@src/api';
+import { e2bCaseKeys } from '../common/changekeys';
 
 export const displaySelector = (state) => state.display;
 
@@ -60,6 +61,7 @@ const initialState = {
     currentSaved: 0,
     uploadedFile: null,
     showUpload: false,
+    errors: {},
     // xml: null,
 };
 
@@ -75,7 +77,6 @@ const displaySlice = createSlice({
         setCurrentSaved: (state, action) => { state.currentSaved = action.payload; },
         setUploadedFile: (state, action) => { state.uploadedFile = action.payload; },
         setShowUpload: (state, action) => { state.showUpload = action.payload; },
-
     },
     extraReducers: (builder) => {
         builder.addCase(revertAll, () => initialState);
@@ -91,6 +92,15 @@ const displaySlice = createSlice({
         builder.addCase(saveData.fulfilled, (state, action) => {
             console.log('save');
             console.log(action.payload);
+            if (action.payload['_errors']) {
+                if (Object.keys(action.payload['_errors']).length !== 0) {
+                    state.currentSaved = 2;
+                    state.errors = e2bCaseKeys(action.payload['_errors']);
+                    return;
+                } else {
+                    state.errors = {};
+                }
+            }
             state.currentId = action.payload.id;
             state.currentSaved = 1;
         });
@@ -102,12 +112,21 @@ const displaySlice = createSlice({
         builder.addCase(changeData.fulfilled, (state, action) => {
             console.log('save');
             console.log(action.payload);
+            if (action.payload['_errors']) {
+                if (Object.keys(action.payload['_errors']).length !== 0) {
+                    state.currentSaved = 2;
+                    state.errors = e2bCaseKeys(action.payload['_errors']);
+                    return;
+                } else {
+                    state.errors = {};
+                }
+            }
             state.currentId = action.payload.id;
             state.currentSaved = 1;
         });
         builder.addCase(changeData.rejected, (state, action) => {
-            console.log('save');
-            console.log(action.payload);
+            console.log('changeData.rejected');
+            console.log(action);
             state.currentSaved = 2;
         });
         builder.addCase(getXmlFromJson.fulfilled, (state, action) => {

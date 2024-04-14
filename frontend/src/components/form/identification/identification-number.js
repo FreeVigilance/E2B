@@ -1,22 +1,55 @@
 
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import {Stack, Card, CardContent, IconButton} from '@mui/material';
+import {Stack, Card, CardContent, IconButton, Grid} from '@mui/material';
 import TextField from '@mui/material/TextField';
 import AddIcon from '@mui/icons-material/Add';
 import { identificationSelector, setIdentificationNumber } from '@src/features/identification/slice';
 import { IdentificationNumber } from '@src/features/identification/identification';
 import DeleteIcon from '@mui/icons-material/Delete';
+import {makeStyles} from '@mui/styles';
+import { FieldLabel } from '../fieldLabel';
 
+const useStyles = makeStyles({
+    margin: {
+      marginTop: '10px',
+      marginLeft: '10px',
+      marginBottom: '5px'
+    },
+    textXshort: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '35%',
+    },
+    textShort: {
+      marginLeft: 1,
+      marginRight: 1,
+      width: '70%',
+    },
+    textMedium: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '90%',
+    },
+    textLong: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '100%',
+    },
+    label: {
+        color: 'black'
+    },
+    checkbox: {
+        paddingTop: '15px',
+        paddingRight: '10px',
+    }
+})
 
 export const IdentificationNumberComp = () => {
+    const classes = useStyles();
+
 	const dispatch = useDispatch();
     const {identificationNumber} = useSelector(identificationSelector);
-
-    useEffect(() => {
-        console.log("STATE");
-        console.log(identificationNumber);
-    });
 
     const handleChange = (fieldName, index) => (event) => {
         let identificationNumberCopy = JSON.parse(JSON.stringify(identificationNumber));
@@ -40,29 +73,33 @@ export const IdentificationNumberComp = () => {
                 boxShadow: "5px 5px #356BA0",
                 marginBottom: 5}}>
                     <CardContent>
-                        <Stack direction="column" spacing={2} justifyContent="flex-start">
-                            <TextField label="Identification Number of the Report Which Is Linked to This Report" variant="outlined"
-                                sx={{ width: '100%' }}
-                                onChange={handleChange('C_1_10_r_IdentificationNumberReportLinked', index)}
-                                value = {item['C_1_10_r_IdentificationNumberReportLinked'].value}
-                                multiline
-                                inputProps={{ maxLength: 100}}
-                                rows={3}/>
-                            <Stack direction="row" justifyContent="flex-start">
-                                <span>
-                                        <IconButton size='large' style= {{ top: '10px', right: '10px'}}
-                                        sx={{ color: "white", backgroundColor: "#1976d2"}}
-                                                onClick={() => removeForm(index)}><DeleteIcon/>
-                                        </IconButton>
-                                </span>
+                    <Stack direction={'column'} gap={2}>
+                        <FieldLabel label="Identification Number of the Report Which Is Linked to This Report"></FieldLabel>
+                        <TextField variant="outlined"
+                            onChange={handleChange('C_1_10_r_IdentificationNumberReportLinked', index)}
+                            value = {item['C_1_10_r_IdentificationNumberReportLinked'].value}
+                            multiline
+                            className={classes.textLong}
+                            inputProps={{ maxLength: 100}}
+                            rows={2}/>
+                    </Stack>
+
+                    <Stack direction="row" justifyContent="flex-start">
+
                             {index === identificationNumber.length - 1 ?
                                 <span>
-                                    <IconButton size='large' style= {{ top: '10px'}}
+                                    <IconButton size='large' style= {{ top: '10px', right: '10px'}}
                                     sx={{ color: "white", backgroundColor: "#1976d2"}}
                                                 onClick={addForm}><AddIcon/></IconButton>
                                 </span> : null}
+
+                                <span>
+                                        <IconButton size='large' style= {{ top: '10px'}}
+                                        sx={{ color: "white", backgroundColor: "#000066"}}
+                                                onClick={() => removeForm(index)}><DeleteIcon/>
+                                        </IconButton>
+                                </span>
                             </Stack>
-                        </Stack>
                 </CardContent>
             </Card>);
         });

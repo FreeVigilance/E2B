@@ -9,7 +9,7 @@ import { Substances } from './substance';
 import { Indications } from './indications';
 import { AddInfo } from './add-info';
 import {makeStyles} from '@mui/styles';
-import { FieldLabel } from '../fieldLabel';
+import { DrugsFieldLabel } from '@src/components/field-labels/drugs/drugs-label';
 
 const useStyles = makeStyles({
     margin: {
@@ -64,30 +64,13 @@ export const Drugs = ({index}) => {
         dispatch(setDrugs(drugsDataCopy));
     };
 
-    const setNullFlavor = (fieldName, index) => (event) => {
-        let drugsDataCopy = JSON.parse(JSON.stringify(drugs));
-        drugsDataCopy[index][fieldName].nullFlavor = event.target.value;
-        dispatch(setDrugs(drugsDataCopy));
-    };
-
-    const setUnknown = (fieldName, index) => (event) => {
-        console.log(event.target.checked);
-        let drugsDataCopy = JSON.parse(JSON.stringify(drugs));
-        if (event.target.checked) {
-            drugsDataCopy[index][fieldName].nullFlavor = -1;
-        } else {
-            drugsDataCopy[index][fieldName].nullFlavor = null;
-        }
-        dispatch(setDrugs(drugsDataCopy));
-    };
-
-
     return(
         <>
         <Stack direction={'row'}>
             <Grid container spacing={2}>
                 <Grid item xs={3}>
-                    <FieldLabel label="Characterisation of Drug Role"></FieldLabel>
+                    <DrugsFieldLabel label="Characterisation of Drug Role"
+                    field = 'G_k_1_CharacterisationDrugRole' index={index}></DrugsFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <Select
@@ -102,7 +85,8 @@ export const Drugs = ({index}) => {
                     </Select>
                 </Grid>
                 <Grid item xs={3}>
-                    <FieldLabel label="MPID Version Date / Number"></FieldLabel>
+                    <DrugsFieldLabel label="MPID Version Date / Number"
+                    field = 'G_k_2_1_1a_MPIDVersion' index={index}></DrugsFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                         <TextField variant="outlined"
@@ -112,7 +96,8 @@ export const Drugs = ({index}) => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Medicinal Product Identifier"></FieldLabel>
+                    <DrugsFieldLabel label="Medicinal Product Identifier"
+                    field = 'G_k_2_1_1b_MPID' index={index}></DrugsFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                         <TextField variant="outlined"
@@ -122,7 +107,8 @@ export const Drugs = ({index}) => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="PhPID Version Date/Number"></FieldLabel>
+                    <DrugsFieldLabel label="PhPID Version Date/Number"
+                    field = 'G_k_2_1_2a_PhPIDVersion' index={index}></DrugsFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                         <TextField variant="outlined"
@@ -132,7 +118,8 @@ export const Drugs = ({index}) => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Pharmaceutical Product Identifier"></FieldLabel>
+                    <DrugsFieldLabel label="Pharmaceutical Product Identifier"
+                    field = 'G_k_2_1_2b_PhPID' index={index}></DrugsFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                         <TextField variant="outlined"
@@ -142,7 +129,8 @@ export const Drugs = ({index}) => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Medicinal Product Name as Reported by the Primary Source"></FieldLabel>
+                    <DrugsFieldLabel label="Medicinal Product Name as Reported by the Primary Source"
+                    field = 'G_k_2_2_MedicinalProductNamePrimarySource' index={index}></DrugsFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                         <TextField variant="outlined"
@@ -155,7 +143,8 @@ export const Drugs = ({index}) => {
                 </Grid>
                 
                 <Grid item xs={3}>
-                    <FieldLabel label="Identification of the Country Where the Drug Was Obtained"></FieldLabel>
+                    <DrugsFieldLabel label="Identification of the Country Where the Drug Was Obtained"
+                    field = 'G_k_2_4_IdentificationCountryDrugObtained' index={index}></DrugsFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                         <TextField variant="outlined"
@@ -166,7 +155,8 @@ export const Drugs = ({index}) => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Authorisation / Application Number"></FieldLabel>
+                    <DrugsFieldLabel label="Authorisation / Application Number"
+                    field = 'G_k_3_1_AuthorisationApplicationNumber' index={index}></DrugsFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                         <TextField variant="outlined"
@@ -178,7 +168,8 @@ export const Drugs = ({index}) => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Country of Authorisation / Application"></FieldLabel>
+                    <DrugsFieldLabel label="Country of Authorisation / Application"
+                    field = 'G_k_3_2_CountryAuthorisationApplication' index={index}></DrugsFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                         <TextField variant="outlined"
@@ -189,7 +180,8 @@ export const Drugs = ({index}) => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Name of Holder / Applicant"></FieldLabel>
+                    <DrugsFieldLabel label="Name of Holder / Applicant"
+                    field = 'G_k_3_3_NameHolderApplicant' index={index}></DrugsFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                         <TextField variant="outlined"
@@ -206,7 +198,8 @@ export const Drugs = ({index}) => {
 
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Cumulative Dose to First Reaction"></FieldLabel>
+                    <DrugsFieldLabel label="Cumulative Dose to First Reaction"
+                    field = 'G_k_5a_CumulativeDoseFirstReactionNum' index={index}></DrugsFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                         <TextField variant="outlined"
@@ -221,7 +214,8 @@ export const Drugs = ({index}) => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Cumulative Dose to First Reaction (unit)"></FieldLabel>
+                    <DrugsFieldLabel label="Cumulative Dose to First Reaction (unit)"
+                    field = 'G_k_5b_CumulativeDoseFirstReactionUnit' index={index}></DrugsFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                         <TextField variant="outlined"
@@ -233,7 +227,8 @@ export const Drugs = ({index}) => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Gestation Period at Time of Exposure (number)"></FieldLabel>
+                    <DrugsFieldLabel label="Gestation Period at Time of Exposure (number)"
+                    field = 'G_k_6a_GestationPeriodExposureNum' index={index}></DrugsFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                         <TextField variant="outlined"
@@ -248,7 +243,8 @@ export const Drugs = ({index}) => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Gestation Period at Time of Exposure (unit)"></FieldLabel>
+                    <DrugsFieldLabel label="Gestation Period at Time of Exposure (unit)"
+                    field = 'G_k_6b_GestationPeriodExposureUnit' index={index}></DrugsFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                         <TextField variant="outlined"
@@ -260,13 +256,14 @@ export const Drugs = ({index}) => {
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Action(s) Taken with Drug"></FieldLabel>
+                    <DrugsFieldLabel label="Action(s) Taken with Drug"
+                    field = 'G_k_8_ActionTakenDrug' index={index}></DrugsFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <Select
                         className={classes.textXshort}
                         value = {drugs[index]['G_k_8_ActionTakenDrug'].nullFlavor}
-                        onChange={setNullFlavor('G_k_8_ActionTakenDrug', index)}
+                        onChange={handleChange('G_k_8_ActionTakenDrug', index)}
                     >
                         <MenuItem value={1}>1 = Drug withdrawn</MenuItem>
                         <MenuItem value={2}>2 = Dose reduced</MenuItem>
@@ -279,20 +276,23 @@ export const Drugs = ({index}) => {
                 </Grid>
 
                 <Grid item xs={3}>
+                    <DrugsFieldLabel label="Investigational Product Blinded"
+                        field = 'G_k_2_5_InvestigationalProductBlinded' index={index}></DrugsFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                         <Box className="text-small" style={{ padding: 0 }}>
                             <FormControlLabel
                             control={<Checkbox
-                                        checked = {drugs[index]['G_k_2_5_InvestigationalProductBlinded'].nullFlavor !== null}
-                                        onChange={setUnknown('G_k_2_5_InvestigationalProductBlinded', index)}
+                                        checked = {drugs[index]['G_k_2_5_InvestigationalProductBlinded']}
+                                        onChange={handleChange('G_k_2_5_InvestigationalProductBlinded', index)}
                                         />}
                                     label="Investigational Product Blinded"/>
                         </Box>
                 </Grid>
 
                 <Grid item xs={3}>
-                    <FieldLabel label="Additional Information on Drug"></FieldLabel>
+                    <DrugsFieldLabel label="Additional Information on Drug"
+                    field = 'G_k_11_AdditionalInformationDrug' index={index}></DrugsFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
                     <TextField variant="outlined"

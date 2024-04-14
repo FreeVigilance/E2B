@@ -12,7 +12,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { Result } from '@src/features/results/result';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { FieldLabel } from './fieldLabel';
+import { ResultFieldLabel } from '../field-labels/result-field-label';
 
 const useStyles = makeStyles({
     margin: {
@@ -109,7 +109,8 @@ export const Results = () => {
                         <Grid container spacing={2}>
 
                             <Grid item xs={2}>
-                                <FieldLabel label={'Test Name'}></FieldLabel>
+                                <ResultFieldLabel label={'Test Name'}
+                                field = 'F_r_2_1_TestName' index={index}></ResultFieldLabel>
                             </Grid>
                             <Grid item xs={10}>
                                 <TextField variant="outlined"
@@ -122,7 +123,8 @@ export const Results = () => {
                             </Grid>
 
                             <Grid item xs={2}>
-                                <FieldLabel label={'MedDRA Version for Test Name'}></FieldLabel>
+                                <ResultFieldLabel label={'MedDRA Version for Test Name'}
+                                field = 'F_r_2_2a_MedDRAVersionTestName' index={index}></ResultFieldLabel>
                             </Grid>
                             <Grid item xs={10}>
                                 <TextField variant="outlined"
@@ -137,7 +139,8 @@ export const Results = () => {
                             </Grid>
 
                             <Grid item xs={2}>
-                                <FieldLabel label="Test Name (MedDRA code)"></FieldLabel>
+                                <ResultFieldLabel label="Test Name (MedDRA code)"
+                                field = 'F_r_2_2b_TestNameMedDRACode' index={index}></ResultFieldLabel>
                             </Grid>
                             <Grid item xs={10}>
                                 <TextField variant="outlined"
@@ -153,7 +156,8 @@ export const Results = () => {
 
                             <Grid item xs={2}>
                                 
-                                    <FieldLabel label="Test Date"></FieldLabel>
+                                    <ResultFieldLabel label="Test Date"
+                                    field = 'F_r_1_TestDate' index={index}></ResultFieldLabel>
                                 
                             </Grid>
                             <Grid item xs={10}>
@@ -179,7 +183,8 @@ export const Results = () => {
                             </Grid>
 
                             <Grid item xs={2}>
-                                <FieldLabel label="Test Result Code"></FieldLabel>
+                                <ResultFieldLabel label="Test Result Code"
+                                field = 'F_r_3_1_TestResultCode' index={index}></ResultFieldLabel>
                             </Grid>
                             <Grid item xs={10}>
                                 <Select
@@ -197,7 +202,8 @@ export const Results = () => {
                             </Grid>
 
                             <Grid item xs={2}>
-                                <FieldLabel label="Test Result Value"></FieldLabel>
+                                <ResultFieldLabel label="Test Result Value"
+                                field = 'F_r_3_2_TestResultValQual' index={index}></ResultFieldLabel>
                             </Grid>
                             <Grid item xs={10}>
                                 <Stack direction={'row'}>
@@ -241,7 +247,8 @@ export const Results = () => {
                         <Grid container spacing={2}>
 
                             <Grid item xs={2}>
-                                <FieldLabel label="Test Result (unit)"></FieldLabel>
+                                <ResultFieldLabel label="Test Result (unit)"
+                                field = 'F_r_3_3_TestResultUnit' index={index}></ResultFieldLabel>
                             </Grid>
                             <Grid item xs={10}>
                                 <TextField variant="outlined"
@@ -252,7 +259,8 @@ export const Results = () => {
                             </Grid>
 
                             <Grid item xs={2}>
-                                <FieldLabel label="Normal Low Value"></FieldLabel>
+                                <ResultFieldLabel label="Normal Low Value"
+                                field = 'F_r_4_NormalLowValue' index={index}></ResultFieldLabel>
                             </Grid>
                             <Grid item xs={10}>
                                 <TextField variant="outlined"
@@ -263,7 +271,8 @@ export const Results = () => {
                             </Grid>
 
                             <Grid item xs={2}>
-                                <FieldLabel label="Normal High Value"></FieldLabel>
+                                <ResultFieldLabel label="Normal High Value"
+                                field = 'F_r_5_NormalHighValue' index={index}></ResultFieldLabel>
                             </Grid>
                             <Grid item xs={10}>
                                 <TextField variant="outlined"
@@ -285,7 +294,8 @@ export const Results = () => {
                             </Grid>
 
                             <Grid item xs={2}>
-                                <FieldLabel label="Result Unstructured Data"></FieldLabel>
+                                <ResultFieldLabel label="Result Unstructured Data"
+                                field = 'F_r_3_4_ResultUnstructuredData' index={index}></ResultFieldLabel>
                             </Grid>
                             <Grid item xs={10}>
                                 <TextField variant="outlined"
@@ -298,7 +308,8 @@ export const Results = () => {
                             </Grid>
 
                             <Grid item xs={2}>  
-                                <FieldLabel label="Comments"></FieldLabel>
+                                <ResultFieldLabel label="Comments"
+                                field = 'F_r_6_Comments' index={index}></ResultFieldLabel>
                             </Grid>
                             <Grid item xs={10}>
                                 <TextField variant="outlined"

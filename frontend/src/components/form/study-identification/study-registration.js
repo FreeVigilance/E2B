@@ -1,23 +1,56 @@
 
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import {Stack, FormControlLabel, Box, Select, MenuItem, FormControl, InputLabel, Card, CardContent, IconButton} from '@mui/material';
+import {Stack, FormControlLabel, Box, Select, MenuItem, FormControl, InputLabel, Card, CardContent, IconButton, Grid} from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import AddIcon from '@mui/icons-material/Add';
 import { setStudyRegistration, studyIdentificationSelector } from '@src/features/study-identification/slice';
 import { StudyRegistration } from '@src/features/study-identification/study-identification';
 import DeleteIcon from '@mui/icons-material/Delete';
+import {makeStyles} from '@mui/styles';
+import { FieldLabel } from '../fieldLabel';
 
+const useStyles = makeStyles({
+    margin: {
+      marginTop: '10px',
+      marginLeft: '10px',
+      marginBottom: '5px'
+    },
+    textXshort: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '35%',
+    },
+    textShort: {
+      marginLeft: 1,
+      marginRight: 1,
+      width: '70%',
+    },
+    textMedium: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '80%',
+    },
+    textLong: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '100%',
+    },
+    label: {
+        color: 'black'
+    },
+    checkbox: {
+        paddingTop: '15px',
+        paddingRight: '10px',
+    }
+})
 
 export const StudyRegistrationComp = () => {
+    const classes = useStyles();
+
 	const dispatch = useDispatch();
     const {studyRegistration} = useSelector(studyIdentificationSelector);
-
-    useEffect(() => {
-        console.log("STATE");
-        console.log(studyRegistration);
-    });
 
     const handleChange = (fieldName, index) => (event) => {
         let studyRegistrationCopy = JSON.parse(JSON.stringify(studyRegistration));
@@ -57,78 +90,84 @@ export const StudyRegistrationComp = () => {
                 boxShadow: "5px 5px #356BA0",
                 marginBottom: 5}}>
                     <CardContent>
-                        <Stack direction="column" spacing={2} justifyContent="flex-start">
-                            <Stack direction="row" spacing={2} justifyContent="flex-start">   
-                                <Box className="text-small" style={{ padding: 0 }} sx={{ width: '100%' }}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={3}>
+                            <FieldLabel label="Study Registration Number"></FieldLabel>
+                        </Grid>
+                        <Grid item xs={9}> 
+                            <Stack direction="row" spacing={2}>   
+                                <Box className="text-small">
                                     <FormControlLabel
                                         control={<Checkbox
                                         checked = {item['C_5_1_r_1_StudyRegistrationNumber'].nullFlavor !== null}
-                                        onChange={setUnknown('C_5_1_r_1_StudyRegistrationNumber', index)}
-                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                        style={{padding: 1, marginLeft: 5, marginTop: 2 }}/>}
+                                        onChange={setUnknown('C_5_1_r_1_StudyRegistrationNumber', index)}/>}
                                         label="No Info"/>
-                                            {item['C_5_1_r_1_StudyRegistrationNumber']['nullFlavor'] === null ? 
-                                                <TextField label="Study Registration Number" variant="outlined"
-                                                    sx={{ width: '80%' }}
-                                                    inputProps={{ maxLength: 50}}
-                                                    onChange={handleChange('C_5_1_r_1_StudyRegistrationNumber', index)}
-                                                    value = {item['C_5_1_r_1_StudyRegistrationNumber'].value}/>
-                                        :   <FormControl sx={{ width: '20%' }}>
-                                                <InputLabel>Null Flavor</InputLabel>
-                                                <Select
-                                                    defaultValue = {0}
-                                                    value = {item['C_5_1_r_1_StudyRegistrationNumber'].nullFlavor}
-                                                    onChange={setNullFlavor('C_5_1_r_1_StudyRegistrationNumber', index)}
-                                                >
-                                                    <MenuItem value={1}>Asked, but not known</MenuItem>
-                                                    <MenuItem value={2}>Not asked</MenuItem>
-                                                </Select>
-                                    </FormControl>}
                                 </Box>
+                                {item['C_5_1_r_1_StudyRegistrationNumber']['nullFlavor'] === null ? 
+                                    <TextField variant="outlined"
+                                        className={classes.textMedium}
+                                        inputProps={{ maxLength: 50}}
+                                        onChange={handleChange('C_5_1_r_1_StudyRegistrationNumber', index)}
+                                        value = {item['C_5_1_r_1_StudyRegistrationNumber'].value}/>
+                                :   <FormControl className={classes.textXshort}>
+                                        <InputLabel>Null Flavor</InputLabel>
+                                        <Select
+                                            value = {item['C_5_1_r_1_StudyRegistrationNumber'].nullFlavor}
+                                            onChange={setNullFlavor('C_5_1_r_1_StudyRegistrationNumber', index)}
+                                        >
+                                            <MenuItem value={1}>Asked, but not known</MenuItem>
+                                            <MenuItem value={2}>Not asked</MenuItem>
+                                        </Select>
+                                    </FormControl>}
                             </Stack>
+                        </Grid>
 
+                        <Grid item xs={3}>
+                            <FieldLabel label="Study Registration Country"></FieldLabel>
+                        </Grid>
+                        <Grid item xs={9}> 
                             <Stack direction="row" spacing={2} justifyContent="flex-start">   
-                                <Box className="text-small" style={{ padding: 0 }} sx={{ width: '100%' }}>
+                                <Box className="text-small">
                                     <FormControlLabel
                                         control={<Checkbox
                                         checked = {item['C_5_1_r_2_StudyRegistrationCountry'].nullFlavor !== null}
-                                        onChange={setUnknown('C_5_1_r_2_StudyRegistrationCountry', index)}
-                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                        style={{padding: 1, marginLeft: 5, marginTop: 2 }}/>}
+                                        onChange={setUnknown('C_5_1_r_2_StudyRegistrationCountry', index)}/>}
                                         label="No Info"/>
-                                            {item['C_5_1_r_2_StudyRegistrationCountry']['nullFlavor'] === null ? 
-                                                <TextField label="Study Registration Country" variant="outlined"
-                                                    sx={{ width: '80%' }}
-                                                    inputProps={{ maxLength: 2}}
-                                                    onChange={handleChange('C_5_1_r_2_StudyRegistrationCountry', index)}
-                                                    value = {item['C_5_1_r_2_StudyRegistrationCountry'].value}/>
-                                        :   <FormControl sx={{ width: '20%' }}>
-                                                <InputLabel>Null Flavor</InputLabel>
-                                                <Select
-                                                    defaultValue = {0}
-                                                    value = {item['C_5_1_r_2_StudyRegistrationCountry'].nullFlavor}
-                                                    onChange={setNullFlavor('C_5_1_r_2_StudyRegistrationCountry', index)}
-                                                >
-                                                    <MenuItem value={1}>Asked, but not known</MenuItem>
-                                                    <MenuItem value={2}>Not asked</MenuItem>
-                                                </Select>
-                                    </FormControl>}
                                 </Box>
+                                    {item['C_5_1_r_2_StudyRegistrationCountry']['nullFlavor'] === null ? 
+                                        <TextField variant="outlined"
+                                            className={classes.textXshort}
+                                            inputProps={{ maxLength: 2}}
+                                            onChange={handleChange('C_5_1_r_2_StudyRegistrationCountry', index)}
+                                            value = {item['C_5_1_r_2_StudyRegistrationCountry'].value}/>
+                                :   <FormControl className={classes.textXshort}>
+                                        <InputLabel>Null Flavor</InputLabel>
+                                        <Select
+                                            value = {item['C_5_1_r_2_StudyRegistrationCountry'].nullFlavor}
+                                            onChange={setNullFlavor('C_5_1_r_2_StudyRegistrationCountry', index)}
+                                        >
+                                            <MenuItem value={1}>Asked, but not known</MenuItem>
+                                            <MenuItem value={2}>Not asked</MenuItem>
+                                        </Select>
+                                    </FormControl>}
                             </Stack>
+                        </Grid>
+                    </Grid>
+
                         <Stack direction="row" justifyContent="flex-start">
-                            <span>
-                                <IconButton size='large' style= {{ top: '10px', right: '10px'}}
-                                sx={{ color: "white", backgroundColor: "#1976d2"}}
-                                        onClick={() => removeForm(index)}><DeleteIcon/>
-                                </IconButton>
-                            </span>
                             {index === studyRegistration.length - 1 ?
                                 <span>
-                                    <IconButton size='large' style= {{ top: '10px'}}
+                                    <IconButton size='large' style= {{ top: '10px', right: '10px'}}
                                     sx={{ color: "white", backgroundColor: "#1976d2"}}
                                                 onClick={addForm}><AddIcon/></IconButton>
                                 </span> : null}
-                            </Stack>
+
+                            <span>
+                                <IconButton size='large' style= {{ top: '10px'}}
+                                sx={{ color: "white", backgroundColor: "#000066"}}
+                                        onClick={() => removeForm(index)}><DeleteIcon/>
+                                </IconButton>
+                            </span>
                         </Stack>
                 </CardContent>
             </Card>

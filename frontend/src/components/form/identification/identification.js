@@ -11,17 +11,51 @@ import { identificationSelector, setIdentification } from '@src/features/identif
 import { DocumentsHeldBySenderComp } from './documents-held-by-sender';
 import { OtherIdentifiersComp } from './other-identifiers';
 import { IdentificationNumberComp } from './identification-number';
+import {makeStyles} from '@mui/styles';
+import { FieldLabel } from '../fieldLabel';
+
+const useStyles = makeStyles({
+    margin: {
+      marginTop: '10px',
+      marginLeft: '10px',
+      marginBottom: '5px'
+    },
+    textXshort: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '35%',
+    },
+    textShort: {
+      marginLeft: 1,
+      marginRight: 1,
+      width: '70%',
+    },
+    textMedium: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '90%',
+    },
+    textLong: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '100%',
+    },
+    label: {
+        color: 'black'
+    },
+    checkbox: {
+        paddingTop: '15px',
+        paddingRight: '10px',
+    }
+})
 
 const snakecaseKeys = require('snakecase-keys');
 
 export const IdentificationComp = () => {
+    const classes = useStyles();
+
     const dispatch = useDispatch();
     const { identification } = useSelector(identificationSelector);
-
-    useEffect(() => {
-        console.log('STATE');
-        console.log(snakecaseKeys(identification));
-    });
 
     const handleChange = (fieldName) => (event) => {
         const identificationCopy = JSON.parse(JSON.stringify(identification));
@@ -45,137 +79,181 @@ export const IdentificationComp = () => {
 
     return (
         <>
-            <Stack direction="column" spacing={2} justifyContent="flex-start">
-                <Stack direction="row" spacing={2} justifyContent="flex-start">
-                    <TextField label="Sender’s (case) Safety Report Unique Identifier" variant="outlined"
-                        sx={{ width: '100%' }}
+        <Stack direction={'row'} gap={2}>
+            <Grid container spacing={2}>
+                <Grid item xs={3}>
+                    <FieldLabel label="Sender’s (case) Safety Report Unique Identifier"></FieldLabel>
+                </Grid>
+                <Grid item xs={9}>   
+                    <TextField variant="outlined"
+                        className={classes.textMedium}
                         onChange={handleChange('C_1_1_SenderSafetyReportUniqueId')}
                         value = {identification.C_1_1_SenderSafetyReportUniqueId.value}
                         multiline
                         inputProps={{ maxLength: 100}}
                         rows={2}/>
+                </Grid>
 
-                    <TextField label="Worldwide Unique Case Identification Number" variant="outlined"
-                        sx={{ width: '100%' }}
+                <Grid item xs={3}>
+                    <FieldLabel label="Worldwide Unique Case Identification Number"></FieldLabel>
+                </Grid>
+                <Grid item xs={9}>   
+                    <TextField variant="outlined"
+                    className={classes.textMedium}
                         onChange={handleChange('C_1_8_1_WorldwideUniqueCaseIdentificationNumber')}
                         value = {identification.C_1_8_1_WorldwideUniqueCaseIdentificationNumber.value}
                         multiline
                         inputProps={{ maxLength: 100}}
                         rows={2}/>
+                </Grid>
 
-                </Stack>
-                <Grid container direction="row" columnGap={4}>
-                    <Grid container item xs direction="column" rowGap={1}>
+                <Grid item xs={3}>
+                    <FieldLabel label="Date of Creation"></FieldLabel>
+                </Grid>
+                <Grid item xs={9}>   
+                    <TextField variant="outlined"
+                    className={classes.textShort}
+                        value = {identification['C_1_2_DateCreation'].value}
+                        onChange={handleChange('C_1_2_DateCreation')}
+                        />
+                </Grid>
 
-                        <TextField sx={{ width: '100%' }}
-                            label="Date of Creation"
-                            variant="outlined"
-                            value = {identification['C_1_2_DateCreation'].value}
-                            onChange={handleChange('C_1_2_DateCreation')}
-                            />
+                <Grid item xs={3}>
+                    <FieldLabel label="Type of Report"></FieldLabel>
+                </Grid>
+                <Grid item xs={9}>   
+                    <Select
+                    className={classes.textShort}
+                            value = {identification.C_1_3_TypeReport.value}
+                            onChange={handleChange('C_1_3_TypeReport')}
+                        >
+                            <MenuItem value={1}>1 = Spontaneous report</MenuItem>
+                            <MenuItem value={2}>2 = Report from study</MenuItem>
+                            <MenuItem value={3}>3 = Other</MenuItem>
+                            <MenuItem value={4}>4 = Not available to sender (unknown)</MenuItem>
+                        </Select>
+                </Grid>
 
-                        <FormControl sx={{ width: '100%' }}>
-                            <InputLabel>Type of Report</InputLabel>
-                            <Select
-                                value = {identification.C_1_3_TypeReport.value}
-                                onChange={handleChange('C_1_3_TypeReport')}
-                            >
-                                <MenuItem value={1}>1 = Spontaneous report</MenuItem>
-                                <MenuItem value={2}>2 = Report from study</MenuItem>
-                                <MenuItem value={3}>3 = Other</MenuItem>
-                                <MenuItem value={4}>4 = Not available to sender (unknown)</MenuItem>
-                            </Select>
-                        </FormControl>
-
-                        <TextField sx={{ width: '100%' }}
-                            label="Date Report Was First Received from Source"
-                            variant="outlined"
+                <Grid item xs={3}>
+                    <FieldLabel label="Date Report Was First Received from Source"></FieldLabel>
+                </Grid>
+                <Grid item xs={9}>   
+                        <TextField variant="outlined"
+                        className={classes.textShort}
                             value = {identification['C_1_4_DateReportFirstReceivedSource'].value}
                             onChange={handleChange('C_1_4_DateReportFirstReceivedSource')}
                             />
+                </Grid>
 
-                        <TextField sx={{ width: '100%' }}
-                            label="Date of Most Recent Information for This Report"
-                            variant="outlined"
+                <Grid item xs={3}>
+                    <FieldLabel label="Date of Most Recent Information for This Report"></FieldLabel>
+                </Grid>
+                <Grid item xs={9}>   
+                        <TextField variant="outlined"
+                        className={classes.textShort}
                             value = {identification['C_1_5_DateMostRecentInformation'].value}
                             onChange={handleChange('C_1_5_DateMostRecentInformation')}
                             />
-                    </Grid>
-                    <Grid container item xs direction="column" rowGap={1}>
-                        <FormControl sx={{ width: '100%' }}>
-                            <InputLabel>Are Additional Documents Available?</InputLabel>
-                            <Select
-                                value = {identification.C_1_6_1_AdditionalDocumentsAvailable.value}
-                                onChange={handleChange('C_1_6_1_AdditionalDocumentsAvailable')}
-                            >
-                                <MenuItem value={true}>Yes</MenuItem>
-                                <MenuItem value={false}>No</MenuItem>
-                            </Select>
-                        </FormControl>
+                </Grid>
 
-                        <FormControl sx={{ width: '100%' }}>
-                            <InputLabel>First Sender of This Case</InputLabel>
-                            <Select
-                                value = {identification.C_1_8_2_FirstSender.value}
-                                onChange={handleChange('C_1_8_2_FirstSender')}
-                            >
-                                <MenuItem value={1}>1 = Regulator</MenuItem>
-                                <MenuItem value={2}>2 = Other</MenuItem>
-                            </Select>
-                        </FormControl>
 
-                        <FormControl sx={{ width: '100%' }}>
-                            <InputLabel>Report Nullification / Amendment</InputLabel>
-                            <Select
-                                value = {identification.C_1_11_1_ReportNullificationAmendment.value}
-                                onChange = {handleChange('C_1_11_1_ReportNullificationAmendment')}
-                            >
-                                <MenuItem value={1}>1 = Nullification</MenuItem>
-                                <MenuItem value={2}>2 = Amendment</MenuItem>
-                            </Select>
-                        </FormControl>
+                <Grid item xs={3}>
+                    <FieldLabel label="Are Additional Documents Available?"></FieldLabel>
+                </Grid>
+                <Grid item xs={9}>   
+                    <Select
+                    className={classes.textXshort}
+                        value = {identification.C_1_6_1_AdditionalDocumentsAvailable.value}
+                        onChange={handleChange('C_1_6_1_AdditionalDocumentsAvailable')}
+                    >
+                        <MenuItem value={true}>Yes</MenuItem>
+                        <MenuItem value={false}>No</MenuItem>
+                    </Select>
+                </Grid>
 
+
+            </Grid>
+            <Grid container spacing={2}>
+
+
+                <Grid item xs={3}>
+                    <FieldLabel label="First Sender of This Case"></FieldLabel>
+                </Grid>
+                <Grid item xs={9}>   
+                    <Select
+                    className={classes.textXshort}
+                        value = {identification.C_1_8_2_FirstSender.value}
+                        onChange={handleChange('C_1_8_2_FirstSender')}
+                    >
+                        <MenuItem value={1}>1 = Regulator</MenuItem>
+                        <MenuItem value={2}>2 = Other</MenuItem>
+                    </Select>
+                </Grid>
+
+                <Grid item xs={3}>
+                    <FieldLabel label="Report Nullification / Amendment"></FieldLabel>
+                </Grid>
+                <Grid item xs={9}>   
+                    <Select
+                    className={classes.textXshort}
+                        value = {identification.C_1_11_1_ReportNullificationAmendment.value}
+                        onChange = {handleChange('C_1_11_1_ReportNullificationAmendment')}
+                    >
+                        <MenuItem value={1}>1 = Nullification</MenuItem>
+                        <MenuItem value={2}>2 = Amendment</MenuItem>
+                    </Select>
+                </Grid>
+
+                <Grid item xs={3}>
+                    <FieldLabel label="Does This Case Fulfil the Local Criteria for an Expedited Report?"></FieldLabel>
+                </Grid>
+                <Grid item xs={9}>   
                         <Stack direction="row" spacing={2} justifyContent="flex-start">
-                            <Box className="text-small" style={{ padding: 0 }} sx={{ width: '100%' }}>
+                            <Box className="text-small">
                                 <FormControlLabel
                                     control={<Checkbox
                                         checked = {identification.C_1_7_FulfilLocalCriteriaExpeditedReport.nullFlavor !== null}
                                         onChange={setUnknown('C_1_7_FulfilLocalCriteriaExpeditedReport')}
-                                        sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                        style={{ padding: 1, marginLeft: 5, marginTop: 2 }}/>}
+                                    />}
                                     label="No Info"/>
+                            </Box>
                                 {identification.C_1_7_FulfilLocalCriteriaExpeditedReport.nullFlavor === null
-                                    ? <FormControl sx={{ width: '90%' }}>
-                                        <InputLabel>Does This Case Fulfil the Local Criteria for an Expedited Report?</InputLabel>
-                                        <Select
+                                    ? <Select
+                                    className={classes.textXshort}
                                             value = {identification.C_1_7_FulfilLocalCriteriaExpeditedReport.value}
                                             onChange={handleChange('C_1_7_FulfilLocalCriteriaExpeditedReport')}
                                         >
                                             <MenuItem value={true}>Yes</MenuItem>
                                             <MenuItem value={false}>No</MenuItem>
                                         </Select>
-                                    </FormControl>
                                     : <FormLabel>No Information On Case Fulfilling the Local Criteria for an Expedited Report</FormLabel>}
-                            </Box>
                         </Stack>
+                </Grid>
 
+                <Grid item xs={3}>
+                </Grid>
+                <Grid item xs={9}>   
                         <FormControlLabel
                             control={<Checkbox
                                 checked = {identification.C_1_9_1_OtherCaseIdsPreviousTransmissions.value}
                                 onChange={handleChange('C_1_9_1_OtherCaseIdsPreviousTransmissions')}
-                                sx={{ '& .MuiSvgIcon-root': { fontSize: 20 } }}
-                                style={{ padding: 1, marginLeft: 5, marginTop: 2 }}/>}
-                            label="Other Case Identifiers in Previous Transmissions"/>
-                    </Grid>
+                                />}
+                        label="Other Case Identifiers in Previous Transmissions"/>
                 </Grid>
 
-                <TextField label="Reason for Nullification / Amendment" variant="outlined"
-                    sx={{ width: '100%' }}
+                <Grid item xs={3}>
+                    <FieldLabel label="Reason for Nullification / Amendment"></FieldLabel>
+                </Grid>
+                <Grid item xs={9}>   
+                <TextField variant="outlined"
+                    className={classes.textLong}
                     onChange={handleChange('C_1_11_2_ReasonNullificationAmendment')}
                     value = {identification.C_1_11_2_ReasonNullificationAmendment.value}
                     multiline
                     inputProps={{ maxLength: 2000}}
-                    rows={5}/>
+                    rows={10}/>
+                </Grid>
+            </Grid>
             </Stack>
 
             <Divider sx={{ borderBottomWidth: 5, padding: 2 }}/>

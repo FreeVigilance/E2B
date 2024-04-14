@@ -14,9 +14,47 @@ import { MedHistory } from '@src/features/patient/patient';
 import { drugsSelector, setAdditionalInfo, setSubstances } from '@src/features/drugs/slice';
 import { AdditionalInfo, Substance } from '@src/features/drugs/drugs';
 import DeleteIcon from '@mui/icons-material/Delete';
+import {makeStyles} from '@mui/styles';
+import { AddInfoFieldLabel } from '@src/components/field-labels/drugs/add-info-label';
 
+const useStyles = makeStyles({
+    margin: {
+      marginTop: '10px',
+      marginLeft: '10px',
+      marginBottom: '5px'
+    },
+    textXshort: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '35%',
+    },
+    textShort: {
+      marginLeft: 1,
+      marginRight: 1,
+      width: '70%',
+    },
+    textMedium: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '90%',
+    },
+    textLong: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '100%',
+    },
+    label: {
+        color: 'black'
+    },
+    checkbox: {
+        paddingTop: '15px',
+        paddingRight: '10px',
+    }
+})
 
 export const AddInfo = ({drugIndex}) => {
+    const classes = useStyles();
+
 	const dispatch = useDispatch();
     const {additionalInfo} = useSelector(drugsSelector);
 
@@ -47,10 +85,14 @@ export const AddInfo = ({drugIndex}) => {
                 boxShadow: "5px 5px #356BA0",
                 marginBottom: 5}}>
                     <CardContent>
-                        <Stack direction="column" spacing={1} justifyContent="flex-start">
-                            <FormControl>
-                                <InputLabel>Additional Information on Drug (coded)</InputLabel>
-                                    <Select
+                        <Grid container spacing={2}>
+                            <Grid item xs={3}>
+                                <AddInfoFieldLabel label="Additional Information on Drug (coded)"
+                                field = 'G_k_10_r_AdditionalInformationDrug' drugIndex={drugIndex} index={index}></AddInfoFieldLabel>
+                            </Grid>
+                            <Grid item xs={9}>
+                                <Select
+                                        className={classes.textMedium}
                                         defaultValue = {0}
                                         value = {item['G_k_10_r_AdditionalInformationDrug'].value}
                                         onChange={handleChange('G_k_10_r_AdditionalInformationDrug', index)}
@@ -68,22 +110,21 @@ export const AddInfo = ({drugIndex}) => {
                                         <MenuItem value={11}>11 = Off label use</MenuItem>
 
                                     </Select>
-                            </FormControl>
-                            <Stack direction="row" justifyContent="flex-start">  
+                            </Grid>
+                        </Grid>
+
+                            {index === additionalInfo[drugIndex].length - 1 ?
                                     <span>
                                         <IconButton size='large' style= {{ top: '10px', right: '10px'}}
                                         sx={{ color: "white", backgroundColor: "#1976d2"}}
-                                                onClick={() => removeForm(index)}><DeleteIcon/>
-                                        </IconButton>
-                                    </span>  
-                            {index === additionalInfo[drugIndex].length - 1 ?
-                                    <span>
-                                        <IconButton size='large' style= {{ top: '10px'}}
-                                        sx={{ color: "white", backgroundColor: "#1976d2"}}
                                                     onClick={addForm}><AddIcon/></IconButton>
                                     </span> : null}
-                            </Stack>
-                        </Stack>
+                            <span>
+                                <IconButton size='large' style= {{ top: '10px'}}
+                                sx={{ color: "white", backgroundColor: "#000066"}}
+                                        onClick={() => removeForm(index)}><DeleteIcon/>
+                                </IconButton>
+                            </span>  
                     </CardContent>
                 </Card>);
         });

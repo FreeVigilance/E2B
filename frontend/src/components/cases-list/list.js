@@ -51,7 +51,7 @@ export const CasesList = () => {
 
 
     return (
-        <Box sx={{ minHeight: 180, flexGrow: 1, maxWidth: 300 }}>
+        <Box sx={{ minHeight: 180, flexGrow: 1, maxWidth: 300, paddingLeft: '30px' }}>
           <List
             aria-label="cases-list"
           >

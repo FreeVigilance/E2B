@@ -8,7 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { CauseOfDeath } from '@src/features/patient/patient';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {makeStyles} from '@mui/styles';
-import { FieldLabel } from '../../fieldLabel';
+import { CauseOfDeathFieldLabel } from '@src/components/field-labels/patient/cause-of-death-label';
 
 const useStyles = makeStyles({
     margin: {
@@ -85,7 +85,8 @@ export const CausesOfDeath = () => {
                         <Grid container spacing={2}>
 
                             <Grid item xs={3}>
-                                <FieldLabel label="Reported Cause of Death"></FieldLabel>
+                                <CauseOfDeathFieldLabel label="Reported Cause of Death"
+                                field = 'D_9_2_r_2_CauseDeath' index={index}></CauseOfDeathFieldLabel>
                             </Grid>
                             <Grid item xs={9}>
                                 <TextField variant="outlined"
@@ -98,7 +99,8 @@ export const CausesOfDeath = () => {
                             </Grid>
 
                             <Grid item xs={3}>
-                                <FieldLabel label="MedDRA Version for Reported Cause(s) of Death"></FieldLabel>
+                                <CauseOfDeathFieldLabel label="MedDRA Version for Reported Cause(s) of Death"
+                                field = 'D_9_2_r_1a_MedDRAVersionCauseDeath' index={index}></CauseOfDeathFieldLabel>
                             </Grid>
                             <Grid item xs={9}>
                                 <TextField variant="outlined"
@@ -113,7 +115,8 @@ export const CausesOfDeath = () => {
                             </Grid>
 
                             <Grid item xs={3}>
-                                <FieldLabel label="Reported Cause of Death (MedDRA code)"></FieldLabel>
+                                <CauseOfDeathFieldLabel label="Reported Cause of Death (MedDRA code)"
+                                field = 'D_9_2_r_1b_CauseDeathMedDRACode' index={index}></CauseOfDeathFieldLabel>
                             </Grid>
                             <Grid item xs={9}>
                                 <TextField variant="outlined"

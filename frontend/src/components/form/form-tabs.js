@@ -5,7 +5,7 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { displaySelector, getJsonFromXml, getXmlFromJson, setCurrentSaved, setCurrentTab } from '@src/features/display/slice';
+import { displaySelector, getJsonFromXml, getXmlFromJson, setCurrentSaved, setCurrentTab, setShowSideMenu } from '@src/features/display/slice';
 import { Results } from './results';
 import { Reactions } from './reactions';
 import { Button, FormLabel, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Tooltip } from '@mui/material';
@@ -15,7 +15,7 @@ import { ParentChild } from './patient-info/parent-child/parent-child';
 import { DrugTabs } from './drugs/drug-tabs';
 import { DosageTabs } from './drugs/dosages/dosage-tabs';
 import { MatrixTabs } from './drugs/matrix/matrix-tabs';
-import { Save } from './save';
+import { Save } from '../save';
 import { PrimarySourceComp } from './primaty-source';
 import { InfoSenderComp } from './info-sender';
 import { ReferencesComp } from './references';
@@ -37,11 +37,12 @@ import { getNarrative } from '@src/features/narrative/slice';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import MenuIcon from '@mui/icons-material/Menu';
 import { PatientDeath } from './patient-info/patient-death/patient-death';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 
 export const FormTabs = () => {
     const dispatch = useDispatch();
-    const { currentTab, currentSaved, currentId } = useSelector(displaySelector);
+    const { currentTab, currentSaved, currentId, showSideMenu} = useSelector(displaySelector);
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -70,6 +71,10 @@ export const FormTabs = () => {
 
     const handleChange = (event, newValue) => {
         dispatch(setCurrentTab(newValue));
+    };
+
+    const handleToggleMenuClick = () => {
+        dispatch(setShowSideMenu(!showSideMenu));
     };
 
     const getXml = () => {
@@ -119,16 +124,22 @@ export const FormTabs = () => {
                         <Tab label="Parent-child" value="4" />
                         <Tab label="Drugs" value="5" />
                         <Tab label="Dosages" value="6" />
-                        {/* <Tab label="Drug Reaction Matrix" value="6" /> */}
-                        <Tab label="Primary Source" value="7" />
-                        <Tab label="Sender Information" value="8" />
-                        <Tab label="Literature References" value="9" />
-                        <Tab label="Identification of report" value="10" />
-                        <Tab label="Study Identification" value="11" />
-                        <Tab label="Narrative Case Summary" value="12" />
+                        <Tab label="Drug Reaction Matrix" value="7" />
+                        <Tab label="Primary Source" value="8" />
+                        <Tab label="Sender Information" value="9" />
+                        <Tab label="Literature References" value="10" />
+                        <Tab label="Identification of report" value="11" />
+                        <Tab label="Study Identification" value="12" />
+                        <Tab label="Narrative Case Summary" value="13" />
 
                     </TabList>
                 </Box>
+
+                {!showSideMenu ?
+            <ArrowForwardIosIcon color='primary' fontSize='large' sx={{ position: 'fixed', top: '25px', left: '5px', zIndex: 10000 }}
+                onClick={handleToggleMenuClick}></ArrowForwardIosIcon>
+                : null }
+
                 <TabPanel value="0">
                     <Results></Results>
                 </TabPanel>
@@ -150,33 +161,33 @@ export const FormTabs = () => {
                 <TabPanel value="6">
                     <DosageTabs></DosageTabs>
                 </TabPanel>
-                {/* <TabPanel value="6">
-                    <MatrixTabs></MatrixTabs>
-                </TabPanel> */}
                 <TabPanel value="7">
-                    <PrimarySourceComp></PrimarySourceComp>
+                    <MatrixTabs></MatrixTabs>
                 </TabPanel>
                 <TabPanel value="8">
-                    <InfoSenderComp></InfoSenderComp>
+                    <PrimarySourceComp></PrimarySourceComp>
                 </TabPanel>
                 <TabPanel value="9">
-                    <ReferencesComp></ReferencesComp>
+                    <InfoSenderComp></InfoSenderComp>
                 </TabPanel>
                 <TabPanel value="10">
-                    <IdentificationComp></IdentificationComp>
+                    <ReferencesComp></ReferencesComp>
                 </TabPanel>
                 <TabPanel value="11">
-                    <StudyIdentificationComp></StudyIdentificationComp>
+                    <IdentificationComp></IdentificationComp>
                 </TabPanel>
                 <TabPanel value="12">
+                    <StudyIdentificationComp></StudyIdentificationComp>
+                </TabPanel>
+                <TabPanel value="13">
                     <NarrativeComp></NarrativeComp>
                 </TabPanel>
 
                 <FormLabel sx={{ position: 'fixed', bottom: '2%', right: '2%',
-                zIndex: 10000, fontSize: 25,  color: 'black'}}>Report id: {currentId}</FormLabel>
+                zIndex: 10000, fontSize: 25,  color: 'black', backgroundColor: 'white', padding: '5px'}}>Report id: {currentId}</FormLabel>
 
                 <Box sx={{ position: "fixed", top: '2%', right: '2%' }} >
-                    <IconButton edge="end" aria-label="delete">
+                    <IconButton edge="end">
                         <MenuIcon onClick={handleClick} fontSize='large' color='primary'/>
                     </IconButton>
                     <Menu
