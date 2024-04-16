@@ -6,7 +6,7 @@ from django import http
 from django.views import View
 
 from app.src.layers.api.models import ApiModel
-from app.src.shared.services import SupportsServiceMethods
+from app.src.layers.base.services import ServiceWithBusinessValidation
 from extensions import utils
 
 
@@ -16,7 +16,7 @@ class StatusCode(enum.IntEnum):
 
 
 class BaseView(View):
-    domain_service: SupportsServiceMethods[ApiModel] = ...
+    domain_service: ServiceWithBusinessValidation[ApiModel] = ...
     model_class: type[ApiModel] = ...
 
     def get_model_from_request(self, request: http.HttpRequest) -> ApiModel:

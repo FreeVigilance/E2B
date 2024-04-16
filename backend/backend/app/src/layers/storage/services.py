@@ -2,12 +2,12 @@ import enum
 
 from django.db import transaction
 
+from app.src.layers.base.services import Service
 from app.src.layers.storage.models import StorageModel
-from app.src.shared.services import SupportsServiceMethods
 from extensions.django.fields import temp_relation_field_utils
 
 
-class StorageService(SupportsServiceMethods[StorageModel]):
+class StorageService(Service[StorageModel]):
     class SaveOperation(enum.Enum):
         INSERT = enum.auto()
         UPDATE = enum.auto()

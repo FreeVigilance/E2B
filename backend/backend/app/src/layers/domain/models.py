@@ -7,9 +7,9 @@ from uuid import UUID
 import pydantic as pd
 import pydantic_core as pdc
 
+from app.src import enums as e
+from app.src.enums import NullFlavor as NF
 from app.src.hl7date import HL7DateUtils, DatePrecision
-from app.src.shared import enums as e
-from app.src.shared.enums import NullFlavor as NF
 from extensions import pydantic as pde
 
 

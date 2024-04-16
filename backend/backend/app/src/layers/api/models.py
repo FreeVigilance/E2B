@@ -2,8 +2,8 @@ from decimal import Decimal
 import typing as t
 from uuid import UUID
 
-from app.src.shared import enums
-from app.src.shared.enums import NullFlavor as NF
+from app.src import enums
+from app.src.enums import NullFlavor as NF
 from extensions import pydantic as pde
 
 

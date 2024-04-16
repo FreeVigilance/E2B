@@ -1,9 +1,9 @@
+from app.src.layers.base.services import Service
 from app.src.layers.domain.models import DomainModel
-from app.src.shared.services import SupportsServiceMethods
 
 
-class DomainService(SupportsServiceMethods[DomainModel]):
-	def __init__(self, storage_service: SupportsServiceMethods[DomainModel]) -> None:
+class DomainService(Service[DomainModel]):
+	def __init__(self, storage_service: Service[DomainModel]) -> None:
 		self.storage_service = storage_service
 
 	def list(self, model_class: type[DomainModel]) -> list[int]:

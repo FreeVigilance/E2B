@@ -1,18 +1,14 @@
 import typing as t
 
+from app.src.connectors.base.model_converters import pydantic as pmc
+from app.src.enums import NullFlavor
 from app.src.layers.api.models import ApiModel, Value
 from app.src.layers.domain.models import DomainModel
-from app.src.model_converters import pydantic as pmc
-from app.src.model_converters.base import BaseModelConverter
-from app.src.shared.enums import NullFlavor
 
 
-class ApiToDomainModelConverter[S: ApiModel, T: DomainModel](
-    BaseModelConverter[S, T], 
-    pmc.PydanticSourceModelConverter[S, T]
-):    
+class ApiToDomainModelConverter[S: ApiModel, T: DomainModel](pmc.PydanticSourceModelConverter[S, T]):    
     @classmethod
-    def convert(cls, source_model: S, **kwargs) -> T:
+    def convert(cls, source_model: S) -> T:
         target_model, target_dict = cls.convert_to_model_and_dict(source_model)
         return target_model.model_safe_validate(target_dict)
     
@@ -44,12 +40,9 @@ class ApiToDomainModelConverter[S: ApiModel, T: DomainModel](
         return False
     
 
-class DomainToApiModelConverter[S: DomainModel, T: ApiModel](
-    BaseModelConverter[S, T], 
-    pmc.PydanticSourceModelConverter[S, T]
-):
+class DomainToApiModelConverter[S: DomainModel, T: ApiModel](pmc.PydanticSourceModelConverter[S, T]):
     @classmethod
-    def convert(cls, source_model: S, **kwargs) -> T:
+    def convert(cls, source_model: S) -> T:
         target_model, target_dict = cls.convert_to_model_and_dict(source_model)
         # If domain model is invalid, validation for api model is not needed
         if not source_model.is_valid:
