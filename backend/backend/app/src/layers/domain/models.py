@@ -1,14 +1,64 @@
 from decimal import Decimal
+import functools
 import typing as t
+from typing import Literal as L
 from uuid import UUID
 
-from app.src.shared import enums
+import pydantic as pd
+import pydantic_core as pdc
+
+from app.src.hl7date import HL7DateUtils, DatePrecision
+from app.src.shared import enums as e
 from app.src.shared.enums import NullFlavor as NF
 from extensions import pydantic as pde
 
 
-class DomainModel(pde.PostValidatableModel, pde.SafeValidatableModel):    
+DP = DatePrecision
+
+
+class Datetime[T: DatePrecision](str):
+    @classmethod
+    def validate(cls, val: str | None, info: pd.ValidationInfo, min_precision: DatePrecision) -> str:
+        precision = HL7DateUtils.parse_and_get_precision(val)
+        if not info.context.get(DomainModel.BUSINESS_VALIDATION_FLAG_KEY):
+            return val
+        if precision < min_precision:
+            raise pdc.PydanticCustomError(
+                pde.ErrorType.BUSINESS,
+                f'Expected at least {min_precision.name.lower()} precision'
+            )
+        return val
+
+    @classmethod
+    def __get_pydantic_core_schema__(
+        cls, 
+        source_type: t.Any, 
+        handler: pd.GetCoreSchemaHandler
+    ) -> pdc.CoreSchema:
+        try:
+            precision = t.get_args(t.get_args(source_type)[0])[0]
+        except IndexError as e:
+            raise RuntimeError('Expected precision to be set as Datetime[Literal[Precision]]')
+
+        return pdc.core_schema.chain_schema([
+            pdc.core_schema.str_schema(),
+            pdc.core_schema.with_info_plain_validator_function(
+                functools.partial(
+                    cls.validate,
+                    min_precision=precision
+                ),
+                field_name=handler.field_name
+            )
+        ])
+
+
+class DomainModel(pde.PostValidatableModel, pde.SafeValidatableModel):  
+    BUSINESS_VALIDATION_FLAG_KEY: t.ClassVar = '_is_business_validation'
+
     id: int | None = None
+
+    def model_business_validate(self, initial_data: dict[str, t.Any] | None = None) -> t.Self:
+        return self.model_safe_validate(initial_data, context={self.BUSINESS_VALIDATION_FLAG_KEY: True})
 
 
 class ICSR(DomainModel):
@@ -72,25 +122,25 @@ class C_1_identification_case_safety_report(DomainModel):
     c_1_10_r_identification_number_report_linked: list['C_1_10_r_identification_number_report_linked'] = []
 
     c_1_1_sender_safety_report_unique_id: str | None = None
-    c_1_2_date_creation: str | None = None  # dt
-    c_1_3_type_report: enums.C_1_3_type_report | None = None
-    c_1_4_date_report_first_received_source: str | None = None  # dt
-    c_1_5_date_most_recent_information: str | None = None  # dt
+    c_1_2_date_creation: Datetime[L[DP.SECOND]] | None = None 
+    c_1_3_type_report: e.C_1_3_type_report | None = None
+    c_1_4_date_report_first_received_source: Datetime[L[DP.DAY]] | None = None 
+    c_1_5_date_most_recent_information: Datetime[L[DP.DAY]] | None = None 
 
     # c_1_6_additional_available_documents_held_sender
     c_1_6_1_additional_documents_available: bool | None = None
 
-    c_1_7_fulfil_local_criteria_expedited_report: bool | t.Literal[NF.NI] | None = None
+    c_1_7_fulfil_local_criteria_expedited_report: bool | L[NF.NI] | None = None
 
     # c_1_8_worldwide_unique_case_identification
     c_1_8_1_worldwide_unique_case_identification_number: str | None = None
-    c_1_8_2_first_sender: enums.C_1_8_2_first_sender | None = None
+    c_1_8_2_first_sender: e.C_1_8_2_first_sender | None = None
 
     # c_1_9_other_case_ids
-    c_1_9_1_other_case_ids_previous_transmissions: t.Literal[True] | t.Literal[NF.NI] | None = None
+    c_1_9_1_other_case_ids_previous_transmissions: L[True] | L[NF.NI] | None = None
 
     # c_1_11_report_nullification_amendment
-    c_1_11_1_report_nullification_amendment: enums.C_1_11_1_report_nullification_amendment | None = None
+    c_1_11_1_report_nullification_amendment: e.C_1_11_1_report_nullification_amendment | None = None
     c_1_11_2_reason_nullification_amendment: str | None = None
 
 
@@ -113,30 +163,30 @@ class C_1_10_r_identification_number_report_linked(DomainModel):
 
 class C_2_r_primary_source_information(DomainModel):
     # c_2_r_1_reporter_name
-    c_2_r_1_1_reporter_title: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK, NF.UNK] | None = None
-    c_2_r_1_2_reporter_given_name: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None
-    c_2_r_1_3_reporter_middle_name: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None
-    c_2_r_1_4_reporter_family_name: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None
+    c_2_r_1_1_reporter_title: str | L[NF.MSK, NF.ASKU, NF.NASK, NF.UNK] | None = None
+    c_2_r_1_2_reporter_given_name: str | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
+    c_2_r_1_3_reporter_middle_name: str | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
+    c_2_r_1_4_reporter_family_name: str | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
 
     # c_2_r_2_reporter_address_telephone
-    c_2_r_2_1_reporter_organisation: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None
-    c_2_r_2_2_reporter_department: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None
-    c_2_r_2_3_reporter_street: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None
-    c_2_r_2_4_reporter_city: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None
-    c_2_r_2_5_reporter_state_province: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None
-    c_2_r_2_6_reporter_postcode: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None
-    c_2_r_2_7_reporter_telephone: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None
+    c_2_r_2_1_reporter_organisation: str | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
+    c_2_r_2_2_reporter_department: str | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
+    c_2_r_2_3_reporter_street: str | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
+    c_2_r_2_4_reporter_city: str | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
+    c_2_r_2_5_reporter_state_province: str | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
+    c_2_r_2_6_reporter_postcode: str | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
+    c_2_r_2_7_reporter_telephone: str | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
 
     c_2_r_3_reporter_country_code: str | None = None  # st
-    c_2_r_4_qualification: enums.C_2_r_4_qualification | t.Literal[NF.UNK] | None = None
-    c_2_r_5_primary_source_regulatory_purposes: enums.C_2_r_5_primary_source_regulatory_purposes | None = None
+    c_2_r_4_qualification: e.C_2_r_4_qualification | L[NF.UNK] | None = None
+    c_2_r_5_primary_source_regulatory_purposes: e.C_2_r_5_primary_source_regulatory_purposes | None = None
 
 
 # C_3_information_sender_case_safety_report
 
 
 class C_3_information_sender_case_safety_report(DomainModel):
-    c_3_1_sender_type: enums.C_3_1_sender_type | None = None
+    c_3_1_sender_type: e.C_3_1_sender_type | None = None
     c_3_2_sender_organisation: str | None = None
 
     # c_3_3_person_responsible_sending_report
@@ -161,7 +211,7 @@ class C_3_information_sender_case_safety_report(DomainModel):
 
 
 class C_4_r_literature_reference(DomainModel):
-    c_4_r_1_literature_reference: str | t.Literal[NF.ASKU, NF.NASK] | None = None
+    c_4_r_1_literature_reference: str | L[NF.ASKU, NF.NASK] | None = None
     # file: c_4_r_2_included_documents
 
 
@@ -170,14 +220,14 @@ class C_4_r_literature_reference(DomainModel):
 class C_5_study_identification(DomainModel):
     c_5_1_r_study_registration: list['C_5_1_r_study_registration'] = []
 
-    c_5_2_study_name: str | t.Literal[NF.ASKU, NF.NASK] | None = None
-    c_5_3_sponsor_study_number: str | t.Literal[NF.ASKU, NF.NASK] | None = None
-    c_5_4_study_type_reaction: enums.C_5_4_study_type_reaction | None = None
+    c_5_2_study_name: str | L[NF.ASKU, NF.NASK] | None = None
+    c_5_3_sponsor_study_number: str | L[NF.ASKU, NF.NASK] | None = None
+    c_5_4_study_type_reaction: e.C_5_4_study_type_reaction | None = None
 
 
 class C_5_1_r_study_registration(DomainModel):
-    c_5_1_r_1_study_registration_number: str | t.Literal[NF.ASKU, NF.NASK] | None = None
-    c_5_1_r_2_study_registration_country: str | t.Literal[NF.ASKU, NF.NASK] | None = None  # st
+    c_5_1_r_1_study_registration_number: str | L[NF.ASKU, NF.NASK] | None = None
+    c_5_1_r_2_study_registration_country: str | L[NF.ASKU, NF.NASK] | None = None  # st
 
 
 # D_patient_characteristics
@@ -191,17 +241,17 @@ class D_patient_characteristics(DomainModel):
     d_10_7_1_r_structured_information_parent_meddra_code: list['D_10_7_1_r_structured_information_parent_meddra_code'] = []
     d_10_8_r_past_drug_history_parent: list['D_10_8_r_past_drug_history_parent'] = []
 
-    d_1_patient: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK, NF.UNK] | None = None
+    d_1_patient: str | L[NF.MSK, NF.ASKU, NF.NASK, NF.UNK] | None = None
 
     # d_1_1_medical_record_number_source
-    d_1_1_1_medical_record_number_source_gp: str | t.Literal[NF.MSK] | None = None
-    d_1_1_2_medical_record_number_source_specialist: str | t.Literal[NF.MSK] | None = None
-    d_1_1_3_medical_record_number_source_hospital: str | t.Literal[NF.MSK] | None = None
-    d_1_1_4_medical_record_number_source_investigation: str | t.Literal[NF.MSK] | None = None
+    d_1_1_1_medical_record_number_source_gp: str | L[NF.MSK] | None = None
+    d_1_1_2_medical_record_number_source_specialist: str | L[NF.MSK] | None = None
+    d_1_1_3_medical_record_number_source_hospital: str | L[NF.MSK] | None = None
+    d_1_1_4_medical_record_number_source_investigation: str | L[NF.MSK] | None = None
 
     # d_2_age_information
 
-    d_2_1_date_birth: str | t.Literal[NF.MSK] | None = None  # dt
+    d_2_1_date_birth: Datetime[L[DP.DAY]] | L[NF.MSK] | None = None 
 
     # d_2_2_age_onset_reaction
 
@@ -212,37 +262,37 @@ class D_patient_characteristics(DomainModel):
     d_2_2_1a_gestation_period_reaction_foetus_num: int | None = None
     d_2_2_1b_gestation_period_reaction_foetus_unit: str | None = None  # st
 
-    d_2_3_patient_age_group: enums.D_2_3_patient_age_group | None = None
+    d_2_3_patient_age_group: e.D_2_3_patient_age_group | None = None
 
     d_3_body_weight: Decimal | None = None
     d_4_height: int | None = None
-    d_5_sex: enums.D_5_sex | t.Literal[NF.MSK, NF.UNK, NF.ASKU, NF.NASK] | None = None
-    d_6_last_menstrual_period_date: str | None = None  # dt
+    d_5_sex: e.D_5_sex | L[NF.MSK, NF.UNK, NF.ASKU, NF.NASK] | None = None
+    d_6_last_menstrual_period_date: Datetime[L[DP.YEAR]] | None = None 
 
     # d_7_medical_history
-    d_7_2_text_medical_history: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK, NF.UNK] | None = None
-    d_7_3_concomitant_therapies: t.Literal[True] | None = None
+    d_7_2_text_medical_history: str | L[NF.MSK, NF.ASKU, NF.NASK, NF.UNK] | None = None
+    d_7_3_concomitant_therapies: L[True] | None = None
 
     # d_9_case_death
-    d_9_1_date_death: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None  # dt
-    d_9_3_autopsy: bool | t.Literal[NF.ASKU, NF.NASK, NF.UNK] | None = None
+    d_9_1_date_death: Datetime[L[DP.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
+    d_9_3_autopsy: bool | L[NF.ASKU, NF.NASK, NF.UNK] | None = None
 
     # d_10_information_concerning_parent
 
-    d_10_1_parent_identification: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK, NF.UNK] | None = None
+    d_10_1_parent_identification: str | L[NF.MSK, NF.ASKU, NF.NASK, NF.UNK] | None = None
 
     # d_10_2_parent_age_information
 
-    d_10_2_1_date_birth_parent: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None  # dt
+    d_10_2_1_date_birth_parent: Datetime[L[DP.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
 
     # d_10_2_2_age_parent
     d_10_2_2a_age_parent_num: int | None = None
     d_10_2_2b_age_parent_unit: str | None = None  # st
 
-    d_10_3_last_menstrual_period_date_parent: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None  # dt
+    d_10_3_last_menstrual_period_date_parent: Datetime[L[DP.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
     d_10_4_body_weight_parent: Decimal | None = None
     d_10_5_height_parent: int | None = None
-    d_10_6_sex_parent: enums.D_10_6_sex_parent | t.Literal[NF.UNK, NF.MSK, NF.ASKU, NF.NASK] | None = None
+    d_10_6_sex_parent: e.D_10_6_sex_parent | L[NF.UNK, NF.MSK, NF.ASKU, NF.NASK] | None = None
 
     # d_10_7_medical_history_parent
     d_10_7_2_text_medical_history_parent: str | None = None
@@ -251,15 +301,15 @@ class D_patient_characteristics(DomainModel):
 class D_7_1_r_structured_information_medical_history(DomainModel):
     d_7_1_r_1a_meddra_version_medical_history: str | None = None  # st
     d_7_1_r_1b_medical_history_meddra_code: int | None = None
-    d_7_1_r_2_start_date: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None  # dt  # dt
-    d_7_1_r_3_continuing: bool | t.Literal[NF.MSK, NF.ASKU, NF.NASK, NF.UNK] | None = None
-    d_7_1_r_4_end_date: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None  # dt  # dt
+    d_7_1_r_2_start_date: Datetime[L[DP.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
+    d_7_1_r_3_continuing: bool | L[NF.MSK, NF.ASKU, NF.NASK, NF.UNK] | None = None
+    d_7_1_r_4_end_date: Datetime[L[DP.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
     d_7_1_r_5_comments: str | None = None
-    d_7_1_r_6_family_history: t.Literal[True] | None = None
+    d_7_1_r_6_family_history: L[True] | None = None
 
 
 class D_8_r_past_drug_history(DomainModel):
-    d_8_r_1_name_drug: str | t.Literal[NF.UNK, NF.NA] | None = None
+    d_8_r_1_name_drug: str | L[NF.UNK, NF.NA] | None = None
 
     # d_8_r_2_mpid
     d_8_r_2a_mpid_version: str | None = None  # st
@@ -269,8 +319,8 @@ class D_8_r_past_drug_history(DomainModel):
     d_8_r_3a_phpid_version: str | None = None  # st
     d_8_r_3b_phpid: str | None = None  # st
 
-    d_8_r_4_start_date: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None  # dt
-    d_8_r_5_end_date: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None  # dt
+    d_8_r_4_start_date: Datetime[L[DP.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
+    d_8_r_5_end_date: Datetime[L[DP.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
 
     # d_8_r_6_indication_meddra_code
     d_8_r_6a_meddra_version_indication: str | None = None  # st
@@ -296,9 +346,9 @@ class D_9_4_r_autopsy_determined_cause_death(DomainModel):
 class D_10_7_1_r_structured_information_parent_meddra_code(DomainModel):
     d_10_7_1_r_1a_meddra_version_medical_history: str | None = None  # st
     d_10_7_1_r_1b_medical_history_meddra_code: int | None = None
-    d_10_7_1_r_2_start_date: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None  # dt
-    d_10_7_1_r_3_continuing: bool | t.Literal[NF.MSK, NF.ASKU, NF.NASK, NF.UNK] | None = None
-    d_10_7_1_r_4_end_date: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None  # dt
+    d_10_7_1_r_2_start_date: Datetime[L[DP.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
+    d_10_7_1_r_3_continuing: bool | L[NF.MSK, NF.ASKU, NF.NASK, NF.UNK] | None = None
+    d_10_7_1_r_4_end_date: Datetime[L[DP.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
     d_10_7_1_r_5_comments: str | None = None
 
 
@@ -313,8 +363,8 @@ class D_10_8_r_past_drug_history_parent(DomainModel):
     d_10_8_r_3a_phpid_version: str | None = None  # st
     d_10_8_r_3b_phpid: str | None = None  # st
 
-    d_10_8_r_4_start_date: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None  # dt
-    d_10_8_r_5_end_date: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None  # dt
+    d_10_8_r_4_start_date: Datetime[L[DP.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
+    d_10_8_r_5_end_date: Datetime[L[DP.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
 
     # d_10_8_r_6_indication_meddra_code
     d_10_8_r_6a_meddra_version_indication: str | None = None  # st
@@ -343,24 +393,24 @@ class E_i_reaction_event(DomainModel):
     e_i_2_1a_meddra_version_reaction: str | None = None  # st
     e_i_2_1b_reaction_meddra_code: int | None = None
 
-    e_i_3_1_term_highlighted_reporter: enums.E_i_3_1_term_highlighted_reporter | None = None
+    e_i_3_1_term_highlighted_reporter: e.E_i_3_1_term_highlighted_reporter | None = None
 
     # e_i_3_2_seriousness_criteria_event_level
-    e_i_3_2a_results_death: t.Literal[True] | t.Literal[NF.NI] | None = None
-    e_i_3_2b_life_threatening: t.Literal[True] | t.Literal[NF.NI] | None = None
-    e_i_3_2c_caused_prolonged_hospitalisation: t.Literal[True] | t.Literal[NF.NI] | None = None
-    e_i_3_2d_disabling_incapacitating: t.Literal[True] | t.Literal[NF.NI] | None = None
-    e_i_3_2e_congenital_anomaly_birth_defect: t.Literal[True] | t.Literal[NF.NI] | None = None
-    e_i_3_2f_other_medically_important_condition: t.Literal[True] | t.Literal[NF.NI] | None = None
+    e_i_3_2a_results_death: L[True] | L[NF.NI] | None = None
+    e_i_3_2b_life_threatening: L[True] | L[NF.NI] | None = None
+    e_i_3_2c_caused_prolonged_hospitalisation: L[True] | L[NF.NI] | None = None
+    e_i_3_2d_disabling_incapacitating: L[True] | L[NF.NI] | None = None
+    e_i_3_2e_congenital_anomaly_birth_defect: L[True] | L[NF.NI] | None = None
+    e_i_3_2f_other_medically_important_condition: L[True] | L[NF.NI] | None = None
 
-    e_i_4_date_start_reaction: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None  # dt
-    e_i_5_date_end_reaction: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None  # dt
+    e_i_4_date_start_reaction: Datetime[L[DP.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
+    e_i_5_date_end_reaction: Datetime[L[DP.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
 
     # e_i_6_duration_reaction
     e_i_6a_duration_reaction_num: int | None = None
     e_i_6b_duration_reaction_unit: str | None = None  # st
 
-    e_i_7_outcome_reaction_last_observation: enums.E_i_7_outcome_reaction_last_observation | None = None
+    e_i_7_outcome_reaction_last_observation: e.E_i_7_outcome_reaction_last_observation | None = None
     e_i_8_medical_confirmation_healthcare_professional: bool | None = None
     e_i_9_identification_country_reaction: str | None = None  # st
 
@@ -378,7 +428,7 @@ class E_i_reaction_event(DomainModel):
 
 
 class F_r_results_tests_procedures_investigation_patient(DomainModel):
-    f_r_1_test_date: str | t.Literal[NF.UNK] | None = None  # dt  # dt
+    f_r_1_test_date: Datetime[L[DP.YEAR]] | L[NF.UNK] | None = None 
 
     # f_r_2_test_name
 
@@ -389,8 +439,8 @@ class F_r_results_tests_procedures_investigation_patient(DomainModel):
     f_r_2_2b_test_name_meddra_code: int | None = None
 
     # f_r_3_test_result
-    f_r_3_1_test_result_code: enums.F_r_3_1_test_result_code | None = None
-    f_r_3_2_test_result_val_qual: Decimal | t.Literal[NF.NINF, NF.PINF] | None = None  # TODO: check how qualifiers are used
+    f_r_3_1_test_result_code: e.F_r_3_1_test_result_code | None = None
+    f_r_3_2_test_result_val_qual: Decimal | L[NF.NINF, NF.PINF] | None = None  # TODO: check how qualifiers are used
     f_r_3_3_test_result_unit: str | None = None  # st
     f_r_3_4_result_unstructured_data: str | None = None
 
@@ -410,7 +460,7 @@ class G_k_drug_information(DomainModel):
     g_k_9_i_drug_reaction_matrix: list['G_k_9_i_drug_reaction_matrix'] = []
     g_k_10_r_additional_information_drug: list['G_k_10_r_additional_information_drug'] = []
 
-    g_k_1_characterisation_drug_role: enums.G_k_1_characterisation_drug_role | None = None
+    g_k_1_characterisation_drug_role: e.G_k_1_characterisation_drug_role | None = None
 
     # g_k_2_drug_identification
 
@@ -422,7 +472,7 @@ class G_k_drug_information(DomainModel):
 
     g_k_2_2_medicinal_product_name_primary_source: str | None = None
     g_k_2_4_identification_country_drug_obtained: str | None = None  # st
-    g_k_2_5_investigational_product_blinded: t.Literal[True] | None = None
+    g_k_2_5_investigational_product_blinded: L[True] | None = None
 
     # g_k_3_holder_authorisation_application_number_drug
     g_k_3_1_authorisation_application_number: str | None = None  # st
@@ -437,7 +487,7 @@ class G_k_drug_information(DomainModel):
     g_k_6a_gestation_period_exposure_num: Decimal | None = None
     g_k_6b_gestation_period_exposure_unit: str | None = None  # st
 
-    g_k_8_action_taken_drug: enums.G_k_8_action_taken_drug | None = None
+    g_k_8_action_taken_drug: e.G_k_8_action_taken_drug | None = None
 
     g_k_11_additional_information_drug: str | None = None
 
@@ -464,8 +514,8 @@ class G_k_4_r_dosage_information(DomainModel):
     g_k_4_r_1b_dose_unit: str | None = None  # st
     g_k_4_r_2_number_units_interval: Decimal | None = None
     g_k_4_r_3_definition_interval_unit: str | None = None  # st
-    g_k_4_r_4_date_time_drug: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None  # dt
-    g_k_4_r_5_date_time_last_administration: str | t.Literal[NF.MSK, NF.ASKU, NF.NASK] | None = None  # dt
+    g_k_4_r_4_date_time_drug: Datetime[L[DP.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
+    g_k_4_r_5_date_time_last_administration: Datetime[L[DP.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
 
     # g_k_4_r_6_duration_drug_administration
     g_k_4_r_6a_duration_drug_administration_num: Decimal | None = None
@@ -476,23 +526,23 @@ class G_k_4_r_dosage_information(DomainModel):
 
     # g_k_4_r_9_pharmaceutical_dose_form
 
-    g_k_4_r_9_1_pharmaceutical_dose_form: str | t.Literal[NF.ASKU, NF.NASK, NF.UNK] | None = None
+    g_k_4_r_9_1_pharmaceutical_dose_form: str | L[NF.ASKU, NF.NASK, NF.UNK] | None = None
     g_k_4_r_9_2a_pharmaceutical_dose_form_termid_version: str | None = None  # st
     g_k_4_r_9_2b_pharmaceutical_dose_form_termid: str | None = None  # st
 
     # g_k_4_r_10_route_administration
-    g_k_4_r_10_1_route_administration: str | t.Literal[NF.ASKU, NF.NASK, NF.UNK] | None = None
+    g_k_4_r_10_1_route_administration: str | L[NF.ASKU, NF.NASK, NF.UNK] | None = None
     g_k_4_r_10_2a_route_administration_termid_version: str | None = None  # st
     g_k_4_r_10_2b_route_administration_termid: str | None = None  # st
 
     # g_k_4_r_11_parent_route_administration
-    g_k_4_r_11_1_parent_route_administration: str | t.Literal[NF.ASKU, NF.NASK, NF.UNK] | None = None
+    g_k_4_r_11_1_parent_route_administration: str | L[NF.ASKU, NF.NASK, NF.UNK] | None = None
     g_k_4_r_11_2a_parent_route_administration_termid_version: str | None = None  # st
     g_k_4_r_11_2b_parent_route_administration_termid: str | None = None  # st
 
 
 class G_k_7_r_indication_use_case(DomainModel):
-    g_k_7_r_1_indication_primary_source: str | t.Literal[NF.ASKU, NF.NASK, NF.UNK] | None = None
+    g_k_7_r_1_indication_primary_source: str | L[NF.ASKU, NF.NASK, NF.UNK] | None = None
 
     # g_k_7_r_2_indication_meddra_code
     g_k_7_r_2a_meddra_version_indication: str | None = None  # st
@@ -511,7 +561,7 @@ class G_k_9_i_drug_reaction_matrix(DomainModel):
     g_k_9_i_3_2a_interval_last_dose_drug_reaction_num: Decimal | None = None
     g_k_9_i_3_2b_interval_last_dose_drug_reaction_unit: str | None = None  # st
 
-    g_k_9_i_4_reaction_recur_readministration: enums.G_k_9_i_4_reaction_recur_readministration | None = None
+    g_k_9_i_4_reaction_recur_readministration: e.G_k_9_i_4_reaction_recur_readministration | None = None
 
 
 class G_k_9_i_2_r_assessment_relatedness_drug_reaction(DomainModel):
@@ -521,7 +571,7 @@ class G_k_9_i_2_r_assessment_relatedness_drug_reaction(DomainModel):
 
 
 class G_k_10_r_additional_information_drug(DomainModel):
-    g_k_10_r_additional_information_drug: enums.G_k_10_r_additional_information_drug | None = None
+    g_k_10_r_additional_information_drug: e.G_k_10_r_additional_information_drug | None = None
 
 
 # H_narrative_case_summary
