@@ -4,22 +4,19 @@ from django import forms
 from django.db import models
 from django.core import exceptions
 
+from app.src.connectors.base.model_converters import base as bmc
+from app.src.connectors.base.model_converters import pydantic as pmc
+from app.src.enums import NullFlavor
 from app.src.layers.domain import models as dm
 from app.src.layers.domain.models import DomainModel
 from app.src.layers.storage.models import StorageModel, null_flavor_field_utils
-from app.src.model_converters import pydantic as pmc
-from app.src.model_converters.base import BaseModelConverter
-from app.src.shared.enums import NullFlavor
 from extensions import utils
 from extensions.django.fields import temp_relation_field_utils
 
 
-class DomainToStorageModelConverter[S: DomainModel, T: StorageModel](
-    BaseModelConverter[S, T], 
-    pmc.PydanticSourceModelConverter[S, T]
-):
+class DomainToStorageModelConverter[S: DomainModel, T: StorageModel](pmc.PydanticSourceModelConverter[S, T]):
     @classmethod
-    def convert(cls, source_model: S, **kwargs) -> T:
+    def convert(cls, source_model: S) -> T:
         target_model, _ = cls.convert_to_model_and_dict(source_model)
         return target_model
     
@@ -107,13 +104,11 @@ class DomainToStorageModelConverter[S: DomainModel, T: StorageModel](
                 rel.g_k_9_i_1_reaction_assessed = events[id_]
 
 
-class StorageToDomainModelConverter[S: StorageModel, T: DomainModel](
-    BaseModelConverter[S, T]
-):  
+class StorageToDomainModelConverter[S: StorageModel, T: DomainModel](bmc.BaseModelConverter[S, T]):  
     INCLUDE_RELATED_DEFAULT = True
 
     @classmethod
-    def convert(cls, source_model: S, include_related: bool = INCLUDE_RELATED_DEFAULT, **kwargs) -> T:
+    def convert(cls, source_model: S, include_related: bool = INCLUDE_RELATED_DEFAULT) -> T:
         target_model, target_dict = cls.convert_to_model_and_dict(source_model, include_related)
         return target_model.model_safe_validate(target_dict)
 

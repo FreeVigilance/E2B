@@ -12,6 +12,7 @@ from extensions import utils
 
 class ErrorType(enum.StrEnum):
     CUSTOM = enum.auto()
+    BUSINESS = enum.auto()
 
 
 class PostValidatableModel(pd.BaseModel):

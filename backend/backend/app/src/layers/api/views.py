@@ -6,7 +6,7 @@ from django import http
 from django.views import View
 
 from app.src.layers.api.models import ApiModel
-from app.src.shared.services import SupportsServiceMethods
+from app.src.layers.base.services import ServiceWithBusinessValidation
 from extensions import utils
 
 
@@ -16,7 +16,7 @@ class StatusCode(enum.IntEnum):
 
 
 class BaseView(View):
-    domain_service: SupportsServiceMethods[ApiModel] = ...
+    domain_service: ServiceWithBusinessValidation[ApiModel] = ...
     model_class: type[ApiModel] = ...
 
     def get_model_from_request(self, request: http.HttpRequest) -> ApiModel:
@@ -25,19 +25,19 @@ class BaseView(View):
         return model.model_safe_validate(data)
     
     def respond_with_model_as_json_after_write(self, model: ApiModel) -> http.HttpResponse:
-        code = StatusCode.OK if model.is_valid else StatusCode.BAD_REQUEST
-        return self.respond_with_model_as_json(model, code)
+        status = StatusCode.OK if model.is_valid else StatusCode.BAD_REQUEST
+        return self.respond_with_model_as_json(model, status)
 
-    def respond_with_model_as_json(self, model: ApiModel, status_code: int) -> http.HttpResponse:
+    def respond_with_model_as_json(self, model: ApiModel, status: int) -> http.HttpResponse:
         # Dump data and ignore warnings about wrong data format and etc.
         data = utils.exec_without_warnings(lambda: model.model_dump_json(by_alias=True))
-        return self.respond_with_json(data, status_code)
+        return self.respond_with_json(data, status)
 
-    def respond_with_object_as_json(self, obj: t.Any, status_code: int) -> http.HttpResponse:
-        return self.respond_with_json(json.dumps(obj), status_code)
+    def respond_with_object_as_json(self, obj: t.Any, status: int) -> http.HttpResponse:
+        return self.respond_with_json(json.dumps(obj), status)
 
-    def respond_with_json(self, json_str: str, status_code: int) -> http.HttpResponse:
-        return http.HttpResponse(json_str, status=status_code, content_type='application/json')
+    def respond_with_json(self, json_str: str, status: int) -> http.HttpResponse:
+        return http.HttpResponse(json_str, status=status, content_type='application/json')
 
 
 class ModelClassView(BaseView):
@@ -68,3 +68,11 @@ class ModelInstanceView(BaseView):
     def delete(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
         self.domain_service.delete(self.model_class, pk)
         return http.HttpResponse(status=StatusCode.OK)
+    
+
+class ModelBusinessValidationView(BaseView):
+    def get(self, request: http.HttpRequest) -> http.HttpResponse:
+        model = self.get_model_from_request(request)
+        if model.is_valid:
+            model = self.domain_service.business_validate(model)
+        return self.respond_with_model_as_json(model, status=StatusCode.OK)

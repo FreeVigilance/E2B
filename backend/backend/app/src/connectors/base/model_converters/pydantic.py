@@ -4,6 +4,8 @@ import typing as t
 
 import pydantic as pd
 
+from app.src.connectors.base.model_converters.base import BaseModelConverter
+
 
 @dc.dataclass
 class FieldData:
@@ -32,17 +34,7 @@ class SharedData:
     context: dict[str, t.Any] = dc.field(default_factory=dict)
 
 
-class PydanticSourceModelConverter[S: pd.BaseModel, T](abc.ABC):
-    @classmethod
-    @abc.abstractmethod
-    def get_source_model_base_class(cls) -> type[S]:
-        raise NotImplementedError()
-    
-    @classmethod
-    @abc.abstractmethod
-    def get_target_model_class(cls, source_model_class: type[S]) -> type[T]:
-        raise NotImplementedError()
-    
+class PydanticSourceModelConverter[S: pd.BaseModel, T](BaseModelConverter[S, T], abc.ABC):    
     @classmethod
     @abc.abstractmethod
     def construct_target_model(cls, clazz: type[T], dict_: dict[str, t.Any]) -> T:

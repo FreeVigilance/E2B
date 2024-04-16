@@ -1,7 +1,7 @@
 from django.db import models
 
-from app.src.shared import enums
-from app.src.shared.enums import NullFlavor as NF
+from app.src import enums
+from app.src.enums import NullFlavor as NF
 from extensions.django import constraints as ext_cons
 from extensions.django import fields as ext_fields
 from extensions.django import models as ext_models

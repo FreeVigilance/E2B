@@ -7,7 +7,7 @@ import typing as t
 class BaseModelConverter[S, T](abc.ABC):
     @classmethod
     @abc.abstractmethod
-    def convert(cls, source_model: S, **kwargs) -> T:
+    def convert(cls, source_model: S) -> T:
         raise NotImplementedError()
     
     @classmethod
