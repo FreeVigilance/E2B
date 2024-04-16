@@ -1,8 +1,10 @@
-from app.src.layers.base.services import Service
+import typing as t
+
+from app.src.layers.base.services import Service, ServiceWithBusinessValidation
 from app.src.layers.domain.models import DomainModel
 
 
-class DomainService(Service[DomainModel]):
+class DomainService(ServiceWithBusinessValidation[DomainModel]):
 	def __init__(self, storage_service: Service[DomainModel]) -> None:
 		self.storage_service = storage_service
 
@@ -24,3 +26,6 @@ class DomainService(Service[DomainModel]):
 
 	def delete(self, model_class: type[DomainModel], pk: int) -> None:
 		return self.storage_service.delete(model_class, pk)
+
+	def business_validate(self, model: DomainModel, initial_data: dict[str, t.Any] | None = None) -> DomainModel:
+		return model.model_business_validate(initial_data)

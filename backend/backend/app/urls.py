@@ -25,4 +25,5 @@ urlpatterns = [
 
     path('icsr', views.ModelClassView.as_view(**view_shared_args)),
     path('icsr/<int:pk>', views.ModelInstanceView.as_view(**view_shared_args)),
+    path('icsr/validate', views.ModelBusinessValidationView.as_view(**view_shared_args)),
 ]
