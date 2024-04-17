@@ -11,6 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {makeStyles} from '@mui/styles';
 import { ParentInfoFieldLabel } from '@src/components/field-labels/patient/parent-child/parent-info-label';
 import InputMask from 'react-input-mask'
+import { MedDRABtn } from '@src/components/meddra/meddra-btn';
 
 const useStyles = makeStyles({
     margin: {
@@ -53,7 +54,10 @@ export const ParentInfo = () => {
     const {parentData} = useSelector(patientSelector);
 
     const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
-        let value = event.target.value
+        let value = event.target.value;
+        if (value === '') {
+            value = null;
+        };
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)
@@ -127,6 +131,8 @@ export const ParentInfo = () => {
                                     evt.preventDefault()
                                 }
                                 value = {item['D_10_7_1_r_1b_MedicalHistoryMedDRACode'].value}/>
+                            <MedDRABtn field='D_10_7_1_r_1b_MedicalHistoryMedDRACode' index={index}
+                                handleChange={handleChange}></MedDRABtn>
                         </Grid>
 
                         <Grid item xs={3}>

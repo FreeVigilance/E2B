@@ -49,8 +49,12 @@ export const InfoSenderComp = () => {
     const {infoSenderData} = useSelector(infoSenderSelector);
 
     const handleChange = (fieldName) => (event) => {
+        let value = event.target.value 
+        if (value === '') {
+            value = null;
+        };
         let infoSenderDataCopy = JSON.parse(JSON.stringify(infoSenderData));
-        infoSenderDataCopy[fieldName].value = event.target.value;
+        infoSenderDataCopy[fieldName].value = value;
         dispatch(setInfoSenderData(infoSenderDataCopy));
     };
 

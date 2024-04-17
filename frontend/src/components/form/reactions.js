@@ -15,6 +15,7 @@ import {makeStyles} from '@mui/styles';
 import { drugsSelector, setDrugReactionMatrix, setRelatedness } from '@src/features/drugs/slice';
 import { ReactionFieldLabel } from '../field-labels/reaction-field-label';
 import InputMask from 'react-input-mask'
+import { MedDRABtn } from '../meddra/meddra-btn';
 
 
 var snakecaseKeys = require('snakecase-keys')
@@ -66,7 +67,10 @@ export const Reactions = () => {
     const {drugReactionMatrix, relatedness} = useSelector(drugsSelector);
 
     const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
-        let value = event.target.value
+        let value = event.target.value;
+        if (value === '') {
+            value = null;
+        }
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)
@@ -200,6 +204,8 @@ export const Reactions = () => {
                                     evt.preventDefault()
                                 }
                                 />
+                            <MedDRABtn field='E_i_2_1b_ReactionMedDRACode' index={index}
+                                handleChange={handleChange}></MedDRABtn>
                         </Grid>
                         <Grid item xs={4}>
                             <ReactionFieldLabel label="Term Highlighted by the Reporter"

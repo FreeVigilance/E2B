@@ -53,8 +53,12 @@ export const StudyRegistrationComp = () => {
     const {studyRegistration} = useSelector(studyIdentificationSelector);
 
     const handleChange = (fieldName, index) => (event) => {
+        let value = event.target.value;
+        if (value === '') {
+            value = null;
+        };
         let studyRegistrationCopy = JSON.parse(JSON.stringify(studyRegistration));
-        studyRegistrationCopy[index][fieldName].value = event.target.value;
+        studyRegistrationCopy[index][fieldName].value = value;
         dispatch(setStudyRegistration(studyRegistrationCopy));
     };
 

@@ -54,8 +54,12 @@ export const SummaryCommentsComp = () => {
     const {summaryComments} = useSelector(narrativeSelector);
 
     const handleChange = (fieldName, index) => (event) => {
+        let value = event.target.value;
+        if (value === '') {
+            value = null;
+        };
         let summaryCommentsCopy = JSON.parse(JSON.stringify(summaryComments));
-        summaryCommentsCopy[index][fieldName].value = event.target.value;
+        summaryCommentsCopy[index][fieldName].value = value;
         dispatch(setSummaryComments(summaryCommentsCopy));
     };
 

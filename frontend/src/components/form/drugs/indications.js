@@ -9,6 +9,7 @@ import { IndicationForUse } from '@src/features/drugs/drugs';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {makeStyles} from '@mui/styles';
 import { IndicationsFieldLabel } from '@src/components/field-labels/drugs/indications-label';
+import { MedDRABtn } from '@src/components/meddra/meddra-btn';
 
 const useStyles = makeStyles({
     margin: {
@@ -57,7 +58,10 @@ export const Indications = ({drugIndex}) => {
     });
 
     const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
-        let value = event.target.value
+        let value = event.target.value;
+        if (value === '') {
+            value = null;
+        };
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)
@@ -168,6 +172,8 @@ export const Indications = ({drugIndex}) => {
                                         evt.preventDefault()
                                     }
                                     value = {item['G_k_7_r_2b_IndicationMedDRACode'].value}/>
+                                <MedDRABtn field='G_k_7_r_2b_IndicationMedDRACode' index={index}
+                                    handleChange={handleChange}></MedDRABtn>
                         </Grid>
                     </Grid>
                        

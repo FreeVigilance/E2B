@@ -9,6 +9,7 @@ import { CauseOfDeath } from '@src/features/patient/patient';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {makeStyles} from '@mui/styles';
 import { CauseOfDeathFieldLabel } from '@src/components/field-labels/patient/cause-of-death-label';
+import { MedDRABtn } from '@src/components/meddra/meddra-btn';
 
 const useStyles = makeStyles({
     margin: {
@@ -50,13 +51,11 @@ export const CausesOfDeath = () => {
 	const dispatch = useDispatch();
     const {causeOfDeath} = useSelector(patientSelector);
 
-    useEffect(() => {
-        console.log("STATE");
-        console.log(causeOfDeath);
-    });
-
     const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
-        let value = event.target.value
+        let value = event.target.value;
+        if (value === '') {
+            value = null;
+        };
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)
@@ -128,6 +127,8 @@ export const CausesOfDeath = () => {
                                         evt.preventDefault()
                                     }
                                     value = {item['D_9_2_r_1b_CauseDeathMedDRACode'].value}/>
+                                <MedDRABtn field='D_9_2_r_1b_CauseDeathMedDRACode' index={index}
+                                    handleChange={handleChange}></MedDRABtn>
                             </Grid>
                         </Grid>
 

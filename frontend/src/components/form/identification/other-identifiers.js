@@ -52,8 +52,12 @@ export const OtherIdentifiersComp = () => {
     const {otherIdentifiers} = useSelector(identificationSelector);
 
     const handleChange = (fieldName, index) => (event) => {
+        let value = event.target.value;
+        if (value === '') {
+            value = null;
+        };
         let otherIdentifiersCopy = JSON.parse(JSON.stringify(otherIdentifiers));
-        otherIdentifiersCopy[index][fieldName].value = event.target.value;
+        otherIdentifiersCopy[index][fieldName].value = value;
         dispatch(setOtherIdentifiers(otherIdentifiersCopy));
     };
 

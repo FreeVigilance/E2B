@@ -1,12 +1,15 @@
 
 import { FormLabel, IconButton, Stack, Tooltip } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { displaySelector } from '@src/features/display/slice';
+import { displaySelector, setErrorTabs } from '@src/features/display/slice';
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import InfoIcon from '@mui/icons-material/Info';
 
 export const ResultFieldLabel = ({label, field, index}) => {
+    const dispatch = useDispatch();
+    const {errorTabs} = useSelector(displaySelector)
+
     const useStyles = makeStyles({
         label: {
             color: '#333366',

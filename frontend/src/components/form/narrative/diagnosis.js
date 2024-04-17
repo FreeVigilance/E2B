@@ -11,6 +11,7 @@ import { narrativeSelector, setDiagnosis } from '@src/features/narrative/slice';
 import { Diagnosis } from '@src/features/narrative/narrative';
 import {makeStyles} from '@mui/styles';
 import { DiagnosisFieldLabel } from '@src/components/field-labels/narrative/diagnosis-label';
+import { MedDRABtn } from '@src/components/meddra/meddra-btn';
 
 const useStyles = makeStyles({
     margin: {
@@ -54,7 +55,10 @@ export const DiagnosisComp = () => {
     const {diagnosis} = useSelector(narrativeSelector);
 
     const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
-        let value = event.target.value
+        let value = event.target.value;
+        if (value === '') {
+            value = null;
+        };
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)
@@ -111,6 +115,9 @@ export const DiagnosisComp = () => {
                                 }
                                 onChange={handleChange('H_3_r_1b_SenderDiagnosisMedDRAcode', index, true, 8)}
                                 value = {item['H_3_r_1b_SenderDiagnosisMedDRAcode'].value}/>
+
+                            <MedDRABtn field='H_3_r_1b_SenderDiagnosisMedDRAcode' index={index}
+                                    handleChange={handleChange}></MedDRABtn>
                         </Grid>
                     </Grid>
                         <Stack direction="row" justifyContent="flex-start">

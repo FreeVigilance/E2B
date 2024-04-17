@@ -15,6 +15,7 @@ import InputMask from 'react-input-mask'
 
 import {makeStyles} from '@mui/styles';
 import { MedHistoryFieldLabel } from '@src/components/field-labels/patient/med-history-label';
+import { MedDRABtn } from '@src/components/meddra/meddra-btn';
 
 const useStyles = makeStyles({
     margin: {
@@ -57,7 +58,10 @@ export const MedicalHistory = () => {
     const {medicalHistory} = useSelector(patientSelector);
 
     const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
-        let value = event.target.value
+        let value = event.target.value;
+        if (value === '') {
+            value = null;
+        };
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)
@@ -132,6 +136,8 @@ export const MedicalHistory = () => {
                                         (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === '.') &&
                                         evt.preventDefault()
                                     }/>
+                                <MedDRABtn field='D_7_1_r_1b_MedicalHistoryMedDRACode' index={index}
+                                    handleChange={handleChange}></MedDRABtn>
                             </Grid>
 
                             <Grid item xs={3}>

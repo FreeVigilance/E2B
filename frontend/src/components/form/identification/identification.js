@@ -59,11 +59,15 @@ export const IdentificationComp = () => {
     const { identification } = useSelector(identificationSelector);
 
     const handleChange = (fieldName) => (event) => {
+        let value = event.target.value;
+        if (value === '') {
+            value = null;
+        };
         const identificationCopy = JSON.parse(JSON.stringify(identification));
         if (fieldName === 'C_1_9_1_OtherCaseIdsPreviousTransmissions') {
             identificationCopy[fieldName].value = event.target.checked;
         } else {
-            identificationCopy[fieldName].value = event.target.value;
+            identificationCopy[fieldName].value = value;
         }
         dispatch(setIdentification(identificationCopy));
     };

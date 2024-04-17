@@ -57,6 +57,9 @@ export const Patient = () => {
 
     const handleChange = (fieldName, isNumber = false, length = 1) => (event) => {
         let value = event.target.value;
+        if (value === '') {
+            value = null;
+        };
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)

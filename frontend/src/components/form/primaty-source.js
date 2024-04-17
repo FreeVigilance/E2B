@@ -58,11 +58,15 @@ export const PrimarySourceComp = () => {
     const {primarySourceData} = useSelector(primarySourceSelector);
 
     const handleChange = (fieldName, index) => (event) => {
+        let value = event.target.value;
+        if (value === '') {
+            value = null;
+        };
         let primarySourceDataCopy = JSON.parse(JSON.stringify(primarySourceData));
         if (fieldName === 'C_2_r_5_PrimarySourceRegulatoryPurposes') {
             primarySourceDataCopy[index][fieldName].value = event.target.checked;
         } else {
-            primarySourceDataCopy[index][fieldName].value = event.target.value;
+            primarySourceDataCopy[index][fieldName].value = value;
         }
         dispatch(setPrimarySourceData(primarySourceDataCopy));
     };

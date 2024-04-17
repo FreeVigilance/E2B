@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import {makeStyles} from '@mui/styles';
-import {Stack, FormControlLabel, Card, CardContent, IconButton, Box, Select, MenuItem, FormControl, InputLabel, InputAdornment, OutlinedInput, createTheme, ThemeProvider, FormLabel, Grid, List, ListItem} from '@mui/material';
+import {Stack, FormControlLabel, Card, CardContent, IconButton, Box, Select, MenuItem, FormControl, InputLabel, Grid} from '@mui/material';
 import { resultsSelector, setResultsData } from '@src/features/results/slice';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -14,6 +14,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ResultFieldLabel } from '../field-labels/result-field-label';
 import InputMask from 'react-input-mask'
+import { MedDRABtn } from '../meddra/meddra-btn';
 
 
 const useStyles = makeStyles({
@@ -57,10 +58,13 @@ export const Results = () => {
     const {resultsData} = useSelector(resultsSelector);
 
     const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
-        let value = event.target.value
+        let value = event.target.value;
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)
+        }
+        if (value === '') {
+            value = null;
         }
         let resultsDataCopy = JSON.parse(JSON.stringify(resultsData));
         if (event.target === undefined) {
@@ -154,6 +158,8 @@ export const Results = () => {
                                         (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
                                         evt.preventDefault()
                                     }/>
+                                <MedDRABtn field='F_r_2_2b_TestNameMedDRACode' index={index}
+                                handleChange={handleChange}></MedDRABtn>
                             </Grid>
 
                             <Grid item xs={2}>
@@ -203,7 +209,6 @@ export const Results = () => {
                             <Grid item xs={10}>
                                 <Select
                                     className={classes.textXshort}
-                                    defaultValue={0}
                                     onChange={handleChange('F_r_3_1_TestResultCode', index)}
                                     value = {item['F_r_3_1_TestResultCode'].value}
                                     >

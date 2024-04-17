@@ -54,8 +54,12 @@ export const StudyIdentificationComp = () => {
     const {studyIdentification} = useSelector(studyIdentificationSelector);
     
     const handleChange = (fieldName) => (event) => {
+        let value = event.target.value
+        if (value === '') {
+            value = null;
+        };
         let studyIdentificationCopy = JSON.parse(JSON.stringify(studyIdentification));
-        studyIdentificationCopy[fieldName].value = event.target.value;
+        studyIdentificationCopy[fieldName].value = value;
         dispatch(setStudyIdentification(studyIdentificationCopy));
     };
 

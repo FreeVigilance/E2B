@@ -14,6 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {makeStyles} from '@mui/styles';
 import { ParentDrugHistoryFieldLabel } from '@src/components/field-labels/patient/parent-child/parent-deug-history';
 import InputMask from 'react-input-mask'
+import { MedDRABtn } from '@src/components/meddra/meddra-btn';
 
 const useStyles = makeStyles({
     margin: {
@@ -56,7 +57,10 @@ export const ParentDrugsHistory = () => {
     const {parentDrugHistory} = useSelector(patientSelector);
 
     const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
-        let value = event.target.value
+        let value = event.target.value;
+        if (value === '') {
+            value = null;
+        };
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)
@@ -191,6 +195,8 @@ export const ParentDrugsHistory = () => {
                                             evt.preventDefault()
                                         }
                                         value = {item['D_10_8_r_6b_IndicationMedDRACode'].value}/>
+                                <MedDRABtn field='D_10_8_r_6b_IndicationMedDRACode' index={index}
+                                    handleChange={handleChange}></MedDRABtn>
                             </Grid>
 
                             <Grid item xs={3}>
@@ -223,6 +229,8 @@ export const ParentDrugsHistory = () => {
                                             evt.preventDefault()
                                         }
                                         value = {item['D_10_8_r_7b_ReactionsMedDRACode'].value}/>
+                                <MedDRABtn field='D_10_8_r_7b_ReactionsMedDRACode' index={index}
+                                    handleChange={handleChange}></MedDRABtn>
                             </Grid>
 
                             <Grid item xs={3}>

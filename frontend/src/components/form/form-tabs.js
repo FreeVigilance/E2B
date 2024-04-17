@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -8,7 +8,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import { displaySelector, getJsonFromXml, getXmlFromJson, setCurrentSaved, setCurrentTab, setShowSideMenu } from '@src/features/display/slice';
 import { Results } from './results';
 import { Reactions } from './reactions';
-import { Button, FormLabel, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Tooltip } from '@mui/material';
+import { Button, ClickAwayListener, FormLabel, Grow, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Popper, Tooltip } from '@mui/material';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import { Patient } from './patient-info/patient';
 import { ParentChild } from './patient-info/parent-child/parent-child';
@@ -42,7 +42,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 export const FormTabs = () => {
     const dispatch = useDispatch();
-    const { currentTab, currentSaved, currentId, showSideMenu} = useSelector(displaySelector);
+    const { currentTab, currentSaved, currentId, showSideMenu, errorTabs} = useSelector(displaySelector);
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -109,29 +109,133 @@ export const FormTabs = () => {
         dispatch(getXmlFromJson(data));
     }
 
+    const [anchorElExtra, setAnchorElExtra] = useState(null);
+    const openExtra = Boolean(anchorElExtra);
+    const handleClickExtra = (event) => {
+        setAnchorElExtra(event.currentTarget);
+    };
+    const handleCloseExtra = () => {
+        setAnchorElExtra(null);
+    };
+
+
     return (
         <Box sx={{ width: '95%', typography: 'body1' }}>
             <TabContext value={currentTab}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList onChange={handleChange} aria-label="lab API tabs example"
                     indicatorColor="secondary"
-          textColor="inherit"
-          variant="fullWidth">
-                        <Tab label="Results" value="0" />
-                        <Tab label="Reactions" value="1" />
-                        <Tab label="Patient" value="2" />
-                        <Tab label="Patient death" value="3" />
-                        <Tab label="Parent-child" value="4" />
-                        <Tab label="Drugs" value="5" />
-                        <Tab label="Dosages" value="6" />
-                        <Tab label="Drug Reaction Matrix" value="7" />
-                        <Tab label="Primary Source" value="8" />
-                        <Tab label="Sender Information" value="9" />
-                        <Tab label="Literature References" value="10" />
-                        <Tab label="Identification of report" value="11" />
-                        <Tab label="Study Identification" value="12" />
-                        <Tab label="Narrative Case Summary" value="13" />
+                    textColor="inherit"
+                    variant="fullWidth">
 
+                {errorTabs[11].value ?
+                    <Tab label="Identification of report" value="11" style={{color: 'red', fontWeight: 600}}/>
+                :   <Tab label="Identification of report" value="11" />}
+
+                {errorTabs[8].value ?
+                    <Tab label="Primary Source" value="8" style={{color: 'red', fontWeight: 600}}/>
+                :   <Tab label="Primary Source" value="8" />}
+
+                {errorTabs[2].value ?
+                    <Tab label="Patient" value="2" style={{color: 'red', fontWeight: 600}}/>
+                :   <Tab label="Patient" value="2" />}
+
+                {errorTabs[1].value ?
+                    <Tab label="Reactions" value="1" style={{color: 'red', fontWeight: 600}}/>
+                :   <Tab label="Reactions" value="1" />}
+
+                {errorTabs[0].value ?
+                    <Tab label="Results" value="0" style={{color: 'red', fontWeight: 600}}/>
+                :   <Tab label="Results" value="0"/>}
+                        
+                {errorTabs[5].value ?
+                    <Tab label="Drugs" value="5" style={{color: 'red', fontWeight: 600}}/>
+                :   <Tab label="Drugs" value="5" />}
+
+                {errorTabs[6].value ?
+                    <Tab label="Dosages" value="6" style={{color: 'red', fontWeight: 600}}/>
+                :   <Tab label="Dosages" value="6" />}
+
+                {errorTabs[7].value ?
+                    <Tab label="Drug Reaction Matrix" value="7" style={{color: 'red', fontWeight: 600}}/>
+                :   <Tab label="Drug Reaction Matrix" value="7" />}
+
+                {errorTabs[13].value ?
+                    <Tab label="Narrative Case Summary" value="13" style={{color: 'red', fontWeight: 600}}/>
+                :   <Tab label="Narrative Case Summary" value="13" />}
+                        
+                        <div>
+                            <Button
+                                aria-controls={open ? 'long-menu' : undefined}
+                                aria-expanded={open ? 'true' : undefined}
+                                aria-haspopup="true"
+                                variant='outlined'
+                                style={{height: '70px', color: 'black', borderColor: 'black'}}
+                                onClick={handleClickExtra}
+                            >
+                                Extra Tabs
+                            </Button>
+                            <Menu
+                                MenuListProps={{
+                                'aria-labelledby': 'long-button',
+                                }}
+                                anchorEl={anchorElExtra}
+                                open={openExtra}
+                                onClose={handleCloseExtra}
+                                PaperProps={{
+                                // style: {
+                                //     maxHeight: 48 * 4.5,
+                                //     width: '20ch',
+                                // },
+                                }}
+                            >
+                                <MenuItem onClick={handleCloseExtra}>
+                                    <TabList onChange={handleChange} indicatorColor="secondary"
+                                            textColor="inherit"
+                                            variant="fullWidth">
+                                    {errorTabs[9].value ?
+                                            <Tab label="Sender Information" value="9" style={{color: 'red', fontWeight: 600}}/>
+                                        :   <Tab label="Sender Information" value="9" />}
+                                    </TabList>
+                                </MenuItem>
+                                <MenuItem onClick={handleCloseExtra}>
+                                    <TabList onChange={handleChange} indicatorColor="secondary"
+                                            textColor="inherit"
+                                            variant="fullWidth">
+                                    {errorTabs[3].value ?
+                                        <Tab label="Patient death" value="3" style={{color: 'red', fontWeight: 600}}/>
+                                    :   <Tab label="Patient death" value="3" />}
+                                    </TabList>
+                                </MenuItem>
+                                <MenuItem onClick={handleCloseExtra}>
+                                    <TabList onChange={handleChange} indicatorColor="secondary"
+                                            textColor="inherit"
+                                            variant="fullWidth">
+                                    {errorTabs[4].value ?
+                                        <Tab label="Parent-child" value="4" style={{color: 'red', fontWeight: 600}}/>
+                                    :   <Tab label="Parent-child" value="4" />}
+                                    </TabList>
+                                </MenuItem>
+                                <MenuItem onClick={handleCloseExtra}>
+                                    <TabList onChange={handleChange} indicatorColor="secondary"
+                                            textColor="inherit"
+                                            variant="fullWidth">
+                                    {errorTabs[10].value ?
+                                        <Tab label="Literature References" value="10" style={{color: 'red', fontWeight: 600}}/>
+                                    :   <Tab label="Literature References" value="10" />}
+                                    </TabList>
+                                </MenuItem>
+                                <MenuItem onClick={handleCloseExtra}>
+                                    <TabList onChange={handleChange} indicatorColor="secondary"
+                                            textColor="inherit"
+                                            variant="fullWidth">
+                                    {errorTabs[12].value ?
+                                        <Tab label="Study Identification" value="12" style={{color: 'red', fontWeight: 600}}/>
+                                    :   <Tab label="Study Identification" value="12" />}
+                                    </TabList>
+                                </MenuItem>
+                            </Menu>
+                        </div>
                     </TabList>
                 </Box>
 

@@ -52,8 +52,12 @@ export const IdentificationNumberComp = () => {
     const {identificationNumber} = useSelector(identificationSelector);
 
     const handleChange = (fieldName, index) => (event) => {
+        let value = event.target.value;
+        if (value === '') {
+            value = null;
+        };
         let identificationNumberCopy = JSON.parse(JSON.stringify(identificationNumber));
-        identificationNumberCopy[index][fieldName].value = event.target.value;
+        identificationNumberCopy[index][fieldName].value = value;
         dispatch(setIdentificationNumber(identificationNumberCopy));
     };
 

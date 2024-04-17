@@ -22,8 +22,12 @@ export const ReactionSelect = ({drugIndex, index}) => {
     const {reactionsData} = useSelector(reactionsSelector);
 
     const handleChange = () => (event) => {
+        let value = event.target.value;
+        if (value === '') {
+            value = null;
+        };
         let drugReactionMatrixCopy = JSON.parse(JSON.stringify(drugReactionMatrix));
-        drugReactionMatrixCopy[drugIndex][index]['G_k_9_i_1_ReactionAssessed'] = event.target.value;
+        drugReactionMatrixCopy[drugIndex][index]['G_k_9_i_1_ReactionAssessed'] = value;
         dispatch(setDrugReactionMatrix(drugReactionMatrixCopy));
     };
 

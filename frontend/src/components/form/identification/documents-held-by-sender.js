@@ -51,8 +51,12 @@ export const DocumentsHeldBySenderComp = () => {
     const {documentsHeldBySender} = useSelector(identificationSelector);
 
     const handleChange = (fieldName, index) => (event) => {
+        let value = event.target.value;
+        if (value === '') {
+            value = null;
+        };
         let documentsHeldBySenderCopy = JSON.parse(JSON.stringify(documentsHeldBySender));
-        documentsHeldBySenderCopy[index][fieldName].value = event.target.value;
+        documentsHeldBySenderCopy[index][fieldName].value = value;
         dispatch(setDocumentsHeldBySender(documentsHeldBySenderCopy));
     };
 

@@ -58,11 +58,15 @@ export const ReferencesComp = () => {
     const {referencesData} = useSelector(referencesSelector);
 
     const handleChange = (fieldName, index) => (event) => {
+        let value = event.target.value;
+        if (value === '') {
+            value = null;
+        };
         let referencesDataCopy = JSON.parse(JSON.stringify(referencesData));
         if (fieldName === 'C_2_r_5_PrimarySourceRegulatoryPurposes') {
             referencesDataCopy[index][fieldName].value = event.target.checked;
         } else {
-            referencesDataCopy[index][fieldName].value = event.target.value;
+            referencesDataCopy[index][fieldName].value = value;
         }
         dispatch(setReferencesData(referencesDataCopy));
     };

@@ -48,8 +48,12 @@ export const ParentHistory = () => {
     const {parentHistoryData, parentData} = useSelector(patientSelector);
 
     const handleChange = (fieldName) => (event) => {
+        let value = event.target.value;
+        if (value === '') {
+            value = null;
+        };
         let parentHistoryDataCopy = JSON.parse(JSON.stringify(parentHistoryData));
-        parentHistoryDataCopy[fieldName].value = event.target.value;
+        parentHistoryDataCopy[fieldName].value = value;
         dispatch(setParentHistoryData(parentHistoryDataCopy));
     };
 

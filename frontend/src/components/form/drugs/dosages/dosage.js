@@ -59,7 +59,10 @@ export const Dosages = ({drugIndex}) => {
     const {dosages} = useSelector(drugsSelector);
 
     const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
-        let value = event.target.value
+        let value = event.target.value;
+        if (value === '') {
+            value = null;
+        };
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)

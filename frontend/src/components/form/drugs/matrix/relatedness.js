@@ -12,14 +12,13 @@ export const Relatednesses = ({drugIndex, matrixIndex}) => {
 	const dispatch = useDispatch();
     const {relatedness} = useSelector(drugsSelector);
 
-    useEffect(() => {
-        console.log("STATE");
-        console.log(relatedness);
-    });
-
     const handleChange = (fieldName, index) => (event) => {
+        let value = event.target.value;
+        if (value === '') {
+            value = null;
+        };
         let relatednessCopy = JSON.parse(JSON.stringify(relatedness));
-        relatednessCopy[drugIndex][matrixIndex][index][fieldName].value = event.target.value;
+        relatednessCopy[drugIndex][matrixIndex][index][fieldName].value = value;
         dispatch(setRelatedness(relatednessCopy));
     };
 

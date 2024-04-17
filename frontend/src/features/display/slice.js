@@ -52,6 +52,143 @@ export const getJsonFromXml = createAsyncThunk(
 );
 
 
+export const getTabsWithErrors = (errors) => {
+    let errorTabs = {
+        0: {value: false, message: null},
+        1: {value: false, message: null},
+        2: {value: false, message: null},
+        3: {value: false, message: null},
+        4: {value: false, message: null},
+        5: {value: false, message: null},
+        6: {value: false, message: null},
+        7: {value: false, message: null},
+        8: {value: false, message: null},
+        9: {value: false, message: null},
+        10: {value: false, message: null},
+        11: {value: false, message: null},
+        12: {value: false, message: null},
+        13: {value: false, message: null},
+    };
+
+    if (errors['F_r_ResultsTestsProceduresInvestigationPatient']) {
+        errorTabs[0].value = true;
+        if (errors['F_r_ResultsTestsProceduresInvestigationPatient']['_Self']){
+            errorTabs[0].message = errors['F_r_ResultsTestsProceduresInvestigationPatient']['_Self']
+        }
+    }
+    if (errors['E_i_ReactionEvent']) {
+        errorTabs[1].value = true;
+        if (errors['E_i_ReactionEvent']['_Self']){
+            errorTabs[1].message = errors['E_i_ReactionEvent']['_Self']
+        }
+    }
+    if (errors['D_PatientCharacteristics'] && !errors['D_PatientCharacteristics']['D_9_2_r_CauseDeath'] && !['D_PatientCharacteristics']['D_9_4_r_AutopsyDeterminedCauseDeath'] &&
+    !errors['D_PatientCharacteristics']['D_10_InformationConcerningParent'] && !errors['D_PatientCharacteristics']['D_10_8_r_PastDrugHistoryParent'] &&
+    !errors['D_PatientCharacteristics']['D_10_7_2_TextMedicalHistoryParent'] && !errors['D_PatientCharacteristics']['D_10_7_1_r_StructuredInformationParentMedDRACode']) {
+        errorTabs[2].value = true;
+        if (errors['D_PatientCharacteristics']['_Self']){
+            errorTabs[2].message = errors['D_PatientCharacteristics']['_Self']
+        }
+    }
+    if (errors['D_PatientCharacteristics'] && (errors['D_PatientCharacteristics']['D_9_2_r_CauseDeath'] || ['D_PatientCharacteristics']['D_9_4_r_AutopsyDeterminedCauseDeath'])) {
+        errorTabs[3].value = true;
+        if (errors['D_PatientCharacteristics']['D_9_2_r_CauseDeath']['_Self']){
+            errorTabs[3].message = errors['D_PatientCharacteristics']['D_9_2_r_CauseDeath']['_Self']
+        }
+        if (errors['D_PatientCharacteristics']['D_9_4_r_AutopsyDeterminedCauseDeath']['_Self']){
+            errorTabs[3].message = errors['D_PatientCharacteristics']['D_9_4_r_AutopsyDeterminedCauseDeath']['_Self']
+        }
+    }
+    if (errors['D_PatientCharacteristics'] && (errors['D_PatientCharacteristics']['D_10_InformationConcerningParent'] || errors['D_PatientCharacteristics']['D_10_8_r_PastDrugHistoryParent'] ||
+    errors['D_PatientCharacteristics']['D_10_7_2_TextMedicalHistoryParent'] || errors['D_PatientCharacteristics']['D_10_7_1_r_StructuredInformationParentMedDRACode'])) {
+        errorTabs[4].value = true;
+        if (errors['D_PatientCharacteristics']['D_10_InformationConcerningParent']['_Self']){
+            errorTabs[4].message = errors['D_PatientCharacteristics']['D_10_InformationConcerningParent']['_Self']
+        }
+        if (errors['D_PatientCharacteristics']['D_10_8_r_PastDrugHistoryParent']['_Self']){
+            errorTabs[4].message = errors['D_PatientCharacteristics']['D_10_8_r_PastDrugHistoryParent']['_Self']
+        }
+        if (errors['D_PatientCharacteristics']['D_10_7_2_TextMedicalHistoryParent']['_Self']){
+            errorTabs[4].message = errors['D_PatientCharacteristics']['D_10_7_2_TextMedicalHistoryParent']['_Self']
+        }
+        if (errors['D_PatientCharacteristics']['D_10_7_1_r_StructuredInformationParentMedDRACode']['_Self']){
+            errorTabs[4].message = errors['D_PatientCharacteristics']['D_10_7_1_r_StructuredInformationParentMedDRACode']['_Self']
+        }
+    }
+    
+    if (errors['G_k_DrugInformation']) {
+        let childrenError = false;
+        for (const [key, value] of Object.entries(errors['G_k_DrugInformation'])) {
+            if (value['G_k_4_r_DosageInformation']) {
+                errorTabs[6].value = true;
+                if (value['G_k_4_r_DosageInformation']['_Self']){
+                    errorTabs[6].message = value['G_k_4_r_DosageInformation']['_Self']
+                }
+                childrenError = true;
+                break;
+            }
+        }
+
+        for (const [key, value] of Object.entries(errors['G_k_DrugInformation'])) {
+            if (value['G_k_9_i_DrugReactionMatrix']) {
+                errorTabs[7].value = true;
+                if (value['G_k_9_i_DrugReactionMatrix']['_Self']){
+                    errorTabs[7].message = value['G_k_9_i_DrugReactionMatrix']['_Self']
+                }
+                childrenError = true;
+                break;
+            }
+        }
+
+        if (!childrenError) {
+            errorTabs[5].value = true;
+            if (errors['G_k_DrugInformation']['_Self']){
+                errorTabs[5].message = errors['G_k_DrugInformation']['_Self']
+            }
+        }
+    }
+    
+    if (errors['C_2_r_PrimarySourceInformation']) {
+        errorTabs[8].value = true;
+        if (errors['C_2_r_PrimarySourceInformation']['_Self']){
+            errorTabs[8].message = errors['C_2_r_PrimarySourceInformation']['_Self']
+        }
+    }
+
+    if (errors['C_3_InformationSenderCaseSafetyReport']) {
+        errorTabs[9].value = true;
+        if (errors['C_3_InformationSenderCaseSafetyReport']['_Self']){
+            errorTabs[9].message = errors['C_3_InformationSenderCaseSafetyReport']['_Self']
+        }
+    }
+    if (errors['C_4_r_LiteratureReference']) {
+        errorTabs[10].value = true;
+        if (errors['C_4_r_LiteratureReference']['_Self']){
+            errorTabs[10].message = errors['C_4_r_LiteratureReference']['_Self']
+        }
+    }
+    if (errors['C_1_IdentificationCaseSafetyReport']) {
+        errorTabs[11].value = true;
+        if (errors['C_1_IdentificationCaseSafetyReport']['_Self']){
+            errorTabs[11].message = errors['C_1_IdentificationCaseSafetyReport']['_Self']
+        }
+    }
+    if (errors['C_5_StudyIdentification']) {
+        errorTabs[12].value = true;
+        if (errors['C_5_StudyIdentification']['_Self']){
+            errorTabs[12].message = errors['C_5_StudyIdentification']['_Self']
+        }
+    }
+    if (errors['H_NarrativeCaseSummary']) {
+        errorTabs[13].value = true;
+        if (errors['H_NarrativeCaseSummary']['_Self']){
+            errorTabs[13].message = errors['H_NarrativeCaseSummary']['_Self']
+        }
+    }
+
+    return errorTabs;
+}
+
 const initialState = {
     showSideMenu: false,
     showCasesList: false,
@@ -62,7 +199,22 @@ const initialState = {
     uploadedFile: null,
     showUpload: false,
     errors: {},
-    // xml: null,
+    errorTabs: {
+        0: {value: false, message: null},
+        1: {value: false, message: null},
+        2: {value: false, message: null},
+        3: {value: false, message: null},
+        4: {value: false, message: null},
+        5: {value: false, message: null},
+        6: {value: false, message: null},
+        7: {value: false, message: null},
+        8: {value: false, message: null},
+        9: {value: false, message: null},
+        10: {value: false, message: null},
+        11: {value: false, message: null},
+        12: {value: false, message: null},
+        13: {value: false, message: null},
+    }
 };
 
 const displaySlice = createSlice({
@@ -77,6 +229,7 @@ const displaySlice = createSlice({
         setCurrentSaved: (state, action) => { state.currentSaved = action.payload; },
         setUploadedFile: (state, action) => { state.uploadedFile = action.payload; },
         setShowUpload: (state, action) => { state.showUpload = action.payload; },
+        setErrorTabs: (state, action) => { state.errorTabs = action.payload; },
     },
     extraReducers: (builder) => {
         builder.addCase(revertAll, () => initialState);
@@ -96,6 +249,7 @@ const displaySlice = createSlice({
                 if (Object.keys(action.payload['_errors']).length !== 0) {
                     state.currentSaved = 2;
                     state.errors = e2bCaseKeys(action.payload['_errors']);
+                    state.errorTabs = getTabsWithErrors(state.errors);
                     return;
                 } else {
                     state.errors = {};
@@ -103,6 +257,7 @@ const displaySlice = createSlice({
             }
             state.currentId = action.payload.id;
             state.currentSaved = 1;
+            state.errorTabs = getTabsWithErrors({});
         });
         builder.addCase(saveData.rejected, (state, action) => {
             console.log('save');
@@ -116,6 +271,7 @@ const displaySlice = createSlice({
                 if (Object.keys(action.payload['_errors']).length !== 0) {
                     state.currentSaved = 2;
                     state.errors = e2bCaseKeys(action.payload['_errors']);
+                    state.errorTabs = getTabsWithErrors(state.errors);
                     return;
                 } else {
                     state.errors = {};
@@ -123,6 +279,7 @@ const displaySlice = createSlice({
             }
             state.currentId = action.payload.id;
             state.currentSaved = 1;
+            state.errorTabs = getTabsWithErrors({});
         });
         builder.addCase(changeData.rejected, (state, action) => {
             console.log('changeData.rejected');
@@ -167,6 +324,7 @@ export const {
     setCurrentId,
     setCurrentSaved,
     setUploadedFile,
-    setShowUpload
+    setShowUpload,
+    setErrorTabs
 
 } = displaySlice.actions;

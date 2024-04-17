@@ -52,8 +52,12 @@ export const NarrativeComp = () => {
     const {narrativeCaseSummary} = useSelector(narrativeSelector);
 
     const handleChange = (fieldName) => (event) => {
+        let value = event.target.value;
+        if (value === '') {
+            value = null;
+        };
         let narrativeCaseSummaryCopy = JSON.parse(JSON.stringify(narrativeCaseSummary));
-        narrativeCaseSummaryCopy[fieldName].value = event.target.value;
+        narrativeCaseSummaryCopy[fieldName].value = value;
         dispatch(setNarrativeCaseSummary(narrativeCaseSummaryCopy));
     };    
 

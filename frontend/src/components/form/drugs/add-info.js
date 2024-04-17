@@ -58,14 +58,13 @@ export const AddInfo = ({drugIndex}) => {
 	const dispatch = useDispatch();
     const {additionalInfo} = useSelector(drugsSelector);
 
-    useEffect(() => {
-        console.log("STATE");
-        console.log(additionalInfo);
-    });
-
     const handleChange = (fieldName, index) => (event) => {
+        let value = event.target.value;
+        if (value === '') {
+            value = null;
+        };
         let additionalInfoCopy = JSON.parse(JSON.stringify(additionalInfo));
-        additionalInfoCopy[drugIndex][index][fieldName].value = event.target.value;
+        additionalInfoCopy[drugIndex][index][fieldName].value = value;
         dispatch(setAdditionalInfo(additionalInfoCopy));
     };
 
