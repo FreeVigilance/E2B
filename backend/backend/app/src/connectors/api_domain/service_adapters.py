@@ -1,14 +1,14 @@
 from app.src.connectors.api_domain import model_converters as mc
 from app.src.connectors.base.service_adapters import BaseServiceAdapter
 from app.src.layers.api.models import ApiModel
-from app.src.layers.base.services import ServiceWithBusinessValidation
+from app.src.layers.base.services import BusinessServiceProtocol
 from app.src.layers.domain.models import DomainModel
 from app.src.layers.domain.services import DomainService
 
 
 class DomainServiceAdapter[U: ApiModel, L: DomainModel](
     BaseServiceAdapter[U, L], 
-    ServiceWithBusinessValidation[U]
+    BusinessServiceProtocol[U]
 ):
     def __init__(self, adapted_service: DomainService) -> None:
         self.adapted_service = adapted_service
