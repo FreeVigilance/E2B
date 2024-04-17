@@ -1,11 +1,11 @@
 from app.src.connectors.base.model_converters.base import BaseModelConverter
-from app.src.layers.base.services import Service
+from app.src.layers.base.services import ServiceProtocol
 
 
-class BaseServiceAdapter[U, L](Service[U]):
+class BaseServiceAdapter[U, L](ServiceProtocol[U]):
     def __init__(
         self, 
-        adapted_service: Service[L],
+        adapted_service: ServiceProtocol[L],
         *,
         upper_to_lower_model_converter: BaseModelConverter[U, L],
         lower_to_upper_model_converter: BaseModelConverter[L, U]

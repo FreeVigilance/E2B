@@ -1,7 +1,7 @@
 import typing as t
 
 
-class Service[T](t.Protocol):
+class ServiceProtocol[T](t.Protocol):
     def list(self, model_class: type[T]) -> list[int]: ...
 
     def read(self, model_class: type[T], pk: int) -> T: ...
@@ -13,5 +13,5 @@ class Service[T](t.Protocol):
     def delete(self, model_class: type[T], pk: int) -> None: ...
 
 
-class ServiceWithBusinessValidation[T](Service[T], t.Protocol):
+class BusinessServiceProtocol[T](ServiceProtocol[T], t.Protocol):
     def business_validate(self, model: T) -> T: ...

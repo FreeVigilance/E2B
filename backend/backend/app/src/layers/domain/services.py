@@ -1,11 +1,11 @@
 import typing as t
 
-from app.src.layers.base.services import Service, ServiceWithBusinessValidation
+from app.src.layers.base.services import ServiceProtocol, BusinessServiceProtocol
 from app.src.layers.domain.models import DomainModel
 
 
-class DomainService(ServiceWithBusinessValidation[DomainModel]):
-	def __init__(self, storage_service: Service[DomainModel]) -> None:
+class DomainService(BusinessServiceProtocol[DomainModel]):
+	def __init__(self, storage_service: ServiceProtocol[DomainModel]) -> None:
 		self.storage_service = storage_service
 
 	def list(self, model_class: type[DomainModel]) -> list[int]:
