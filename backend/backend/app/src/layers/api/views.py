@@ -3,10 +3,11 @@ import json
 import typing as t
 
 from django import http
+from django.shortcuts import render
 from django.views import View
 
 from app.src.layers.api.models import ApiModel
-from app.src.layers.base.services import BusinessServiceProtocol
+from app.src.layers.base.services import BusinessServiceProtocol, CIOMSServiceProtocol
 from extensions import utils
 
 
@@ -69,7 +70,7 @@ class ModelInstanceView(BaseView):
     def delete(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
         self.domain_service.delete(self.model_class, pk)
         return http.HttpResponse(status=StatusCode.OK)
-    
+
 
 class ModelBusinessValidationView(BaseView):
     def post(self, request: http.HttpRequest) -> http.HttpResponse:
@@ -78,3 +79,10 @@ class ModelBusinessValidationView(BaseView):
             model = self.domain_service.business_validate(model)
         status = self.get_status_code_from_validity(model)
         return self.respond_with_model_as_json(model, status)
+
+
+class ModelCIOMSView(View):
+    cioms_service: CIOMSServiceProtocol = ...
+
+    def get(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
+        return render(request, 'templates/cioms.html', self.cioms_service.convert_icsr_to_cioms(pk).__dict__)
