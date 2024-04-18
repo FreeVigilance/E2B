@@ -191,7 +191,7 @@ class SafeValidatableModel(pd.BaseModel):
                     else:  # dict
                         # If key not in data, then pydntic generated specific error, which will be saved on field level
                         # (e.g. several erros for union type conversion)
-                        if key not in context_data:
+                        if not isinstance(context_data, dict) or key not in context_data:
                             break
                         context_data = context_data[key]
 
