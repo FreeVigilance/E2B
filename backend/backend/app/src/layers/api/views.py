@@ -24,9 +24,8 @@ class BaseView(View):
         model = self.model_class.model_dict_construct(data)
         return model.model_safe_validate(data)
     
-    def respond_with_model_as_json_after_write(self, model: ApiModel) -> http.HttpResponse:
-        status = StatusCode.OK if model.is_valid else StatusCode.BAD_REQUEST
-        return self.respond_with_model_as_json(model, status)
+    def get_status_code_from_validity(self, model: ApiModel) -> StatusCode:
+        return StatusCode.OK if model.is_valid else StatusCode.BAD_REQUEST
 
     def respond_with_model_as_json(self, model: ApiModel, status: int) -> http.HttpResponse:
         # Dump data and ignore warnings about wrong data format and etc.
@@ -50,7 +49,8 @@ class ModelClassView(BaseView):
         if model.is_valid:
             # TODO: check id empty
             model = self.domain_service.create(model)
-        return self.respond_with_model_as_json_after_write(model)
+        status = self.get_status_code_from_validity(model)
+        return self.respond_with_model_as_json(model, status)
 
 
 class ModelInstanceView(BaseView):
@@ -63,7 +63,8 @@ class ModelInstanceView(BaseView):
         model = self.get_model_from_request(request)
         if model.is_valid:
             model = self.domain_service.update(model, pk)
-        return self.respond_with_model_as_json_after_write(model)
+        status = self.get_status_code_from_validity(model)
+        return self.respond_with_model_as_json(model, status)
 
     def delete(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
         self.domain_service.delete(self.model_class, pk)
@@ -75,4 +76,5 @@ class ModelBusinessValidationView(BaseView):
         model = self.get_model_from_request(request)
         if model.is_valid:
             model = self.domain_service.business_validate(model)
-        return self.respond_with_model_as_json(model, status=StatusCode.OK)
+        status = self.get_status_code_from_validity(model)
+        return self.respond_with_model_as_json(model, status)
