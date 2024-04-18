@@ -10,7 +10,9 @@ import pydantic_core as pdc
 from extensions import utils
 
 
-class ErrorType(enum.StrEnum):
+class CustomErrorType(enum.StrEnum):
+    # From this names error list keys are created, therefore change them with caution, 
+    # as some code can depend on these keys
     PARSING = enum.auto()
     BUSINESS = enum.auto()
 
@@ -177,28 +179,34 @@ class SafeValidatableModel(pd.BaseModel):
             
         # Saving errors as dict of dicts (of dicts and so on) with max depth = max len of loc
         for err in self._exception.errors():
-            loc = err['loc']
-            msg = err['msg']
-
-            if not loc:
-                utils.update_or_create_list_in_dict(self._errors, self.SELF_ERRORS_KEY, msg)
-
             errors = self._errors
-            context_data = initial_data
+            loc = err['loc']
 
-            for key in loc:
-                if isinstance(key, int):
-                    context_data = context_data[key]
-                else:  # dict
-                    # If key not in data, then pydntic generated specific error, which will be saved on field level
-                    # (e.g. several erros for union type conversion)
-                    if key not in context_data:
-                        break
-                    context_data = context_data[key]
+            if loc:
+                context_data = initial_data
 
-                errors = utils.get_or_create_dict_in_dict(errors, key)
+                for key in loc:
+                    if isinstance(key, int):
+                        context_data = context_data[key]
+                    else:  # dict
+                        # If key not in data, then pydntic generated specific error, which will be saved on field level
+                        # (e.g. several erros for union type conversion)
+                        if key not in context_data:
+                            break
+                        context_data = context_data[key]
 
-            utils.update_or_create_list_in_dict(errors, self.SELF_ERRORS_KEY, msg)
+                    errors = utils.get_or_create_dict_in_dict(errors, key)
+
+            errors = utils.get_or_create_dict_in_dict(errors, self.SELF_ERRORS_KEY)
+
+            try:
+                # Trying to parse custom type if it is one
+                type_ = CustomErrorType(err['type']).value
+            except ValueError:
+                # This type will be used for any pydantic type
+                type_ = CustomErrorType.PARSING
+            
+            utils.update_or_create_list_in_dict(errors, type_, err['msg'])
 
     @classmethod
     def model_dict_construct(cls, data: dict[str, t.Any]) -> t.Self:
@@ -282,7 +290,7 @@ class PostValidationProcessor:
         self._errors = []
         for error in errors: 
             error_type = error.get('type')
-            if error_type in ErrorType:
+            if error_type in CustomErrorType:
                 # Crutch for error with custom type because of the bug in pydantic
                 self.add_error(
                     type=error_type,
@@ -343,7 +351,7 @@ class PostValidationProcessor:
         if not is_add_error_manually:
             if is_add_single_error:
                 self.add_error(
-                    type=ErrorType.PARSING,
+                    type=CustomErrorType.PARSING,
                     message=error_message,
                     loc=tuple(),
                     input=initial_data
@@ -351,7 +359,7 @@ class PostValidationProcessor:
             else:
                 for field_name in field_names:
                     self.add_error(
-                        type=ErrorType.PARSING,
+                        type=CustomErrorType.PARSING,
                         message=error_message,
                         loc=(field_name,),
                         input=initial_data

@@ -24,7 +24,7 @@ class Datetime[T: DatePrecision](str):
             return val
         if precision < min_precision:
             raise pdc.PydanticCustomError(
-                pde.ErrorType.BUSINESS,
+                pde.CustomErrorType.BUSINESS,
                 f'Expected at least {min_precision.name.lower()} precision'
             )
         return val
@@ -103,7 +103,7 @@ class ICSR(DomainModel):
                     continue
 
                 processor.add_error(
-                    type=pde.ErrorType.PARSING,
+                    type=pde.CustomErrorType.PARSING,
                     message='Technical id was not found among possible related entities',
                     loc=('g_k_drug_information', k, 'g_k_9_i_drug_reaction_matrix', i, 'g_k_9_i_1_reaction_assessed'),
                     input=reaction_id
