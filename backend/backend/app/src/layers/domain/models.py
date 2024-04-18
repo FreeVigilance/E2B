@@ -103,7 +103,7 @@ class ICSR(DomainModel):
                     continue
 
                 processor.add_error(
-                    type=pde.ErrorType.CUSTOM,
+                    type=pde.ErrorType.PARSING,
                     message='Technical id was not found among possible related entities',
                     loc=('g_k_drug_information', k, 'g_k_9_i_drug_reaction_matrix', i, 'g_k_9_i_1_reaction_assessed'),
                     input=reaction_id
