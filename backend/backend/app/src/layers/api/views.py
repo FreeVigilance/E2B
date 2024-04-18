@@ -72,7 +72,7 @@ class ModelInstanceView(BaseView):
     
 
 class ModelBusinessValidationView(BaseView):
-    def get(self, request: http.HttpRequest) -> http.HttpResponse:
+    def post(self, request: http.HttpRequest) -> http.HttpResponse:
         model = self.get_model_from_request(request)
         if model.is_valid:
             model = self.domain_service.business_validate(model)
