@@ -31,11 +31,6 @@ class StorageModelMeta(ext_models.ModelWithFieldChoicesConstraintMeta):
             if not field.choices:
                 raise ValueError(f'Null flavor field {field_name} must have choices restriction')
 
-            # Call add_any_null_constraint
-            meta = ext_models.get_meta_attr_or_raise_exc(attrs, name, 'null flavor field')
-            base_field_name = null_flavor_field_utils.get_base_field_name(field_name)
-            ext_cons.add_any_null_constraint(meta, base_field_name, field_name)
-
         return super().__new__(cls, name, bases, attrs, **kwargs)
 
 
