@@ -7,14 +7,14 @@ from app.src import enums as e
 from app.src.enums import NullFlavor as NF
 from app.src.hl7date import DatePrecision as P
 from app.src.layers.domain.models.field_types import (
-    Datetime as DT, 
+    Datetime as DT,
     AlphaNumeric as AN,
     Alpha as A
 )
 from extensions import pydantic as pde
 
 
-class DomainModel(pde.PostValidatableModel, pde.SafeValidatableModel):  
+class DomainModel(pde.PostValidatableModel, pde.SafeValidatableModel):
     BUSINESS_VALIDATION_FLAG_KEY: t.ClassVar = '_is_business_validation'
 
     id: int | None = None
@@ -44,9 +44,9 @@ class ICSR(DomainModel):
 
     @staticmethod
     def _validate_uuids(
-        processor: pde.PostValidationProcessor,
-        e_i_reaction_event: list['E_i_reaction_event'], 
-        g_k_drug_information: list['G_k_drug_information']
+            processor: pde.PostValidationProcessor,
+            e_i_reaction_event: list['E_i_reaction_event'],
+            g_k_drug_information: list['G_k_drug_information']
     ) -> bool:
         is_valid = True
 
@@ -74,6 +74,13 @@ class ICSR(DomainModel):
 
         return is_valid
 
+    def get_primary_reaction_event(self) -> 'E_i_reaction_event':
+        return self.e_i_reaction_event[0]
+
+    def is_initial(self) -> bool:
+        return (self.c_1_identification_case_safety_report.c_1_8_1_worldwide_unique_case_identification_number ==
+                self.c_1_identification_case_safety_report.c_1_1_sender_safety_report_unique_id)
+
 
 # C_1_identification_case_safety_report
 
@@ -84,10 +91,10 @@ class C_1_identification_case_safety_report(DomainModel):
     c_1_10_r_identification_number_report_linked: list['C_1_10_r_identification_number_report_linked'] = []
 
     c_1_1_sender_safety_report_unique_id: AN[L[100]] | None = None
-    c_1_2_date_creation: DT[L[P.SECOND]] | None = None 
+    c_1_2_date_creation: DT[L[P.SECOND]] | None = None
     c_1_3_type_report: e.C_1_3_type_report | None = None
-    c_1_4_date_report_first_received_source: DT[L[P.DAY]] | None = None 
-    c_1_5_date_most_recent_information: DT[L[P.DAY]] | None = None 
+    c_1_4_date_report_first_received_source: DT[L[P.DAY]] | None = None
+    c_1_5_date_most_recent_information: DT[L[P.DAY]] | None = None
 
     # c_1_6_additional_available_documents_held_sender
     c_1_6_1_additional_documents_available: bool | None = None
@@ -213,7 +220,7 @@ class D_patient_characteristics(DomainModel):
 
     # d_2_age_information
 
-    d_2_1_date_birth: DT[L[P.DAY]] | L[NF.MSK] | None = None 
+    d_2_1_date_birth: DT[L[P.DAY]] | L[NF.MSK] | None = None
 
     # d_2_2_age_onset_reaction
 
@@ -229,14 +236,14 @@ class D_patient_characteristics(DomainModel):
     d_3_body_weight: Decimal | None = None
     d_4_height: int | None = None
     d_5_sex: e.D_5_sex | L[NF.MSK, NF.UNK, NF.ASKU, NF.NASK] | None = None
-    d_6_last_menstrual_period_date: DT[L[P.YEAR]] | None = None 
+    d_6_last_menstrual_period_date: DT[L[P.YEAR]] | None = None
 
     # d_7_medical_history
     d_7_2_text_medical_history: AN[L[10000]] | L[NF.MSK, NF.ASKU, NF.NASK, NF.UNK] | None = None
     d_7_3_concomitant_therapies: L[True] | None = None
 
     # d_9_case_death
-    d_9_1_date_death: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
+    d_9_1_date_death: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
     d_9_3_autopsy: bool | L[NF.ASKU, NF.NASK, NF.UNK] | None = None
 
     # d_10_information_concerning_parent
@@ -245,13 +252,13 @@ class D_patient_characteristics(DomainModel):
 
     # d_10_2_parent_age_information
 
-    d_10_2_1_date_birth_parent: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
+    d_10_2_1_date_birth_parent: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
 
     # d_10_2_2_age_parent
     d_10_2_2a_age_parent_num: int | None = None
     d_10_2_2b_age_parent_unit: AN[L[50]] | None = None  # st
 
-    d_10_3_last_menstrual_period_date_parent: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
+    d_10_3_last_menstrual_period_date_parent: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
     d_10_4_body_weight_parent: Decimal | None = None
     d_10_5_height_parent: int | None = None
     d_10_6_sex_parent: e.D_10_6_sex_parent | L[NF.UNK, NF.MSK, NF.ASKU, NF.NASK] | None = None
@@ -263,9 +270,9 @@ class D_patient_characteristics(DomainModel):
 class D_7_1_r_structured_information_medical_history(DomainModel):
     d_7_1_r_1a_meddra_version_medical_history: AN[L[4]] | None = None  # st
     d_7_1_r_1b_medical_history_meddra_code: int | None = None
-    d_7_1_r_2_start_date: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
+    d_7_1_r_2_start_date: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
     d_7_1_r_3_continuing: bool | L[NF.MSK, NF.ASKU, NF.NASK, NF.UNK] | None = None
-    d_7_1_r_4_end_date: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
+    d_7_1_r_4_end_date: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
     d_7_1_r_5_comments: AN[L[2000]] | None = None
     d_7_1_r_6_family_history: L[True] | None = None
 
@@ -281,8 +288,8 @@ class D_8_r_past_drug_history(DomainModel):
     d_8_r_3a_phpid_version: AN[L[10]] | None = None  # st
     d_8_r_3b_phpid: AN[L[250]] | None = None  # st
 
-    d_8_r_4_start_date: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
-    d_8_r_5_end_date: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
+    d_8_r_4_start_date: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
+    d_8_r_5_end_date: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
 
     # d_8_r_6_indication_meddra_code
     d_8_r_6a_meddra_version_indication: AN[L[4]] | None = None  # st
@@ -308,9 +315,9 @@ class D_9_4_r_autopsy_determined_cause_death(DomainModel):
 class D_10_7_1_r_structured_information_parent_meddra_code(DomainModel):
     d_10_7_1_r_1a_meddra_version_medical_history: AN[L[4]] | None = None  # st
     d_10_7_1_r_1b_medical_history_meddra_code: int | None = None
-    d_10_7_1_r_2_start_date: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
+    d_10_7_1_r_2_start_date: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
     d_10_7_1_r_3_continuing: bool | L[NF.MSK, NF.ASKU, NF.NASK, NF.UNK] | None = None
-    d_10_7_1_r_4_end_date: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
+    d_10_7_1_r_4_end_date: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
     d_10_7_1_r_5_comments: AN[L[2000]] | None = None
 
 
@@ -325,8 +332,8 @@ class D_10_8_r_past_drug_history_parent(DomainModel):
     d_10_8_r_3a_phpid_version: AN[L[10]] | None = None  # st
     d_10_8_r_3b_phpid: AN[L[250]] | None = None  # st
 
-    d_10_8_r_4_start_date: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
-    d_10_8_r_5_end_date: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
+    d_10_8_r_4_start_date: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
+    d_10_8_r_5_end_date: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
 
     # d_10_8_r_6_indication_meddra_code
     d_10_8_r_6a_meddra_version_indication: AN[L[4]] | None = None  # st
@@ -365,8 +372,8 @@ class E_i_reaction_event(DomainModel):
     e_i_3_2e_congenital_anomaly_birth_defect: L[True] | L[NF.NI] | None = None
     e_i_3_2f_other_medically_important_condition: L[True] | L[NF.NI] | None = None
 
-    e_i_4_date_start_reaction: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
-    e_i_5_date_end_reaction: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
+    e_i_4_date_start_reaction: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
+    e_i_5_date_end_reaction: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
 
     # e_i_6_duration_reaction
     e_i_6a_duration_reaction_num: int | None = None
@@ -382,7 +389,7 @@ class E_i_reaction_event(DomainModel):
             error_message='Both id and uuid cannot be specified',
             is_add_single_error=True,
             validate=lambda id, uuid:
-                id is None or uuid is None
+            id is None or uuid is None
         )
 
 
@@ -390,7 +397,7 @@ class E_i_reaction_event(DomainModel):
 
 
 class F_r_results_tests_procedures_investigation_patient(DomainModel):
-    f_r_1_test_date: DT[L[P.YEAR]] | L[NF.UNK] | None = None 
+    f_r_1_test_date: DT[L[P.YEAR]] | L[NF.UNK] | None = None
 
     # f_r_2_test_name
 
@@ -458,9 +465,12 @@ class G_k_drug_information(DomainModel):
         processor.try_validate_fields(
             error_message='Cannot have duplicate drug to reaction relations',
             validate=lambda g_k_9_i_drug_reaction_matrix:
-                len(g_k_9_i_drug_reaction_matrix) == 
-                len(set(x.g_k_9_i_1_reaction_assessed for x in g_k_9_i_drug_reaction_matrix))
+            len(g_k_9_i_drug_reaction_matrix) ==
+            len(set(x.g_k_9_i_1_reaction_assessed for x in g_k_9_i_drug_reaction_matrix))
         )
+
+    def get_id(self) -> str:
+        return self.g_k_2_1_1b_mpid or self.g_k_2_1_2b_phpid
 
 
 class G_k_2_3_r_substance_id_strength(DomainModel):
@@ -476,8 +486,8 @@ class G_k_4_r_dosage_information(DomainModel):
     g_k_4_r_1b_dose_unit: AN[L[50]] | None = None  # st
     g_k_4_r_2_number_units_interval: Decimal | None = None
     g_k_4_r_3_definition_interval_unit: AN[L[50]] | None = None  # st
-    g_k_4_r_4_date_time_drug: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
-    g_k_4_r_5_date_time_last_administration: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None 
+    g_k_4_r_4_date_time_drug: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
+    g_k_4_r_5_date_time_last_administration: DT[L[P.YEAR]] | L[NF.MSK, NF.ASKU, NF.NASK] | None = None
 
     # g_k_4_r_6_duration_drug_administration
     g_k_4_r_6a_duration_drug_administration_num: Decimal | None = None
