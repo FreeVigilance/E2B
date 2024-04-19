@@ -9,7 +9,7 @@ class DomainService(BusinessServiceProtocol[DomainModel]):
     def __init__(self, storage_service: ServiceProtocol[DomainModel]) -> None:
         self.storage_service = storage_service
 
-    def list(self, model_class: type[DomainModel]) -> list[int]:
+    def list(self, model_class: type[DomainModel]) -> list[dict[str, t.Any]]:
         return self.storage_service.list(model_class)
 
     def read(self, model_class: type[DomainModel], pk: int) -> DomainModel:
