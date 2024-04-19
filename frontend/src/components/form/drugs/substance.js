@@ -53,13 +53,13 @@ export const Substances = ({drugIndex}) => {
 
     const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
         let value = event.target.value;
-        if (value === '') {
-            value = null;
-        };
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)
         }
+        if (value === '') {
+            value = null;
+        };
         let substancesCopy = JSON.parse(JSON.stringify(substances));
         substancesCopy[drugIndex][index][fieldName].value = value;
         dispatch(setSubstances(substancesCopy));
@@ -94,7 +94,6 @@ export const Substances = ({drugIndex}) => {
                                     onChange={handleChange('G_k_2_3_r_1_SubstanceName', index)}
                                     value = {item['G_k_2_3_r_1_SubstanceName'].value}
                                     multiline
-                                    inputProps={{ maxLength: 250}}
                                     rows={4}/> 
                         </Grid>
 
@@ -143,7 +142,6 @@ export const Substances = ({drugIndex}) => {
                         <Grid item xs={9}>
                             <TextField variant="outlined"
                                     className={classes.textLong}
-                                    inputProps={{ maxLength: 50}}
                                     onChange={handleChange('G_k_2_3_r_3b_StrengthUnit', index)}
                                     value = {item['G_k_2_3_r_3b_StrengthUnit'].value}/>
                         </Grid>

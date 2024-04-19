@@ -121,7 +121,6 @@ export const Results = () => {
                             <Grid item xs={10}>
                                 <TextField variant="outlined"
                                     onChange={handleChange('F_r_2_1_TestName', index)}
-                                    inputProps={{ maxLength: 250 }}
                                     className={classes.textMedium}
                                     multiline
                                     rows={3}
@@ -274,7 +273,7 @@ export const Results = () => {
                                     className={classes.textShort}
                                     onChange={handleChange('F_r_3_3_TestResultUnit', index)}
                                     value = {item['F_r_3_3_TestResultUnit'].value}
-                                    inputProps={{ maxLength: 50}}/>
+                                />
                             </Grid>
 
                             <Grid item xs={2}>
@@ -286,7 +285,7 @@ export const Results = () => {
                                     className={classes.textShort}
                                     onChange={handleChange('F_r_4_NormalLowValue', index)}
                                     value = {item['F_r_4_NormalLowValue'].value}
-                                    inputProps={{ maxLength: 50}}/>
+                                />
                             </Grid>
 
                             <Grid item xs={2}>
@@ -298,7 +297,7 @@ export const Results = () => {
                                     className={classes.textShort}
                                     onChange={handleChange('F_r_5_NormalHighValue', index)}
                                     value = {item['F_r_5_NormalHighValue'].value}
-                                    inputProps={{ maxLength: 50}}/>
+                                />
                             </Grid>
 
                             <Grid item xs={2}>
@@ -322,7 +321,6 @@ export const Results = () => {
                                     onChange={handleChange('F_r_3_4_ResultUnstructuredData', index)}
                                     multiline
                                     className={classes.textLong}
-                                    inputProps={{ maxLength: 2000}}
                                     rows={7}/>
                             </Grid>
 
@@ -336,7 +334,6 @@ export const Results = () => {
                                     onChange={handleChange('F_r_6_Comments', index)}
                                     multiline
                                     className={classes.textLong}
-                                    inputProps={{ maxLength: 2000}}
                                     rows={7}/>
                             </Grid>
                         </Grid>

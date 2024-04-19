@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { e2bCaseKeys, pascalSnakeCaseKeys } from '../common/changekeys';
-import { changeData, getData, getJsonFromXml, revertAll, saveData } from '../display/slice';
+import { changeData, getData, getJsonFromXml, parseDate, revertAll, saveData } from '../display/slice';
 import { DocumentsHeldBySender, Identification, IdentificationNumber, OtherIdentifiers } from './identification';
 
 export const identificationSelector = (state) => state.identification;
@@ -13,10 +13,10 @@ export const getIdentification = () => {
             "C_1_IdentificationCaseSafetyReport": {
                 'id': identificationData['id'],
                 'C_1_1_SenderSafetyReportUniqueId': identificationData['C_1_1_SenderSafetyReportUniqueId'],
-                'C_1_2_DateCreation': identificationData['C_1_2_DateCreation'],
+                'C_1_2_DateCreation': {value: parseDate(identificationData['C_1_2_DateCreation'].value)},
                 'C_1_3_TypeReport': identificationData['C_1_3_TypeReport'],
-                'C_1_4_DateReportFirstReceivedSource': identificationData['C_1_4_DateReportFirstReceivedSource'],
-                'C_1_5_DateMostRecentInformation': identificationData['C_1_5_DateMostRecentInformation'],
+                'C_1_4_DateReportFirstReceivedSource': {value: parseDate(identificationData['C_1_4_DateReportFirstReceivedSource'].value)},
+                'C_1_5_DateMostRecentInformation': {value: parseDate(identificationData['C_1_5_DateMostRecentInformation'].value)},
                 'C_1_6_AdditionalAvailableDocumentsHeldSender': identificationData['C_1_6_AdditionalAvailableDocumentsHeldSender'],
                 'C_1_6_1_AdditionalDocumentsAvailable': identificationData['C_1_6_1_AdditionalDocumentsAvailable'],
                 'C_1_7_FulfilLocalCriteriaExpeditedReport': (identificationData['C_1_7_FulfilLocalCriteriaExpeditedReport']['value'] === null

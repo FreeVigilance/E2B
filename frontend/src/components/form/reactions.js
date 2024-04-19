@@ -68,12 +68,12 @@ export const Reactions = () => {
 
     const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
         let value = event.target.value;
-        if (value === '') {
-            value = null;
-        }
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)
+        }
+        if (value === '') {
+            value = null;
         }
         let reactionsDataCopy = JSON.parse(JSON.stringify(reactionsData));
         reactionsDataCopy[index][fieldName].value = value;
@@ -133,7 +133,6 @@ export const Reactions = () => {
                                 onChange={handleChange('E_i_1_1a_ReactionPrimarySourceNativeLanguage', index)}
                                 value = {item['E_i_1_1a_ReactionPrimarySourceNativeLanguage'].value}
                                 multiline
-                                inputProps={{ maxLength: 250}}
                                 rows={2}/>
                         </Grid>
 
@@ -147,7 +146,6 @@ export const Reactions = () => {
                                 onChange={handleChange('E_i_1_1b_ReactionPrimarySourceLanguage', index)}
                                 value = {item['E_i_1_1b_ReactionPrimarySourceLanguage'].value}
                                 multiline
-                                inputProps={{ maxLength: 250}}
                                 rows={2}/>
                         </Grid>
 
@@ -161,7 +159,6 @@ export const Reactions = () => {
                                 onChange={handleChange('E_i_1_2_ReactionPrimarySourceTranslation', index)}
                                 value = {item['E_i_1_2_ReactionPrimarySourceTranslation'].value}
                                 multiline
-                                inputProps={{ maxLength: 250}}
                                 rows={2}/>
                         </Grid>
                     </Grid>
@@ -265,7 +262,6 @@ export const Reactions = () => {
                             <TextField
                                 className={classes.textXshort}
                                 variant="outlined"
-                                inputProps={{ maxLength: 2}}
                                 onChange={handleChange('E_i_9_IdentificationCountryReaction', index)}
                                 value = {item['E_i_9_IdentificationCountryReaction'].value}
                                 />
@@ -453,8 +449,7 @@ export const Reactions = () => {
                                 value = {item['E_i_6a_DurationReactionNum'].value}
                                 onChange={handleChange('E_i_6a_DurationReactionNum', index, true, 5)}
                                 autoComplete="off"
-                                InputProps={{ inputProps: { min: 1, max: 4 } }}
-                                // type='number'
+                                type='number'
                                 onKeyDown={(evt) =>
                                     (evt.key === "-" || evt.key === "+" || evt.key === "e" || evt.key === "," || evt.key === ".") &&
                                     evt.preventDefault()
@@ -471,7 +466,6 @@ export const Reactions = () => {
                                 className={classes.textMedium}
                                 value = {item['E_i_6b_DurationReactionUnit'].value}
                                 variant="outlined"
-                                inputProps={{ maxLength: 50}}
                                 onChange={handleChange('E_i_6b_DurationReactionUnit', index)}
                                 />
                         </Grid>

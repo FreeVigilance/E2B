@@ -19,7 +19,7 @@ function changeKeysFactory (changeCase) {
             let changedKey = '';
             if (key === 'null_flavor') {
                 changedKey = 'nullFlavor';
-            } else if (key !== 'value' && key !== 'id' && isNaN(key)) {
+            } else if (key !== 'value' && key !== 'id' && isNaN(key) && key !== 'parsing' && key !== 'business') {
                 changedKey = changeCase(key, options);
             } else {
                 if (!isNaN(key)) {

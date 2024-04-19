@@ -78,11 +78,10 @@ export const MedDRABtn = ({field, index, handleChange}) => {
 
                                 {/* <Autocomplete
                                     options={[
-                                        { label: "1 = Positive" },
-                                        { label: "0 = unknown" },
-                                      ].map((option) => option.label)}
-                                    onChange={handleChange('F_r_3_1_TestResultCode', index)}
-                                    value = {item['F_r_3_1_TestResultCode'].value}
+                                        "1 = Positive" ,
+                                        "0 = unknown" ,
+                                      ].map((option) => option)}
+                                    onChange={(e, newValue) => {console.log(newValue)}}
                                     renderInput={(params) => <TextField {...params}/>}
                                 /> */}
 

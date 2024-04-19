@@ -48,7 +48,7 @@ export const Relatednesses = ({drugIndex, matrixIndex}) => {
                             <TextField variant="outlined"
                                         onChange={handleChange('G_k_9_i_2_r_1_SourceAssessment', index)}
                                         value = {item['G_k_9_i_2_r_1_SourceAssessment'].value}
-                                        inputProps={{ maxLength: 60}}/>
+                            />
 
                         <RelatednessFieldLabel label="Method of Assessment"
                             field = 'G_k_9_i_2_r_2_MethodAssessment' drugIndex={drugIndex} matrixIndex={matrixIndex} index={index}></RelatednessFieldLabel>
@@ -56,14 +56,14 @@ export const Relatednesses = ({drugIndex, matrixIndex}) => {
                             <TextField  variant="outlined"
                                         onChange={handleChange('G_k_9_i_2_r_2_MethodAssessment', index)}
                                         value = {item['G_k_9_i_2_r_2_MethodAssessment'].value}
-                                        inputProps={{ maxLength: 60}}/>
+                            />
                         
                         <RelatednessFieldLabel label="Result of Assessment"
                             field = 'G_k_9_i_2_r_3_ResultAssessment' drugIndex={drugIndex} matrixIndex={matrixIndex} index={index}></RelatednessFieldLabel>
                             <TextField variant="outlined"
                                         onChange={handleChange('G_k_9_i_2_r_3_ResultAssessment', index)}
                                         value = {item['G_k_9_i_2_r_3_ResultAssessment'].value}
-                                        inputProps={{ maxLength: 60}}/>
+                            />
                         </Stack>
 
                             {index === relatedness[drugIndex][matrixIndex].length - 1 ?

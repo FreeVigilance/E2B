@@ -88,7 +88,6 @@ export const DocumentsHeldBySenderComp = () => {
                                 value = {item['C_1_6_1_r_1_DocumentsHeldSender'].value}
                                 multiline
                                 className={classes.textLong}
-                                inputProps={{ maxLength: 2000}}
                                 rows={10}/>
                         </Grid>
 

@@ -7,7 +7,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import { displaySelector, getData, revertAll, setCurrentId, setOpenNewReport, setShowCasesList, setShowSideMenu, setShowUpload } from '@src/features/display/slice';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Fab, ListItemIcon } from '@mui/material';
+import { Button, Divider, Fab, ListItemIcon } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { reactionsSelector, setReactionsData } from '@src/features/reactions/slice';
 import { resultsSelector, setResultsData } from '@src/features/results/slice';
@@ -67,44 +67,76 @@ export const SideMenu = () => {
                 transitionDuration={500}
                 sx={{
                     display: { xs: 'none', sm: 'block' },
-                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, backgroundColor: '#122c44' },
                 }}
                 open={showSideMenu}>
                 
-                <List>
+                <List sx={{backgroundColor: '#051e34'}}>
 
                     <ListItem key={'toggle'}>
-                        <ListItemIcon onClick={handleToggleMenuClick} style={{paddingLeft: '80%'}}>
+                        <ListItemIcon onClick={handleToggleMenuClick} style={{paddingLeft: '80%', color: 'white'}}>
                             <ArrowBackIosIcon fontSize='large'></ArrowBackIosIcon>
                         </ListItemIcon>
                     </ListItem>
+
+                    <Divider sx={{backgroundColor: 'white', height: '2px'}}></Divider>
                 
 
-                    <ListItem key={'New Report'} disablePadding>
+                    <ListItem key={'New Report'} disablePadding sx={{
+                        color: 'white',
+                        backgroundColor: '#122c44',
+                        '&:hover': {
+                            backgroundColor: '#fff',
+                            color: '#122c44',
+                        }
+                    }}>
                         <ListItemButton onClick={handleNewReportClick}>
                             <ListItemText primary={'New Report'} />
                         </ListItemButton>
                     </ListItem>
 
-                    <ListItem key={'Cases List'} disablePadding>
+                    <Divider sx={{backgroundColor: 'white', height: '1px'}}></Divider>
+
+
+                    <ListItem key={'Cases List'} disablePadding sx={{
+                        color: 'white',
+                        backgroundColor: '#122c44',
+                        '&:hover': {
+                            backgroundColor: '#fff',
+                            color: '#122c44',
+                        }
+                    }}>
                         <ListItemButton
                             onClick={handleCaseListShow}>
                             <ListItemText primary={'Cases List'} />
                         </ListItemButton>
                     </ListItem>
 
-                    <ListItem key={'Import XML'} disablePadding>
+                    <Divider sx={{backgroundColor: 'white', height: '1px'}}></Divider>
+
+
+                    <ListItem key={'Import XML'} disablePadding sx={{
+                        color: 'white',
+                        backgroundColor: '#122c44',
+                        '&:hover': {
+                            backgroundColor: '#fff',
+                            color: '#122c44',
+                        }
+                    }}>
                         <ListItemButton
                             onClick={handleUploadClick}>
                             <ListItemText primary={'Import XML'} />
                         </ListItemButton>
                     </ListItem>
+
+                    <Divider sx={{backgroundColor: 'white', height: '1px'}}></Divider>
+
                 </List>
             </SwipeableDrawer>
 
 
             {!showSideMenu && !openNewReport?
-            <ArrowForwardIosIcon color='primary' fontSize='large' sx={{ position: 'fixed', top: '25px', left: '5px', zIndex: 10000 }}
+            <ArrowForwardIosIcon color='primary' fontSize='large' sx={{ position: 'fixed', bottom: '25px', left: '10px', zIndex: 10000 }}
                 onClick={handleToggleMenuClick}></ArrowForwardIosIcon>
                 : null }
             {/* <Fab variant="contained"

@@ -58,13 +58,13 @@ export const ParentDrugsHistory = () => {
 
     const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
         let value = event.target.value;
-        if (value === '') {
-            value = null;
-        };
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)
         }
+        if (value === '') {
+            value = null;
+        };
         let parentdrugHistoryCopy = JSON.parse(JSON.stringify(parentDrugHistory));
         parentdrugHistoryCopy[index][fieldName].value = value;
         dispatch(setParentDrugHistory(parentdrugHistoryCopy));
@@ -114,7 +114,6 @@ export const ParentDrugsHistory = () => {
                                     onChange={handleChange('D_10_8_r_1_NameDrug', index)}
                                     value = {item['D_10_8_r_1_NameDrug'].value}
                                     multiline
-                                    inputProps={{ maxLength: 250}}
                                     rows={3}
                                     sx={{ width: '100%' }}/>
                             </Grid>

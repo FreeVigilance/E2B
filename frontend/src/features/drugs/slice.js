@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import {AdditionalInfo, Dosage, Drug, DrugReactionMatrix, IndicationForUse, Relatedness, Substance} from './drugs';
 import { nullFlavors } from '@src/components/nullFlavours';
-import { changeData, getData, getJsonFromXml, revertAll, saveData } from '../display/slice';
+import { changeData, getData, getJsonFromXml, parseDate, revertAll, saveData } from '../display/slice';
 import { e2bCaseKeys } from '../common/changekeys';
 
 export const drugsSelector = (state) => state.drugs;
@@ -55,8 +55,8 @@ export const getDrug = () => {
 						'G_k_4_r_1b_DoseUnit': subItem['G_k_4_r_1b_DoseUnit'],
 						'G_k_4_r_2_NumberUnitsInterval': subItem['G_k_4_r_2_NumberUnitsInterval'],
 						'G_k_4_r_3_DefinitionIntervalUnit': subItem['G_k_4_r_3_DefinitionIntervalUnit'],
-						'G_k_4_r_4_DateTimeDrug': getNullFlavor(subItem, 'G_k_4_r_4_DateTimeDrug'),
-						'G_k_4_r_5_DateTimeLastAdministration': getNullFlavor(subItem, 'G_k_4_r_5_DateTimeLastAdministration'),
+						'G_k_4_r_4_DateTimeDrug': getNullFlavor(subItem, 'G_k_4_r_4_DateTimeDrug', true),
+						'G_k_4_r_5_DateTimeLastAdministration': getNullFlavor(subItem, 'G_k_4_r_5_DateTimeLastAdministration', true),
 						'G_k_4_r_6a_DurationDrugAdministrationNum': subItem['G_k_4_r_6a_DurationDrugAdministrationNum'],
 						'G_k_4_r_6b_DurationDrugAdministrationUnit': subItem['G_k_4_r_6b_DurationDrugAdministrationUnit'],
 						'G_k_4_r_7_BatchLotNumber': subItem['G_k_4_r_7_BatchLotNumber'],
@@ -190,9 +190,11 @@ export const parseDrug = (data) => {
 }
 
 
-const getNullFlavor = (item, field) => {
+const getNullFlavor = (item, field, isDate = false) => {
 	return item[field]['nullFlavor'] !== null
 			? {'value': null, 'nullFlavor': nullFlavors[item[field]['nullFlavor']]}
+			: isDate
+			? {'value': parseDate(item[field].value), 'nullFlavor': null}
 			: item[field]
 }
 

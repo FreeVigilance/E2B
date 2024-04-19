@@ -51,6 +51,13 @@ export const getJsonFromXml = createAsyncThunk(
     },
 );
 
+export const validateData = createAsyncThunk(
+    'display/validateData',
+    (data) => {
+        return api.validateData(data);
+    },
+)
+
 
 export const getTabsWithErrors = (errors) => {
     let errorTabs = {
@@ -189,6 +196,12 @@ export const getTabsWithErrors = (errors) => {
     return errorTabs;
 }
 
+export const parseDate = (date) => {
+    if (date === null)
+        return null;
+    return date.replaceAll(' ', '').replaceAll('-', '').replaceAll(':', '').replaceAll('_', '')
+}
+
 const initialState = {
     showSideMenu: false,
     showCasesList: false,
@@ -199,6 +212,7 @@ const initialState = {
     uploadedFile: null,
     showUpload: false,
     errors: {},
+    currentValidated: 0,
     errorTabs: {
         0: {value: false, message: null},
         1: {value: false, message: null},
@@ -230,6 +244,8 @@ const displaySlice = createSlice({
         setUploadedFile: (state, action) => { state.uploadedFile = action.payload; },
         setShowUpload: (state, action) => { state.showUpload = action.payload; },
         setErrorTabs: (state, action) => { state.errorTabs = action.payload; },
+        setCurrentValidated: (state, action) => { state.currentValidated = action.payload; },
+
     },
     extraReducers: (builder) => {
         builder.addCase(revertAll, () => initialState);
@@ -310,6 +326,23 @@ const displaySlice = createSlice({
             console.log('getJsonFromXml no');
             console.log(action.payload);
         });
+        builder.addCase(validateData.fulfilled, (state, action) => {
+            console.log('validate');
+            console.log(action.payload);
+            if (action.payload['_errors']) {
+                if (Object.keys(action.payload['_errors']).length !== 0) {
+                    state.currentValidated = 2;
+                    state.errors = e2bCaseKeys(action.payload['_errors']);
+                    state.errorTabs = getTabsWithErrors(state.errors);
+                    return;
+                } else {
+                    state.errors = {};
+                }
+            }
+            state.currentId = action.payload.id;
+            state.currentValidated = 1;
+            state.errorTabs = getTabsWithErrors({});
+        });
 
     },
 
@@ -325,6 +358,7 @@ export const {
     setCurrentSaved,
     setUploadedFile,
     setShowUpload,
-    setErrorTabs
+    setErrorTabs,
+    setCurrentValidated
 
 } = displaySlice.actions;

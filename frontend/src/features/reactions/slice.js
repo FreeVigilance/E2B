@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { nullFlavors } from '@src/components/nullFlavours';
 import { e2bCaseKeys } from '../common/changekeys';
-import { changeData, getData, getJsonFromXml, revertAll, saveData } from '../display/slice';
+import { changeData, getData, getJsonFromXml, parseDate, revertAll, saveData } from '../display/slice';
 import { Reaction } from './reaction';
 
 export const reactionsSelector = (state) => state.reactions;
@@ -50,10 +50,10 @@ export const getReaction = () => {
 						: {'value': item['E_i_3_2f_OtherMedicallyImportantCondition']['value'], 'nullFlavor': null});
 			itemData['E_i_4_DateStartReaction'] = (item['E_i_4_DateStartReaction']['nullFlavor'] !== null
 				? {'value': null, 'nullFlavor': nullFlavors[item['E_i_4_DateStartReaction']['nullFlavor']]}
-				: {'value': item['E_i_4_DateStartReaction']['value'], 'nullFlavor': null})
+				: {'value': parseDate(item['E_i_4_DateStartReaction'].value), 'nullFlavor': null})
 			itemData['E_i_5_DateEndReaction'] = (item['E_i_5_DateEndReaction']['nullFlavor'] !== null
 				? {'value': null, 'nullFlavor': nullFlavors[item['E_i_5_DateEndReaction']['nullFlavor']]}
-				: {'value': item['E_i_5_DateEndReaction']['value'], 'nullFlavor': null})
+				: {'value': parseDate(item['E_i_5_DateEndReaction'].value), 'nullFlavor': null})
 			itemData['E_i_6a_DurationReactionNum'] = item['E_i_6a_DurationReactionNum'];
 			itemData['E_i_6b_DurationReactionUnit'] = item['E_i_6b_DurationReactionUnit'];
 			itemData['E_i_7_OutcomeReactionLastObservation'] = item['E_i_7_OutcomeReactionLastObservation']

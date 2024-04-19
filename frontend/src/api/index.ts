@@ -28,5 +28,8 @@ export const api = {
     getJsonFromXml: (data: any) => {
         console.log(data);
         return clientER.getJson('/icsr/from-xml', { data: data });
-    }
+    },
+    validateData: (data: any) => {
+        return clientER.post('/icsr/validate', { data: data });
+    },
 };

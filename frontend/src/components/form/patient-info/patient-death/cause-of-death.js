@@ -53,13 +53,13 @@ export const CausesOfDeath = () => {
 
     const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
         let value = event.target.value;
-        if (value === '') {
-            value = null;
-        };
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)
         }
+        if (value === '') {
+            value = null;
+        };
         let causeOfDeathCopy = JSON.parse(JSON.stringify(causeOfDeath));
         causeOfDeathCopy[index][fieldName].value = value;
         dispatch(setCauseOfDeath(causeOfDeathCopy));
@@ -92,7 +92,6 @@ export const CausesOfDeath = () => {
                                     className={classes.textLong}
                                     onChange={handleChange('D_9_2_r_2_CauseDeath', index)}
                                     value = {item['D_9_2_r_2_CauseDeath'].value}
-                                    inputProps={{ maxLength: 250}}
                                     multiline
                                     rows={3}/>
                             </Grid>

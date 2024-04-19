@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { AutopsyData, CauseOfDeath, DrugHistory, MedHistory, ParentChildData, ParentData, ParentDrugHistory, ParentHistoryData, PatientInfo } from './patient';
 import { nullFlavors } from '@src/components/nullFlavours';
-import { changeData, getData, getJsonFromXml, revertAll, saveData } from '../display/slice';
+import { changeData, getData, getJsonFromXml, parseDate, revertAll, saveData } from '../display/slice';
 import { e2bCaseKeys } from '../common/changekeys';
 
 export const patientSelector = (state) => state.patient;
@@ -37,7 +37,7 @@ export const getPatient = () => {
 						: {'value': patientData['D_1_1_4_MedicalRecordNumberSourceInvestigation']['value'], 'nullFlavor': null},
 				'D_2_1_DateBirth': patientData['D_2_1_DateBirth']['value'] === null
 					? {'value': null, 'nullFlavor': 'MSK'}
-					: {'value': patientData['D_2_1_DateBirth']['value'], 'nullFlavor': null},
+					: {'value': parseDate(patientData['D_2_1_DateBirth']['value']), 'nullFlavor': null},
 				'D_2_2a_AgeOnsetReactionNum': patientData['D_2_2a_AgeOnsetReactionNum'],
 				'D_2_2b_AgeOnsetReactionUnit': patientData['D_2_2b_AgeOnsetReactionUnit'],
 				'D_2_2_1a_GestationPeriodReactionFoetusNum': patientData['D_2_2_1a_GestationPeriodReactionFoetusNum'],
@@ -48,16 +48,16 @@ export const getPatient = () => {
 				'D_5_Sex': getNullFlavor(patientData, 'D_5_Sex'),
 				'D_6_LastMenstrualPeriodDate': patientData['D_6_LastMenstrualPeriodDate']['value'] === null
 					? {'value': null, 'nullFlavor': 'MSK'}
-					: patientData['D_6_LastMenstrualPeriodDate'],
+					: {'value': parseDate(patientData['D_6_LastMenstrualPeriodDate']['value']), 'nullFlavor': null},
 				'D_7_2_TextMedicalHistory': getNullFlavor(patientData, 'D_7_2_TextMedicalHistory'),
 				'D_7_3_ConcomitantTherapies': patientData['D_7_3_ConcomitantTherapies'],
-				'D_9_1_DateDeath': getNullFlavor(patientData, 'D_9_1_DateDeath'),
+				'D_9_1_DateDeath': getNullFlavor(patientData, 'D_9_1_DateDeath', true),
 				'D_9_3_Autopsy': getNullFlavor(patientData, 'D_9_3_Autopsy'),
 				'D_10_1_ParentIdentification': getNullFlavor(parentChildData, 'D_10_1_ParentIdentification'),
-				'D_10_2_1_DateBirthParent': getNullFlavor(parentChildData, 'D_10_2_1_DateBirthParent'),
+				'D_10_2_1_DateBirthParent': getNullFlavor(parentChildData, 'D_10_2_1_DateBirthParent', true),
 				'D_10_2_2a_AgeParentNum': parentChildData['D_10_2_2a_AgeParentNum'],
 				'D_10_2_2b_AgeParentUnit': parentChildData['D_10_2_2b_AgeParentUnit'],
-				'D_10_3_LastMenstrualPeriodDateParent': getNullFlavor(parentChildData, 'D_10_3_LastMenstrualPeriodDateParent'),
+				'D_10_3_LastMenstrualPeriodDateParent': getNullFlavor(parentChildData, 'D_10_3_LastMenstrualPeriodDateParent', true),
 				'D_10_4_BodyWeightParent': parentChildData['D_10_4_BodyWeightParent'],
 				'D_10_5_HeightParent': parentChildData['D_10_5_HeightParent'],
 				'D_10_6_SexParent': getNullFlavor(parentChildData, 'D_10_6_SexParent'),
@@ -70,9 +70,9 @@ export const getPatient = () => {
 				'id': item['id'],
 				'D_7_1_r_1a_MedDRAVersionMedicalHistory': item['D_7_1_r_1a_MedDRAVersionMedicalHistory'],
 				'D_7_1_r_1b_MedicalHistoryMedDRACode': item['D_7_1_r_1b_MedicalHistoryMedDRACode'],
-				'D_7_1_r_2_StartDate': getNullFlavor(item, 'D_7_1_r_2_StartDate'),
+				'D_7_1_r_2_StartDate': getNullFlavor(item, 'D_7_1_r_2_StartDate', true),
 				'D_7_1_r_3_Continuing': getNullFlavor(item, 'D_7_1_r_3_Continuing'),
-				'D_7_1_r_4_EndDate': getNullFlavor(item, 'D_7_1_r_4_EndDate'),
+				'D_7_1_r_4_EndDate': getNullFlavor(item, 'D_7_1_r_4_EndDate', true),
 				'D_7_1_r_5_Comments': item['D_7_1_r_5_Comments'],
 				'D_7_1_r_6_FamilyHistory': item['D_7_1_r_6_FamilyHistory']
 			});
@@ -89,8 +89,8 @@ export const getPatient = () => {
 			itemData['D_8_r_2b_MPID'] = item['D_8_r_2b_MPID']
 			itemData['D_8_r_3a_PhPIDVersion'] = item['D_8_r_3a_PhPIDVersion'],
 			itemData['D_8_r_3b_PhPID'] = item['D_8_r_3b_PhPID']
-			itemData['D_8_r_4_StartDate'] = getNullFlavor(item, 'D_8_r_4_StartDate');
-			itemData['D_8_r_5_EndDate'] = getNullFlavor(item, 'D_8_r_5_EndDate');
+			itemData['D_8_r_4_StartDate'] = getNullFlavor(item, 'D_8_r_4_StartDate', true);
+			itemData['D_8_r_5_EndDate'] = getNullFlavor(item, 'D_8_r_5_EndDate', true);
 			itemData['D_8_r_6a_MedDRAVersionIndication'] = item['D_8_r_6a_MedDRAVersionIndication'],
 			itemData['D_8_r_6b_IndicationMedDRACode'] = item['D_8_r_6b_IndicationMedDRACode']
 			itemData['D_8_r_7a_MedDRAVersionReaction'] = item['D_8_r_7a_MedDRAVersionReaction'],
@@ -127,9 +127,9 @@ export const getPatient = () => {
 				'id': item['id'],
 				'D_10_7_1_r_1a_MeddraVersionMedicalHistory': item['D_10_7_1_r_1a_MedDRAVersionMedicalHistory'],
 				'D_10_7_1_r_1b_MedicalHistoryMeddraCode': item['D_10_7_1_r_1b_MedicalHistoryMedDRACode'],
-				'D_10_7_1_r_2_StartDate': getNullFlavor(item, 'D_10_7_1_r_2_StartDate'),
+				'D_10_7_1_r_2_StartDate': getNullFlavor(item, 'D_10_7_1_r_2_StartDate', true),
 				'D_10_7_1_r_3_Continuing': getNullFlavor(item, 'D_10_7_1_r_3_Continuing'),
-				'D_10_7_1_r_4_EndDate': getNullFlavor(item, 'D_10_7_1_r_4_EndDate'),
+				'D_10_7_1_r_4_EndDate': getNullFlavor(item, 'D_10_7_1_r_4_EndDate', true),
 				'D_10_7_1_r_5_Comments': item['D_10_7_1_r_5_Comments'],
 			}
 			
@@ -148,8 +148,8 @@ export const getPatient = () => {
 				'D_10_8_r_2b_MPID': item['D_10_8_r_2b_MPID'],
 				'D_10_8_r_3a_PhPIDVersion': item['D_10_8_r_3a_PhPIDVersion'],
 				'D_10_8_r_3b_PhPID': item['D_10_8_r_3b_PhPID'],
-				'D_10_8_r_4_StartDate': getNullFlavor(item, 'D_10_8_r_4_StartDate'),
-				'D_10_8_r_5_EndDate': getNullFlavor(item, 'D_10_8_r_5_EndDate'),
+				'D_10_8_r_4_StartDate': getNullFlavor(item, 'D_10_8_r_4_StartDate', true),
+				'D_10_8_r_5_EndDate': getNullFlavor(item, 'D_10_8_r_5_EndDate', true),
 				'D_10_8_r_6a_MedDRAVersionIndication': item['D_10_8_r_6a_MedDRAVersionIndication'],
 				'D_10_8_r_6b_IndicationMedDRACode': item['D_10_8_r_6b_IndicationMedDRACode'],
 				'D_10_8_r_7a_MedDRAVersionReaction': item['D_10_8_r_7a_MedDRAVersionReaction'],
@@ -164,9 +164,11 @@ export const getPatient = () => {
 	}
 }
 
-const getNullFlavor = (item, field) => {
+const getNullFlavor = (item, field, isDate = false) => {
 	return item[field]['nullFlavor'] !== null
 			? {'value': null, 'nullFlavor': nullFlavors[item[field]['nullFlavor']]}
+			: isDate
+			? {'value': parseDate(item[field].value), 'nullFlavor': null}
 			: item[field]
 }
 

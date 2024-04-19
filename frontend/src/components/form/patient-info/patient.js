@@ -57,13 +57,13 @@ export const Patient = () => {
 
     const handleChange = (fieldName, isNumber = false, length = 1) => (event) => {
         let value = event.target.value;
-        if (value === '') {
-            value = null;
-        };
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)
         }
+        if (value === '') {
+            value = null;
+        };
         // if (value === '' || value.length === 0){
         //     value = null;
         // }
@@ -110,7 +110,6 @@ export const Patient = () => {
                         {patientData['D_1_Patient']['nullFlavor'] !== -1 ? 
                             <TextField variant="outlined"
                             className={classes.textShort}
-                            inputProps={{ maxLength: 60}}
                             onChange={handleChange('D_1_Patient')}
                             value = {patientData['D_1_Patient'].value}/>
                         :   
@@ -147,7 +146,6 @@ export const Patient = () => {
                         {patientData['D_1_1_1_MedicalRecordNumberSourceGP']['nullFlavor'] !== -1 ? 
                             <TextField variant="outlined"
                             className={classes.textShort}
-                            inputProps={{ maxLength: 20}}
                             onChange={handleChange('D_1_1_1_MedicalRecordNumberSourceGP')}
                             value = {patientData['D_1_1_1_MedicalRecordNumberSourceGP'].value}/>
                         : <FormLabel>No GP Medical Record Number</FormLabel>}
@@ -172,7 +170,6 @@ export const Patient = () => {
                         {patientData['D_1_1_2_MedicalRecordNumberSourceSpecialist']['nullFlavor'] !== -1 ? 
                             <TextField variant="outlined"
                             className={classes.textShort}
-                            inputProps={{ maxLength: 20}}
                             onChange={handleChange('D_1_1_2_MedicalRecordNumberSourceSpecialist')}
                             value = {patientData['D_1_1_2_MedicalRecordNumberSourceSpecialist'].value}/>
                         : <FormLabel>No Specialist Record Number</FormLabel>}
@@ -196,7 +193,6 @@ export const Patient = () => {
                         {patientData['D_1_1_3_MedicalRecordNumberSourceHospital']['nullFlavor'] !== -1 ? 
                             <TextField variant="outlined"
                             className={classes.textShort}
-                            inputProps={{ maxLength: 20}}
                             onChange={handleChange('D_1_1_3_MedicalRecordNumberSourceHospital')}
                             value = {patientData['D_1_1_3_MedicalRecordNumberSourceHospital'].value}/>
                         : <FormLabel>No Hospital Record Number</FormLabel>}
@@ -221,7 +217,6 @@ export const Patient = () => {
                         {patientData['D_1_1_4_MedicalRecordNumberSourceInvestigation']['nullFlavor'] !== -1 ? 
                             <TextField variant="outlined"
                             className={classes.textShort}
-                            inputProps={{ maxLength: 20}}
                             onChange={handleChange('D_1_1_4_MedicalRecordNumberSourceInvestigation')}
                             value = {patientData['D_1_1_4_MedicalRecordNumberSourceInvestigation'].value}/>
                         : <FormLabel>No Investigation Number</FormLabel>}
@@ -277,7 +272,6 @@ export const Patient = () => {
                 <Grid item xs={9}>
                     <TextField variant="outlined"
                         className={classes.textMedium}
-                        inputProps={{ maxLength: 50}}
                         onChange={handleChange('D_2_2b_AgeOnsetReactionUnit')}
                         value = {patientData['D_2_2b_AgeOnsetReactionUnit'].value}/>
                 </Grid>
@@ -305,7 +299,6 @@ export const Patient = () => {
                 <Grid item xs={9}>
                     <TextField variant="outlined"
                         className={classes.textMedium}
-                        inputProps={{ maxLength: 50}}
                         onChange={handleChange('D_2_2_1b_GestationPeriodReactionFoetusUnit')}
                         value = {patientData['D_2_2_1b_GestationPeriodReactionFoetusUnit'].value}/>
                 </Grid>
@@ -536,7 +529,6 @@ export const Patient = () => {
                                 value = {patientData['D_7_2_TextMedicalHistory'].value}
                                 onChange={handleChange('D_7_2_TextMedicalHistory')}
                                 multiline
-                                inputProps={{ maxLength: 10000}}
                                 rows={15}/>
                         :   <FormControl className={classes.textXshort}>
                             <InputLabel>Null Flavor</InputLabel>

@@ -85,10 +85,10 @@ export const DrugTabs = () => {
     const formTabsList = () => {
         let list = [];
         Object.values(drugs).forEach((item, index) => {
-            list.push(<Tab label={
+            list.push(<Tab sx={{color: 'white', fontWeight: 600, fontSize: '22px'}} label={
                 <span>
                           {`drug ${index}`}
-                          <IconButton sx={{ color: "#1976d2", marginLeft: 1}}
+                          <IconButton sx={{ color: 'white', marginLeft: 1}}
                           onClick = {() => deleteDrug(index)}>
                             <DeleteIcon />
                           </IconButton>
@@ -116,7 +116,13 @@ export const DrugTabs = () => {
             <Box sx={{ width: '100%'}}>
                 <TabContext value={value}>
                 <TabList indicatorColor="primary"
-                variant="fullWidth"
+                    variant="fullWidth"
+                    sx={{backgroundColor: '#B8B8CE'}}
+                    TabIndicatorProps={{
+                        sx: {
+                          height: "5px !important",
+                        },
+                    }}  
                     onChange={handleChange}
                     aria-label="Drugs"
                 >

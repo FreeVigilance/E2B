@@ -14,7 +14,14 @@ export const ParentChildFieldLabel = ({label, field}) => {
             paddingRight: '10px',
         },
         error: {
-            color: 'red',
+            color: '#CC0000',
+            fontSize: 20,
+            paddingTop: '15px',
+            paddingRight: '10px',
+            fontWeight: 600
+        },
+        businessError: {
+            color: '#FFCC00',
             fontSize: 20,
             paddingTop: '15px',
             paddingRight: '10px',
@@ -28,7 +35,6 @@ export const ParentChildFieldLabel = ({label, field}) => {
     const getErrorText = (obj) => {
         if (!obj) return null;
         for (const [key, value] of Object.entries(obj)) {
-            console.log(key);
             if (key === field) {
                 if (value['value']) {
                     return value['value']['_Self'];
@@ -52,16 +58,48 @@ export const ParentChildFieldLabel = ({label, field}) => {
             if (errorText === null) {
                 return <FormLabel className={classes.label}>{label}</FormLabel>
             }
-            return (
-                <Stack direction={'row'}>
-                    <FormLabel className={classes.error}>{label}</FormLabel>
-                    <Tooltip title={<h2>{errorText}</h2> }arrow>
-                        <IconButton>
-                            <InfoIcon style={{color: 'red'}}/>
-                        </IconButton>
-                    </Tooltip>
-                </Stack>
-            );
+            if (errorText['parsing'] && errorText['business']) {
+                return (
+                    <Stack direction={'row'}>
+                        <FormLabel className={classes.error}>{label}</FormLabel>
+                        <Tooltip title={<h2>{errorText['parsing']}</h2> }arrow>
+                            <IconButton>
+                                <InfoIcon style={{color: '#CC0000'}}/>
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title={<h2>{errorText['business']}</h2> }arrow>
+                            <IconButton>
+                                <InfoIcon style={{color: '#FFCC00'}}/>
+                            </IconButton>
+                        </Tooltip>
+                    </Stack>
+                )
+            }
+            if (errorText['parsing']) {
+                return (
+                    <Stack direction={'row'}>
+                        <FormLabel className={classes.error}>{label}</FormLabel>
+                        <Tooltip title={<h2>{errorText['parsing']}</h2> }arrow>
+                            <IconButton>
+                                <InfoIcon style={{color: '#CC0000'}}/>
+                            </IconButton>
+                        </Tooltip>
+                    </Stack>
+                )
+            }
+            if (errorText['business']) {
+                return (
+                    <Stack direction={'row'}>
+                        <FormLabel className={classes.businessError}>{label}</FormLabel>
+                        <Tooltip title={<h2>{errorText['business']}</h2> }arrow>
+                            <IconButton>
+                                <InfoIcon style={{color: '#FFCC00'}}/>
+                            </IconButton>
+                        </Tooltip>
+                    </Stack>
+                )
+            }
+            return null;
         } else {
             return <FormLabel className={classes.label}>{label}</FormLabel>
         }

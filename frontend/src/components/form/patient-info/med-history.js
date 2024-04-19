@@ -59,13 +59,13 @@ export const MedicalHistory = () => {
 
     const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
         let value = event.target.value;
-        if (value === '') {
-            value = null;
-        };
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)
         }
+        if (value === '') {
+            value = null;
+        };
         let medicalHistoryCopy = JSON.parse(JSON.stringify(medicalHistory));
         medicalHistoryCopy[index][fieldName].value = value;
         dispatch(setMedicalHistory(medicalHistoryCopy));
@@ -280,7 +280,6 @@ export const MedicalHistory = () => {
                                     onChange={handleChange('D_7_1_r_5_Comments', index)}
                                     value = {item['D_7_1_r_5_Comments'].value}
                                     multiline
-                                    inputProps={{ maxLength: 2000}}
                                     rows={7}/>
                             </Grid>
 

@@ -60,13 +60,13 @@ export const Dosages = ({drugIndex}) => {
 
     const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
         let value = event.target.value;
-        if (value === '') {
-            value = null;
-        };
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)
         }
+        if (value === '') {
+            value = null;
+        };
         let dosagesCopy = JSON.parse(JSON.stringify(dosages));
         dosagesCopy[drugIndex][index][fieldName].value = value;
         dispatch(setDosages(dosagesCopy));
@@ -130,7 +130,6 @@ export const Dosages = ({drugIndex}) => {
                             <TextField variant="outlined"
                                 className={classes.textShort}
                                     onChange={handleChange('G_k_4_r_1b_DoseUnit', index)}
-                                    inputProps={{ maxLength: 50}}
                                     value = {item['G_k_4_r_1b_DoseUnit'].value}/> 
                         </Grid>
 
@@ -249,7 +248,6 @@ export const Dosages = ({drugIndex}) => {
                             <TextField variant="outlined"
                             className={classes.textLong}
                                     onChange={handleChange('G_k_4_r_6b_DurationDrugAdministrationUnit', index)}
-                                    inputProps={{ maxLength: 50}}
                                     value = {item['G_k_4_r_6b_DurationDrugAdministrationUnit'].value}/>
                         </Grid>
 
@@ -270,7 +268,6 @@ export const Dosages = ({drugIndex}) => {
                                     {dosages[drugIndex][index]['G_k_4_r_9_1_PharmaceuticalDoseForm']['nullFlavor'] === null ? 
                                             <TextField variant="outlined"
                                             className={classes.textLong}
-                                                inputProps={{ maxLength: 60}}
                                                 onChange={handleChange('G_k_4_r_9_1_PharmaceuticalDoseForm', index)}
                                                 value = {item['G_k_4_r_9_1_PharmaceuticalDoseForm'].value}/> 
                                             : <FormControl className={classes.textXshort}>
@@ -333,7 +330,6 @@ export const Dosages = ({drugIndex}) => {
                                             <TextField variant="outlined"
                                             className={classes.textLong}
                                                 onChange={handleChange('G_k_4_r_10_1_RouteAdministration', index)}
-                                                inputProps={{ maxLength: 60}}
                                                 value = {item['G_k_4_r_10_1_RouteAdministration'].value}/> 
                                             : <FormControl className={classes.textXshort}>
                                                 <InputLabel>Null Flavor</InputLabel>
@@ -390,7 +386,6 @@ export const Dosages = ({drugIndex}) => {
                                             <TextField variant="outlined"
                                             className={classes.textLong}
                                                 onChange={handleChange('G_k_4_r_11_1_ParentRouteAdministration', index)}
-                                                inputProps={{ maxLength: 60}}
                                                 value = {item['G_k_4_r_11_1_ParentRouteAdministration'].value}/> 
                                             : <FormControl className={classes.textXshort}>
                                                 <InputLabel>Null Flavor</InputLabel>
@@ -437,7 +432,6 @@ export const Dosages = ({drugIndex}) => {
                             <TextField variant="outlined"
                             className={classes.textShort}
                                     onChange={handleChange('G_k_4_r_7_BatchLotNumber', index)}
-                                    inputProps={{ maxLength: 35}}
                                     value = {item['G_k_4_r_7_BatchLotNumber'].value}/> 
                         </Grid>                        
                             
@@ -451,7 +445,6 @@ export const Dosages = ({drugIndex}) => {
                                     onChange={handleChange('G_k_4_r_8_DosageText', index)}
                                     value = {item['G_k_4_r_8_DosageText'].value}
                                     multiline
-                                    inputProps={{ maxLength: 2000}}
                                     rows={7}/> 
                         </Grid>
 
@@ -463,7 +456,6 @@ export const Dosages = ({drugIndex}) => {
                             <TextField variant="outlined"
                             className={classes.textShort}
                                     onChange={handleChange('G_k_4_r_3_DefinitionIntervalUnit', index)}
-                                    inputProps={{ maxLength: 50}}
                                     value = {item['G_k_4_r_3_DefinitionIntervalUnit'].value}/> 
                         </Grid>   
                     </Grid>

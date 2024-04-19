@@ -86,7 +86,6 @@ export const SummaryCommentsComp = () => {
                         </Grid>
                         <Grid item xs={6}>
                             <TextField variant="outlined"
-                                inputProps={{ maxLength: 3}}
                                 className={classes.textXshort}
                                 onChange={handleChange('H_5_r_1b_CaseSummaryReporterCommentsLanguage', index)}
                                 value = {item['H_5_r_1b_CaseSummaryReporterCommentsLanguage'].value}/>
@@ -98,7 +97,6 @@ export const SummaryCommentsComp = () => {
                         field = 'H_5_r_1a_CaseSummaryReporterCommentsText' index={index}></SummaryCommentsFieldLabel>                           
                             <TextField variant="outlined"
                                 className={classes.textLong}
-                                inputProps={{ maxLength: 100000}}
                                 multiline
                                 rows={20}
                                 onChange={handleChange('H_5_r_1a_CaseSummaryReporterCommentsText', index)}

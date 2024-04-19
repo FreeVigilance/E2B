@@ -25,7 +25,9 @@ export const DosageTabs = () => {
     const formTabsList = () => {
         let list = [];
         Object.values(drugs).forEach((item, index) => {
-            list.push(<Tab value={index} label={`drug ${index}`}/>);
+            list.push(<Tab 
+                sx={{color: 'white', fontWeight: 600, fontSize: '22px'}}
+                value={index} label={`drug ${index}`}/>);
         });
         return list;
     }
@@ -48,6 +50,14 @@ export const DosageTabs = () => {
                 <Box sx={{ width: '100%' }}>
                     <TabContext value={value}>
                     <TabList
+                        indicatorColor="primary"
+                        variant="fullWidth"
+                        sx={{backgroundColor: '#B8B8CE'}}
+                        TabIndicatorProps={{
+                            sx: {
+                              height: "5px !important",
+                            },
+                        }}  
                         onChange={handleChange}
                         aria-label="Dosages"
                     >

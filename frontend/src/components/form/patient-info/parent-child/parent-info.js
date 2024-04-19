@@ -55,13 +55,13 @@ export const ParentInfo = () => {
 
     const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
         let value = event.target.value;
-        if (value === '') {
-            value = null;
-        };
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)
         }
+        if (value === '') {
+            value = null;
+        };
         let parentDataCopy = JSON.parse(JSON.stringify(parentData));
         parentDataCopy[index][fieldName].value = value;
         dispatch(setParentData(parentDataCopy));
@@ -262,7 +262,6 @@ export const ParentInfo = () => {
                                 onChange={handleChange('D_10_7_1_r_5_Comments', index)}
                                 value = {item['D_10_7_1_r_5_Comments'].value}
                                 multiline
-                                inputProps={{ maxLength: 2000}}
                                 rows={10}/>
                         </Grid>
                     </Grid>

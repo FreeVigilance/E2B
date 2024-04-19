@@ -111,7 +111,6 @@ export const StudyRegistrationComp = () => {
                                 {item['C_5_1_r_1_StudyRegistrationNumber']['nullFlavor'] === null ? 
                                     <TextField variant="outlined"
                                         className={classes.textMedium}
-                                        inputProps={{ maxLength: 50}}
                                         onChange={handleChange('C_5_1_r_1_StudyRegistrationNumber', index)}
                                         value = {item['C_5_1_r_1_StudyRegistrationNumber'].value}/>
                                 :   <FormControl className={classes.textXshort}>
@@ -143,7 +142,6 @@ export const StudyRegistrationComp = () => {
                                     {item['C_5_1_r_2_StudyRegistrationCountry']['nullFlavor'] === null ? 
                                         <TextField variant="outlined"
                                             className={classes.textXshort}
-                                            inputProps={{ maxLength: 2}}
                                             onChange={handleChange('C_5_1_r_2_StudyRegistrationCountry', index)}
                                             value = {item['C_5_1_r_2_StudyRegistrationCountry'].value}/>
                                 :   <FormControl className={classes.textXshort}>

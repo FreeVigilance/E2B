@@ -26,7 +26,9 @@ export const MatrixTabs = () => {
     const formTabsList = () => {
         let list = [];
         Object.values(drugs).forEach((item, index) => {
-            list.push(<Tab value={index} label={index}/>);
+            list.push(<Tab 
+                sx={{color: 'white', fontWeight: 600, fontSize: '22px'}}
+                value={index} label={`drug ${index}`}/>);
         });
         return list;
     }
@@ -49,6 +51,14 @@ export const MatrixTabs = () => {
                 <Box sx={{ width: '100%' }}>
                     <TabContext value={value}>
                     <TabList
+                        indicatorColor="primary"
+                        variant="fullWidth"
+                        sx={{backgroundColor: '#B8B8CE'}}
+                        TabIndicatorProps={{
+                            sx: {
+                              height: "5px !important",
+                            },
+                        }}  
                         onChange={handleChange}
                         aria-label="Drug Reaction Matrix"
                     >

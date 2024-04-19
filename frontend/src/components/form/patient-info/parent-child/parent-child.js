@@ -56,13 +56,13 @@ export const ParentChild = () => {
 
     const handleChange = (fieldName, isNumber = false, length = 1) => (event) => {
         let value = event.target.value;
-        if (value === '') {
-            value = null;
-        };
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)
         }
+        if (value === '') {
+            value = null;
+        };
         let parentChildDataCopy = JSON.parse(JSON.stringify(parentChildData));
         parentChildDataCopy[fieldName].value = value;
         dispatch(setParentChildData(parentChildDataCopy));
@@ -106,7 +106,6 @@ export const ParentChild = () => {
                         {parentChildData['D_10_1_ParentIdentification']['nullFlavor'] === null ? 
                             <TextField variant="outlined"
                                 className={classes.textShort}
-                                inputProps={{ maxLength: 60}}
                                 onChange={handleChange('D_10_1_ParentIdentification')}
                                 value = {parentChildData['D_10_1_ParentIdentification'].value}/>
                         :   
@@ -262,7 +261,6 @@ export const ParentChild = () => {
                 <Grid item xs={9}>
                     <TextField variant="outlined"
                         className={classes.textMedium}
-                        inputProps={{ maxLength: 50}}
                         onChange={handleChange('D_10_2_2b_AgeParentUnit')}
                         value = {parentChildData['D_10_2_2b_AgeParentUnit'].value}/>
                 </Grid>

@@ -104,7 +104,6 @@ export const StudyIdentificationComp = () => {
                                 value = {studyIdentification['C_5_2_StudyName'].value}
                                 multiline
                                 className={classes.textLong}
-                                inputProps={{ maxLength: 2000}}
                                 rows={5}/>
                         :   <FormControl className={classes.textXshort}>
                                 <InputLabel>Null Flavor</InputLabel>
@@ -135,7 +134,6 @@ export const StudyIdentificationComp = () => {
                             {studyIdentification['C_5_3_SponsorStudyNumber']['nullFlavor'] === null ? 
                                 <TextField variant="outlined"
                                     className={classes.textShort}
-                                    inputProps={{ maxLength: 50}}
                                     onChange={handleChange('C_5_3_SponsorStudyNumber')}
                                     value = {studyIdentification['C_5_3_SponsorStudyNumber'].value}/>
                             :   <FormControl className={classes.textXshort}>

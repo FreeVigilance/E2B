@@ -70,7 +70,6 @@ export const NarrativeComp = () => {
             field = 'H_1_CaseNarrative'></NarrativeFieldLabel>
             <TextField variant="outlined"
                 className={classes.textLong}
-                inputProps={{ maxLength: 100000}}
                 onChange={handleChange('H_1_CaseNarrative')}
                 value = {narrativeCaseSummary['H_1_CaseNarrative'].value}
                 multiline
@@ -80,7 +79,6 @@ export const NarrativeComp = () => {
             field = 'H_2_ReporterComments'></NarrativeFieldLabel>
             <TextField variant="outlined"
                 className={classes.textLong}
-                inputProps={{ maxLength: 20000}}
                 onChange={handleChange('H_2_ReporterComments')}
                 value = {narrativeCaseSummary['H_2_ReporterComments'].value}
                 multiline
@@ -90,7 +88,6 @@ export const NarrativeComp = () => {
             field = 'H_4_SenderComments'></NarrativeFieldLabel>
             <TextField variant="outlined"
                 className={classes.textLong}
-                inputProps={{ maxLength: 20000}}
                 onChange={handleChange('H_4_SenderComments')}
                 value = {narrativeCaseSummary['H_4_SenderComments'].value}
                 multiline

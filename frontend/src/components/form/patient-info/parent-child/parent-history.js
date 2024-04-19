@@ -67,7 +67,6 @@ export const ParentHistory = () => {
                         onChange={handleChange('D_10_7_2_TextMedicalHistoryParent')}
                         value = {parentHistoryData['D_10_7_2_TextMedicalHistoryParent'].value}
                         multiline
-                        inputProps={{ maxLength: 10000}}
                         rows={15}/>
 
                 <Grid container item xs direction="column" rowGap={1}>

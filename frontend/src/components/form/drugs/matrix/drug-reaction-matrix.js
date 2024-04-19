@@ -60,13 +60,13 @@ export const DrugReactionsMatrix = ({drugIndex}) => {
 
     const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
         let value = event.target.value;
-        if (value === '') {
-            value = null;
-        };
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)
         }
+        if (value === '') {
+            value = null;
+        };
         let drugReactionMatrixCopy = JSON.parse(JSON.stringify(drugReactionMatrix));
         drugReactionMatrixCopy[drugIndex][index][fieldName].value = value;
         dispatch(setDrugReactionMatrix(drugReactionMatrixCopy));
@@ -118,7 +118,6 @@ export const DrugReactionsMatrix = ({drugIndex}) => {
                                 <TextField variant="outlined"
                                     className={classes.textMedium}
                                             onChange={handleChange('G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit', index)}
-                                            inputProps={{ maxLength: 50}}
                                             value = {item['G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit'].value}/>
                             </Grid>
 
@@ -145,7 +144,6 @@ export const DrugReactionsMatrix = ({drugIndex}) => {
                             <Grid item xs={8}>
                                 <TextField variant="outlined"
                                             onChange={handleChange('G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit', index)}
-                                            inputProps={{ maxLength: 50}}
                                             className={classes.textMedium}
                                             value = {item['G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit'].value}/>
                             </Grid>

@@ -59,13 +59,13 @@ export const Indications = ({drugIndex}) => {
 
     const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
         let value = event.target.value;
-        if (value === '') {
-            value = null;
-        };
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)
         }
+        if (value === '') {
+            value = null;
+        };
         let indicationsCopy = JSON.parse(JSON.stringify(indications));
         indicationsCopy[drugIndex][index][fieldName].value = value;
         dispatch(setIndications(indicationsCopy));
@@ -125,7 +125,6 @@ export const Indications = ({drugIndex}) => {
                                                 onChange={handleChange('G_k_7_r_1_IndicationPrimarySource', index)}
                                                 value = {item['G_k_7_r_1_IndicationPrimarySource'].value}
                                                 multiline
-                                                inputProps={{ maxLength: 250}}
                                                 rows={5}/>
                                             : <FormControl className={classes.textXshort}>
                                                 <InputLabel>Null Flavor</InputLabel>

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { nullFlavors } from '@src/components/nullFlavours';
 import { e2bCaseKeys } from '../common/changekeys';
-import { changeData, getData, getJsonFromXml, revertAll, saveData } from '../display/slice';
+import { changeData, getData, getJsonFromXml, parseDate, revertAll, saveData } from '../display/slice';
 import { Result } from './result';
 
 export const resultsSelector = (state) => state.results;
@@ -14,7 +14,7 @@ export const getResults = () => {
 		Object.values(resultsData).forEach((item, index) => {
 			let itemData = {}
 			itemData['id'] = item['id'];
-			itemData['F_r_1_TestDate'] = item['F_r_1_TestDate'];
+			itemData['F_r_1_TestDate'] = {value: parseDate(item['F_r_1_TestDate'].value), nullFlavor: item['F_r_1_TestDate'].nullFlavor};
 			if (itemData['F_r_1_TestDate']['nullFlavor'] === -1) {
 				itemData['F_r_1_TestDate'] = {'value': null, 'nullFlavor': 'UNK'}
 			}

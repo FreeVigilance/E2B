@@ -54,13 +54,13 @@ export const Drugs = ({index}) => {
 
     const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
         let value = event.target.value;
-        if (value === '') {
-            value = null;
-        };
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)
         }
+        if (value === '') {
+            value = null;
+        };
         let drugsDataCopy = JSON.parse(JSON.stringify(drugs));
         drugsDataCopy[index][fieldName].value = value;
         console.log(drugsDataCopy[index]);
@@ -141,7 +141,6 @@ export const Drugs = ({index}) => {
                                 onChange={handleChange('G_k_2_2_MedicinalProductNamePrimarySource', index)}
                                 value = {drugs[index]['G_k_2_2_MedicinalProductNamePrimarySource'].value}
                                 multiline
-                                inputProps={{ maxLength: 250}}
                                 rows={4}/>
                 </Grid>
                 
@@ -153,7 +152,6 @@ export const Drugs = ({index}) => {
                         <TextField variant="outlined"
                             className={classes.textXshort}
                                 onChange={handleChange('G_k_2_4_IdentificationCountryDrugObtained', index)}
-                                inputProps={{ maxLength: 2}}
                                 value = {drugs[index]['G_k_2_4_IdentificationCountryDrugObtained'].value}/>
                 </Grid>
 
@@ -165,7 +163,6 @@ export const Drugs = ({index}) => {
                         <TextField variant="outlined"
                             className={classes.textShort}
                                 onChange={handleChange('G_k_3_1_AuthorisationApplicationNumber', index)}
-                                inputProps={{ maxLength: 35}}
                                 value = {drugs[index]['G_k_3_1_AuthorisationApplicationNumber'].value}
                         />
                 </Grid>
@@ -178,7 +175,6 @@ export const Drugs = ({index}) => {
                         <TextField variant="outlined"
                             className={classes.textXshort}
                                 onChange={handleChange('G_k_3_2_CountryAuthorisationApplication', index)}
-                                inputProps={{ maxLength: 2}}
                                 value = {drugs[index]['G_k_3_2_CountryAuthorisationApplication'].value}/>
                 </Grid>
 
@@ -190,7 +186,6 @@ export const Drugs = ({index}) => {
                         <TextField variant="outlined"
                             className={classes.textMedium}
                                 onChange={handleChange('G_k_3_3_NameHolderApplicant', index)}
-                                inputProps={{ maxLength: 60}}
                                 value = {drugs[index]['G_k_3_3_NameHolderApplicant'].value}
                         />
                 </Grid>
@@ -223,7 +218,6 @@ export const Drugs = ({index}) => {
                 <Grid item xs={9}>
                         <TextField variant="outlined"
                             className={classes.textMedium}
-                                inputProps={{ maxLength: 50}}
                                 onChange={handleChange('G_k_5b_CumulativeDoseFirstReactionUnit', index)}
                                 value = {drugs[index]['G_k_5b_CumulativeDoseFirstReactionUnit'].value}
                         />
@@ -252,7 +246,6 @@ export const Drugs = ({index}) => {
                 <Grid item xs={9}>
                         <TextField variant="outlined"
                         className={classes.textMedium}
-                        inputProps={{ maxLength: 50}}
                                 onChange={handleChange('G_k_6b_GestationPeriodExposureUnit', index)}
                                 value = {drugs[index]['G_k_6b_GestationPeriodExposureUnit'].value}
                         />
@@ -303,7 +296,6 @@ export const Drugs = ({index}) => {
                                     onChange={handleChange('G_k_11_AdditionalInformationDrug', index)}
                                     value = {drugs[index]['G_k_11_AdditionalInformationDrug'].value}
                                     multiline
-                                    inputProps={{ maxLength: 2000}}
                                     rows={10}/>
                 </Grid>
              </Grid>

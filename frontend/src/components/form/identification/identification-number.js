@@ -85,7 +85,6 @@ export const IdentificationNumberComp = () => {
                             value = {item['C_1_10_r_IdentificationNumberReportLinked'].value}
                             multiline
                             className={classes.textLong}
-                            inputProps={{ maxLength: 100}}
                             rows={2}/>
                     </Stack>
 

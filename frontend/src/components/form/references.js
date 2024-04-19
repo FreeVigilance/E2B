@@ -125,7 +125,6 @@ export const ReferencesComp = () => {
                                         className={classes.textMedium}
                                         onChange={handleChange('C_4_r_1_LiteratureReference', index)}
                                         value = {item['C_4_r_1_LiteratureReference'].value}
-                                        inputProps={{ maxLength: 500}}
                                         multiline
                                         rows={5}/>
                                 : <FormControl className={classes.textXshort}>

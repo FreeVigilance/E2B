@@ -126,7 +126,7 @@ export const PrimarySourceComp = () => {
                                         className={classes.textMedium}
                                         onChange={handleChange('C_2_r_1_1_ReporterTitle', index)}
                                         value = {item['C_2_r_1_1_ReporterTitle'].value}
-                                        inputProps={{ maxLength: 50}}/>
+                                    />
                                 : <FormControl className={classes.textXshort}>
                                     <InputLabel>Null Flavor</InputLabel>
                                     <Select
@@ -162,7 +162,7 @@ export const PrimarySourceComp = () => {
                                     className={classes.textMedium}
                                         onChange={handleChange('C_2_r_1_2_ReporterGivenName', index)}
                                         value = {item['C_2_r_1_2_ReporterGivenName'].value}
-                                        inputProps={{ maxLength: 60}}/>
+                                    />
                                 : <FormControl className={classes.textXshort}>
                                     <InputLabel>Null Flavor</InputLabel>
                                     <Select
@@ -196,7 +196,6 @@ export const PrimarySourceComp = () => {
                                     <TextField variant="outlined"
                                         onChange={handleChange('C_2_r_1_3_ReporterMiddleName', index)}
                                         value = {item['C_2_r_1_3_ReporterMiddleName'].value}
-                                        inputProps={{ maxLength: 60}}
                                         className={classes.textMedium}/>
                                 : <FormControl className={classes.textXshort}>
                                     <InputLabel>Null Flavor</InputLabel>
@@ -231,7 +230,6 @@ export const PrimarySourceComp = () => {
                                     <TextField variant="outlined"
                                         onChange={handleChange('C_2_r_1_4_ReporterFamilyName', index)}
                                         value = {item['C_2_r_1_4_ReporterFamilyName'].value}
-                                        inputProps={{ maxLength: 60}}
                                         className={classes.textMedium}/>
                                 : <FormControl className={classes.textXshort}>
                                     <InputLabel>Null Flavor</InputLabel>
@@ -266,7 +264,6 @@ export const PrimarySourceComp = () => {
                                     <TextField variant="outlined"
                                         onChange={handleChange('C_2_r_2_1_ReporterOrganisation', index)}
                                         value = {item['C_2_r_2_1_ReporterOrganisation'].value}
-                                        inputProps={{ maxLength: 60}}
                                         className={classes.textMedium}/>
                                 : <FormControl className={classes.textXshort}>
                                     <InputLabel>Null Flavor</InputLabel>
@@ -301,7 +298,6 @@ export const PrimarySourceComp = () => {
                                     <TextField variant="outlined"
                                         onChange={handleChange('C_2_r_2_2_ReporterDepartment', index)}
                                         value = {item['C_2_r_2_2_ReporterDepartment'].value}
-                                        inputProps={{ maxLength: 60}}
                                         className={classes.textMedium}/>
                                 : <FormControl className={classes.textXshort}>
                                     <InputLabel>Null Flavor</InputLabel>
@@ -338,7 +334,6 @@ export const PrimarySourceComp = () => {
                                         value = {item['C_2_r_2_3_ReporterStreet'].value}
                                         className={classes.textMedium}
                                         multiline
-                                        inputProps={{ maxLength: 100}}
                                         rows={2}/>
                                 : <FormControl className={classes.textXshort}>
                                     <InputLabel>Null Flavor</InputLabel>
@@ -376,7 +371,6 @@ export const PrimarySourceComp = () => {
                                     <TextField variant="outlined"
                                         onChange={handleChange('C_2_r_2_4_ReporterCity', index)}
                                         value = {item['C_2_r_2_4_ReporterCity'].value}
-                                        inputProps={{ maxLength: 35}}
                                         className={classes.textShort}/>
                                 : <FormControl className={classes.textXshort}>
                                     <InputLabel>Null Flavor</InputLabel>
@@ -412,7 +406,7 @@ export const PrimarySourceComp = () => {
                                         onChange={handleChange('C_2_r_2_5_ReporterStateProvince', index)}
                                         value = {item['C_2_r_2_5_ReporterStateProvince'].value}
                                         className={classes.textMedium}
-                                        inputProps={{ maxLength: 40}}/>
+                                    />
                                 : <FormControl className={classes.textXshort}>
                                     <InputLabel>Null Flavor</InputLabel>
                                     <Select
@@ -446,7 +440,6 @@ export const PrimarySourceComp = () => {
                                     <TextField variant="outlined"
                                         onChange={handleChange('C_2_r_2_7_ReporterTelephone', index)}
                                         value = {item['C_2_r_2_7_ReporterTelephone'].value}
-                                        inputProps={{ maxLength: 33}}
                                         className={classes.textShort}/>
                                 : <FormControl className={classes.textXshort}>
                                     <InputLabel>Null Flavor</InputLabel>
@@ -481,7 +474,6 @@ export const PrimarySourceComp = () => {
                                     <TextField variant="outlined"
                                         onChange={handleChange('C_2_r_2_6_ReporterPostcode', index)}
                                         value = {item['C_2_r_2_6_ReporterPostcode'].value}
-                                        inputProps={{ maxLength: 15}}
                                         className={classes.textXshort}/>
                                 : <FormControl className={classes.textXshort}>
                                     <InputLabel>Null Flavor</InputLabel>
@@ -507,7 +499,7 @@ export const PrimarySourceComp = () => {
                             className={classes.textXshort}
                                 onChange={handleChange('C_2_r_3_ReporterCountryCode', index)}
                                 value = {item['C_2_r_3_ReporterCountryCode'].value}
-                                inputProps={{ maxLength: 2}}/>
+                            />
                         </Grid>
 
                         <Grid item xs={3}>

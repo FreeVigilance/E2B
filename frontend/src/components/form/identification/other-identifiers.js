@@ -88,7 +88,6 @@ export const OtherIdentifiersComp = () => {
                                 value = {item['C_1_9_1_r_1_SourceCaseId'].value}
                                 multiline
                                 className={classes.textLong}
-                                inputProps={{ maxLength: 100}}
                                 rows={3}/>
                         </Grid>
 
@@ -102,7 +101,6 @@ export const OtherIdentifiersComp = () => {
                                 value = {item['C_1_9_1_r_2_CaseId'].value}
                                 multiline
                                 className={classes.textLong}
-                                inputProps={{ maxLength: 100}}
                                 rows={3}/>
                         </Grid>
                     </Grid>

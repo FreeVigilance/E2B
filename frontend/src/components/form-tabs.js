@@ -1,28 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { displaySelector, getJsonFromXml, getXmlFromJson, setCurrentSaved, setCurrentTab, setShowSideMenu } from '@src/features/display/slice';
-import { Results } from './results';
-import { Reactions } from './reactions';
+import { displaySelector, getJsonFromXml, getXmlFromJson, setCurrentSaved, setCurrentTab, setCurrentValidated, setShowSideMenu } from '@src/features/display/slice';
+import { Results } from './form/results';
+import { Reactions } from './form/reactions';
 import { Button, ClickAwayListener, FormLabel, Grow, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Popper, Tooltip } from '@mui/material';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
-import { Patient } from './patient-info/patient';
-import { ParentChild } from './patient-info/parent-child/parent-child';
-import { DrugTabs } from './drugs/drug-tabs';
-import { DosageTabs } from './drugs/dosages/dosage-tabs';
-import { MatrixTabs } from './drugs/matrix/matrix-tabs';
-import { Save } from '../save';
-import { PrimarySourceComp } from './primaty-source';
-import { InfoSenderComp } from './info-sender';
-import { ReferencesComp } from './references';
-import { IdentificationComp } from './identification/identification';
-import { StudyIdentificationComp } from './study-identification/study-identification';
+import { Patient } from './form/patient-info/patient';
+import { ParentChild } from './form/patient-info/parent-child/parent-child';
+import { DrugTabs } from './form/drugs/drug-tabs';
+import { DosageTabs } from './form/drugs/dosages/dosage-tabs';
+import { MatrixTabs } from './form/drugs/matrix/matrix-tabs';
+import { Save } from './save';
+import { PrimarySourceComp } from './form/primaty-source';
+import { InfoSenderComp } from './form/info-sender';
+import { ReferencesComp } from './form/references';
+import { IdentificationComp } from './form/identification/identification';
+import { StudyIdentificationComp } from './form/study-identification/study-identification';
 import { useSnackbar } from 'notistack';
-import { NarrativeComp } from './narrative/narrative';
+import { NarrativeComp } from './form/narrative/narrative';
 import DownloadIcon from '@mui/icons-material/Download';
 import { getResults } from '@src/features/results/slice';
 import { getDrug } from '@src/features/drugs/slice';
@@ -36,13 +36,14 @@ import { getIdentification } from '@src/features/identification/slice';
 import { getNarrative } from '@src/features/narrative/slice';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import MenuIcon from '@mui/icons-material/Menu';
-import { PatientDeath } from './patient-info/patient-death/patient-death';
+import { PatientDeath } from './form/patient-info/patient-death/patient-death';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { Validate } from './validate';
 
 
 export const FormTabs = () => {
     const dispatch = useDispatch();
-    const { currentTab, currentSaved, currentId, showSideMenu, errorTabs} = useSelector(displaySelector);
+    const { currentTab, currentSaved, currentId, showSideMenu, errorTabs, currentValidated} = useSelector(displaySelector);
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -57,19 +58,30 @@ export const FormTabs = () => {
 
     useEffect(() => {
         if (currentSaved === 1) {
-            enqueueSnackbar(`Успешно сохранено`,{ variant: 'success' });
+            enqueueSnackbar(`Saved`,{ variant: 'success' });
             dispatch(setCurrentSaved(0));
         } else if (currentSaved === 2) {
-            enqueueSnackbar(`Ошибка сохранения`,{ variant: 'error' });
+            enqueueSnackbar(`Saving error`,{ variant: 'error' });
             dispatch(setCurrentSaved(0));
         }
     }, [currentSaved]);
+
+    useEffect(() => {
+        if (currentValidated === 1) {
+            enqueueSnackbar(`Valid data`,{ variant: 'success' });
+            dispatch(setCurrentValidated(0));
+        } else if (currentValidated === 2) {
+            enqueueSnackbar(`Invalid data`,{ variant: 'error' });
+            dispatch(setCurrentValidated(0));
+        }
+    }, [currentValidated]);
 
     // useEffect(() => {
     //     dispatch(getJsonFromXml(xml));
     // }, [xml]);
 
     const handleChange = (event, newValue) => {
+        console.log(newValue);
         dispatch(setCurrentTab(newValue));
     };
 
@@ -112,6 +124,7 @@ export const FormTabs = () => {
     const [anchorElExtra, setAnchorElExtra] = useState(null);
     const openExtra = Boolean(anchorElExtra);
     const handleClickExtra = (event) => {
+        console.log(event);
         setAnchorElExtra(event.currentTarget);
     };
     const handleCloseExtra = () => {
@@ -119,50 +132,93 @@ export const FormTabs = () => {
     };
 
 
+    const handleKeyPress = useCallback((event) => {
+        if (event.shiftKey && event.code === 'Digit1' ) {
+            handleChange(null, '11');
+        }
+        if (event.shiftKey && event.code === 'Digit2' ) {
+            handleChange(null, '8');
+        }
+        if (event.shiftKey && event.code === 'Digit3' ) {
+            handleChange(null, '2');
+        }
+        if (event.shiftKey && event.code === 'Digit4' ) {
+            handleChange(null, '1');
+        }
+        if (event.shiftKey && event.code === 'Digit5' ) {
+            handleChange(null, '0');
+        }
+        if (event.shiftKey && event.code === 'Digit6' ) {
+            handleChange(null, '5');
+        }
+        if (event.shiftKey && event.code === 'Digit7' ) {
+            handleChange(null, '6');
+        }
+        if (event.shiftKey && event.code === 'Digit8' ) {
+            handleChange(null, '7');
+        }
+        if (event.shiftKey && event.code === 'Digit9' ) {
+            handleChange(null, '13');
+        }
+    }, []);
+
+    useEffect(() => {
+        document.addEventListener('keydown', handleKeyPress);
+        return () => {
+            document.removeEventListener('keydown', handleKeyPress);
+        };
+    }, [handleKeyPress]);
+
+
     return (
-        <Box sx={{ width: '95%', typography: 'body1' }}>
+        <Box sx={{ width: '95%' }}>
             <TabContext value={currentTab}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <TabList onChange={handleChange} aria-label="lab API tabs example"
-                    indicatorColor="secondary"
+                <Box sx={{ borderBottom: 1, borderColor: 'divider', backgroundColor: '#122c44', color: 'white'}}>
+                    <TabList onChange={handleChange}
+                    indicatorColor="primary"
+                    TabIndicatorProps={{
+                        sx: {
+                          height: "6px !important",
+                        },
+                    }}            
                     textColor="inherit"
                     variant="fullWidth">
 
                 {errorTabs[11].value ?
-                    <Tab label="Identification of report" value="11" style={{color: 'red', fontWeight: 600}}/>
-                :   <Tab label="Identification of report" value="11" />}
+                    <Tab label="Identification of report" value="11" style={{color: '#CC0000', fontWeight: 600}}/>
+                :   <Tab label="Identification of report" value="11" style={{fontWeight: 600}}/>}
 
                 {errorTabs[8].value ?
-                    <Tab label="Primary Source" value="8" style={{color: 'red', fontWeight: 600}}/>
-                :   <Tab label="Primary Source" value="8" />}
+                    <Tab label="Primary Source" value="8" style={{color: '#CC0000', fontWeight: 600}}/>
+                :   <Tab label="Primary Source" value="8" style={{fontWeight: 600}}/>}
 
                 {errorTabs[2].value ?
-                    <Tab label="Patient" value="2" style={{color: 'red', fontWeight: 600}}/>
-                :   <Tab label="Patient" value="2" />}
+                    <Tab label="Patient" value="2" style={{color: '#CC0000', fontWeight: 600}}/>
+                :   <Tab label="Patient" value="2" style={{fontWeight: 600}}/>}
 
                 {errorTabs[1].value ?
-                    <Tab label="Reactions" value="1" style={{color: 'red', fontWeight: 600}}/>
-                :   <Tab label="Reactions" value="1" />}
+                    <Tab label="Reactions" value="1" style={{color: '#CC0000', fontWeight: 600}}/>
+                :   <Tab label="Reactions" value="1" style={{fontWeight: 600}}/>}
 
                 {errorTabs[0].value ?
-                    <Tab label="Results" value="0" style={{color: 'red', fontWeight: 600}}/>
-                :   <Tab label="Results" value="0"/>}
+                    <Tab label="Results" value="0" style={{color: '#CC0000', fontWeight: 600}}/>
+                :   <Tab label="Results" value="0" style={{fontWeight: 600}}/>}
                         
                 {errorTabs[5].value ?
-                    <Tab label="Drugs" value="5" style={{color: 'red', fontWeight: 600}}/>
-                :   <Tab label="Drugs" value="5" />}
+                    <Tab label="Drugs" value="5" style={{color: '#CC0000', fontWeight: 600}}/>
+                :   <Tab label="Drugs" value="5" style={{fontWeight: 600}}/>}
 
                 {errorTabs[6].value ?
-                    <Tab label="Dosages" value="6" style={{color: 'red', fontWeight: 600}}/>
-                :   <Tab label="Dosages" value="6" />}
+                    <Tab label="Dosages" value="6" style={{color: '#CC0000', fontWeight: 600}}/>
+                :   <Tab label="Dosages" value="6" style={{fontWeight: 600}}/>}
 
                 {errorTabs[7].value ?
-                    <Tab label="Drug Reaction Matrix" value="7" style={{color: 'red', fontWeight: 600}}/>
-                :   <Tab label="Drug Reaction Matrix" value="7" />}
+                    <Tab label="Drug Reaction Matrix" value="7" style={{color: '#CC0000', fontWeight: 600}}/>
+                :   <Tab label="Drug Reaction Matrix" value="7" style={{fontWeight: 600}}/>}
 
                 {errorTabs[13].value ?
-                    <Tab label="Narrative Case Summary" value="13" style={{color: 'red', fontWeight: 600}}/>
-                :   <Tab label="Narrative Case Summary" value="13" />}
+                    <Tab label="Narrative Case Summary" value="13" style={{color: '#CC0000', fontWeight: 600}}/>
+                :   <Tab label="Narrative Case Summary" value="13" style={{fontWeight: 600}}/>}
                         
                         <div>
                             <Button
@@ -170,7 +226,12 @@ export const FormTabs = () => {
                                 aria-expanded={open ? 'true' : undefined}
                                 aria-haspopup="true"
                                 variant='outlined'
-                                style={{height: '70px', color: 'black', borderColor: 'black'}}
+                                style={{height: '70px', color: 'white', borderColor: 'white',
+                                backgroundColor: '#122c44',
+                                borderWidth: '3px',
+                                marginRight: '5px',
+                                marginTop: '2px',
+                                marginBottom: '2px'}}
                                 onClick={handleClickExtra}
                             >
                                 Extra Tabs
@@ -183,66 +244,91 @@ export const FormTabs = () => {
                                 open={openExtra}
                                 onClose={handleCloseExtra}
                                 PaperProps={{
-                                // style: {
-                                //     maxHeight: 48 * 4.5,
-                                //     width: '20ch',
-                                // },
+                                    style: {
+                                        backgroundColor: '#122c44', color: 'white',
+                                        marginTop: '5px'
+                                    },
                                 }}
                             >
                                 <MenuItem onClick={handleCloseExtra}>
-                                    <TabList onChange={handleChange} indicatorColor="secondary"
+                                    <TabList onChange={handleChange}
                                             textColor="inherit"
-                                            variant="fullWidth">
+                                            variant="fullWidth"
+                                            indicatorColor="primary"
+                                            TabIndicatorProps={{
+                                                sx: {
+                                                height: "6px !important",
+                                                },
+                                            }} >
                                     {errorTabs[9].value ?
-                                            <Tab label="Sender Information" value="9" style={{color: 'red', fontWeight: 600}}/>
-                                        :   <Tab label="Sender Information" value="9" />}
+                                            <Tab label="Sender Information" value="9" style={{color: '#CC0000', fontWeight: 600}}/>
+                                        :   <Tab label="Sender Information" value="9" style={{fontWeight: 600}}/>}
                                     </TabList>
                                 </MenuItem>
                                 <MenuItem onClick={handleCloseExtra}>
-                                    <TabList onChange={handleChange} indicatorColor="secondary"
+                                    <TabList onChange={handleChange} 
+                                            indicatorColor="primary"
+                                            TabIndicatorProps={{
+                                                sx: {
+                                                height: "6px !important",
+                                                },
+                                            }} 
                                             textColor="inherit"
                                             variant="fullWidth">
                                     {errorTabs[3].value ?
-                                        <Tab label="Patient death" value="3" style={{color: 'red', fontWeight: 600}}/>
-                                    :   <Tab label="Patient death" value="3" />}
+                                        <Tab label="Patient death" value="3" style={{color: '#CC0000', fontWeight: 600}}/>
+                                    :   <Tab label="Patient death" value="3" style={{fontWeight: 600}}/>}
                                     </TabList>
                                 </MenuItem>
                                 <MenuItem onClick={handleCloseExtra}>
-                                    <TabList onChange={handleChange} indicatorColor="secondary"
+                                    <TabList onChange={handleChange}
+                                            indicatorColor="primary"
+                                            TabIndicatorProps={{
+                                                sx: {
+                                                height: "6px !important",
+                                                },
+                                            }} 
                                             textColor="inherit"
                                             variant="fullWidth">
                                     {errorTabs[4].value ?
-                                        <Tab label="Parent-child" value="4" style={{color: 'red', fontWeight: 600}}/>
-                                    :   <Tab label="Parent-child" value="4" />}
+                                        <Tab label="Parent-child" value="4" style={{color: '#CC0000', fontWeight: 600}}/>
+                                    :   <Tab label="Parent-child" value="4" style={{fontWeight: 600}}/>}
                                     </TabList>
                                 </MenuItem>
                                 <MenuItem onClick={handleCloseExtra}>
-                                    <TabList onChange={handleChange} indicatorColor="secondary"
+                                    <TabList onChange={handleChange} 
+                                            indicatorColor="primary"
+                                            TabIndicatorProps={{
+                                                sx: {
+                                                height: "6px !important",
+                                                },
+                                            }} 
                                             textColor="inherit"
                                             variant="fullWidth">
                                     {errorTabs[10].value ?
-                                        <Tab label="Literature References" value="10" style={{color: 'red', fontWeight: 600}}/>
-                                    :   <Tab label="Literature References" value="10" />}
+                                        <Tab label="Literature References" value="10" style={{color: '#CC0000', fontWeight: 600}}/>
+                                    :   <Tab label="Literature References" value="10" style={{fontWeight: 600}}/>}
                                     </TabList>
                                 </MenuItem>
                                 <MenuItem onClick={handleCloseExtra}>
-                                    <TabList onChange={handleChange} indicatorColor="secondary"
+                                    <TabList onChange={handleChange} 
+                                            indicatorColor="primary"
+                                            TabIndicatorProps={{
+                                                sx: {
+                                                height: "6px !important",
+                                                },
+                                            }} 
                                             textColor="inherit"
                                             variant="fullWidth">
                                     {errorTabs[12].value ?
-                                        <Tab label="Study Identification" value="12" style={{color: 'red', fontWeight: 600}}/>
-                                    :   <Tab label="Study Identification" value="12" />}
+                                        <Tab label="Study Identification" value="12" style={{color: '#CC0000', fontWeight: 600}}/>
+                                    :   <Tab label="Study Identification" value="12" style={{fontWeight: 600}}/>}
                                     </TabList>
                                 </MenuItem>
                             </Menu>
                         </div>
                     </TabList>
                 </Box>
-
-                {!showSideMenu ?
-            <ArrowForwardIosIcon color='primary' fontSize='large' sx={{ position: 'fixed', top: '25px', left: '5px', zIndex: 10000 }}
-                onClick={handleToggleMenuClick}></ArrowForwardIosIcon>
-                : null }
 
                 <TabPanel value="0">
                     <Results></Results>
@@ -288,11 +374,15 @@ export const FormTabs = () => {
                 </TabPanel>
 
                 <FormLabel sx={{ position: 'fixed', bottom: '2%', right: '2%',
-                zIndex: 10000, fontSize: 25,  color: 'black', backgroundColor: 'white', padding: '5px'}}>Report id: {currentId}</FormLabel>
+                zIndex: 10000, fontSize: 25,  color: 'black', backgroundColor: '#f1f1fb', padding: '5px'}}>Report id: {currentId}</FormLabel>
 
-                <Box sx={{ position: "fixed", top: '2%', right: '2%' }} >
-                    <IconButton edge="end">
-                        <MenuIcon onClick={handleClick} fontSize='large' color='primary'/>
+                <Box sx={{ position: "fixed", top: '15px', right: '2%'}} >
+                    <IconButton edge="end" sx={{ 
+                                border: "3px solid",
+                                borderColor: '#122c44',
+                                borderRadius: "100%",
+                            }}>
+                        <MenuIcon onClick={handleClick} fontSize='large' sx={{color: '#122c44'}}/>
                     </IconButton>
                     <Menu
                         id="basic-menu"
@@ -305,6 +395,7 @@ export const FormTabs = () => {
                     >
                         
                         <Save></Save>
+                        <Validate></Validate>
                         <MenuItem onClick={getXml}>
                             <ListItemIcon><DownloadIcon sx={{fontSize: 35}} color='primary'/></ListItemIcon>
                             <ListItemText>Get XML</ListItemText>
@@ -325,6 +416,10 @@ export const FormTabs = () => {
                 </Box>
 
             </TabContext>
+            {!showSideMenu ?
+            <ArrowForwardIosIcon fontSize='large' sx={{ position: 'fixed', bottom: '15px', left: '0px', zIndex: 10000, color: '#122c44' }}
+                onClick={handleToggleMenuClick}></ArrowForwardIosIcon>
+                : null }
         </Box>
     );
 };

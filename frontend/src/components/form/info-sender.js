@@ -91,7 +91,6 @@ export const InfoSenderComp = () => {
                     onChange={handleChange('C_3_2_SenderOrganisation')}
                     value = {infoSenderData['C_3_2_SenderOrganisation'].value}
                     multiline
-                    inputProps={{ maxLength: 100}}
                     rows={2}/>
             </Grid>
 
@@ -104,7 +103,7 @@ export const InfoSenderComp = () => {
                     className={classes.textMedium}
                     onChange={handleChange('C_3_3_1_SenderDepartment')}
                     value = {infoSenderData['C_3_3_1_SenderDepartment'].value}
-                    inputProps={{ maxLength: 60}}/>
+                />
             </Grid>
 
             <Grid item xs={3}>
@@ -116,7 +115,7 @@ export const InfoSenderComp = () => {
                     onChange={handleChange('C_3_3_2_SenderTitle')}
                     value = {infoSenderData['C_3_3_2_SenderTitle'].value}
                     className={classes.textMedium}
-                    inputProps={{ maxLength: 50}}/>
+                />
             </Grid>
 
             <Grid item xs={3}>
@@ -128,7 +127,7 @@ export const InfoSenderComp = () => {
                     onChange={handleChange('C_3_3_3_SenderGivenName')}
                     value = {infoSenderData['C_3_3_3_SenderGivenName'].value}
                     className={classes.textMedium}
-                    inputProps={{ maxLength: 60}}/>
+                />
             </Grid>
             
             <Grid item xs={3}>
@@ -140,7 +139,7 @@ export const InfoSenderComp = () => {
                     onChange={handleChange('C_3_3_4_SenderMiddleName')}
                     value = {infoSenderData['C_3_3_4_SenderMiddleName'].value}
                     className={classes.textMedium}
-                    inputProps={{ maxLength: 60}}/>
+                />
             </Grid>
 
             <Grid item xs={3}>
@@ -152,7 +151,7 @@ export const InfoSenderComp = () => {
                     onChange={handleChange('C_3_3_5_SenderFamilyName')}
                     value = {infoSenderData['C_3_3_5_SenderFamilyName'].value}
                     className={classes.textMedium}
-                    inputProps={{ maxLength: 60}}/>
+                />
             </Grid>
 
 
@@ -170,7 +169,6 @@ export const InfoSenderComp = () => {
                     value = {infoSenderData['C_3_4_1_SenderStreetAddress'].value}
                     className={classes.textMedium}
                     multiline
-                    inputProps={{ maxLength: 100}}
                     rows={2}/>
             </Grid>
 
@@ -183,7 +181,7 @@ export const InfoSenderComp = () => {
                     onChange={handleChange('C_3_4_2_SenderCity')}
                     value = {infoSenderData['C_3_4_2_SenderCity'].value}
                     className={classes.textShort}
-                    inputProps={{ maxLength: 35}}/>
+                />
             </Grid>
 
             <Grid item xs={3}>
@@ -195,7 +193,7 @@ export const InfoSenderComp = () => {
                     onChange={handleChange('C_3_4_3_SenderStateProvince')}
                     value = {infoSenderData['C_3_4_3_SenderStateProvince'].value}
                     className={classes.textMedium}
-                    inputProps={{ maxLength: 40}}/>
+                />
             </Grid>
             
             <Grid item xs={3}>
@@ -207,7 +205,7 @@ export const InfoSenderComp = () => {
                     onChange={handleChange('C_3_4_4_SenderPostcode')}
                     value = {infoSenderData['C_3_4_4_SenderPostcode'].value}
                     className={classes.textShort}
-                    inputProps={{ maxLength: 15}}/>
+                />
             </Grid>
 
             <Grid item xs={3}>
@@ -216,7 +214,6 @@ export const InfoSenderComp = () => {
             </Grid>
             <Grid item xs={9}> 
                 <TextField variant="outlined"
-                    inputProps={{ maxLength: 2}}
                     className={classes.textXshort}
                     onChange={handleChange('C_3_4_5_SenderCountryCode')}
                     value = {infoSenderData['C_3_4_5_SenderCountryCode'].value}/>
@@ -228,7 +225,6 @@ export const InfoSenderComp = () => {
             </Grid>
             <Grid item xs={9}> 
                 <TextField variant="outlined"
-                    inputProps={{ maxLength: 33}}
                     className={classes.textMedium}
                     onChange={handleChange('C_3_4_6_SenderTelephone')}
                     value = {infoSenderData['C_3_4_6_SenderTelephone'].value}/>
@@ -240,7 +236,6 @@ export const InfoSenderComp = () => {
             </Grid>
             <Grid item xs={9}> 
                 <TextField variant="outlined"
-                    inputProps={{ maxLength: 33}}
                     className={classes.textMedium}
                     onChange={handleChange('C_3_4_7_SenderFax')}
                     value = {infoSenderData['C_3_4_7_SenderFax'].value}/>
@@ -252,7 +247,6 @@ export const InfoSenderComp = () => {
             </Grid>
             <Grid item xs={9}> 
                 <TextField variant="outlined"
-                    inputProps={{ maxLength: 100}}
                     onChange={handleChange('C_3_4_8_SenderEmail')}
                     value = {infoSenderData['C_3_4_8_SenderEmail'].value}
                     className={classes.textMedium}

@@ -53,13 +53,13 @@ export const Autopsy = () => {
 
     const handleChange = (fieldName, index, isNumber = false, length = 1) => (event) => {
         let value = event.target.value;
-        if (value === '') {
-            value = null;
-        };
         if (isNumber) {
             if (value.length > length)
                 value = value.slice(0, length)
         }
+        if (value === '') {
+            value = null;
+        };
         let autopsyCopy = JSON.parse(JSON.stringify(autopsy));
         autopsyCopy[index][fieldName].value = event.target.value;
         dispatch(setAutopsy(autopsyCopy));
@@ -93,7 +93,6 @@ export const Autopsy = () => {
                                 onChange={handleChange('D_9_4_r_2_AutopsyDeterminedCauseDeath', index)}
                                 value = {item['D_9_4_r_2_AutopsyDeterminedCauseDeath'].value}
                                 multiline
-                                inputProps={{ maxLength: 250}}
                                 rows={3}/>
                         </Grid>
 
