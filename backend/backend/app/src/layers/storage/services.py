@@ -1,4 +1,5 @@
 import enum
+import typing as t
 
 from django.db import transaction
 
@@ -12,8 +13,8 @@ class StorageService(ServiceProtocol[StorageModel]):
         INSERT = enum.auto()
         UPDATE = enum.auto()
 
-    def list(self, model_class: type[StorageModel]) -> list[int]:
-        return list(model_class.objects.all().values_list('id', flat=True))
+    def list(self, model_class: type[StorageModel]) -> list[dict[str, t.Any]]:
+        return model_class.list()
 
     def read(self, model_class: type[StorageModel], pk: int) -> StorageModel:
         return model_class.objects.get(pk=pk)

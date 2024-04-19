@@ -1,3 +1,5 @@
+import typing as t
+
 from app.src.connectors.base.model_converters.base import BaseModelConverter
 from app.src.layers.base.services import ServiceProtocol
 
@@ -15,7 +17,7 @@ class BaseServiceAdapter[U, L](ServiceProtocol[U]):
         self.upper_to_lower_model_converter = upper_to_lower_model_converter
         self.lower_to_upper_model_converter = lower_to_upper_model_converter
 
-    def list(self, upper_model_class: type[U]) -> list[int]:
+    def list(self, upper_model_class: type[U]) -> list[dict[str, t.Any]]:
         lower_model_class = self.upper_to_lower_model_converter.get_target_model_class(upper_model_class)
         return self.adapted_service.list(lower_model_class)
 

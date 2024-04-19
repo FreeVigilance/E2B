@@ -44,10 +44,11 @@ class ICSR(DomainModel):
 
     @staticmethod
     def _validate_uuids(
-            processor: pde.PostValidationProcessor,
-            e_i_reaction_event: list['E_i_reaction_event'],
-            g_k_drug_information: list['G_k_drug_information']
+        processor: pde.PostValidationProcessor,
+        e_i_reaction_event: list['E_i_reaction_event'],
+        g_k_drug_information: list['G_k_drug_information']
     ) -> bool:
+        
         is_valid = True
 
         reaction_ids = set()
@@ -389,7 +390,7 @@ class E_i_reaction_event(DomainModel):
             error_message='Both id and uuid cannot be specified',
             is_add_single_error=True,
             validate=lambda id, uuid:
-            id is None or uuid is None
+                id is None or uuid is None
         )
 
 
@@ -465,8 +466,8 @@ class G_k_drug_information(DomainModel):
         processor.try_validate_fields(
             error_message='Cannot have duplicate drug to reaction relations',
             validate=lambda g_k_9_i_drug_reaction_matrix:
-            len(g_k_9_i_drug_reaction_matrix) ==
-            len(set(x.g_k_9_i_1_reaction_assessed for x in g_k_9_i_drug_reaction_matrix))
+                len(g_k_9_i_drug_reaction_matrix) ==
+                len(set(x.g_k_9_i_1_reaction_assessed for x in g_k_9_i_drug_reaction_matrix))
         )
 
     def get_id(self) -> str:
