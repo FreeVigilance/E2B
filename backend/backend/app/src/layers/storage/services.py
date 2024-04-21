@@ -1,7 +1,8 @@
 import enum
 import typing as t
 
-from django.db import models as m
+from django.core import exceptions as dje
+from django.db import models as djm
 from django.db import transaction
 
 from app.src.layers.base.services import ServiceProtocol
@@ -31,7 +32,10 @@ class StorageService(ServiceProtocol[StorageModel]):
     @transaction.atomic
     def update(self, new_model: StorageModel, pk: int) -> StorageModel:
         new_model.id = pk
-        old_model = self.read(type(new_model), pk)
+        try:
+            old_model = self.read(type(new_model), pk)
+        except dje.ObjectDoesNotExist:
+            raise ValueError(f'Cannot update not existing entity: {new_model.__class__.__name__}(id={pk})')
 
         # Delete old related models if they are missing in new model
         for key, new_value in vars(new_model).items():
@@ -58,7 +62,7 @@ class StorageService(ServiceProtocol[StorageModel]):
         fk_names = [
             f.name for f in new_model._meta.get_fields() 
             # Get only real db fk without backward rel
-            if f.many_to_one or f.one_to_one and not isinstance(f, m.ForeignObjectRel)
+            if f.many_to_one or f.one_to_one and not isinstance(f, djm.ForeignObjectRel)
         ]
         for fk_name in fk_names:
             new_fk_val = getattr(new_model, fk_name, None)
