@@ -1,6 +1,7 @@
 import enum
 import typing as t
 
+from django.db import models as m
 from django.db import transaction
 
 from app.src.layers.base.services import ServiceProtocol
@@ -51,6 +52,20 @@ class StorageService(ServiceProtocol[StorageModel]):
                 new_ids = set(v.id for v in new_value) if new_value else set()
                 for old_id in old_ids - new_ids:
                     self.delete_model(old_id_to_model_dict[old_id])
+
+        # Check that model doesn't change fk as it is not allowed
+        fk_names = [
+            f.name for f in new_model._meta.get_fields() 
+            # Get only real db fk without backward rel
+            if f.many_to_one or f.one_to_one and not isinstance(f, m.ForeignObjectRel)
+        ]
+        for fk_name in fk_names:
+            new_fk_val = getattr(new_model, fk_name, None)
+            old_fk_val = getattr(old_model, fk_name, None)
+            if old_fk_val and new_fk_val != old_fk_val:
+                print(new_model)
+                print(fk_name)
+                raise ValueError('Foreign key cannot be chenged')
 
         self._save_with_related(new_model, self.SaveOperation.UPDATE)
         return new_model
