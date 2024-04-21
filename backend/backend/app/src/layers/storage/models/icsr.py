@@ -4,7 +4,6 @@ from django.db import models as m
 
 from app.src import enums as e
 from app.src.enums import NullFlavor as NF
-from extensions import utils
 from extensions.django import constraints as ec
 from extensions.django import fields as ef
 from extensions.django import models as em
@@ -76,14 +75,14 @@ class ICSR(StorageModel):
             ])\
             .values(
                 'icsr',
-                reaction_name=m.F('e_i_2_1b_reaction_meddra_code')
+                reaction_names=m.F('e_i_2_1b_reaction_meddra_code')
             )
         
         drugs = G_k_drug_information.objects\
             .filter(g_k_1_characterisation_drug_role=e.G_k_1_characterisation_drug_role.SUSPECT)\
             .values(
                 'icsr',
-                drug_name=m.F('g_k_2_1_2b_phpid')
+                drug_names=m.F('g_k_2_1_2b_phpid')
             )
 
         seriousness_data = E_i_reaction_event.objects\
@@ -106,11 +105,13 @@ class ICSR(StorageModel):
         result = {}
         for icsr in icsrs:
             result[icsr['id']] = icsr
+            icsr['reaction_names'] = []
+            icsr['drug_names'] = []
 
-        for prop_name, data in {'reaction_name': events, 'drug_name': drugs}.items():
+        for prop_name, data in {'reaction_names': events, 'drug_names': drugs}.items():
             for item in data:
                 icsr_id = item['icsr']
-                utils.update_or_create_list_in_dict(result[icsr_id], prop_name, item[prop_name])
+                result[icsr_id][prop_name].append(item[prop_name])
 
         for seriousness in seriousness_data:
             icsr_id = seriousness['icsr']
