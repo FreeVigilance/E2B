@@ -23,7 +23,7 @@ class BaseType[T](abc.ABC):
         if not is_ok:
             raise pdc.PydanticCustomError(pde.CustomErrorType.PARSING, err_msg)
         
-        if not info.context.get(DomainModel.BUSINESS_VALIDATION_FLAG_KEY):
+        if not DomainModel.is_business_validation(info):
             return val
         
         is_ok, err_msg = cls._validate_business(val, info, type_param)
