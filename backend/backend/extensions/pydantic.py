@@ -76,7 +76,7 @@ class PostValidatableModel(pd.BaseModel):
             if context is not None:
                 valid_data = context[cls._CURRENT_CONTEXT_KEY][cls._VALID_DATA_KEY]
                 if valid_data:
-                    processor = PostValidationProcessor(valid_data, data, errors)
+                    processor = PostValidationProcessor(valid_data, data, errors, info)
                     cls._post_validate(processor)
                     errors = processor.errors
 
@@ -282,7 +282,8 @@ class PostValidationProcessor:
         self, 
         valid_data: dict[str, t.Any], 
         initial_data: dict[str, t.Any],
-        errors: list[pdc.ErrorDetails]
+        errors: list[pdc.ErrorDetails],
+        info: pd.ValidationInfo
     ) -> None:
         self._valid_data = valid_data.copy()
         self._initial_data = initial_data.copy()
@@ -302,11 +303,13 @@ class PostValidationProcessor:
             else:
                 self._errors.append(error)
 
+        self.info = info
+
     @property
     def errors(self) -> list[pdc.ErrorDetails | pdc.InitErrorDetails]:
         return self._errors.copy()
 
-    def try_validate_fields(
+    def try_validate_with_fields(
         self,
         *,
         validate: t.Callable[..., bool],
@@ -314,6 +317,7 @@ class PostValidationProcessor:
         is_abort_next: bool = False,
         is_add_single_error: bool = False,
         is_add_error_manually: bool = False,
+        error_type: CustomErrorType = CustomErrorType.PARSING
     ) -> None:
         """
         Calls validation for fields.
@@ -351,7 +355,7 @@ class PostValidationProcessor:
         if not is_add_error_manually:
             if is_add_single_error:
                 self.add_error(
-                    type=CustomErrorType.PARSING,
+                    type=error_type,
                     message=error_message,
                     loc=tuple(),
                     input=initial_data
@@ -359,7 +363,7 @@ class PostValidationProcessor:
             else:
                 for field_name in field_names:
                     self.add_error(
-                        type=CustomErrorType.PARSING,
+                        type=error_type,
                         message=error_message,
                         loc=(field_name,),
                         input=initial_data

@@ -3,6 +3,8 @@ import typing as t
 from typing import Literal as L
 from uuid import UUID
 
+import pydantic as pd
+
 from app.src import enums as e
 from app.src.enums import NullFlavor as NF
 from app.src.hl7date import DatePrecision as P
@@ -18,6 +20,10 @@ class DomainModel(pde.PostValidatableModel, pde.SafeValidatableModel):
     BUSINESS_VALIDATION_FLAG_KEY: t.ClassVar = '_is_business_validation'
 
     id: int | None = None
+
+    @classmethod
+    def is_business_validation(cls, info: pd.ValidationInfo) -> bool:
+        return bool(info.context.get(cls.BUSINESS_VALIDATION_FLAG_KEY))
 
     def model_business_validate(self, initial_data: dict[str, t.Any] | None = None) -> t.Self:
         return self.model_safe_validate(initial_data, context={self.BUSINESS_VALIDATION_FLAG_KEY: True})
@@ -37,13 +43,14 @@ class ICSR(DomainModel):
 
     @classmethod
     def _post_validate(cls, processor: pde.PostValidationProcessor) -> None:
-        processor.try_validate_fields(
+        processor.try_validate_with_fields(
             validate=cls._validate_uuids,
             is_add_error_manually=True
         )
 
-    @staticmethod
+    @classmethod
     def _validate_uuids(
+        cls,
         processor: pde.PostValidationProcessor,
         e_i_reaction_event: list['E_i_reaction_event'],
         g_k_drug_information: list['G_k_drug_information']
@@ -386,7 +393,7 @@ class E_i_reaction_event(DomainModel):
 
     @classmethod
     def _post_validate(cls, processor: pde.PostValidationProcessor) -> None:
-        processor.try_validate_fields(
+        processor.try_validate_with_fields(
             error_message='Both id and uuid cannot be specified',
             is_add_single_error=True,
             validate=lambda id, uuid:
@@ -463,7 +470,7 @@ class G_k_drug_information(DomainModel):
 
     @classmethod
     def _post_validate(cls, processor: pde.PostValidationProcessor):
-        processor.try_validate_fields(
+        processor.try_validate_with_fields(
             error_message='Cannot have duplicate drug to reaction relations',
             validate=lambda g_k_9_i_drug_reaction_matrix:
                 len(g_k_9_i_drug_reaction_matrix) ==
