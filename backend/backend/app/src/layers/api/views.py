@@ -25,8 +25,8 @@ class BaseView(View):
         model = self.model_class.model_dict_construct(data)
         return model.model_safe_validate(data)
     
-    def get_status_code_from_validity(self, model: ApiModel) -> StatusCode:
-        return StatusCode.OK if model.is_valid else StatusCode.BAD_REQUEST
+    def get_status_code(self, is_ok: bool) -> StatusCode:
+        return StatusCode.OK if is_ok else StatusCode.BAD_REQUEST
 
     def respond_with_model_as_json(self, model: ApiModel, status: int) -> http.HttpResponse:
         # Dump data and ignore warnings about wrong data format and etc.
@@ -49,8 +49,10 @@ class ModelClassView(BaseView):
         model = self.get_model_from_request(request)
         if model.is_valid:
             # TODO: check id empty
-            model = self.domain_service.create(model)
-        status = self.get_status_code_from_validity(model)
+            model, is_ok = self.domain_service.create(model)
+        else:
+            is_ok = False
+        status = self.get_status_code(is_ok)
         return self.respond_with_model_as_json(model, status)
 
 
@@ -63,21 +65,26 @@ class ModelInstanceView(BaseView):
         # TODO: check pk = model.id
         model = self.get_model_from_request(request)
         if model.is_valid:
-            model = self.domain_service.update(model, pk)
-        status = self.get_status_code_from_validity(model)
+            model, is_ok = self.domain_service.update(model, pk)
+        else:
+            is_ok = False
+        status = self.get_status_code(is_ok)
         return self.respond_with_model_as_json(model, status)
 
     def delete(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
-        self.domain_service.delete(self.model_class, pk)
-        return http.HttpResponse(status=StatusCode.OK)
+        is_ok = self.domain_service.delete(self.model_class, pk)
+        status = self.get_status_code(is_ok)
+        return http.HttpResponse(status=status)
 
 
 class ModelBusinessValidationView(BaseView):
     def post(self, request: http.HttpRequest) -> http.HttpResponse:
         model = self.get_model_from_request(request)
         if model.is_valid:
-            model = self.domain_service.business_validate(model)
-        status = self.get_status_code_from_validity(model)
+            model, is_ok = self.domain_service.business_validate(model)
+        else:
+            is_ok = False
+        status = self.get_status_code(is_ok)
         return self.respond_with_model_as_json(model, status)
 
 

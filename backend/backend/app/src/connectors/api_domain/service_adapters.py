@@ -15,9 +15,9 @@ class DomainServiceAdapter[U: ApiModel, L: DomainModel](
         self.upper_to_lower_model_converter = mc.ApiToDomainModelConverter()
         self.lower_to_upper_model_converter = mc.DomainToApiModelConverter()
 
-    def business_validate(self, upper_model: U) -> U:
+    def business_validate(self, upper_model: U) -> tuple[U, bool]:
         # Convert withoud basic validation as it will be done together with business validation
         lower_model, lower_dict = self.upper_to_lower_model_converter.convert_to_model_and_dict(upper_model)
-        lower_model = self.adapted_service.business_validate(lower_model, initial_data=lower_dict)
+        lower_model, is_ok = self.adapted_service.business_validate(lower_model, initial_data=lower_dict)
         upper_model = self.lower_to_upper_model_converter.convert(lower_model)
-        return upper_model
+        return upper_model, is_ok

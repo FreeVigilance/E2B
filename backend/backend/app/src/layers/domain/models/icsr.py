@@ -70,6 +70,7 @@ class ICSR(DomainModel):
 
     @classmethod
     def _post_validate(cls, processor: pde.PostValidationProcessor) -> None:
+        super()._post_validate(processor)
         processor.try_validate_with_fields(
             validate=cls._validate_uuids,
             is_add_error_manually=True
@@ -147,6 +148,19 @@ class C_1_identification_case_safety_report(DomainModel):
     c_1_11_1_report_nullification_amendment: e.C_1_11_1_report_nullification_amendment | None = None
     c_1_11_2_reason_nullification_amendment: AN[L[2000]] | None = None
 
+    @classmethod
+    def _post_validate(cls, processor: pde.PostValidationProcessor) -> None:
+        super()._post_validate(processor)
+        if not BusinessValidationUtils.is_business_validation(processor.info):
+            return
+        processor.try_validate_with_fields(
+            error_message='Check that 1 and only 1 information source ' +
+                'with C.2.r.5 = primary and filled C.2.r.3 exists' +
+                'and that your company name is set in the environment variables',
+            error_type=pde.CustomErrorType.BUSINESS,
+            validate=lambda c_1_1_sender_safety_report_unique_id:
+                c_1_1_sender_safety_report_unique_id is not None
+        )
 
 class C_1_6_1_r_documents_held_sender(DomainModel):
     c_1_6_1_r_1_documents_held_sender: AN[L[2000]] | None = None
@@ -420,6 +434,7 @@ class E_i_reaction_event(DomainModel):
 
     @classmethod
     def _post_validate(cls, processor: pde.PostValidationProcessor) -> None:
+        super()._post_validate(processor)
         processor.try_validate_with_fields(
             error_message='Both id and uuid cannot be specified',
             is_add_single_error=True,
@@ -497,6 +512,7 @@ class G_k_drug_information(DomainModel):
 
     @classmethod
     def _post_validate(cls, processor: pde.PostValidationProcessor):
+        super()._post_validate(processor)
         processor.try_validate_with_fields(
             error_message='Cannot have duplicate drug to reaction relations',
             validate=lambda g_k_9_i_drug_reaction_matrix:

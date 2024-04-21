@@ -27,18 +27,18 @@ class BaseServiceAdapter[U, L](ServiceProtocol[U]):
         upper_model = self.lower_to_upper_model_converter.convert(lower_model)
         return upper_model
 
-    def create(self, upper_model: U) -> U:
+    def create(self, upper_model: U) -> tuple[U, bool]:
         lower_model = self.upper_to_lower_model_converter.convert(upper_model)
-        lower_model = self.adapted_service.create(lower_model)
+        lower_model, is_ok = self.adapted_service.create(lower_model)
         upper_model = self.lower_to_upper_model_converter.convert(lower_model)
-        return upper_model
+        return upper_model, is_ok
 
-    def update(self, upper_model: U, pk: int) -> U:
+    def update(self, upper_model: U, pk: int) -> tuple[U, bool]:
         lower_model = self.upper_to_lower_model_converter.convert(upper_model)
-        lower_model = self.adapted_service.update(lower_model, pk)
+        lower_model, is_ok = self.adapted_service.update(lower_model, pk)
         upper_model = self.lower_to_upper_model_converter.convert(lower_model)
-        return upper_model
+        return upper_model, is_ok
 
-    def delete(self, upper_model_class: type[U], pk: int) -> None:
+    def delete(self, upper_model_class: type[U], pk: int) -> bool:
         lower_model_class = self.upper_to_lower_model_converter.get_target_model_class(upper_model_class)
         return self.adapted_service.delete(lower_model_class, pk)

@@ -1,3 +1,4 @@
+import os
 import typing as t
 
 from django.db import models as m
@@ -46,6 +47,16 @@ class StorageModel(em.ModelWithTempRelationSupport, metaclass=StorageModelMeta):
 
     def pre_create(self) -> None:
         pass
+
+    def pre_update(self) -> None:
+        pass
+
+    def post_create(self) -> None:
+        pass
+
+    def post_update(self) -> None:
+        pass
+
 
 
 class ICSR(StorageModel):
@@ -118,6 +129,44 @@ class ICSR(StorageModel):
             result[icsr_id]['serious'] = seriousness['serious']
 
         return list(result.values())
+    
+    def pre_create(self) -> None:
+        # C.1 is always created
+        temp_c_1_name = ef.temp_relation_field_utils\
+            .make_special_field_name('c_1_identification_case_safety_report')
+        c_1 = getattr(self, temp_c_1_name, None)
+        if c_1 is None:
+            c_1 = C_1_identification_case_safety_report(icsr=self)
+            setattr(self, temp_c_1_name, c_1)
+
+    def pre_update(self) -> None:
+        # C.1 can never be recreated for icsr, only updated
+        temp_c_1_name = ef.temp_relation_field_utils\
+            .make_special_field_name('c_1_identification_case_safety_report')
+        new_c_1 = getattr(self, temp_c_1_name, None)
+        if not new_c_1:
+            return
+        try:
+            old_c_1 = self.c_1_identification_case_safety_report
+        except C_1_identification_case_safety_report.DoesNotExist:
+            return
+        if new_c_1.id != old_c_1.id:
+            raise ValueError('C.1 cannot be recreated for ICSR, consider updating it with the id instead')
+        
+    def post_create(self) -> None:
+        self.post_save()
+
+    def post_update(self) -> None:
+        self.post_save()
+
+    def post_save(self) -> None:
+        try:
+            c_1 = self.c_1_identification_case_safety_report
+        except C_1_identification_case_safety_report.DoesNotExist:
+            return
+        if not c_1.c_1_1_sender_safety_report_unique_id:
+            c_1.calculate_c_1_1()
+            c_1.save()
 
 
 # C_1_identification_case_safety_report
@@ -157,15 +206,45 @@ class C_1_identification_case_safety_report(StorageModel):
     c_1_11_2_reason_nullification_amendment = m.CharField(null=True)
 
     def pre_create(self) -> None:
-        if not self.icsr:
-            return     
-        # C.1 can never be recreated for icsr, only updated
+        if not self.c_1_1_sender_safety_report_unique_id:
+            self.calculate_c_1_1()
+
+    def pre_update(self) -> None:
+        old_self = self.__class__.objects.get(id=self.id)
+        old_c_1_1 = old_self.c_1_1_sender_safety_report_unique_id
+        new_c_1_1 = self.c_1_1_sender_safety_report_unique_id
+
+        if not old_c_1_1:
+            if not new_c_1_1:
+                self.calculate_c_1_1()
+        else:
+            if new_c_1_1 and new_c_1_1 != old_c_1_1:
+                raise ValueError('Cannot change once created C.1.1')
+            else:
+                self.c_1_1_sender_safety_report_unique_id = old_c_1_1
+        
+    def calculate_c_1_1(self) -> None:
         try:
-            self.icsr.c_1_identification_case_safety_report
-            # Error is raised if c.1 already exists for this icsr
-            raise ValueError('C.1 cannot be recreated for ICSR, consider updating it with the id instead')
-        except C_1_identification_case_safety_report.DoesNotExist:
-            pass
+            company_name = os.environ['COMPANY_NAME']
+        except KeyError:
+            return
+        
+        icsr = self.icsr
+        if not icsr:
+            return
+            
+        primary_c_2_r = icsr.c_2_r_primary_source_information.filter(
+            c_2_r_5_primary_source_regulatory_purposes=
+                e.C_2_r_5_primary_source_regulatory_purposes.PRIMARY
+        )
+        if len(primary_c_2_r) != 1:
+            return
+        
+        country_code = primary_c_2_r[0].c_2_r_3_reporter_country_code
+        if not country_code:
+            return
+
+        self.c_1_1_sender_safety_report_unique_id = '-'.join([country_code, company_name, str(self.id)])
 
 
 class C_1_6_1_r_documents_held_sender(StorageModel):

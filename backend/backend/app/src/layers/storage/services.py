@@ -22,20 +22,24 @@ class StorageService(ServiceProtocol[StorageModel]):
         return model_class.objects.get(pk=pk)
 
     @transaction.atomic
-    def create(self, new_model: StorageModel) -> StorageModel:
+    def create(self, new_model: StorageModel) -> tuple[StorageModel, bool]:
         if new_model.id is not None:
             raise ValueError('Id can not be specified when creating a new entity')
+        
         new_model.pre_create()
         self._save_with_related(new_model, self.SaveOperation.INSERT)
-        return new_model
+        new_model.post_create()
+        return new_model, True
 
     @transaction.atomic
-    def update(self, new_model: StorageModel, pk: int) -> StorageModel:
+    def update(self, new_model: StorageModel, pk: int) -> tuple[StorageModel, bool]:
         new_model.id = pk
         try:
             old_model = self.read(type(new_model), pk)
         except dje.ObjectDoesNotExist:
             raise ValueError(f'Cannot update not existing entity: {new_model.__class__.__name__}(id={pk})')
+        
+        new_model.pre_update()
 
         # Delete old related models if they are missing in new model
         for key, new_value in vars(new_model).items():
@@ -68,12 +72,18 @@ class StorageService(ServiceProtocol[StorageModel]):
             new_fk_val = getattr(new_model, fk_name, None)
             old_fk_val = getattr(old_model, fk_name, None)
             if old_fk_val and new_fk_val != old_fk_val:
-                print(new_model)
-                print(fk_name)
-                raise ValueError('Foreign key cannot be chenged')
+                raise ValueError(
+                    f'Forbidden atempt to change the foreign key ' +
+                    '"{new_model.__class__.__name__}.{fk_name}"'
+                )
 
         self._save_with_related(new_model, self.SaveOperation.UPDATE)
-        return new_model
+        new_model.post_update()
+        return new_model, True
+    
+    def delete(self, model_class: type[StorageModel], pk: int) -> bool:
+        model_class.objects.get(pk=pk).delete()
+        return True
 
     def _save_with_related(self, new_model: StorageModel, save_operation: SaveOperation) -> None:
         if not isinstance(save_operation, self.SaveOperation):
@@ -102,9 +112,6 @@ class StorageService(ServiceProtocol[StorageModel]):
                     self.create(related_model)
                 else:
                     self.update(related_model, related_model.id)
-
-    def delete(self, model_class: type[StorageModel], pk: int) -> None:
-        model_class.objects.get(pk=pk).delete()
 
     def delete_model(self, old_model: StorageModel) -> None:
         self.delete(type(old_model), old_model.pk)
