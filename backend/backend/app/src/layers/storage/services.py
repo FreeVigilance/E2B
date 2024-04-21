@@ -1,6 +1,8 @@
 import enum
 import typing as t
 
+from django.core import exceptions as dje
+from django.db import models as djm
 from django.db import transaction
 
 from app.src.layers.base.services import ServiceProtocol
@@ -23,13 +25,17 @@ class StorageService(ServiceProtocol[StorageModel]):
     def create(self, new_model: StorageModel) -> StorageModel:
         if new_model.id is not None:
             raise ValueError('Id can not be specified when creating a new entity')
+        new_model.pre_create()
         self._save_with_related(new_model, self.SaveOperation.INSERT)
         return new_model
 
     @transaction.atomic
     def update(self, new_model: StorageModel, pk: int) -> StorageModel:
         new_model.id = pk
-        old_model = self.read(type(new_model), pk)
+        try:
+            old_model = self.read(type(new_model), pk)
+        except dje.ObjectDoesNotExist:
+            raise ValueError(f'Cannot update not existing entity: {new_model.__class__.__name__}(id={pk})')
 
         # Delete old related models if they are missing in new model
         for key, new_value in vars(new_model).items():
@@ -51,6 +57,20 @@ class StorageService(ServiceProtocol[StorageModel]):
                 new_ids = set(v.id for v in new_value) if new_value else set()
                 for old_id in old_ids - new_ids:
                     self.delete_model(old_id_to_model_dict[old_id])
+
+        # Check that model doesn't change fk as it is not allowed
+        fk_names = [
+            f.name for f in new_model._meta.get_fields() 
+            # Get only real db fk without backward rel
+            if f.many_to_one or f.one_to_one and not isinstance(f, djm.ForeignObjectRel)
+        ]
+        for fk_name in fk_names:
+            new_fk_val = getattr(new_model, fk_name, None)
+            old_fk_val = getattr(old_model, fk_name, None)
+            if old_fk_val and new_fk_val != old_fk_val:
+                print(new_model)
+                print(fk_name)
+                raise ValueError('Foreign key cannot be chenged')
 
         self._save_with_related(new_model, self.SaveOperation.UPDATE)
         return new_model
