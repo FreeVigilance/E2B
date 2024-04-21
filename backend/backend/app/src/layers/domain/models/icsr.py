@@ -1,4 +1,6 @@
 from decimal import Decimal
+import functools
+import types
 import typing as t
 from typing import Literal as L
 from uuid import UUID
@@ -8,25 +10,50 @@ import pydantic as pd
 from app.src import enums as e
 from app.src.enums import NullFlavor as NF
 from app.src.hl7date import DatePrecision as P
+from app.src.layers.domain.models.business_validation import BusinessValidationUtils
 from app.src.layers.domain.models.field_types import (
     Datetime as DT,
     AlphaNumeric as AN,
-    Alpha as A
+    Alpha as A,
+    Required as R
 )
 from extensions import pydantic as pde
 
 
 class DomainModel(pde.PostValidatableModel, pde.SafeValidatableModel):
-    BUSINESS_VALIDATION_FLAG_KEY: t.ClassVar = '_is_business_validation'
-
     id: int | None = None
 
-    @classmethod
-    def is_business_validation(cls, info: pd.ValidationInfo) -> bool:
-        return bool(info.context.get(cls.BUSINESS_VALIDATION_FLAG_KEY))
-
     def model_business_validate(self, initial_data: dict[str, t.Any] | None = None) -> t.Self:
-        return self.model_safe_validate(initial_data, context={self.BUSINESS_VALIDATION_FLAG_KEY: True})
+        return self.model_safe_validate(initial_data, context=BusinessValidationUtils.create_context())
+
+    @classmethod
+    def _post_validate(cls, processor: pde.PostValidationProcessor) -> None:
+        if not BusinessValidationUtils.is_business_validation(processor.info):
+            return
+        for field_name in cls.get_required_field_names():
+            if processor.get_from_initial_data(field_name) is None:
+                processor.add_error(
+                    type=pde.CustomErrorType.BUSINESS,
+                    message='Value is required',
+                    loc=(field_name,),
+                    input=None
+                )
+
+    @classmethod
+    @functools.cache
+    def get_required_field_names(cls) -> list[str]:
+        # Only `R[type] | None` notation is supported
+        required_field_names = []
+        for field_name, field_info in cls.model_fields.items():
+            a = field_info.annotation
+            if t.get_origin(a) is not t.Union:
+                continue
+            a = t.get_args(a)[0]
+            if t.get_origin(a) is not t.Annotated:
+                continue
+            if t.get_args(a)[1] == t.get_args(R)[1]:
+                required_field_names.append(field_name)
+        return required_field_names
 
 
 class ICSR(DomainModel):
@@ -43,6 +70,7 @@ class ICSR(DomainModel):
 
     @classmethod
     def _post_validate(cls, processor: pde.PostValidationProcessor) -> None:
+        super()._post_validate(processor)
         processor.try_validate_with_fields(
             validate=cls._validate_uuids,
             is_add_error_manually=True
@@ -120,6 +148,19 @@ class C_1_identification_case_safety_report(DomainModel):
     c_1_11_1_report_nullification_amendment: e.C_1_11_1_report_nullification_amendment | None = None
     c_1_11_2_reason_nullification_amendment: AN[L[2000]] | None = None
 
+    @classmethod
+    def _post_validate(cls, processor: pde.PostValidationProcessor) -> None:
+        super()._post_validate(processor)
+        if not BusinessValidationUtils.is_business_validation(processor.info):
+            return
+        processor.try_validate_with_fields(
+            error_message='Check that 1 and only 1 information source ' +
+                'with C.2.r.5 = primary and filled C.2.r.3 exists' +
+                'and that your company name is set in the environment variables',
+            error_type=pde.CustomErrorType.BUSINESS,
+            validate=lambda c_1_1_sender_safety_report_unique_id:
+                c_1_1_sender_safety_report_unique_id is not None
+        )
 
 class C_1_6_1_r_documents_held_sender(DomainModel):
     c_1_6_1_r_1_documents_held_sender: AN[L[2000]] | None = None
@@ -393,6 +434,7 @@ class E_i_reaction_event(DomainModel):
 
     @classmethod
     def _post_validate(cls, processor: pde.PostValidationProcessor) -> None:
+        super()._post_validate(processor)
         processor.try_validate_with_fields(
             error_message='Both id and uuid cannot be specified',
             is_add_single_error=True,
@@ -470,6 +512,7 @@ class G_k_drug_information(DomainModel):
 
     @classmethod
     def _post_validate(cls, processor: pde.PostValidationProcessor):
+        super()._post_validate(processor)
         processor.try_validate_with_fields(
             error_message='Cannot have duplicate drug to reaction relations',
             validate=lambda g_k_9_i_drug_reaction_matrix:

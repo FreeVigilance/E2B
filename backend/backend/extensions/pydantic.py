@@ -394,3 +394,9 @@ class PostValidationProcessor:
                 ctx=ctx
             )
         )
+
+    def get_from_valid_data(self, key: str) -> t.Any:
+        return self._valid_data.get(key)
+    
+    def get_from_initial_data(self, key: str) -> t.Any:
+        return self._initial_data.get(key)

@@ -15,21 +15,27 @@ class DomainService(BusinessServiceProtocol[DomainModel]):
     def read(self, model_class: type[DomainModel], pk: int) -> DomainModel:
         return self.storage_service.read(model_class, pk)
 
-    def create(self, model: DomainModel) -> DomainModel:
+    def create(self, model: DomainModel) -> tuple[DomainModel, bool]:
         if not model.is_valid:
-            return model
+            return model, False
         return self.storage_service.create(model)
 
-    def update(self, model: DomainModel, pk: int) -> DomainModel:
+    def update(self, model: DomainModel, pk: int) -> tuple[DomainModel, bool]:
         if not model.is_valid:
-            return model
+            return model, False
         return self.storage_service.update(model, pk)
 
-    def delete(self, model_class: type[DomainModel], pk: int) -> None:
+    def delete(self, model_class: type[DomainModel], pk: int) -> bool:
         return self.storage_service.delete(model_class, pk)
 
-    def business_validate(self, model: DomainModel, initial_data: dict[str, t.Any] | None = None) -> DomainModel:
-        return model.model_business_validate(initial_data)
+    def business_validate(
+        self, 
+        model: DomainModel, 
+        initial_data: dict[str, t.Any] | None = None
+    ) -> tuple[DomainModel, bool]:
+        
+        model = model.model_business_validate(initial_data)
+        return model, model.is_valid
 
 
 class CIOMSService(CIOMSServiceProtocol):
