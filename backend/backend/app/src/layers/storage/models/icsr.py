@@ -45,6 +45,9 @@ class StorageModel(em.ModelWithTempRelationSupport, metaclass=StorageModelMeta):
     def list(cls) -> list[dict[str, t.Any]]:
         return list(cls.objects.values('id'))
 
+    def pre_create(self) -> None:
+        pass
+
 
 class ICSR(StorageModel):
     @classmethod
@@ -151,6 +154,17 @@ class C_1_identification_case_safety_report(StorageModel):
     # c_1_11_report_nullification_amendment
     c_1_11_1_report_nullification_amendment = m.IntegerField(null=True, choices=e.C_1_11_1_report_nullification_amendment)
     c_1_11_2_reason_nullification_amendment = m.CharField(null=True)
+
+    def pre_create(self) -> None:
+        if not self.icsr:
+            return     
+        # C.1 can never be recreated for icsr, only updated
+        try:
+            self.icsr.c_1_identification_case_safety_report
+            # Error is raised if c.1 already exists for this icsr
+            raise ValueError('C.1 cannot be recreated for ICSR, consider updating it with the id instead')
+        except C_1_identification_case_safety_report.DoesNotExist:
+            pass
 
 
 class C_1_6_1_r_documents_held_sender(StorageModel):

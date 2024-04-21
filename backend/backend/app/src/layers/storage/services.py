@@ -24,6 +24,7 @@ class StorageService(ServiceProtocol[StorageModel]):
     def create(self, new_model: StorageModel) -> StorageModel:
         if new_model.id is not None:
             raise ValueError('Id can not be specified when creating a new entity')
+        new_model.pre_create()
         self._save_with_related(new_model, self.SaveOperation.INSERT)
         return new_model
 
