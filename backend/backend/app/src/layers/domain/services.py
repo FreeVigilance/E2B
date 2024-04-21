@@ -1,8 +1,16 @@
+import collections
+import dataclasses
 import typing as t
 
-from app.src.layers.base.services import ServiceProtocol, BusinessServiceProtocol, CIOMSServiceProtocol
+from django.db.models import Q
+
+from app.src.layers.api.models import meddra
+from app.src.layers.base.services import ServiceProtocol, BusinessServiceProtocol, CIOMSServiceProtocol, \
+    MedDRAServiceProtocol
 from app.src.layers.domain.models import DomainModel, ICSR
 from app.src.layers.domain.models import CIOMS
+from app.src.layers.storage.models import soc_term, hlt_pref_term, hlgt_pref_term, pref_term, low_level_term, \
+    meddra_release
 
 
 class DomainService(BusinessServiceProtocol[DomainModel]):
@@ -45,3 +53,42 @@ class CIOMSService(CIOMSServiceProtocol):
     def convert_icsr_to_cioms(self, pk: int) -> CIOMS:
         icsr = self.storage_service.read(ICSR, pk)
         return CIOMS.from_icsr(icsr)
+
+
+class MedDRAService(MedDRAServiceProtocol):
+    LEVELS = list(meddra.LevelEnum)
+    MODELS = [soc_term, hlgt_pref_term, hlt_pref_term, pref_term, low_level_term]
+
+    def __init__(self, storage_service) -> None:
+        self.storage_service = storage_service
+
+    def list(self) -> meddra.ReleaseResponse:
+        return meddra.ReleaseResponse(
+            root=[meddra.Release(id=obj.id, version=obj.version, language=obj.language) for obj in
+                  meddra_release.objects.all()])
+
+    def search(self, search_request: meddra.SearchRequest, meddra_release_id: int) -> meddra.SearchResponse:
+        search_level = search_request.search.level
+        search_state = search_request.state
+        states = [search_state.SOC, search_state.HLGT, search_state.HLT, search_state.PT, search_state.LLT]
+
+        level_index = self.LEVELS.index(search_level)
+        level_model = self.MODELS[level_index]
+
+        queryset = level_model.objects.filter(meddra_release=meddra_release_id)
+
+        filter_key = ""
+        for i in range(level_index, -1, -1):
+            if states[i]:
+                queryset = queryset.filter(**{filter_key + "code": states[i]})
+            if i > 0:
+                parent_model = self.MODELS[i - 1]
+                parent_field_name = parent_model._meta.object_name + ("" if parent_model is pref_term else "s")
+                filter_key += parent_field_name + "__"
+
+        search_input = search_request.search.input
+        if search_input:
+            queryset = queryset.filter(Q(name__icontains=search_input) | Q(code__iexact=search_input))
+
+        return meddra.SearchResponse(terms=[meddra.Term(code=obj.code, name=obj.name) for obj in queryset],
+                                     level=search_request.search.level)
