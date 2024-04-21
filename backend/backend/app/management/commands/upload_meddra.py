@@ -87,21 +87,21 @@ class Command(BaseCommand):
         )
 
         # Order of the files is important: from the highest level to the lowest.
-        file_map = {
-            'soc.asc': (soc_term, ['code', 'name', 'abbrev']),
-            'hlgt.asc': (hlgt_pref_term, ['code', 'name']),
-            'hlt.asc': (hlt_pref_term, ['code', 'name']),
-            'pt.asc': (pref_term, ['code', 'name', 'null_field', 'soc_term']),
+        files = [
+            ('soc.asc', soc_term, ['code', 'name', 'abbrev']),
+            ('hlgt.asc', hlgt_pref_term, ['code', 'name']),
+            ('hlt.asc', hlt_pref_term, ['code', 'name']),
+            ('pt.asc', pref_term, ['code', 'name', 'null_field', 'soc_term']),
             # None is used to skip legacy empty fields
-            'llt.asc': (low_level_term, ['code', 'name', 'pref_term', None, None, None, None, None, None, 'currency'])
-        }
-        for file_name, (model_class, field_names) in file_map.items():
+            ('llt.asc', low_level_term, ['code', 'name', 'pref_term', None, None, None, None, None, None, 'currency'])
+        ]
+        for file_name, model_class, field_names in files:
             parse_meddra_file(meddra_folder / file_name, model_class, field_names, meddra_release_)
 
-        relationships_file_map = {
-            'soc_hlgt.asc': (soc_term, hlgt_pref_term),
-            'hlgt_hlt.asc': (hlgt_pref_term, hlt_pref_term),
-            'hlt_pt.asc': (hlt_pref_term, pref_term),
-        }
-        for file_name, (model_class_from, model_class_to) in relationships_file_map.items():
+        relationships_files = [
+            ('soc_hlgt.asc', soc_term, hlgt_pref_term),
+            ('hlgt_hlt.asc', hlgt_pref_term, hlt_pref_term),
+            ('hlt_pt.asc', hlt_pref_term, pref_term),
+        ]
+        for file_name, model_class_from, model_class_to in relationships_files:
             parse_meddra_relationship_file(meddra_folder / file_name, model_class_from, model_class_to, meddra_release_)
