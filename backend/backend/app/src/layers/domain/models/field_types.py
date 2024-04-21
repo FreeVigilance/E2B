@@ -7,15 +7,18 @@ import pydantic as pd
 import pydantic_core as pdc
 
 from app.src.hl7date import HL7DateUtils, DatePrecision
+from app.src.layers.domain.models.business_validation import BusinessValidationUtils
 from extensions import pydantic as pde
 
 
+# Required should be used as custom Annotated
+Required = t.Annotated[t.TypeVar('T'), 'required']
+
+
 # This class and all its children expect that the owner model passes the validation context
-class BaseType[T](abc.ABC):
+class BaseType[T](abc.ABC, str):
     @classmethod
     def _validate(cls, val: t.Any, info: pd.ValidationInfo, type_param: T) -> t.Any:
-        from app.src.layers.domain.models import DomainModel
-
         if val is None:
             return val
         
@@ -23,7 +26,7 @@ class BaseType[T](abc.ABC):
         if not is_ok:
             raise pdc.PydanticCustomError(pde.CustomErrorType.PARSING, err_msg)
         
-        if not DomainModel.is_business_validation(info):
+        if not BusinessValidationUtils.is_business_validation(info):
             return val
         
         is_ok, err_msg = cls._validate_business(val, info, type_param)
@@ -68,7 +71,7 @@ class BaseType[T](abc.ABC):
         ])
     
 
-class BaseAlphaType[T: int](BaseType[T], str):
+class BaseAlphaType[T: int](BaseType[T]):
     @classmethod
     def _validate_business(cls, val: str, info: pd.ValidationInfo, type_param: T) -> tuple[bool, str]:
         max_length = type_param
@@ -81,7 +84,7 @@ class AlphaNumeric[T: int](BaseAlphaType[T]):
 
     @classmethod
     def _validate_parsing(cls, val: str, info: pd.ValidationInfo, type_param: T) -> tuple[bool, str]:
-        return ''.join(set(val) - cls.SPECIAL_CHARS).isalnum(), \
+        return not val or ''.join(set(val) - cls.SPECIAL_CHARS).isalnum(), \
             'Value can contain only alphabetic, numerical, special and whitespace characters'
     
     @classmethod
@@ -92,14 +95,14 @@ class AlphaNumeric[T: int](BaseAlphaType[T]):
 class Alpha[T: int](BaseAlphaType[T]):
     @classmethod
     def _validate_parsing(cls, val: str, info: pd.ValidationInfo, type_param: T) -> tuple[bool, str]:
-        return val.isalpha(), 'Value can contain only alphabetic characters'
+        return not val or val.isalpha(), 'Value can contain only alphabetic characters'
     
     @classmethod
     def __get_pydantic_core_schema__(cls, source_type: t.Any, handler: pd.GetCoreSchemaHandler) -> pdc.CoreSchema:
         return cls._get_pydantic_core_schema(source_type, handler)
 
 
-class Datetime[T: DatePrecision](BaseType[T], str):
+class Datetime[T: DatePrecision](BaseType[T]):
     @classmethod
     def _validate_parsing(cls, val: t.Any, info: pd.ValidationInfo, type_param: T) -> tuple[bool, str]:
         try:
