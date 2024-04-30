@@ -200,11 +200,22 @@ export const Patient = () => {
                                onChange={handleChange('D_2_2a_AgeOnsetReactionNum')}
                                value={patientData['D_2_2a_AgeOnsetReactionNum'].value}/>
 
-                    <TextField label="Age at Time of Reaction (unit)" variant="outlined"
-                               sx={{width: '100%'}}
-                               inputProps={{maxLength: 50}}
-                               onChange={handleChange('D_2_2b_AgeOnsetReactionUnit')}
-                               value={patientData['D_2_2b_AgeOnsetReactionUnit'].value}/>
+                    <FormControl>
+                        <InputLabel>Age at Time of Reaction (unit)</InputLabel>
+                        <Select
+                            label="Age at Time of Reaction (unit)"
+                            sx={{width: '100%'}}
+                            onChange={handleChange('D_2_2b_AgeOnsetReactionUnit')}
+                            value={patientData['D_2_2b_AgeOnsetReactionUnit'].value}
+                        >
+                            <MenuItem value={'{decade}'}>Decade</MenuItem>
+                            <MenuItem value={'a'}>Year (a)</MenuItem>
+                            <MenuItem value={'mo'}>Month (mo)</MenuItem>
+                            <MenuItem value={'wk'}>Week (wk)</MenuItem>
+                            <MenuItem value={'d'}>Day (d)</MenuItem>
+                            <MenuItem value={'h'}>Hour (h)</MenuItem>
+                        </Select>
+                    </FormControl>
 
                     <TextField label="Gestation Period (number)" variant="outlined"
                                sx={{width: '100%'}}
@@ -217,11 +228,20 @@ export const Patient = () => {
                                onChange={handleChange('D_2_2_1a_GestationPeriodReactionFoetusNum')}
                                value={patientData['D_2_2_1a_GestationPeriodReactionFoetusNum'].value}/>
 
-                    <TextField label="Gestation Period (unit)" variant="outlined"
-                               sx={{width: '100%'}}
-                               inputProps={{maxLength: 50}}
-                               onChange={handleChange('D_2_2_1b_GestationPeriodReactionFoetusUnit')}
-                               value={patientData['D_2_2_1b_GestationPeriodReactionFoetusUnit'].value}/>
+                    <FormControl>
+                        <InputLabel>Gestation Period (unit)</InputLabel>
+                        <Select
+                            label="Gestation Period (unit)"
+                            sx={{width: '100%'}}
+                            onChange={handleChange('D_2_2_1b_GestationPeriodReactionFoetusUnit')}
+                            value={patientData['D_2_2_1b_GestationPeriodReactionFoetusUnit'].value}
+                        >
+                            <MenuItem value={'d'}>Day (d)</MenuItem>
+                            <MenuItem value={'wk'}>Week (wk)</MenuItem>
+                            <MenuItem value={'mo'}>Month (mo)</MenuItem>
+                            <MenuItem value={'{trimester}'}>Trimester</MenuItem>
+                        </Select>
+                    </FormControl>
 
                     <FormControl>
                         <InputLabel>Patient Age Group</InputLabel>

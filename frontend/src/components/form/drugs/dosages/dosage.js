@@ -48,11 +48,13 @@ export const Dosages = ({drugIndex}) => {
     const formList = () => {
         let list = [];
         if (dosages[drugIndex].length === 0) {
-            return (<span>
-                <IconButton size="large" style={{top: '10px'}}
-                            sx={{color: "white", backgroundColor: "#1976d2"}}
-                            onClick={addForm}><AddIcon/></IconButton>
-            </span>);
+            return (
+                <span>
+                    <IconButton size="large" style={{top: '10px'}}
+                                sx={{color: "white", backgroundColor: "#1976d2"}}
+                                onClick={addForm}><AddIcon/></IconButton>
+                </span>
+            );
         }
         Object.values(dosages[drugIndex]).forEach((item, index) => {
             list.push(
@@ -168,10 +170,23 @@ export const Dosages = ({drugIndex}) => {
                                            }
                                            value={item['G_k_4_r_6a_DurationDrugAdministrationNum'].value}/>
 
-                                <TextField label="Duration of Drug Administration (unit)" variant="outlined"
-                                           onChange={handleChange('G_k_4_r_6b_DurationDrugAdministrationUnit', index)}
-                                           inputProps={{maxLength: 50}}
-                                           value={item['G_k_4_r_6b_DurationDrugAdministrationUnit'].value}/>
+                                <FormControl>
+                                    <InputLabel>Duration of Drug Administration (unit)</InputLabel>
+                                    <Select
+                                        label="Duration of Drug Administration (unit)"
+                                        sx={{width: '100%'}}
+                                        onChange={handleChange('G_k_4_r_6b_DurationDrugAdministrationUnit', index)}
+                                        value={item['G_k_4_r_6b_DurationDrugAdministrationUnit'].value}
+                                    >
+                                        <MenuItem value={'s'}>Second (s)</MenuItem>
+                                        <MenuItem value={'min'}>Minute (min)</MenuItem>
+                                        <MenuItem value={'h'}>Hour (h)</MenuItem>
+                                        <MenuItem value={'d'}>Day (d)</MenuItem>
+                                        <MenuItem value={'wk'}>Week (wk)</MenuItem>
+                                        <MenuItem value={'mo'}>Month (mo)</MenuItem>
+                                        <MenuItem value={'a'}>Year (a)</MenuItem>
+                                    </Select>
+                                </FormControl>
 
                                 <Stack direction="row" spacing={2} justifyContent="flex-start">
                                     <Box className="text-small" style={{padding: 0}}>
@@ -306,26 +321,39 @@ export const Dosages = ({drugIndex}) => {
                                            inputProps={{maxLength: 2000}}
                                            rows={5}/>
 
-                                <TextField label="Definition of the Time Interval Unit" variant="outlined"
-                                           onChange={handleChange('G_k_4_r_3_DefinitionIntervalUnit', index)}
-                                           inputProps={{maxLength: 50}}
-                                           value={item['G_k_4_r_3_DefinitionIntervalUnit'].value}
-                                           multiline
-                                           rows={3}/>
+                                <FormControl>
+                                    <InputLabel>Definition of the Time Interval Unit</InputLabel>
+                                    <Select
+                                        label="Definition of the Time Interval Unit"
+                                        sx={{width: '100%'}}
+                                        onChange={handleChange('G_k_4_r_3_DefinitionIntervalUnit', index)}
+                                        value={item['G_k_4_r_3_DefinitionIntervalUnit'].value}
+                                    >
+                                        <MenuItem value={'min'}>Minute (min)</MenuItem>
+                                        <MenuItem value={'h'}>Hour (h)</MenuItem>
+                                        <MenuItem value={'d'}>Day (d)</MenuItem>
+                                        <MenuItem value={'wk'}>Week (wk)</MenuItem>
+                                        <MenuItem value={'mo'}>Month (mo)</MenuItem>
+                                        <MenuItem value={'a'}>Year (a)</MenuItem>
+                                        <MenuItem value={'{cyclical}'}>Cyclical</MenuItem>
+                                        <MenuItem value={'{asnecessary}'}>As necessary</MenuItem>
+                                        <MenuItem value={'{total}'}>Total</MenuItem>
+                                    </Select>
+                                </FormControl>
                             </Grid>
                         </Grid>
                         <span>
-                                        <IconButton size="large" style={{top: '10px', right: '10px'}}
-                                                    sx={{color: "white", backgroundColor: "#1976d2"}}
-                                                    onClick={() => removeForm(index)}><DeleteIcon/>
-                                        </IconButton>
-                                    </span>
+                            <IconButton size="large" style={{top: '10px', right: '10px'}}
+                                        sx={{color: "white", backgroundColor: "#1976d2"}}
+                                        onClick={() => removeForm(index)}><DeleteIcon/>
+                            </IconButton>
+                        </span>
                         {index === dosages[drugIndex].length - 1 ?
                             <span>
-                                    <IconButton size="large" style={{top: '10px'}}
-                                                sx={{color: "white", backgroundColor: "#1976d2"}}
-                                                onClick={addForm}><AddIcon/></IconButton>
-                                </span> : null}
+                                <IconButton size="large" style={{top: '10px'}}
+                                            sx={{color: "white", backgroundColor: "#1976d2"}}
+                                            onClick={addForm}><AddIcon/></IconButton>
+                            </span> : null}
                     </CardContent>
                 </Card>);
         });

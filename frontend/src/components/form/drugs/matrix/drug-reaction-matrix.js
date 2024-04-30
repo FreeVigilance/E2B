@@ -27,11 +27,13 @@ export const DrugReactionsMatrix = ({drugIndex}) => {
     const formList = () => {
         let list = [];
         if (drugReactionMatrix[drugIndex].length === 0) {
-            return (<span>
-                <IconButton size="large" style={{top: '10px'}}
-                            sx={{color: "white", backgroundColor: "#1976d2"}}
-                            onClick={addForm}><AddIcon/></IconButton>
-            </span>);
+            return (
+                <span>
+                    <IconButton size="large" style={{top: '10px'}}
+                                sx={{color: "white", backgroundColor: "#1976d2"}}
+                                onClick={addForm}><AddIcon/></IconButton>
+                </span>
+            );
         }
         Object.values(drugReactionMatrix[drugIndex]).forEach((item, index) => {
             list.push(
@@ -60,10 +62,23 @@ export const DrugReactionsMatrix = ({drugIndex}) => {
                                                    }
                                                    value={item['G_k_9_i_3_1a_IntervalDrugAdministrationReactionNum'].value}/>
 
-                                        <TextField label="(unit) Time Interval Beginning of Drug Administration and Start of Reaction" variant="outlined"
-                                                   onChange={handleChange('G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit', index)}
-                                                   inputProps={{maxLength: 50}}
-                                                   value={item['G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit'].value}/>
+                                        <FormControl>
+                                            <InputLabel>Time Interval between Beginning of Drug Administration and Start of Reaction / Event (unit)</InputLabel>
+                                            <Select
+                                                label="Time Interval between Beginning of Drug Administration and Start of Reaction / Event (unit)"
+                                                sx={{width: '100%'}}
+                                                onChange={handleChange('G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit', index)}
+                                                value={item['G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit'].value}
+                                            >
+                                                <MenuItem value={'s'}>Second (s)</MenuItem>
+                                                <MenuItem value={'min'}>Minute (min)</MenuItem>
+                                                <MenuItem value={'h'}>Hour (h)</MenuItem>
+                                                <MenuItem value={'d'}>Day (d)</MenuItem>
+                                                <MenuItem value={'wk'}>Week (wk)</MenuItem>
+                                                <MenuItem value={'mo'}>Month (mo)</MenuItem>
+                                                <MenuItem value={'a'}>Year (a)</MenuItem>
+                                            </Select>
+                                        </FormControl>
 
                                         <TextField label="Time Interval Last Dose of Drug and Start of Reaction / Event" variant="outlined"
                                                    onChange={handleChange('G_k_9_i_3_2a_IntervalLastDoseDrugReactionNum', index)}
@@ -75,10 +90,23 @@ export const DrugReactionsMatrix = ({drugIndex}) => {
                                                    }
                                                    value={item['G_k_9_i_3_2a_IntervalLastDoseDrugReactionNum'].value}/>
 
-                                        <TextField label="(unit) Time Interval Last Dose of Drug and Start of Reaction / Event" variant="outlined"
-                                                   onChange={handleChange('G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit', index)}
-                                                   inputProps={{maxLength: 50}}
-                                                   value={item['G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit'].value}/>
+                                        <FormControl>
+                                            <InputLabel>Time Interval between Beginning of Drug Administration and Start of Reaction / Event (unit)</InputLabel>
+                                            <Select
+                                                label="Time Interval between Last Dose of Drug and Start of Reaction / Event (unit)"
+                                                sx={{width: '100%'}}
+                                                onChange={handleChange('G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit', index)}
+                                                value={item['G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit'].value}
+                                            >
+                                                <MenuItem value={'s'}>Second (s)</MenuItem>
+                                                <MenuItem value={'min'}>Minute (min)</MenuItem>
+                                                <MenuItem value={'h'}>Hour (h)</MenuItem>
+                                                <MenuItem value={'d'}>Day (d)</MenuItem>
+                                                <MenuItem value={'wk'}>Week (wk)</MenuItem>
+                                                <MenuItem value={'mo'}>Month (mo)</MenuItem>
+                                                <MenuItem value={'a'}>Year (a)</MenuItem>
+                                            </Select>
+                                        </FormControl>
 
                                         <FormControl>
                                             <InputLabel>Did Reaction Recur on Re-administration</InputLabel>
@@ -104,17 +132,17 @@ export const DrugReactionsMatrix = ({drugIndex}) => {
                             </Grid>
                         </Grid>
                         <span>
-                                        <IconButton size="large" style={{top: '10px', right: '10px'}}
-                                                    sx={{color: "white", backgroundColor: "#1976d2"}}
-                                                    onClick={() => removeForm(index)}><DeleteIcon/>
-                                        </IconButton>
-                                    </span>
+                            <IconButton size="large" style={{top: '10px', right: '10px'}}
+                                        sx={{color: "white", backgroundColor: "#1976d2"}}
+                                        onClick={() => removeForm(index)}><DeleteIcon/>
+                            </IconButton>
+                        </span>
                         {index === drugReactionMatrix[drugIndex].length - 1 ?
                             <span>
-                                                    <IconButton size="large" style={{top: '10px'}}
-                                                                sx={{color: "white", backgroundColor: "#1976d2"}}
-                                                                onClick={addForm}><AddIcon/></IconButton>
-                                                </span> : null}
+                                <IconButton size="large" style={{top: '10px'}}
+                                            sx={{color: "white", backgroundColor: "#1976d2"}}
+                                            onClick={addForm}><AddIcon/></IconButton>
+                            </span> : null}
                     </CardContent>
                 </Card>);
         });
