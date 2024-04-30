@@ -135,11 +135,20 @@ export const Drugs = ({index}) => {
                                }
                                value={drugs[index]['G_k_6a_GestationPeriodExposureNum'].value}/>
 
-                    <TextField label="Gestation Period at Time of Exposure (unit)" variant="outlined"
-                               onChange={handleChange('G_k_6b_GestationPeriodExposureUnit', index)}
-                               value={drugs[index]['G_k_6b_GestationPeriodExposureUnit'].value}
-                               multiline
-                               rows={2}/>
+                    <FormControl>
+                        <InputLabel>Gestation Period at Time of Exposure (unit)</InputLabel>
+                        <Select
+                            label="Gestation Period at Time of Exposure (unit)"
+                            sx={{width: '100%'}}
+                            onChange={handleChange('G_k_6b_GestationPeriodExposureUnit', index)}
+                            value={drugs[index]['G_k_6b_GestationPeriodExposureUnit'].value}
+                        >
+                            <MenuItem value={'d'}>Day (d)</MenuItem>
+                            <MenuItem value={'wk'}>Week (wk)</MenuItem>
+                            <MenuItem value={'mo'}>Month (mo)</MenuItem>
+                            <MenuItem value={'{trimester}'}>Trimester</MenuItem>
+                        </Select>
+                    </FormControl>
 
                     <FormControl>
                         <InputLabel>Action(s) Taken with Drug</InputLabel>

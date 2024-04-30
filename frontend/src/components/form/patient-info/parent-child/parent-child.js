@@ -188,11 +188,18 @@ export const ParentChild = () => {
                                }
                                value={parentChildData['D_10_2_2a_AgeParentNum'].value}/>
 
-                    <TextField label="Age of Parent (unit)" variant="outlined"
-                               sx={{width: '100%'}}
-                               inputProps={{maxLength: 50}}
-                               onChange={handleChange('D_10_2_2b_AgeParentUnit')}
-                               value={parentChildData['D_10_2_2b_AgeParentUnit'].value}/>
+                    <FormControl>
+                        <InputLabel>Age of Parent (unit)</InputLabel>
+                        <Select
+                            label="Age of Parent (unit)"
+                            sx={{width: '100%'}}
+                            onChange={handleChange('D_10_2_2b_AgeParentUnit')}
+                            value={parentChildData['D_10_2_2b_AgeParentUnit'].value}
+                        >
+                            <MenuItem value={'{decade}'}>Decade</MenuItem>
+                            <MenuItem value={'a'}>Year (a)</MenuItem>
+                        </Select>
+                    </FormControl>
 
                     <TextField label="Body Weight (kg) of Parent" variant="outlined"
                                sx={{width: '100%'}}

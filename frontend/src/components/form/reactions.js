@@ -51,11 +51,13 @@ export const Reactions = () => {
     const formList = () => {
         let list = [];
         if (reactionsData.length === 0) {
-            return (<span>
-                <IconButton size="large" style={{top: '10px'}}
-                            sx={{color: "white", backgroundColor: "#1976d2"}}
-                            onClick={addForm}><AddIcon/></IconButton>
-            </span>);
+            return (
+                <span>
+                    <IconButton size="large" style={{top: '10px'}}
+                                sx={{color: "white", backgroundColor: "#1976d2"}}
+                                onClick={addForm}><AddIcon/></IconButton>
+                </span>
+            );
         }
         Object.values(reactionsData).forEach((item, index) => {
             list.push(
@@ -351,13 +353,23 @@ export const Reactions = () => {
                                         label="Duration of Reaction (number)"
                                     />
 
-                                    <TextField
-                                        value={item['E_i_6b_DurationReactionUnit'].value}
-                                        label="Duration of Reaction (unit)"
-                                        variant="outlined"
-                                        inputProps={{maxLength: 50}}
-                                        onChange={handleChange('E_i_6b_DurationReactionUnit', index)}
-                                    />
+                                    <FormControl>
+                                        <InputLabel>Duration of Reaction (unit)</InputLabel>
+                                        <Select
+                                            label="Duration of Reaction (unit)"
+                                            sx={{width: '100%'}}
+                                            onChange={handleChange('E_i_6b_DurationReactionUnit', index)}
+                                            value={item['E_i_6b_DurationReactionUnit'].value}
+                                        >
+                                            <MenuItem value={'s'}>Second (s)</MenuItem>
+                                            <MenuItem value={'min'}>Minute (min)</MenuItem>
+                                            <MenuItem value={'h'}>Hour (h)</MenuItem>
+                                            <MenuItem value={'d'}>Day (d)</MenuItem>
+                                            <MenuItem value={'wk'}>Week (wk)</MenuItem>
+                                            <MenuItem value={'mo'}>Month (mo)</MenuItem>
+                                            <MenuItem value={'a'}>Year (a)</MenuItem>
+                                        </Select>
+                                    </FormControl>
                                 </Grid>
                             </Grid>
 
@@ -367,13 +379,13 @@ export const Reactions = () => {
                                         sx={{color: "white", backgroundColor: "#1976d2"}}
                                         onClick={() => removeForm(index)}><DeleteIcon/>
                             </IconButton>
-                </span>
+                        </span>
                         {index === reactionsData.length - 1 ?
                             <span>
-                        <IconButton size="large" style={{top: '10px'}}
-                                    sx={{color: "white", backgroundColor: "#1976d2"}}
-                                    onClick={addForm}><AddIcon/></IconButton>
-                    </span> : null}
+                                <IconButton size="large" style={{top: '10px'}}
+                                            sx={{color: "white", backgroundColor: "#1976d2"}}
+                                            onClick={addForm}><AddIcon/></IconButton>
+                            </span> : null}
                     </CardContent>
                 </Card>);
         });
