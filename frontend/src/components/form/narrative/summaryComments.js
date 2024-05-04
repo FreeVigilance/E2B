@@ -1,22 +1,41 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from "react-redux";
-import {Stack, FormControlLabel, Box, Select, MenuItem, FormControl, InputLabel, Card, CardContent, IconButton, Grid} from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    Stack,
+    FormControlLabel,
+    Box,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
+    Card,
+    CardContent,
+    IconButton,
+    Grid,
+} from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import AddIcon from '@mui/icons-material/Add';
-import { setStudyRegistration, studyIdentificationSelector } from '@src/features/study-identification/slice';
+import {
+    setStudyRegistration,
+    studyIdentificationSelector,
+} from '@src/features/study-identification/slice';
 import { StudyRegistration } from '@src/features/study-identification/study-identification';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { narrativeSelector, setDiagnosis, setSummaryComments } from '@src/features/narrative/slice';
+import {
+    narrativeSelector,
+    setDiagnosis,
+    setSummaryComments,
+} from '@src/features/narrative/slice';
 import { Diagnosis, SummaryComments } from '@src/features/narrative/narrative';
-import {makeStyles} from '@mui/styles';
+import { makeStyles } from '@mui/styles';
 import { SummaryCommentsFieldLabel } from '@src/components/field-labels/narrative/summary-comments-label';
 
 const useStyles = makeStyles({
     margin: {
-      marginTop: '10px',
-      marginLeft: '10px',
-      marginBottom: '5px'
+        marginTop: '10px',
+        marginLeft: '10px',
+        marginBottom: '5px',
     },
     textXshort: {
         marginLeft: 1,
@@ -24,9 +43,9 @@ const useStyles = makeStyles({
         width: '35%',
     },
     textShort: {
-      marginLeft: 1,
-      marginRight: 1,
-      width: '70%',
+        marginLeft: 1,
+        marginRight: 1,
+        width: '70%',
     },
     textMedium: {
         marginLeft: 1,
@@ -39,25 +58,25 @@ const useStyles = makeStyles({
         width: '100%',
     },
     label: {
-        color: 'black'
+        color: 'black',
     },
     checkbox: {
         paddingTop: '15px',
         paddingRight: '10px',
-    }
-})
+    },
+});
 
 export const SummaryCommentsComp = () => {
     const classes = useStyles();
 
-	const dispatch = useDispatch();
-    const {summaryComments} = useSelector(narrativeSelector);
+    const dispatch = useDispatch();
+    const { summaryComments } = useSelector(narrativeSelector);
 
     const handleChange = (fieldName, index) => (event) => {
         let value = event.target.value;
         if (value === '') {
             value = null;
-        };
+        }
         let summaryCommentsCopy = JSON.parse(JSON.stringify(summaryComments));
         summaryCommentsCopy[index][fieldName].value = value;
         dispatch(setSummaryComments(summaryCommentsCopy));
@@ -66,81 +85,127 @@ export const SummaryCommentsComp = () => {
     const formList = () => {
         let list = [];
         if (summaryComments.length === 0) {
-            return ( <span>
-                <IconButton size='large' style= {{ top: '10px'}}
-                sx={{ color: "white", backgroundColor: "#1976d2"}}
-                            onClick={addForm}><AddIcon/></IconButton>
-            </span>);
+            return (
+                <span>
+                    <IconButton
+                        size="large"
+                        style={{ top: '10px' }}
+                        sx={{ color: 'white', backgroundColor: '#1976d2' }}
+                        onClick={addForm}
+                    >
+                        <AddIcon />
+                    </IconButton>
+                </span>
+            );
         }
         Object.values(summaryComments).forEach((item, index) => {
             list.push(
-                <Card sx={{border: "3px solid #094B8C",
-                padding: "10px",
-                boxShadow: "5px 5px #356BA0",
-                marginBottom: 5}}>
+                <Card
+                    sx={{
+                        border: '3px solid #094B8C',
+                        padding: '10px',
+                        boxShadow: '5px 5px #356BA0',
+                        marginBottom: 5,
+                    }}
+                >
                     <CardContent>
-                    <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                            <SummaryCommentsFieldLabel label="Case Summary and Reporter’s Comments Language"
-                            field = 'H_5_r_1b_CaseSummaryReporterCommentsLanguage' index={index}></SummaryCommentsFieldLabel>
+                        <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                                <SummaryCommentsFieldLabel
+                                    label="Case Summary and Reporter’s Comments Language"
+                                    field="H_5_r_1b_CaseSummaryReporterCommentsLanguage"
+                                    index={index}
+                                ></SummaryCommentsFieldLabel>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    variant="outlined"
+                                    className={classes.textXshort}
+                                    onChange={handleChange(
+                                        'H_5_r_1b_CaseSummaryReporterCommentsLanguage',
+                                        index,
+                                    )}
+                                    value={
+                                        item[
+                                            'H_5_r_1b_CaseSummaryReporterCommentsLanguage'
+                                        ].value
+                                    }
+                                />
+                            </Grid>
                         </Grid>
-                        <Grid item xs={6}>
-                            <TextField variant="outlined"
-                                className={classes.textXshort}
-                                onChange={handleChange('H_5_r_1b_CaseSummaryReporterCommentsLanguage', index)}
-                                value = {item['H_5_r_1b_CaseSummaryReporterCommentsLanguage'].value}/>
-                        </Grid>
-                    </Grid>
 
                         <Stack direction={'column'}>
-                        <SummaryCommentsFieldLabel label="Case Summary and Reporter’s Comments"
-                        field = 'H_5_r_1a_CaseSummaryReporterCommentsText' index={index}></SummaryCommentsFieldLabel>                           
-                            <TextField variant="outlined"
+                            <SummaryCommentsFieldLabel
+                                label="Case Summary and Reporter’s Comments"
+                                field="H_5_r_1a_CaseSummaryReporterCommentsText"
+                                index={index}
+                            ></SummaryCommentsFieldLabel>
+                            <TextField
+                                variant="outlined"
                                 className={classes.textLong}
                                 multiline
                                 rows={20}
-                                onChange={handleChange('H_5_r_1a_CaseSummaryReporterCommentsText', index)}
-                                value = {item['H_5_r_1a_CaseSummaryReporterCommentsText'].value}/>
+                                onChange={handleChange(
+                                    'H_5_r_1a_CaseSummaryReporterCommentsText',
+                                    index,
+                                )}
+                                value={
+                                    item[
+                                        'H_5_r_1a_CaseSummaryReporterCommentsText'
+                                    ].value
+                                }
+                            />
                         </Stack>
 
-
                         <Stack direction="row" justifyContent="flex-start">
-                            {index === summaryComments.length - 1 ?
-                                    <span>
-                                        <IconButton size='large' style= {{ top: '10px', right: '10px'}}
-                                        sx={{ color: "white", backgroundColor: "#1976d2"}}
-                                                    onClick={addForm}><AddIcon/></IconButton>
-                                    </span> : null}
+                            {index === summaryComments.length - 1 ? (
+                                <span>
+                                    <IconButton
+                                        size="large"
+                                        style={{ top: '10px', right: '10px' }}
+                                        sx={{
+                                            color: 'white',
+                                            backgroundColor: '#1976d2',
+                                        }}
+                                        onClick={addForm}
+                                    >
+                                        <AddIcon />
+                                    </IconButton>
+                                </span>
+                            ) : null}
                             <span>
-                                <IconButton size='large' style= {{ top: '10px'}}
-                                sx={{ color: "white", backgroundColor: "#000066"}}
-                                        onClick={() => removeForm(index)}><DeleteIcon/>
+                                <IconButton
+                                    size="large"
+                                    style={{ top: '10px' }}
+                                    sx={{
+                                        color: 'white',
+                                        backgroundColor: '#000066',
+                                    }}
+                                    onClick={() => removeForm(index)}
+                                >
+                                    <DeleteIcon />
                                 </IconButton>
                             </span>
                         </Stack>
-                </CardContent>
-            </Card>
+                    </CardContent>
+                </Card>,
             );
         });
         return list;
-    }
+    };
 
     const addForm = () => {
         let summaryCommentsCopy = JSON.parse(JSON.stringify(summaryComments));
         let summaryCommentsNew = new SummaryComments();
         summaryCommentsCopy.push(summaryCommentsNew);
         dispatch(setSummaryComments(summaryCommentsCopy));
-    }
+    };
 
     const removeForm = (index) => {
         let summaryCommentsCopy = JSON.parse(JSON.stringify(summaryComments));
         summaryCommentsCopy.splice(index, 1);
         dispatch(setSummaryComments(summaryCommentsCopy));
-    }
+    };
 
-    return(
-        <div>
-            {formList()}
-        </div>
-    )
-}
+    return <div>{formList()}</div>;
+};

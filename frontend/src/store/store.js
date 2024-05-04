@@ -13,6 +13,7 @@ import referencesReducer from '../features/references/slice';
 import identificationReducer from '../features/identification/slice';
 import studyIdentificationReducer from '../features/study-identification/slice';
 import narrativeReducer from '../features/narrative/slice';
+import meddraReducer from '../features/meddra/slice';
 
 export const store = configureStore({
     reducer: {
@@ -29,7 +30,10 @@ export const store = configureStore({
         identification: identificationReducer,
         studyIdentification: studyIdentificationReducer,
         narrative: narrativeReducer,
+        meddra: meddraReducer,
     },
 
-    middleware: getDefaultMiddleware({ serializableCheck: false }).concat(thunk),
+    middleware: getDefaultMiddleware({ serializableCheck: false }).concat(
+        thunk,
+    ),
 });

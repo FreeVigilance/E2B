@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import InfoIcon from '@mui/icons-material/Info';
 
-export const StudyIdentificationFieldLabel = ({label, field}) => {
+export const StudyIdentificationFieldLabel = ({ label, field }) => {
     const useStyles = makeStyles({
         label: {
             color: '#333366',
@@ -18,19 +18,19 @@ export const StudyIdentificationFieldLabel = ({label, field}) => {
             fontSize: 20,
             paddingTop: '15px',
             paddingRight: '10px',
-            fontWeight: 600
+            fontWeight: 600,
         },
         businessError: {
             color: '#FFCC00',
             fontSize: 20,
             paddingTop: '15px',
             paddingRight: '10px',
-            fontWeight: 600
-        }
-    })
+            fontWeight: 600,
+        },
+    });
 
     const classes = useStyles();
-    const {errors} = useSelector(displaySelector);
+    const { errors } = useSelector(displaySelector);
 
     const getErrorText = (obj) => {
         if (!obj) return null;
@@ -50,62 +50,62 @@ export const StudyIdentificationFieldLabel = ({label, field}) => {
             }
         }
         return null;
-    }
+    };
 
     const createLabel = () => {
         if (errors['C_5_StudyIdentification']) {
             const errorText = getErrorText(errors['C_5_StudyIdentification']);
             if (errorText === null) {
-                return <FormLabel className={classes.label}>{label}</FormLabel>
+                return <FormLabel className={classes.label}>{label}</FormLabel>;
             }
             if (errorText['parsing'] && errorText['business']) {
                 return (
                     <Stack direction={'row'}>
                         <FormLabel className={classes.error}>{label}</FormLabel>
-                        <Tooltip title={<h2>{errorText['parsing']}</h2> }arrow>
+                        <Tooltip title={<h2>{errorText['parsing']}</h2>} arrow>
                             <IconButton>
-                                <InfoIcon style={{color: '#CC0000'}}/>
+                                <InfoIcon style={{ color: '#CC0000' }} />
                             </IconButton>
                         </Tooltip>
-                        <Tooltip title={<h2>{errorText['business']}</h2> }arrow>
+                        <Tooltip title={<h2>{errorText['business']}</h2>} arrow>
                             <IconButton>
-                                <InfoIcon style={{color: '#FFCC00'}}/>
+                                <InfoIcon style={{ color: '#FFCC00' }} />
                             </IconButton>
                         </Tooltip>
                     </Stack>
-                )
+                );
             }
             if (errorText['parsing']) {
                 return (
                     <Stack direction={'row'}>
                         <FormLabel className={classes.error}>{label}</FormLabel>
-                        <Tooltip title={<h2>{errorText['parsing']}</h2> }arrow>
+                        <Tooltip title={<h2>{errorText['parsing']}</h2>} arrow>
                             <IconButton>
-                                <InfoIcon style={{color: '#CC0000'}}/>
+                                <InfoIcon style={{ color: '#CC0000' }} />
                             </IconButton>
                         </Tooltip>
                     </Stack>
-                )
+                );
             }
             if (errorText['business']) {
                 return (
                     <Stack direction={'row'}>
-                        <FormLabel className={classes.businessError}>{label}</FormLabel>
-                        <Tooltip title={<h2>{errorText['business']}</h2> }arrow>
+                        <FormLabel className={classes.businessError}>
+                            {label}
+                        </FormLabel>
+                        <Tooltip title={<h2>{errorText['business']}</h2>} arrow>
                             <IconButton>
-                                <InfoIcon style={{color: '#FFCC00'}}/>
+                                <InfoIcon style={{ color: '#FFCC00' }} />
                             </IconButton>
                         </Tooltip>
                     </Stack>
-                )
+                );
             }
             return null;
         } else {
-            return <FormLabel className={classes.label}>{label}</FormLabel>
+            return <FormLabel className={classes.label}>{label}</FormLabel>;
         }
-    }
+    };
 
-    return (
-        createLabel()
-    );
-}
+    return createLabel();
+};

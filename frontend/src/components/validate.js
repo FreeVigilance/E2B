@@ -1,12 +1,23 @@
 import React from 'react';
-import { useDispatch, useSelector } from "react-redux";
-import SaveIcon from "@mui/icons-material/Save";
-import { IconButton, ListItemIcon, ListItemText, MenuItem, Tooltip } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import SaveIcon from '@mui/icons-material/Save';
+import {
+    IconButton,
+    ListItemIcon,
+    ListItemText,
+    MenuItem,
+    Tooltip,
+} from '@mui/material';
 import { getResults } from '@src/features/results/slice';
 import { getReaction } from '@src/features/reactions/slice';
 import { getPatient } from '@src/features/patient/slice';
 import { getDrug } from '@src/features/drugs/slice';
-import { changeData, displaySelector, saveData, validateData } from '@src/features/display/slice';
+import {
+    changeData,
+    displaySelector,
+    saveData,
+    validateData,
+} from '@src/features/display/slice';
 import { getReferences } from '@src/features/references/slice';
 import { getStudyIdentification } from '@src/features/study-identification/slice';
 import { getPrimarySources } from '@src/features/primary-source/slice';
@@ -18,7 +29,7 @@ import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 export const Validate = () => {
     const dispatch = useDispatch();
 
-    const {currentId} = useSelector(displaySelector);
+    const { currentId } = useSelector(displaySelector);
 
     const onValidateData = () => {
         const results = dispatch(getResults());
@@ -33,30 +44,32 @@ export const Validate = () => {
         const narrative = dispatch(getNarrative());
 
         let data = {
-            'id': currentId,
-            'F_r_ResultsTestsProceduresInvestigationPatient': results,
-            'G_k_DrugInformation': grugs,
-            'D_PatientCharacteristics': patient['D_PatientCharacteristics'],
-            'E_i_ReactionEvent': reactions,
-            'C_4_r_LiteratureReference': reference,
-            'C_5_StudyIdentification': studyIdent,
-            'C_2_r_PrimarySourceInformation': primarySource,
-            'C_3_InformationSenderCaseSafetyReport': infoSender,
-            'C_1_IdentificationCaseSafetyReport': identification['C_1_IdentificationCaseSafetyReport'],
-            'H_NarrativeCaseSummary': narrative,
-        }
-        
+            id: currentId,
+            F_r_ResultsTestsProceduresInvestigationPatient: results,
+            G_k_DrugInformation: grugs,
+            D_PatientCharacteristics: patient['D_PatientCharacteristics'],
+            E_i_ReactionEvent: reactions,
+            C_4_r_LiteratureReference: reference,
+            C_5_StudyIdentification: studyIdent,
+            C_2_r_PrimarySourceInformation: primarySource,
+            C_3_InformationSenderCaseSafetyReport: infoSender,
+            C_1_IdentificationCaseSafetyReport:
+                identification['C_1_IdentificationCaseSafetyReport'],
+            H_NarrativeCaseSummary: narrative,
+        };
+
         var snakecaseKeys = require('snakecase-keys');
         data = snakecaseKeys(data);
         console.log(data);
-        dispatch(validateData(data));  
-    }
+        dispatch(validateData(data));
+    };
 
-    return(
+    return (
         <MenuItem onClick={onValidateData}>
-            <ListItemIcon><VerifiedUserIcon sx={{fontSize: 35}} color='primary'/></ListItemIcon>
+            <ListItemIcon>
+                <VerifiedUserIcon sx={{ fontSize: 35 }} color="primary" />
+            </ListItemIcon>
             <ListItemText>Validate</ListItemText>
         </MenuItem>
-
     );
-}
+};

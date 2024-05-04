@@ -1,4 +1,3 @@
-
 import { FormLabel, IconButton, Stack, Tooltip } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { displaySelector } from '@src/features/display/slice';
@@ -6,7 +5,13 @@ import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import InfoIcon from '@mui/icons-material/Info';
 
-export const RelatednessFieldLabel = ({label, field, drugIndex, matrixIndex, index}) => {
+export const RelatednessFieldLabel = ({
+    label,
+    field,
+    drugIndex,
+    matrixIndex,
+    index,
+}) => {
     const useStyles = makeStyles({
         label: {
             color: '#333366',
@@ -19,19 +24,19 @@ export const RelatednessFieldLabel = ({label, field, drugIndex, matrixIndex, ind
             fontSize: 20,
             paddingTop: '15px',
             paddingRight: '10px',
-            fontWeight: 600
+            fontWeight: 600,
         },
         businessError: {
             color: '#FFCC00',
             fontSize: 20,
             paddingTop: '15px',
             paddingRight: '10px',
-            fontWeight: 600
-        }
-    })
+            fontWeight: 600,
+        },
+    });
 
     const classes = useStyles();
-    const {errors} = useSelector(displaySelector);
+    const { errors } = useSelector(displaySelector);
 
     const getErrorText = (obj) => {
         if (!obj) return null;
@@ -51,65 +56,80 @@ export const RelatednessFieldLabel = ({label, field, drugIndex, matrixIndex, ind
             }
         }
         return null;
-    }
+    };
 
     const createLabel = () => {
-        if (errors['G_k_DrugInformation'] && errors['G_k_DrugInformation'][drugIndex] &&
-        errors['G_k_DrugInformation'][drugIndex]['G_k_9_i_DrugReactionMatrix'] &&
-        errors['G_k_DrugInformation'][drugIndex]['G_k_9_i_DrugReactionMatrix'][matrixIndex] &&
-        errors['G_k_DrugInformation'][drugIndex]['G_k_9_i_DrugReactionMatrix'][matrixIndex]['G_k_9_i_2_r_AssessmentRelatednessDrugReaction']) {
-            const errorText = getErrorText(errors['G_k_DrugInformation'][drugIndex]['G_k_9_i_DrugReactionMatrix'][matrixIndex]['G_k_9_i_2_r_AssessmentRelatednessDrugReaction'][index]);
+        if (
+            errors['G_k_DrugInformation'] &&
+            errors['G_k_DrugInformation'][drugIndex] &&
+            errors['G_k_DrugInformation'][drugIndex][
+                'G_k_9_i_DrugReactionMatrix'
+            ] &&
+            errors['G_k_DrugInformation'][drugIndex][
+                'G_k_9_i_DrugReactionMatrix'
+            ][matrixIndex] &&
+            errors['G_k_DrugInformation'][drugIndex][
+                'G_k_9_i_DrugReactionMatrix'
+            ][matrixIndex]['G_k_9_i_2_r_AssessmentRelatednessDrugReaction']
+        ) {
+            const errorText = getErrorText(
+                errors['G_k_DrugInformation'][drugIndex][
+                    'G_k_9_i_DrugReactionMatrix'
+                ][matrixIndex]['G_k_9_i_2_r_AssessmentRelatednessDrugReaction'][
+                    index
+                ],
+            );
             if (errorText === null) {
-                return <FormLabel className={classes.label}>{label}</FormLabel>
+                return <FormLabel className={classes.label}>{label}</FormLabel>;
             }
             if (errorText['parsing'] && errorText['business']) {
                 return (
                     <Stack direction={'row'}>
                         <FormLabel className={classes.error}>{label}</FormLabel>
-                        <Tooltip title={<h2>{errorText['parsing']}</h2> }arrow>
+                        <Tooltip title={<h2>{errorText['parsing']}</h2>} arrow>
                             <IconButton>
-                                <InfoIcon style={{color: '#CC0000'}}/>
+                                <InfoIcon style={{ color: '#CC0000' }} />
                             </IconButton>
                         </Tooltip>
-                        <Tooltip title={<h2>{errorText['business']}</h2> }arrow>
+                        <Tooltip title={<h2>{errorText['business']}</h2>} arrow>
                             <IconButton>
-                                <InfoIcon style={{color: '#FFCC00'}}/>
+                                <InfoIcon style={{ color: '#FFCC00' }} />
                             </IconButton>
                         </Tooltip>
                     </Stack>
-                )
+                );
             }
             if (errorText['parsing']) {
                 return (
                     <Stack direction={'row'}>
                         <FormLabel className={classes.error}>{label}</FormLabel>
-                        <Tooltip title={<h2>{errorText['parsing']}</h2> }arrow>
+                        <Tooltip title={<h2>{errorText['parsing']}</h2>} arrow>
                             <IconButton>
-                                <InfoIcon style={{color: '#CC0000'}}/>
+                                <InfoIcon style={{ color: '#CC0000' }} />
                             </IconButton>
                         </Tooltip>
                     </Stack>
-                )
+                );
             }
             if (errorText['business']) {
                 return (
                     <Stack direction={'row'}>
-                        <FormLabel className={classes.businessError}>{label}</FormLabel>
-                        <Tooltip title={<h2>{errorText['business']}</h2> }arrow>
+                        <FormLabel className={classes.businessError}>
+                            {label}
+                        </FormLabel>
+                        <Tooltip title={<h2>{errorText['business']}</h2>} arrow>
                             <IconButton>
-                                <InfoIcon style={{color: '#FFCC00'}}/>
+                                <InfoIcon style={{ color: '#FFCC00' }} />
                             </IconButton>
                         </Tooltip>
                     </Stack>
-                )
+                );
             }
             return null;
         } else {
-            return <FormLabel className={classes.label}>{label}</FormLabel>
+            return <FormLabel className={classes.label}>{label}</FormLabel>;
         }
-    }
+    };
 
-    return (
-        createLabel()
-    );
-}
+    return createLabel();
+};

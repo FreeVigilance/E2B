@@ -16,46 +16,51 @@ import { store } from './store/store';
 import { UploadXml } from './components/menu/upload-xml';
 import { useSnackbar } from 'notistack';
 import CloseIcon from '@mui/icons-material/Close';
+import { getCasesList } from './features/cases-list/slice';
 
 const SnackbarCloseButton = ({ snackbarKey }) => {
     const { closeSnackbar } = useSnackbar();
-  
+
     return (
-      <IconButton onClick={() => closeSnackbar(snackbarKey)}>
-        <CloseIcon sx={{color: 'white'}} />
-      </IconButton>
+        <IconButton onClick={() => closeSnackbar(snackbarKey)}>
+            <CloseIcon sx={{ color: 'white' }} />
+        </IconButton>
     );
-}
+};
 
 export const App = () => {
     const dispatch = useDispatch();
     const { isAuth, token } = useSelector(authSelector);
-    const { showCasesList, openNewReport, showUpload } = useSelector(displaySelector);
+    const { showCasesList, openNewReport, showUpload } =
+        useSelector(displaySelector);
 
     const checkAuth = () => {
         return isAuth && token.length > 0;
     };
- 
- 
-
-
-
 
     if (!checkAuth()) {
         return (
             <Box>
-                <AuthComponent/>
+                <AuthComponent />
             </Box>
         );
     } else {
+        dispatch(getCasesList());
         return (
             <Provider store={store}>
-                <SnackbarProvider autoHideDuration={3000} anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right'}} action={snackbarKey => <SnackbarCloseButton snackbarKey={snackbarKey} />} >
-                        <SideMenu></SideMenu>
-                        {showCasesList ? <CasesList></CasesList> : null}
-                        {openNewReport ? <FormTabs></FormTabs> : null}
+                <SnackbarProvider
+                    autoHideDuration={3000}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    action={(snackbarKey) => (
+                        <SnackbarCloseButton snackbarKey={snackbarKey} />
+                    )}
+                >
+                    <SideMenu></SideMenu>
+                    {showCasesList ? <CasesList></CasesList> : null}
+                    {openNewReport ? <FormTabs></FormTabs> : null}
                 </SnackbarProvider>
             </Provider>
         );

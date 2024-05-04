@@ -1,4 +1,3 @@
-
 import { FormLabel, IconButton, Stack, Tooltip } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { displaySelector, setErrorTabs } from '@src/features/display/slice';
@@ -6,9 +5,9 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfoIcon from '@mui/icons-material/Info';
 
-export const ResultFieldLabel = ({label, field, index}) => {
+export const ResultFieldLabel = ({ label, field, index }) => {
     const dispatch = useDispatch();
-    const {errorTabs} = useSelector(displaySelector)
+    const { errorTabs } = useSelector(displaySelector);
 
     const useStyles = makeStyles({
         label: {
@@ -22,19 +21,19 @@ export const ResultFieldLabel = ({label, field, index}) => {
             fontSize: 20,
             paddingTop: '15px',
             paddingRight: '10px',
-            fontWeight: 600
+            fontWeight: 600,
         },
         businessError: {
             color: '#FFCC00',
             fontSize: 20,
             paddingTop: '15px',
             paddingRight: '10px',
-            fontWeight: 600
-        }
-    })
+            fontWeight: 600,
+        },
+    });
 
     const classes = useStyles();
-    const {errors} = useSelector(displaySelector);
+    const { errors } = useSelector(displaySelector);
 
     const getErrorText = (obj) => {
         if (!obj) return null;
@@ -54,62 +53,64 @@ export const ResultFieldLabel = ({label, field, index}) => {
             }
         }
         return null;
-    }
+    };
 
     const createLabel = () => {
         if (errors['F_r_ResultsTestsProceduresInvestigationPatient']) {
-            const errorText = getErrorText(errors['F_r_ResultsTestsProceduresInvestigationPatient'][index]);
+            const errorText = getErrorText(
+                errors['F_r_ResultsTestsProceduresInvestigationPatient'][index],
+            );
             if (errorText === null) {
-                return <FormLabel className={classes.label}>{label}</FormLabel>
+                return <FormLabel className={classes.label}>{label}</FormLabel>;
             }
             if (errorText['parsing'] && errorText['business']) {
                 return (
                     <Stack direction={'row'}>
                         <FormLabel className={classes.error}>{label}</FormLabel>
-                        <Tooltip title={<h2>{errorText['parsing']}</h2> }arrow>
+                        <Tooltip title={<h2>{errorText['parsing']}</h2>} arrow>
                             <IconButton>
-                                <InfoIcon style={{color: '#CC0000'}}/>
+                                <InfoIcon style={{ color: '#CC0000' }} />
                             </IconButton>
                         </Tooltip>
-                        <Tooltip title={<h2>{errorText['business']}</h2> }arrow>
+                        <Tooltip title={<h2>{errorText['business']}</h2>} arrow>
                             <IconButton>
-                                <InfoIcon style={{color: '#FFCC00'}}/>
+                                <InfoIcon style={{ color: '#FFCC00' }} />
                             </IconButton>
                         </Tooltip>
                     </Stack>
-                )
+                );
             }
             if (errorText['parsing']) {
                 return (
                     <Stack direction={'row'}>
                         <FormLabel className={classes.error}>{label}</FormLabel>
-                        <Tooltip title={<h2>{errorText['parsing']}</h2> }arrow>
+                        <Tooltip title={<h2>{errorText['parsing']}</h2>} arrow>
                             <IconButton>
-                                <InfoIcon style={{color: '#CC0000'}}/>
+                                <InfoIcon style={{ color: '#CC0000' }} />
                             </IconButton>
                         </Tooltip>
                     </Stack>
-                )
+                );
             }
             if (errorText['business']) {
                 return (
                     <Stack direction={'row'}>
-                        <FormLabel className={classes.businessError}>{label}</FormLabel>
-                        <Tooltip title={<h2>{errorText['business']}</h2> }arrow>
+                        <FormLabel className={classes.businessError}>
+                            {label}
+                        </FormLabel>
+                        <Tooltip title={<h2>{errorText['business']}</h2>} arrow>
                             <IconButton>
-                                <InfoIcon style={{color: '#FFCC00'}}/>
+                                <InfoIcon style={{ color: '#FFCC00' }} />
                             </IconButton>
                         </Tooltip>
                     </Stack>
-                )
+                );
             }
             return null;
         } else {
-            return <FormLabel className={classes.label}>{label}</FormLabel>
+            return <FormLabel className={classes.label}>{label}</FormLabel>;
         }
-    }
+    };
 
-    return (
-        createLabel()
-    );
-}
+    return createLabel();
+};

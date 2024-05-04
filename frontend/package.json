@@ -96,6 +96,7 @@
     "ramda": "0.29.0",
     "react": "17.0.2",
     "react-bootstrap": "^2.10.2",
+    "react-code-prettify": "^0.0.1",
     "react-cookies": "0.1.1",
     "react-dom": "17.0.2",
     "react-hook-form": "^7.39.1",
