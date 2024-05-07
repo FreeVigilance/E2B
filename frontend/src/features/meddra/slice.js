@@ -1,7 +1,5 @@
 import { createSlice, createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '@src/api';
-import { e2bCaseKeys } from '../common/changekeys';
-import { setRelatedness } from '../drugs/slice';
 
 export const meddraSelector = (state) => state.meddra;
 
