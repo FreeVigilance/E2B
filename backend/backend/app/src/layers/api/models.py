@@ -1,33 +1,34 @@
 from decimal import Decimal
 import typing as t
+from uuid import UUID
 
-from pydantic import BaseModel, model_validator
-from pydantic_core import PydanticCustomError
-
-from app.src.shared import enums
-from app.src.shared.enums import NullFlavor as NF
-
-
-# TODO: check if whole model layer is needed
+from app.src import enums
+from app.src.enums import NullFlavor as NF
+from extensions import pydantic as pde
 
 
-class Value[T](BaseModel):
+class Value[T](pde.PostValidatableModel, pde.SafeValidatableModel):
     value: T | None = None
 
 
 class NullableValue[T, N](Value[T]):
     null_flavor: N | None = None
 
-    @model_validator(mode='after')
-    def _check_value_and_null_flavor_are_not_present_together(self) -> 'NullableValue':
-        if self.null_flavor is not None and self.value is not None:
-            raise PydanticCustomError('data_error', 'Null flavor should not be present if value is present')
-        return self
+    @classmethod
+    def _post_validate(cls, processor: pde.PostValidationProcessor) -> None:
+        processor.try_validate_fields(
+            error_message='Null flavor should not be specified if value is specified',
+            is_add_single_error=True,
+            validate=lambda 
+                value, 
+                null_flavor:
+                value is None or null_flavor is None
+        )
 
 
-class ApiModel(BaseModel):
+class ApiModel(pde.PostValidatableModel, pde.SafeValidatableModel):
     id: int | None = None
-
+                
 
 class ICSR(ApiModel):
     c_1_identification_case_safety_report: t.Optional['C_1_identification_case_safety_report'] = None
@@ -308,6 +309,8 @@ class D_10_8_r_past_drug_history_parent(ApiModel):
 
 
 class E_i_reaction_event(ApiModel):
+    uuid: UUID | None = None
+
     # e_i_1_reaction_primary_source
 
     # e_i_1_1_reaction_primary_source_native_language
@@ -460,10 +463,8 @@ class G_k_7_r_indication_use_case(ApiModel):
 
 class G_k_9_i_drug_reaction_matrix(ApiModel):
     g_k_9_i_2_r_assessment_relatedness_drug_reaction: list['G_k_9_i_2_r_assessment_relatedness_drug_reaction'] = []
-
-    # This field stores id of related reaction
-    # TODO: workaround is needed as new entities do not have ids yet
-    g_k_9_i_1_reaction_assessed: int | None = None
+    
+    g_k_9_i_1_reaction_assessed: int | UUID
 
     # g_k_9_i_3_interval_drug_administration_reaction
     g_k_9_i_3_1a_interval_drug_administration_reaction_num: Value[Decimal] = Value()

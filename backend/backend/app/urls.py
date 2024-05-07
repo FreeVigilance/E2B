@@ -1,23 +1,19 @@
 from django import http
 from django.urls import path
 
+from app.src.connectors.api_domain.service_adapters import DomainServiceAdapter
+from app.src.connectors.domain_storage.service_adapters import StorageServiceAdapter
 from app.src.layers.api import models as api_models
 from app.src.layers.api import views
-from app.src.layers.domain.services import CIOMSService, DomainService
+from app.src.layers.domain.services import DomainService
 from app.src.layers.storage.services import StorageService
-from app.src.model_converters.api_to_domain import ApiToDomainModelConverter
-from app.src.model_converters.domain_to_storage import DomainToStorageModelConverter
-from app.src.service_adapters import ServiceAdapter
 
 
 # Dependency injection
 storage_service = StorageService()
-domain_to_storage_model_converter = DomainToStorageModelConverter()
-storage_service_adapter = ServiceAdapter(storage_service, domain_to_storage_model_converter)
+storage_service_adapter = StorageServiceAdapter(storage_service)
 domain_service = DomainService(storage_service_adapter)
-api_to_domain_model_converter = ApiToDomainModelConverter()
-domain_service_adapter = ServiceAdapter(domain_service, api_to_domain_model_converter)
-cioms_domain_service = CIOMSService(storage_service_adapter)
+domain_service_adapter = DomainServiceAdapter(domain_service)
 
 view_shared_args = dict(
     domain_service=domain_service_adapter,
@@ -29,7 +25,5 @@ urlpatterns = [
 
     path('icsr', views.ModelClassView.as_view(**view_shared_args)),
     path('icsr/<int:pk>', views.ModelInstanceView.as_view(**view_shared_args)),
-	path('cioms/<int:pk>', views.CIOMSView.as_view(cioms_service=cioms_domain_service)),
-    path('icsr/to-xml', views.ModelToXmlView.as_view(**view_shared_args)),
-    path('icsr/from-xml', views.ModelFromXmlView.as_view(**view_shared_args))
+    path('icsr/validate', views.ModelBusinessValidationView.as_view(**view_shared_args)),
 ]

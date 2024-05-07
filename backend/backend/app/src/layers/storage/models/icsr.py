@@ -1,7 +1,7 @@
 from django.db import models
 
-from app.src.shared import enums
-from app.src.shared.enums import NullFlavor as NF
+from app.src import enums
+from app.src.enums import NullFlavor as NF
 from extensions.django import constraints as ext_cons
 from extensions.django import fields as ext_fields
 from extensions.django import models as ext_models
@@ -28,7 +28,8 @@ class StorageModelMeta(ext_models.ModelWithFieldChoicesConstraintMeta):
                 continue
 
             # Check choices restriction existence
-            assert field.choices, f'Null flavor field {field_name} must have choices restriction'
+            if not field.choices:
+                raise ValueError(f'Null flavor field {field_name} must have choices restriction')
 
             # Call add_any_null_constraint
             meta = ext_models.get_meta_attr_or_raise_exc(attrs, name, 'null flavor field')
@@ -100,7 +101,7 @@ class C_1_6_1_r_documents_held_sender(StorageModel):
 class C_1_9_1_r_source_case_id(StorageModel):
     class Meta: pass
 
-    ext_cons.add_unique_together_constraint(
+    ext_cons.add_unique_constraint(
         Meta,
         'c_1_identification_case_safety_report',
         'c_1_9_1_r_2_case_id'
@@ -119,7 +120,7 @@ class C_1_9_1_r_source_case_id(StorageModel):
 class C_1_10_r_identification_number_report_linked(StorageModel):
     class Meta: pass
 
-    ext_cons.add_unique_together_constraint(
+    ext_cons.add_unique_constraint(
         Meta,
         'c_1_identification_case_safety_report',
         'c_1_10_r_identification_number_report_linked'
@@ -140,7 +141,7 @@ class C_1_10_r_identification_number_report_linked(StorageModel):
 class C_2_r_primary_source_information(StorageModel):
     class Meta: pass
 
-    ext_cons.add_unique_together_constraint(
+    ext_cons.add_unique_constraint(
         Meta,
         'icsr',
         'c_2_r_5_primary_source_regulatory_purposes'
