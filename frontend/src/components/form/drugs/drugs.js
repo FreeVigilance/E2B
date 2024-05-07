@@ -518,6 +518,7 @@ export const Drugs = ({ index }) => {
                     >
                         Additional Information on Drug
                     </FormLabel>
+
                     <AddInfo drugIndex={index}></AddInfo>
                 </Grid>
             </Grid>

@@ -1,34 +1,45 @@
 import enum
+import typing as t
 
+from django.core import exceptions as dje
+from django.db import models as djm
 from django.db import transaction
 
-from app.src.layers.base.services import Service
+from app.src.layers.base.services import ServiceProtocol
 from app.src.layers.storage.models import StorageModel
 from extensions.django.fields import temp_relation_field_utils
 
 
-class StorageService(Service[StorageModel]):
+class StorageService(ServiceProtocol[StorageModel]):
     class SaveOperation(enum.Enum):
         INSERT = enum.auto()
         UPDATE = enum.auto()
 
-    def list(self, model_class: type[StorageModel]) -> list[int]:
-        return list(model_class.objects.all().values_list('id', flat=True))
+    def list(self, model_class: type[StorageModel]) -> list[dict[str, t.Any]]:
+        return model_class.list()
 
     def read(self, model_class: type[StorageModel], pk: int) -> StorageModel:
         return model_class.objects.get(pk=pk)
 
     @transaction.atomic
-    def create(self, new_model: StorageModel) -> StorageModel:
+    def create(self, new_model: StorageModel) -> tuple[StorageModel, bool]:
         if new_model.id is not None:
             raise ValueError('Id can not be specified when creating a new entity')
+        
+        new_model.pre_create()
         self._save_with_related(new_model, self.SaveOperation.INSERT)
-        return new_model
+        new_model.post_create()
+        return new_model, True
 
     @transaction.atomic
-    def update(self, new_model: StorageModel, pk: int) -> StorageModel:
+    def update(self, new_model: StorageModel, pk: int) -> tuple[StorageModel, bool]:
         new_model.id = pk
-        old_model = self.read(type(new_model), pk)
+        try:
+            old_model = self.read(type(new_model), pk)
+        except dje.ObjectDoesNotExist:
+            raise ValueError(f'Cannot update not existing entity: {new_model.__class__.__name__}(id={pk})')
+        
+        new_model.pre_update()
 
         # Delete old related models if they are missing in new model
         for key, new_value in vars(new_model).items():
@@ -51,8 +62,28 @@ class StorageService(Service[StorageModel]):
                 for old_id in old_ids - new_ids:
                     self.delete_model(old_id_to_model_dict[old_id])
 
+        # Check that model doesn't change fk as it is not allowed
+        fk_names = [
+            f.name for f in new_model._meta.get_fields() 
+            # Get only real db fk without backward rel
+            if f.many_to_one or f.one_to_one and not isinstance(f, djm.ForeignObjectRel)
+        ]
+        for fk_name in fk_names:
+            new_fk_val = getattr(new_model, fk_name, None)
+            old_fk_val = getattr(old_model, fk_name, None)
+            if old_fk_val and new_fk_val != old_fk_val:
+                raise ValueError(
+                    f'Forbidden atempt to change the foreign key ' +
+                    '"{new_model.__class__.__name__}.{fk_name}"'
+                )
+
         self._save_with_related(new_model, self.SaveOperation.UPDATE)
-        return new_model
+        new_model.post_update()
+        return new_model, True
+    
+    def delete(self, model_class: type[StorageModel], pk: int) -> bool:
+        model_class.objects.get(pk=pk).delete()
+        return True
 
     def _save_with_related(self, new_model: StorageModel, save_operation: SaveOperation) -> None:
         if not isinstance(save_operation, self.SaveOperation):
@@ -81,9 +112,6 @@ class StorageService(Service[StorageModel]):
                     self.create(related_model)
                 else:
                     self.update(related_model, related_model.id)
-
-    def delete(self, model_class: type[StorageModel], pk: int) -> None:
-        model_class.objects.get(pk=pk).delete()
 
     def delete_model(self, old_model: StorageModel) -> None:
         self.delete(type(old_model), old_model.pk)

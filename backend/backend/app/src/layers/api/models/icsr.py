@@ -16,7 +16,7 @@ class NullableValue[T, N](Value[T]):
 
     @classmethod
     def _post_validate(cls, processor: pde.PostValidationProcessor) -> None:
-        processor.try_validate_fields(
+        processor.try_validate_with_fields(
             error_message='Null flavor should not be specified if value is specified',
             is_add_single_error=True,
             validate=lambda 

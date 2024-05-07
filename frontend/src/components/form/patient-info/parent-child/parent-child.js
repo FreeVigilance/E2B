@@ -507,6 +507,7 @@ export const ParentChild = () => {
                     >
                         Relevant Past Drug History of Parent
                     </FormLabel>
+
                     <ParentDrugsHistory></ParentDrugsHistory>
                 </Grid>
             </Grid>

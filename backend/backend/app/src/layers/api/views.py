@@ -1,32 +1,28 @@
-import enum
 import json
 import typing as t
+from http import HTTPStatus
 
 from django import http
+
+from django.shortcuts import render
 from django.views import View
 
-from app.src.layers.api.models import ApiModel
-from app.src.layers.base.services import ServiceWithBusinessValidation
+from app.src.layers.api.models import ApiModel, meddra
+from app.src.layers.base.services import BusinessServiceProtocol, CIOMSServiceProtocol, MedDRAServiceProtocol
 from extensions import utils
 
 
-class StatusCode(enum.IntEnum):
-    OK = 200
-    BAD_REQUEST = 400
-
-
 class BaseView(View):
-    domain_service: ServiceWithBusinessValidation[ApiModel] = ...
+    domain_service: BusinessServiceProtocol[ApiModel] = ...
     model_class: type[ApiModel] = ...
 
     def get_model_from_request(self, request: http.HttpRequest) -> ApiModel:
         data = json.loads(request.body)
         model = self.model_class.model_dict_construct(data)
         return model.model_safe_validate(data)
-    
-    def respond_with_model_as_json_after_write(self, model: ApiModel) -> http.HttpResponse:
-        status = StatusCode.OK if model.is_valid else StatusCode.BAD_REQUEST
-        return self.respond_with_model_as_json(model, status)
+
+    def get_status_code(self, is_ok: bool) -> HTTPStatus:
+        return HTTPStatus.OK if is_ok else HTTPStatus.BAD_REQUEST
 
     def respond_with_model_as_json(self, model: ApiModel, status: int) -> http.HttpResponse:
         # Dump data and ignore warnings about wrong data format and etc.
@@ -43,36 +39,70 @@ class BaseView(View):
 class ModelClassView(BaseView):
     def get(self, request: http.HttpRequest) -> http.HttpResponse:
         result_list = self.domain_service.list(self.model_class)
-        return self.respond_with_object_as_json(result_list, StatusCode.OK)
+        return self.respond_with_object_as_json(result_list, HTTPStatus.OK)
 
     def post(self, request: http.HttpRequest) -> http.HttpResponse:
         model = self.get_model_from_request(request)
         if model.is_valid:
             # TODO: check id empty
-            model = self.domain_service.create(model)
-        return self.respond_with_model_as_json_after_write(model)
+            model, is_ok = self.domain_service.create(model)
+        else:
+            is_ok = False
+        status = self.get_status_code(is_ok)
+        return self.respond_with_model_as_json(model, status)
 
 
 class ModelInstanceView(BaseView):
     def get(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
         model = self.domain_service.read(self.model_class, pk)
-        return self.respond_with_model_as_json(model, StatusCode.OK)
+        return self.respond_with_model_as_json(model, HTTPStatus.OK)
 
     def put(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
         # TODO: check pk = model.id
         model = self.get_model_from_request(request)
         if model.is_valid:
-            model = self.domain_service.update(model, pk)
-        return self.respond_with_model_as_json_after_write(model)
+            model, is_ok = self.domain_service.update(model, pk)
+        else:
+            is_ok = False
+        status = self.get_status_code(is_ok)
+        return self.respond_with_model_as_json(model, status)
 
     def delete(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
-        self.domain_service.delete(self.model_class, pk)
-        return http.HttpResponse(status=StatusCode.OK)
-    
+        is_ok = self.domain_service.delete(self.model_class, pk)
+        status = self.get_status_code(is_ok)
+        return http.HttpResponse(status=status)
+
 
 class ModelBusinessValidationView(BaseView):
-    def get(self, request: http.HttpRequest) -> http.HttpResponse:
+    def post(self, request: http.HttpRequest) -> http.HttpResponse:
         model = self.get_model_from_request(request)
         if model.is_valid:
-            model = self.domain_service.business_validate(model)
-        return self.respond_with_model_as_json(model, status=StatusCode.OK)
+            model, is_ok = self.domain_service.business_validate(model)
+        else:
+            is_ok = False
+        status = self.get_status_code(is_ok)
+        return self.respond_with_model_as_json(model, status)
+
+
+class ModelCIOMSView(View):
+    cioms_service: CIOMSServiceProtocol = ...
+
+    def get(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
+        return render(request, 'templates/cioms.html', self.cioms_service.convert_icsr_to_cioms(pk).__dict__)
+
+
+class MedDRAReleaseView(View):
+    meddra_service: MedDRAServiceProtocol = ...
+
+    def get(self, request: http.HttpRequest) -> http.HttpResponse:
+        response = self.meddra_service.list()
+        return http.HttpResponse(response.model_dump_json(), status=HTTPStatus.OK, content_type='application/json')
+
+
+class MedDRASearchView(View):
+    meddra_service: MedDRAServiceProtocol = ...
+
+    def post(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
+        search_request = meddra.SearchRequest.parse_raw(request.body)
+        response = self.meddra_service.search(search_request, pk)
+        return http.HttpResponse(response.model_dump_json(), status=HTTPStatus.OK, content_type='application/json')

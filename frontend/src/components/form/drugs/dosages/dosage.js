@@ -944,6 +944,7 @@ export const Dosages = ({ drugIndex }) => {
                     </CardContent>
                 </Card>,
             );
+
         });
         return list;
     };

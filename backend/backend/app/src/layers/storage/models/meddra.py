@@ -1,9 +1,16 @@
 from django.db import models
 
 
+class meddra_release(models.Model):
+    version = models.CharField()
+    language = models.CharField()
+
+
 class soc_term(models.Model):
+    class Meta:
+        unique_together = ('code', 'meddra_release')
+
     code = models.PositiveIntegerField(
-        unique=True,
         help_text='8-digit code to identify the System Organ Class'
     )
     name = models.CharField(
@@ -15,10 +22,14 @@ class soc_term(models.Model):
         help_text='System Organ Class abbreviation'
     )
 
+    meddra_release = models.ForeignKey(meddra_release, on_delete=models.CASCADE, related_name='soc_terms')
 
-class hlgt_term(models.Model):
+
+class hlgt_pref_term(models.Model):
+    class Meta:
+        unique_together = ('code', 'meddra_release')
+
     code = models.PositiveIntegerField(
-        unique=True,
         help_text='8-digit code to identify the High Level Group Term'
     )
     name = models.CharField(
@@ -26,12 +37,15 @@ class hlgt_term(models.Model):
         help_text='Full name of the High Level Group Term'
     )
 
-    soc_codes = models.ManyToManyField(soc_term, related_name='hlgt_codes')
+    soc_terms = models.ManyToManyField(soc_term, related_name='hlgt_pref_terms')
+    meddra_release = models.ForeignKey(meddra_release, on_delete=models.CASCADE, related_name='hlgt_pref_terms')
 
 
-class hlt_term(models.Model):
+class hlt_pref_term(models.Model):
+    class Meta:
+        unique_together = ('code', 'meddra_release')
+
     code = models.PositiveIntegerField(
-        unique=True,
         help_text='8-digit code to identify the High Level Term'
     )
     name = models.CharField(
@@ -39,12 +53,15 @@ class hlt_term(models.Model):
         help_text='Full name of the High Level Term'
     )
 
-    hlgt_codes = models.ManyToManyField(hlgt_term, related_name='hlt_codes')
+    hlgt_pref_terms = models.ManyToManyField(hlgt_pref_term, related_name='hlt_pref_terms')
+    meddra_release = models.ForeignKey(meddra_release, on_delete=models.CASCADE, related_name='hlt_pref_terms')
 
 
 class pref_term(models.Model):
+    class Meta:
+        unique_together = ('code', 'meddra_release')
+
     code = models.PositiveIntegerField(
-        unique=True,
         help_text='8-digit code to identify the Preferred Term'
     )
     name = models.CharField(
@@ -57,19 +74,22 @@ class pref_term(models.Model):
         help_text='This field is null'
     )
 
-    soc_code = models.ForeignKey(
+    soc_term = models.ForeignKey(
         soc_term,
         on_delete=models.CASCADE,
-        related_name='pt_codes',
+        related_name='pref_terms',
         help_text='The primary System Organ Class to which the Preferred Term is linked'
     )
 
-    hlt_codes = models.ManyToManyField(hlt_term, related_name='pt_codes')
+    hlt_pref_terms = models.ManyToManyField(hlt_pref_term, related_name='pref_terms')
+    meddra_release = models.ForeignKey(meddra_release, on_delete=models.CASCADE, related_name='pref_terms')
 
 
 class low_level_term(models.Model):
+    class Meta:
+        unique_together = ('code', 'meddra_release')
+
     code = models.PositiveIntegerField(
-        unique=True,
         help_text='8-digit code to identify the Lowest Level Term'
     )
     name = models.CharField(
@@ -82,8 +102,9 @@ class low_level_term(models.Model):
         help_text='Indicates whether the Lowest Level Term is current or non-current'
     )
 
-    pt_code = models.ForeignKey(
+    pref_term = models.ForeignKey(
         pref_term,
         on_delete=models.CASCADE,
-        related_name='llt_codes'
+        related_name='low_level_terms'
     )
+    meddra_release = models.ForeignKey(meddra_release, on_delete=models.CASCADE, related_name='low_level_terms')
