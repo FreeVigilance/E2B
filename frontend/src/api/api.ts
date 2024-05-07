@@ -150,9 +150,9 @@ export class HTTP {
         })
             .then((response) => {
                 console.log(response);
-                if (!response.ok) {
-                    return Promise.reject(response);
-                }
+                // if (!response.ok) {
+                //     return Promise.reject(response);
+                // }
 
                 return response[responseFormat]();
             })

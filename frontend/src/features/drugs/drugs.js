@@ -73,6 +73,7 @@ export class DrugReactionMatrix {
         this.G_k_9_i_3_2a_IntervalLastDoseDrugReactionNum = {"value": null}
         this.G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit = {"value": null}
         this.G_k_9_i_4_ReactionRecurReadministration = {"value": null}
+        this.G_k_9_i_1_ReactionAssessed = null
         this.id = null
     }
 }

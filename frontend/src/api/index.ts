@@ -1,9 +1,10 @@
 import { clientER } from './clients';
 
 export const api = {
-
     auth: (username: any, password: any) => {
-        return clientER.get('', { data: { username: username, password: password } });
+        return clientER.get('', {
+            data: { username: username, password: password },
+        });
     },
     saveData: (data: any) => {
         return clientER.post('/icsr', { data: data });
@@ -15,7 +16,7 @@ export const api = {
         return clientER.get(`/icsr/${id}`);
     },
     getCasesList: () => {
-        console.log('getCasesList api')
+        console.log('getCasesList api');
         return clientER.get('/icsr');
     },
     deleteReport: (id: any) => {
@@ -28,5 +29,23 @@ export const api = {
     getJsonFromXml: (data: any) => {
         console.log(data);
         return clientER.getJson('/icsr/from-xml', { data: data });
+    },
+    validateData: (data: any) => {
+        return clientER.post('/icsr/validate', { data: data });
+    },
+    getTerms: (id: any, data: any) => {
+        console.log(id);
+        console.log(data);
+        return clientER.post(`/meddra/release/${id}/search `, { data: data });
+    },
+    getReleases: () => {
+        return clientER.get(`/meddra/release`);
     }
+    // {
+    //     "state": {"SOC": 10036585, "HLT": 10000232},
+    //     "search": {
+    //         "level": "PT",
+    //         "input": "abortion"
+    //     }
+    // }
 };

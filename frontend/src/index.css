@@ -40,3 +40,93 @@ input[type=number]::-webkit-outer-spin-button {
 	width: 0;
 	height: 0;
 }
+
+.group-border {
+	padding: 0 5px;
+	margin-top: 0;
+	margin-right: 0;
+	margin-bottom: 10px!important;
+	margin-left: 0;
+	border: 1px solid #bbbbbb;
+	border-radius:  5px;
+  }
+
+th, td {
+	font-size: 20px;
+	/* background: #fafcff !important; */
+}
+
+.ht_clone_top th {
+	color: #ffffff !important;
+	background: #141f6d !important;
+	font-weight: bold !important;
+  }
+
+.customFilterButton .changeType {
+	background: #FFFFFF !important;
+	border-radius: 100% !important;
+	width: 20px !important;
+	color: #141f6d !important;
+	height: 20px !important;
+	border: none !important;
+}
+
+.customFilterButton .changeType::before {
+	content: '▼' !important;
+	font-size: 15px;
+}
+
+.htDropdownMenu .handsontable .htFiltersMenuLabel {
+	width: 380px;
+  }
+
+.myBtOpen {
+	width: 99%;
+	height: 40px;
+	border-radius: 10%;
+	background: #4185C5;
+	box-sizing: border-box;
+	text-align: center;
+	font-size: 18px;
+	font-weight: 600;
+	color: #fff;
+	border: 0px;
+}
+
+.myBtRemove {
+	width: 99%;
+	height: 40px;
+	border-radius: 10%;
+	background: #C23636;
+	box-sizing: border-box;
+	text-align: center;
+	font-size: 30px;
+	color: #fff;
+	border: 0px;
+}
+
+.handsontable .sorted-column-header-desc::after,
+.handsontable .columnSorting.descending::after {
+  cursor: pointer;
+  content: '⬇';
+  color: #ffffff;
+  font-size: medium !important;
+  position: static !important;
+}
+
+.handsontable .sorted-column-header-asc::after,
+.handsontable .columnSorting.ascending::after {
+  cursor: pointer;
+  content: '⬆';
+  color: #ffffff;
+  font-size: medium !important;
+  position: static !important;
+}
+
+.handsontable span.colHeader.columnSorting.ascending::before {
+	display: none !important;
+  }
+  
+.handsontable span.colHeader.columnSorting.descending::before {
+display: none !important;
+}

@@ -1,3 +1,11 @@
+import {v4 as uuidv4} from 'uuid';
+
+let lastReactionNumber = 0;
+
+const getReactionNumber = () => {
+    lastReactionNumber += 1;
+    return lastReactionNumber
+}
 export class Reaction {
     constructor () {
         this.E_i_1_1a_ReactionPrimarySourceNativeLanguage = { value: null };
@@ -20,5 +28,6 @@ export class Reaction {
         this.E_i_8_MedicalConfirmationHealthcareProfessional = { value: null };
         this.E_i_9_IdentificationCountryReaction = { value: null };
         this.id = null;
+        this.uuid = uuidv4();
     }
 }
