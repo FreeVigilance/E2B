@@ -25,13 +25,13 @@ export const getResults = () => {
                 value: parseDate(item['F_r_1_TestDate'].value),
                 nullFlavor: item['F_r_1_TestDate'].nullFlavor,
             };
-            if (itemData['F_r_1_TestDate']['nullFlavor'] === -1) {
+            if (itemData['F_r_1_TestDate']['nullFlavor'] !== null) {
                 itemData['F_r_1_TestDate'] = { value: null, nullFlavor: 'UNK' };
             }
             itemData['F_r_2_1_TestName'] = item['F_r_2_1_TestName'];
-            itemData['F_r_2_2a_MedDRAVersionTestName'] =
+            itemData['F_r_2_2a_MeddraVersionTestName'] =
                 item['F_r_2_2a_MedDRAVersionTestName'];
-            itemData['F_r_2_2b_TestNameMedDRACode'] =
+            itemData['F_r_2_2b_TestNameMeddraCode'] =
                 item['F_r_2_2b_TestNameMedDRACode'];
 
             itemData['F_r_3_1_TestResultCode'] = item['F_r_3_1_TestResultCode'];

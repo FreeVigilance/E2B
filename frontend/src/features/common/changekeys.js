@@ -39,9 +39,13 @@ function changeKeysFactory(changeCase) {
             let changedValue = changeKeys(value, depth - 1, options);
             if (changedKey === 'nullFlavor') {
                 if (changedValue !== null) {
-                    changedValue = Object.keys(nullFlavors).find(
+                    if (Object.keys(nullFlavors).find(
                         (key) => nullFlavors[key] === changedValue,
-                    );
+                    )) {
+                        changedValue = Object.keys(nullFlavors).find(
+                            (key) => nullFlavors[key] === changedValue,
+                        );
+                    }
                 }
             }
             if (changedKey.indexOf('Meddra') >= 0) {

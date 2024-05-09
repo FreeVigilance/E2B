@@ -62,7 +62,7 @@ export const getTabsWithErrors = (errors) => {
 
     if (errors['F_r_ResultsTestsProceduresInvestigationPatient']) {
         errorTabs[0].value = true;
-        if (errors['F_r_ResultsTestsProceduresInvestigationPatient']['_Self']) {
+        if (errors['F_r_ResultsTestsProceduresInvestigationPatient']) {
             errorTabs[0].message =
                 errors['F_r_ResultsTestsProceduresInvestigationPatient'][
                     '_Self'
@@ -71,14 +71,14 @@ export const getTabsWithErrors = (errors) => {
     }
     if (errors['E_i_ReactionEvent']) {
         errorTabs[1].value = true;
-        if (errors['E_i_ReactionEvent']['_Self']) {
+        if (errors['E_i_ReactionEvent']) {
             errorTabs[1].message = errors['E_i_ReactionEvent']['_Self'];
         }
     }
-    if (
+    if ( 
         errors['D_PatientCharacteristics'] &&
         !errors['D_PatientCharacteristics']['D_9_2_r_CauseDeath'] &&
-        !['D_PatientCharacteristics']['D_9_4_r_AutopsyDeterminedCauseDeath'] &&
+        !errors['D_PatientCharacteristics']['D_9_4_r_AutopsyDeterminedCauseDeath'] &&
         !errors['D_PatientCharacteristics'][
             'D_10_InformationConcerningParent'
         ] &&
@@ -91,17 +91,17 @@ export const getTabsWithErrors = (errors) => {
         ]
     ) {
         errorTabs[2].value = true;
-        if (errors['D_PatientCharacteristics']['_Self']) {
+        if (errors['D_PatientCharacteristics']) {
             errorTabs[2].message = errors['D_PatientCharacteristics']['_Self'];
         }
     }
     if (
         errors['D_PatientCharacteristics'] &&
         (errors['D_PatientCharacteristics']['D_9_2_r_CauseDeath'] ||
-            ['D_PatientCharacteristics']['D_9_4_r_AutopsyDeterminedCauseDeath'])
+        errors['D_PatientCharacteristics']['D_9_4_r_AutopsyDeterminedCauseDeath'])
     ) {
         errorTabs[3].value = true;
-        if (errors['D_PatientCharacteristics']['D_9_2_r_CauseDeath']['_Self']) {
+        if (errors['D_PatientCharacteristics']['D_9_2_r_CauseDeath']) {
             errorTabs[3].message =
                 errors['D_PatientCharacteristics']['D_9_2_r_CauseDeath'][
                     '_Self'
@@ -110,7 +110,7 @@ export const getTabsWithErrors = (errors) => {
         if (
             errors['D_PatientCharacteristics'][
                 'D_9_4_r_AutopsyDeterminedCauseDeath'
-            ]['_Self']
+            ]
         ) {
             errorTabs[3].message =
                 errors['D_PatientCharacteristics'][
@@ -137,7 +137,7 @@ export const getTabsWithErrors = (errors) => {
         if (
             errors['D_PatientCharacteristics'][
                 'D_10_InformationConcerningParent'
-            ]['_Self']
+            ]
         ) {
             errorTabs[4].message =
                 errors['D_PatientCharacteristics'][
@@ -147,7 +147,7 @@ export const getTabsWithErrors = (errors) => {
         if (
             errors['D_PatientCharacteristics'][
                 'D_10_8_r_PastDrugHistoryParent'
-            ]['_Self']
+            ]
         ) {
             errorTabs[4].message =
                 errors['D_PatientCharacteristics'][
@@ -157,7 +157,7 @@ export const getTabsWithErrors = (errors) => {
         if (
             errors['D_PatientCharacteristics'][
                 'D_10_7_2_TextMedicalHistoryParent'
-            ]['_Self']
+            ]
         ) {
             errorTabs[4].message =
                 errors['D_PatientCharacteristics'][
@@ -167,7 +167,7 @@ export const getTabsWithErrors = (errors) => {
         if (
             errors['D_PatientCharacteristics'][
                 'D_10_7_1_r_StructuredInformationParentMedDRACode'
-            ]['_Self']
+            ]
         ) {
             errorTabs[4].message =
                 errors['D_PatientCharacteristics'][
@@ -183,7 +183,7 @@ export const getTabsWithErrors = (errors) => {
         )) {
             if (value['G_k_4_r_DosageInformation']) {
                 errorTabs[6].value = true;
-                if (value['G_k_4_r_DosageInformation']['_Self']) {
+                if (value['G_k_4_r_DosageInformation']) {
                     errorTabs[6].message =
                         value['G_k_4_r_DosageInformation']['_Self'];
                 }
@@ -197,7 +197,7 @@ export const getTabsWithErrors = (errors) => {
         )) {
             if (value['G_k_9_i_DrugReactionMatrix']) {
                 errorTabs[7].value = true;
-                if (value['G_k_9_i_DrugReactionMatrix']['_Self']) {
+                if (value['G_k_9_i_DrugReactionMatrix']) {
                     errorTabs[7].message =
                         value['G_k_9_i_DrugReactionMatrix']['_Self'];
                 }
@@ -208,7 +208,7 @@ export const getTabsWithErrors = (errors) => {
 
         if (!childrenError) {
             errorTabs[5].value = true;
-            if (errors['G_k_DrugInformation']['_Self']) {
+            if (errors['G_k_DrugInformation']) {
                 errorTabs[5].message = errors['G_k_DrugInformation']['_Self'];
             }
         }
@@ -216,7 +216,7 @@ export const getTabsWithErrors = (errors) => {
 
     if (errors['C_2_r_PrimarySourceInformation']) {
         errorTabs[8].value = true;
-        if (errors['C_2_r_PrimarySourceInformation']['_Self']) {
+        if (errors['C_2_r_PrimarySourceInformation']) {
             errorTabs[8].message =
                 errors['C_2_r_PrimarySourceInformation']['_Self'];
         }
@@ -224,34 +224,34 @@ export const getTabsWithErrors = (errors) => {
 
     if (errors['C_3_InformationSenderCaseSafetyReport']) {
         errorTabs[9].value = true;
-        if (errors['C_3_InformationSenderCaseSafetyReport']['_Self']) {
+        if (errors['C_3_InformationSenderCaseSafetyReport']) {
             errorTabs[9].message =
                 errors['C_3_InformationSenderCaseSafetyReport']['_Self'];
         }
     }
     if (errors['C_4_r_LiteratureReference']) {
         errorTabs[10].value = true;
-        if (errors['C_4_r_LiteratureReference']['_Self']) {
+        if (errors['C_4_r_LiteratureReference']) {
             errorTabs[10].message =
                 errors['C_4_r_LiteratureReference']['_Self'];
         }
     }
     if (errors['C_1_IdentificationCaseSafetyReport']) {
         errorTabs[11].value = true;
-        if (errors['C_1_IdentificationCaseSafetyReport']['_Self']) {
+        if (errors['C_1_IdentificationCaseSafetyReport']) {
             errorTabs[11].message =
                 errors['C_1_IdentificationCaseSafetyReport']['_Self'];
         }
     }
     if (errors['C_5_StudyIdentification']) {
         errorTabs[12].value = true;
-        if (errors['C_5_StudyIdentification']['_Self']) {
+        if (errors['C_5_StudyIdentification']) {
             errorTabs[12].message = errors['C_5_StudyIdentification']['_Self'];
         }
     }
     if (errors['H_NarrativeCaseSummary']) {
         errorTabs[13].value = true;
-        if (errors['H_NarrativeCaseSummary']['_Self']) {
+        if (errors['H_NarrativeCaseSummary']) {
             errorTabs[13].message = errors['H_NarrativeCaseSummary']['_Self'];
         }
     }

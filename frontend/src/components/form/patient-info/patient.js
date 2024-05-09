@@ -68,6 +68,8 @@ export const Patient = () => {
         (fieldName, isNumber = false, length = 1) =>
         (event) => {
             let value = event.target.value;
+            console.log("AAAAAAa", value)
+            console.log(event.target.checked)
             if (isNumber) {
                 if (value.length > length) value = value.slice(0, length);
             }
@@ -78,7 +80,11 @@ export const Patient = () => {
             //     value = null;
             // }
             let patientDataCopy = JSON.parse(JSON.stringify(patientData));
-            patientDataCopy[fieldName].value = value;
+            if (fieldName === 'D_7_3_ConcomitantTherapies') {
+                patientDataCopy[fieldName].value = event.target.checked;
+            } else {
+                patientDataCopy[fieldName].value = value;
+            }
             dispatch(setPatientData(patientDataCopy));
         };
 
@@ -791,12 +797,17 @@ export const Patient = () => {
                         </Stack>
                     </Grid>
 
-                    <Grid item xs={3}></Grid>
+                    <Grid item xs={3}>
+                        <PatientFieldLabel
+                            label="Concomitant Therapies"
+                            field="D_7_3_ConcomitantTherapies"
+                        ></PatientFieldLabel>
+                    </Grid>
                     <Grid item xs={9}>
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                checked={
+                                    checked={
                                         patientData[
                                             'D_7_3_ConcomitantTherapies'
                                         ].value
@@ -806,7 +817,6 @@ export const Patient = () => {
                                     )}
                                 />
                             }
-                            label="Concomitant Therapies"
                         />
                     </Grid>
 

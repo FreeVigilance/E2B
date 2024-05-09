@@ -245,7 +245,7 @@ export const StudyIdentificationComp = () => {
                             <MenuItem value={2}>
                                 2 = Individual patient use
                             </MenuItem>
-                            <MenuItem value={3}>2 = Other studies</MenuItem>
+                            <MenuItem value={3}>3 = Other studies</MenuItem>
                         </Select>
                     </Grid>
                 </Grid>

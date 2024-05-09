@@ -15,6 +15,11 @@ const useStyles = makeStyles({
         marginRight: 1,
         width: '20%',
     },
+    textMedium: {
+        marginLeft: 1,
+        marginRight: 1,
+        width: '50%',
+    },
 });
 
 export const ReactionSelect = ({ drugIndex, index }) => {
@@ -65,7 +70,7 @@ export const ReactionSelect = ({ drugIndex, index }) => {
             </Grid>
             <Grid item xs={8}>
                 <Select
-                    className={classes.textShort}
+                    className={classes.textMedium}
                     value={
                         drugReactionMatrix[drugIndex][index][
                             'G_k_9_i_1_ReactionAssessed'

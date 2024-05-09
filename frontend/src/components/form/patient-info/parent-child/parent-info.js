@@ -427,10 +427,13 @@ export const ParentInfo = () => {
                                                 item['D_10_7_1_r_3_Continuing']
                                                     .value
                                             }
-                                            defaultValue={0}
+                                            onChange={handleChange(
+                                                'D_10_7_1_r_3_Continuing',
+                                                index,
+                                            )}
                                         >
-                                            <MenuItem value={1}>Yes</MenuItem>
-                                            <MenuItem value={0}>No</MenuItem>
+                                            <MenuItem value={true}>Yes</MenuItem>
+                                            <MenuItem value={false}>No</MenuItem>
                                         </Select>
                                     ) : (
                                         <FormControl

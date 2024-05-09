@@ -454,8 +454,8 @@ export const MedicalHistory = () => {
                                                 index,
                                             )}
                                         >
-                                            <MenuItem value={1}>Yes</MenuItem>
-                                            <MenuItem value={0}>No</MenuItem>
+                                            <MenuItem value={true}>Yes</MenuItem>
+                                            <MenuItem value={false}>No</MenuItem>
                                         </Select>
                                     ) : (
                                         <FormControl

@@ -493,7 +493,13 @@ export const Results = () => {
                                     />
                                 </Grid>
 
-                                <Grid item xs={2}></Grid>
+                                <Grid item xs={2}>
+                                    <ResultFieldLabel
+                                        label="More Information Available"
+                                        field="F_r_7_MoreInformationAvailable"
+                                        index={index}
+                                    ></ResultFieldLabel>
+                                </Grid>
                                 <Grid item xs={10}>
                                     <FormControlLabel
                                         control={
@@ -510,7 +516,6 @@ export const Results = () => {
                                                 }
                                             />
                                         }
-                                        label="More Information Available"
                                     />
                                 </Grid>
 

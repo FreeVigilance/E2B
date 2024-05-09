@@ -80,9 +80,6 @@ export const SideMenu = () => {
         dispatch(revertAll());
         dispatch(setCurrentId(null));
         dispatch(setOpenNewReport(true));
-
-        dispatch(getMeddraReleases());
-
         dispatch(setShowCasesList(false));
     };
 

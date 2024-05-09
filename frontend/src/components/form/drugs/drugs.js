@@ -423,7 +423,7 @@ export const Drugs = ({ index }) => {
                         <Select
                             className={classes.textXshort}
                             value={
-                                drugs[index]['G_k_8_ActionTakenDrug'].nullFlavor
+                                drugs[index]['G_k_8_ActionTakenDrug'].value
                             }
                             onChange={handleChange(
                                 'G_k_8_ActionTakenDrug',

@@ -159,9 +159,9 @@ export const getPatient = () => {
         Object.values(medicalHistory).forEach((item, index) => {
             medHistoryData.push({
                 id: item['id'],
-                D_7_1_r_1a_MedDRAVersionMedicalHistory:
+                D_7_1_r_1a_MeddraVersionMedicalHistory:
                     item['D_7_1_r_1a_MedDRAVersionMedicalHistory'],
-                D_7_1_r_1b_MedicalHistoryMedDRACode:
+                D_7_1_r_1b_MedicalHistoryMeddraCode:
                     item['D_7_1_r_1b_MedicalHistoryMedDRACode'],
                 D_7_1_r_2_StartDate: getNullFlavor(
                     item,
@@ -195,8 +195,8 @@ export const getPatient = () => {
             );
             (itemData['D_8_r_2a_MPIDVersion'] = item['D_8_r_2a_MPIDVersion']),
                 (itemData['D_8_r_2b_MPID'] = item['D_8_r_2b_MPID']);
-            (itemData['D_8_r_3a_PhPIDVersion'] = item['D_8_r_3a_PhPIDVersion']),
-                (itemData['D_8_r_3b_PhPID'] = item['D_8_r_3b_PhPID']);
+            (itemData['D_8_r_3a_PhpidVersion'] = item['D_8_r_3a_PhPIDVersion']),
+                (itemData['D_8_r_3b_Phpid'] = item['D_8_r_3b_PhPID']);
             itemData['D_8_r_4_StartDate'] = getNullFlavor(
                 item,
                 'D_8_r_4_StartDate',
@@ -207,13 +207,13 @@ export const getPatient = () => {
                 'D_8_r_5_EndDate',
                 true,
             );
-            (itemData['D_8_r_6a_MedDRAVersionIndication'] =
+            (itemData['D_8_r_6a_MeddraVersionIndication'] =
                 item['D_8_r_6a_MedDRAVersionIndication']),
-                (itemData['D_8_r_6b_IndicationMedDRACode'] =
+                (itemData['D_8_r_6b_IndicationMeddraCode'] =
                     item['D_8_r_6b_IndicationMedDRACode']);
-            (itemData['D_8_r_7a_MedDRAVersionReaction'] =
+            (itemData['D_8_r_7a_MeddraVersionReaction'] =
                 item['D_8_r_7a_MedDRAVersionReaction']),
-                (itemData['D_8_r_7b_ReactionMedDRACode'] =
+                (itemData['D_8_r_7b_ReactionMeddraCode'] =
                     item['D_8_r_7b_ReactionMedDRACode']);
             drugHistoryData.push(itemData);
         });
@@ -224,9 +224,9 @@ export const getPatient = () => {
         Object.values(causeOfDeath).forEach((item, index) => {
             causeOfDeathData.push({
                 id: item['id'],
-                D_9_2_r_1a_MedDRAVersionCauseDeath:
+                D_9_2_r_1a_MeddraVersionCauseDeath:
                     item['D_9_2_r_1a_MedDRAVersionCauseDeath'],
-                D_9_2_r_1b_CauseDeathMedDRACode:
+                D_9_2_r_1b_CauseDeathMeddraCode:
                     item['D_9_2_r_1b_CauseDeathMedDRACode'],
                 D_9_2_r_2_CauseDeath: item['D_9_2_r_2_CauseDeath'],
             });
@@ -235,9 +235,9 @@ export const getPatient = () => {
         Object.values(autopsy).forEach((item, index) => {
             autopsyData.push({
                 id: item['id'],
-                D_9_4_r_1a_MedDRAVersionAutopsyDeterminedCauseDeath:
+                D_9_4_r_1a_MeddraVersionAutopsyDeterminedCauseDeath:
                     item['D_9_4_r_1a_MedDRAVersionAutopsyDeterminedCauseDeath'],
-                D_9_4_r_1b_AutopsyDeterminedCauseDeathMedDRACode:
+                D_9_4_r_1b_AutopsyDeterminedCauseDeathMeddraCode:
                     item['D_9_4_r_1b_AutopsyDeterminedCauseDeathMedDRACode'],
                 D_9_4_r_2_AutopsyDeterminedCauseDeath:
                     item['D_9_4_r_2_AutopsyDeterminedCauseDeath'],
@@ -291,8 +291,8 @@ export const getPatient = () => {
                 D_10_8_r_1_NameDrug: item['D_10_8_r_1_NameDrug'],
                 D_10_8_r_2a_MPIDVersion: item['D_10_8_r_2a_MPIDVersion'],
                 D_10_8_r_2b_MPID: item['D_10_8_r_2b_MPID'],
-                D_10_8_r_3a_PhPIDVersion: item['D_10_8_r_3a_PhPIDVersion'],
-                D_10_8_r_3b_PhPID: item['D_10_8_r_3b_PhPID'],
+                D_10_8_r_3a_PhpidVersion: item['D_10_8_r_3a_PhPIDVersion'],
+                D_10_8_r_3b_Phpid: item['D_10_8_r_3b_PhPID'],
                 D_10_8_r_4_StartDate: getNullFlavor(
                     item,
                     'D_10_8_r_4_StartDate',
@@ -303,13 +303,13 @@ export const getPatient = () => {
                     'D_10_8_r_5_EndDate',
                     true,
                 ),
-                D_10_8_r_6a_MedDRAVersionIndication:
+                D_10_8_r_6a_MeddraVersionIndication:
                     item['D_10_8_r_6a_MedDRAVersionIndication'],
-                D_10_8_r_6b_IndicationMedDRACode:
+                D_10_8_r_6b_IndicationMeddraCode:
                     item['D_10_8_r_6b_IndicationMedDRACode'],
-                D_10_8_r_7a_MedDRAVersionReaction:
+                D_10_8_r_7a_MeddraVersionReaction:
                     item['D_10_8_r_7a_MedDRAVersionReaction'],
-                D_10_8_r_7b_ReactionsMedDRACode:
+                D_10_8_r_7b_ReactionsMeddraCode:
                     item['D_10_8_r_7b_ReactionsMedDRACode'],
             };
             parentDrugHistoryData.push(itemData);

@@ -36,7 +36,10 @@ export const PrimarySourceFieldLabel = ({ label, field, index }) => {
         if (!obj) return null;
         for (const [key, value] of Object.entries(obj)) {
             console.log(key);
+            console.log('field', field)
             if (key === field) {
+                console.log(1)
+                console.log(value)
                 // return value['value']['_Self'];
                 if (value['value']) {
                     return value['value']['_Self'];
@@ -45,7 +48,9 @@ export const PrimarySourceFieldLabel = ({ label, field, index }) => {
                 }
                 return value['_Self'];
             } else {
+                console.log(2)
                 if (key === '_Self') {
+                    console.log(3)
                     return null;
                 }
                 return getErrorText(value);
@@ -56,10 +61,13 @@ export const PrimarySourceFieldLabel = ({ label, field, index }) => {
 
     const createLabel = () => {
         if (errors['C_2_r_PrimarySourceInformation']) {
+            console.log("C_2_r_PrimarySourceInformation!!!!");
+
             const errorText = getErrorText(
                 errors['C_2_r_PrimarySourceInformation'][index],
             );
-            if (errorText === null) {
+            console.log("c2 errorText", errorText)
+            if (errorText === null || !errorText) {
                 return <FormLabel className={classes.label}>{label}</FormLabel>;
             }
             if (errorText['parsing'] && errorText['business']) {

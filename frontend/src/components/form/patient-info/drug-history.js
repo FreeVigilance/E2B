@@ -71,6 +71,7 @@ export const DrugsHistory = () => {
         (fieldName, index, isNumber = false, length = 1) =>
         (event) => {
             let value = event.target.value;
+            console.log(value)
             if (isNumber) {
                 if (value.length > length) value = value.slice(0, length);
             }

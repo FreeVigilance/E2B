@@ -426,10 +426,10 @@ export const Reactions = () => {
                                             }
                                             defaultValue={0}
                                         >
-                                            <MenuItem value={1}>
+                                            <MenuItem value={true}>
                                                 Confirmed
                                             </MenuItem>
-                                            <MenuItem value={0}>
+                                            <MenuItem value={false}>
                                                 NOT confirmed
                                             </MenuItem>
                                         </Select>
