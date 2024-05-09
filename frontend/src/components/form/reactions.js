@@ -859,19 +859,23 @@ export const Reactions = () => {
                                         ></ReactionFieldLabel>
                                     </Grid>
                                     <Grid item xs={8}>
-                                        <TextField
-                                            className={classes.textMedium}
-                                            value={
-                                                item[
-                                                    'E_i_6b_DurationReactionUnit'
-                                                ].value
-                                            }
-                                            variant="outlined"
-                                            onChange={handleChange(
-                                                'E_i_6b_DurationReactionUnit',
-                                                index,
-                                            )}
-                                        />
+                                        <FormControl>
+                                            <InputLabel>Duration of Reaction (unit)</InputLabel>
+                                            <Select
+                                                label="Duration of Reaction (unit)"
+                                                sx={{width: '100%'}}
+                                                onChange={handleChange('E_i_6b_DurationReactionUnit', index)}
+                                                value={item['E_i_6b_DurationReactionUnit'].value}
+                                            >
+                                                <MenuItem value={'s'}>Second (s)</MenuItem>
+                                                <MenuItem value={'min'}>Minute (min)</MenuItem>
+                                                <MenuItem value={'h'}>Hour (h)</MenuItem>
+                                                <MenuItem value={'d'}>Day (d)</MenuItem>
+                                                <MenuItem value={'wk'}>Week (wk)</MenuItem>
+                                                <MenuItem value={'mo'}>Month (mo)</MenuItem>
+                                                <MenuItem value={'a'}>Year (a)</MenuItem>
+                                            </Select>
+                                        </FormControl>
                                     </Grid>
                                 </Grid>
                             </Stack>

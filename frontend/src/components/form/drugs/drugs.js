@@ -397,19 +397,20 @@ export const Drugs = ({ index }) => {
                         ></DrugsFieldLabel>
                     </Grid>
                     <Grid item xs={9}>
-                        <TextField
-                            variant="outlined"
-                            className={classes.textMedium}
-                            onChange={handleChange(
-                                'G_k_6b_GestationPeriodExposureUnit',
-                                index,
-                            )}
-                            value={
-                                drugs[index][
-                                    'G_k_6b_GestationPeriodExposureUnit'
-                                ].value
-                            }
-                        />
+                        <FormControl>
+                            <InputLabel>Gestation Period at Time of Exposure (unit)</InputLabel>
+                            <Select
+                                label="Gestation Period at Time of Exposure (unit)"
+                                sx={{width: '100%'}}
+                                onChange={handleChange('G_k_6b_GestationPeriodExposureUnit', index)}
+                                value={drugs[index]['G_k_6b_GestationPeriodExposureUnit'].value}
+                            >
+                                <MenuItem value={'d'}>Day (d)</MenuItem>
+                                <MenuItem value={'wk'}>Week (wk)</MenuItem>
+                                <MenuItem value={'mo'}>Month (mo)</MenuItem>
+                                <MenuItem value={'{trimester}'}>Trimester</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Grid>
 
                     <Grid item xs={3}>
