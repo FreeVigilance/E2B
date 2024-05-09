@@ -114,7 +114,7 @@ export const Patient = () => {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            value={
+                                        checked={
                                                 patientData['D_1_Patient']
                                                     .nullFlavor !== null
                                             }
@@ -165,7 +165,7 @@ export const Patient = () => {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            value={
+                                            checked={
                                                 patientData[
                                                     'D_1_1_1_MedicalRecordNumberSourceGP'
                                                 ].nullFlavor !== null
@@ -213,7 +213,7 @@ export const Patient = () => {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            value={
+                                        checked={
                                                 patientData[
                                                     'D_1_1_2_MedicalRecordNumberSourceSpecialist'
                                                 ].nullFlavor !== null
@@ -261,7 +261,7 @@ export const Patient = () => {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            value={
+                                        checked={
                                                 patientData[
                                                     'D_1_1_3_MedicalRecordNumberSourceHospital'
                                                 ].nullFlavor !== null
@@ -307,7 +307,7 @@ export const Patient = () => {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            value={
+                                        checked={
                                                 patientData[
                                                     'D_1_1_4_MedicalRecordNumberSourceInvestigation'
                                                 ].nullFlavor !== null
@@ -353,7 +353,7 @@ export const Patient = () => {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            value={
+                                        checked={
                                                 patientData['D_2_1_DateBirth']
                                                     .nullFlavor !== null
                                             }
@@ -796,7 +796,7 @@ export const Patient = () => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    value={
+                                checked={
                                         patientData[
                                             'D_7_3_ConcomitantTherapies'
                                         ].value

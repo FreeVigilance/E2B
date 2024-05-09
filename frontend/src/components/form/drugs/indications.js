@@ -156,7 +156,7 @@ export const Indications = ({ drugIndex }) => {
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
-                                                    value={
+                                                checked={
                                                         item[
                                                             'G_k_7_r_1_IndicationPrimarySource'
                                                         ].nullFlavor !== null
