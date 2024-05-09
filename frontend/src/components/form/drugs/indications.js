@@ -159,7 +159,7 @@ export const Indications = ({ drugIndex }) => {
                                                     value={
                                                         item[
                                                             'G_k_7_r_1_IndicationPrimarySource'
-                                                        ].nullFlavor === -1
+                                                        ].nullFlavor !== null
                                                     }
                                                     onChange={setUnknown(
                                                         'G_k_7_r_1_IndicationPrimarySource',
@@ -172,7 +172,7 @@ export const Indications = ({ drugIndex }) => {
                                     </Box>
                                     {indications[drugIndex][index][
                                         'G_k_7_r_1_IndicationPrimarySource'
-                                    ]['nullFlavor'] !== -1 ? (
+                                    ]['nullFlavor'] === null ? (
                                         <TextField
                                             variant="outlined"
                                             className={classes.textLong}

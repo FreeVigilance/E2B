@@ -102,10 +102,6 @@ const initialState = {
     PTvalue: null,
     LLTvalue: null,
     meddraOptions: [],
-    // [
-    //     { id: 1, language: 1, version: 1 },
-    //     { id: 2, language: 2, version: 2 },
-    // ],
     meddraVersion: null,
 };
 
