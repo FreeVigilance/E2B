@@ -68,6 +68,8 @@ export const Patient = () => {
         (fieldName, isNumber = false, length = 1) =>
         (event) => {
             let value = event.target.value;
+            console.log("AAAAAAa", value)
+            console.log(event.target.checked)
             if (isNumber) {
                 if (value.length > length) value = value.slice(0, length);
             }
@@ -78,7 +80,11 @@ export const Patient = () => {
             //     value = null;
             // }
             let patientDataCopy = JSON.parse(JSON.stringify(patientData));
-            patientDataCopy[fieldName].value = value;
+            if (fieldName === 'D_7_3_ConcomitantTherapies') {
+                patientDataCopy[fieldName].value = event.target.checked;
+            } else {
+                patientDataCopy[fieldName].value = value;
+            }
             dispatch(setPatientData(patientDataCopy));
         };
 
@@ -114,9 +120,9 @@ export const Patient = () => {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            value={
+                                        checked={
                                                 patientData['D_1_Patient']
-                                                    .nullFlavor === -1
+                                                    .nullFlavor !== null
                                             }
                                             onChange={setUnknown('D_1_Patient')}
                                         />
@@ -124,7 +130,7 @@ export const Patient = () => {
                                     label="No Info"
                                 />
                             </Box>
-                            {patientData['D_1_Patient']['nullFlavor'] !== -1 ? (
+                            {patientData['D_1_Patient']['nullFlavor'] === null ? (
                                 <TextField
                                     variant="outlined"
                                     className={classes.textShort}
@@ -165,10 +171,10 @@ export const Patient = () => {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            value={
+                                            checked={
                                                 patientData[
                                                     'D_1_1_1_MedicalRecordNumberSourceGP'
-                                                ].nullFlavor === -1
+                                                ].nullFlavor !== null
                                             }
                                             onChange={setUnknown(
                                                 'D_1_1_1_MedicalRecordNumberSourceGP',
@@ -180,7 +186,7 @@ export const Patient = () => {
                             </Box>
                             {patientData['D_1_1_1_MedicalRecordNumberSourceGP'][
                                 'nullFlavor'
-                            ] !== -1 ? (
+                            ] === null ? (
                                 <TextField
                                     variant="outlined"
                                     className={classes.textShort}
@@ -213,10 +219,10 @@ export const Patient = () => {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            value={
+                                        checked={
                                                 patientData[
                                                     'D_1_1_2_MedicalRecordNumberSourceSpecialist'
-                                                ].nullFlavor === -1
+                                                ].nullFlavor !== null
                                             }
                                             onChange={setUnknown(
                                                 'D_1_1_2_MedicalRecordNumberSourceSpecialist',
@@ -228,7 +234,7 @@ export const Patient = () => {
                             </Box>
                             {patientData[
                                 'D_1_1_2_MedicalRecordNumberSourceSpecialist'
-                            ]['nullFlavor'] !== -1 ? (
+                            ]['nullFlavor'] === null ? (
                                 <TextField
                                     variant="outlined"
                                     className={classes.textShort}
@@ -261,10 +267,10 @@ export const Patient = () => {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            value={
+                                        checked={
                                                 patientData[
                                                     'D_1_1_3_MedicalRecordNumberSourceHospital'
-                                                ].nullFlavor === -1
+                                                ].nullFlavor !== null
                                             }
                                             onChange={setUnknown(
                                                 'D_1_1_3_MedicalRecordNumberSourceHospital',
@@ -276,7 +282,7 @@ export const Patient = () => {
                             </Box>
                             {patientData[
                                 'D_1_1_3_MedicalRecordNumberSourceHospital'
-                            ]['nullFlavor'] !== -1 ? (
+                            ]['nullFlavor'] === null ? (
                                 <TextField
                                     variant="outlined"
                                     className={classes.textShort}
@@ -307,10 +313,10 @@ export const Patient = () => {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            value={
+                                        checked={
                                                 patientData[
                                                     'D_1_1_4_MedicalRecordNumberSourceInvestigation'
-                                                ].nullFlavor === -1
+                                                ].nullFlavor !== null
                                             }
                                             onChange={setUnknown(
                                                 'D_1_1_4_MedicalRecordNumberSourceInvestigation',
@@ -322,7 +328,7 @@ export const Patient = () => {
                             </Box>
                             {patientData[
                                 'D_1_1_4_MedicalRecordNumberSourceInvestigation'
-                            ]['nullFlavor'] !== -1 ? (
+                            ]['nullFlavor'] === null ? (
                                 <TextField
                                     variant="outlined"
                                     className={classes.textShort}
@@ -353,9 +359,9 @@ export const Patient = () => {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            value={
+                                        checked={
                                                 patientData['D_2_1_DateBirth']
-                                                    .nullFlavor === -1
+                                                    .nullFlavor !== null
                                             }
                                             onChange={setUnknown(
                                                 'D_2_1_DateBirth',
@@ -365,8 +371,8 @@ export const Patient = () => {
                                     label="No Info"
                                 />
                             </Box>
-                            {patientData['D_2_1_DateBirth']['nullFlavor'] !==
-                            -1 ? (
+                            {patientData['D_2_1_DateBirth']['nullFlavor'] === null
+                            ? (
                                 <InputMask
                                     mask="9999-99-99 99:99:99"
                                     maskChar="_"
@@ -791,12 +797,17 @@ export const Patient = () => {
                         </Stack>
                     </Grid>
 
-                    <Grid item xs={3}></Grid>
+                    <Grid item xs={3}>
+                        <PatientFieldLabel
+                            label="Concomitant Therapies"
+                            field="D_7_3_ConcomitantTherapies"
+                        ></PatientFieldLabel>
+                    </Grid>
                     <Grid item xs={9}>
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    value={
+                                    checked={
                                         patientData[
                                             'D_7_3_ConcomitantTherapies'
                                         ].value
@@ -806,7 +817,6 @@ export const Patient = () => {
                                     )}
                                 />
                             }
-                            label="Concomitant Therapies"
                         />
                     </Grid>
 

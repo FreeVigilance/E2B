@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { nullFlavors } from '@src/components/nullFlavours';
 import { e2bCaseKeys } from '../common/changekeys';
 import { changeData, getData, getJsonFromXml, revertAll, saveData } from '../display/slice';
 import { StudyIdentification, StudyRegistration } from './study-identification';
@@ -13,21 +14,27 @@ export const getStudyIdentification = () => {
 		Object.values(studyRegistration).forEach((item, index) => {
 			let itemData = {}
 			itemData['id'] = index;
-			itemData['C_5_1_r_1_StudyRegistrationNumber'] = item['C_5_1_r_1_StudyRegistrationNumber'];
-			itemData['C_5_1_r_2_StudyRegistrationCountry'] = item['C_5_1_r_2_StudyRegistrationCountry'];
+			itemData['C_5_1_r_1_StudyRegistrationNumber'] = getNullFlavor(item, 'C_5_1_r_1_StudyRegistrationNumber');
+			itemData['C_5_1_r_2_StudyRegistrationCountry'] = getNullFlavor(item, 'C_5_1_r_2_StudyRegistrationCountry');
 			itemData['id'] = item['id'];
 			data.push(itemData);
 		});
 		let result = {
 			'C_5_1_r_StudyRegistration': data,
-			'C_5_2_StudyName': studyIdentification['C_5_2_StudyName'],
-			'C_5_3_SponsorStudyNumber': studyIdentification['C_5_3_SponsorStudyNumber'],
+			'C_5_2_StudyName': getNullFlavor(studyIdentification, 'C_5_2_StudyName'),
+			'C_5_3_SponsorStudyNumber': getNullFlavor(studyIdentification, 'C_5_3_SponsorStudyNumber'),
 			'C_5_4_StudyTypeReaction': studyIdentification['C_5_4_StudyTypeReaction'],
 			'id': studyIdentification['id'],
 		}
 		return result;
 	}
 }
+
+const getNullFlavor = (item, field) => {
+    return item[field]['nullFlavor'] !== null
+        ? { value: null, nullFlavor: nullFlavors[item[field]['nullFlavor']] }
+        : item[field];
+};
 
 const initialState = {
 	studyIdentification: new StudyIdentification(),

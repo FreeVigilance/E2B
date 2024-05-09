@@ -34,6 +34,11 @@ export const App = () => {
     const { showCasesList, openNewReport, showUpload } =
         useSelector(displaySelector);
 
+
+    useEffect(() => {
+        dispatch(getCasesList());
+    }, []);
+
     const checkAuth = () => {
         return isAuth && token.length > 0;
     };
@@ -45,7 +50,6 @@ export const App = () => {
             </Box>
         );
     } else {
-        dispatch(getCasesList());
         return (
             <Provider store={store}>
                 <SnackbarProvider

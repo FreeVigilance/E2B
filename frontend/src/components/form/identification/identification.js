@@ -376,7 +376,6 @@ export const IdentificationComp = () => {
                                     )}
                                 />
                             }
-                            label="Other Case Identifiers in Previous Transmissions"
                         />
                     </Grid>
 

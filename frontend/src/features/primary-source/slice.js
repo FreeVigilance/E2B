@@ -28,7 +28,7 @@ export const getPrimarySources = () => {
 
 			itemData['C_2_r_3_ReporterCountryCode'] = item['C_2_r_3_ReporterCountryCode'];
 
-			itemData['C_2_r_4_Qualification'] = (item['C_2_r_4_Qualification']['nullFlavor'] === -1
+			itemData['C_2_r_4_Qualification'] = (item['C_2_r_4_Qualification']['nullFlavor'] !== null
 			? {'value': null, 'nullFlavor': 'UNK'}
 			: item['C_2_r_4_Qualification']);
 

@@ -243,7 +243,7 @@ export const Dosages = ({ drugIndex }) => {
                                             <FormControlLabel
                                                 control={
                                                     <Checkbox
-                                                        value={
+                                                        checked={
                                                             item[
                                                                 'G_k_4_r_4_DateTimeDrug'
                                                             ].nullFlavor !==
@@ -296,7 +296,7 @@ export const Dosages = ({ drugIndex }) => {
                                                         ].nullFlavor
                                                     }
                                                     onChange={setNullFlavor(
-                                                        'D_7_1_r_4_EndDate',
+                                                        'G_k_4_r_4_DateTimeDrug',
                                                         index,
                                                     )}
                                                 >
@@ -329,7 +329,7 @@ export const Dosages = ({ drugIndex }) => {
                                             <FormControlLabel
                                                 control={
                                                     <Checkbox
-                                                        value={
+                                                    checked={
                                                             item[
                                                                 'G_k_4_r_5_DateTimeLastAdministration'
                                                             ].nullFlavor !==
@@ -475,7 +475,7 @@ export const Dosages = ({ drugIndex }) => {
                                             <FormControlLabel
                                                 control={
                                                     <Checkbox
-                                                        value={
+                                                    checked={
                                                             item[
                                                                 'G_k_4_r_9_1_PharmaceuticalDoseForm'
                                                             ].nullFlavor !==
@@ -602,7 +602,7 @@ export const Dosages = ({ drugIndex }) => {
                                             <FormControlLabel
                                                 control={
                                                     <Checkbox
-                                                        value={
+                                                    checked={
                                                             item[
                                                                 'G_k_4_r_10_1_RouteAdministration'
                                                             ].nullFlavor !==
@@ -728,7 +728,7 @@ export const Dosages = ({ drugIndex }) => {
                                             <FormControlLabel
                                                 control={
                                                     <Checkbox
-                                                        value={
+                                                    checked={
                                                             item[
                                                                 'G_k_4_r_11_1_ParentRouteAdministration'
                                                             ].nullFlavor !==

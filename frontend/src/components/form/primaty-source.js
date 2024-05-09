@@ -1077,7 +1077,13 @@ export const PrimarySourceComp = () => {
                                     </Stack>
                                 </Grid>
 
-                                <Grid item xs={3}></Grid>
+                                <Grid item xs={3}>
+                                    <PrimarySourceFieldLabel
+                                        label="Primary Source for Regulatory Purposes"
+                                        field="C_2_r_5_PrimarySourceRegulatoryPurposes"
+                                        index={index}
+                                    ></PrimarySourceFieldLabel>
+                                </Grid>
                                 <Grid item xs={9}>
                                     <FormControlLabel
                                         control={
@@ -1093,7 +1099,6 @@ export const PrimarySourceComp = () => {
                                                 )}
                                             />
                                         }
-                                        label="Primary Source for Regulatory Purposes"
                                     />
                                 </Grid>
                             </Grid>

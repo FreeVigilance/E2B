@@ -32,9 +32,9 @@ export const getReaction = () => {
                 item['E_i_1_1b_ReactionPrimarySourceLanguage'];
             itemData['E_i_1_2_ReactionPrimarySourceTranslation'] =
                 item['E_i_1_2_ReactionPrimarySourceTranslation'];
-            itemData['E_i_2_1a_MedDRAVersionReaction'] =
+            itemData['E_i_2_1a_MeddraVersionReaction'] =
                 item['E_i_2_1a_MedDRAVersionReaction'];
-            itemData['E_i_2_1b_ReactionMedDRACode'] =
+            itemData['E_i_2_1b_ReactionMeddraCode'] =
                 item['E_i_2_1b_ReactionMedDRACode'];
 
             itemData['E_i_3_1_TermHighlightedReporter'] =

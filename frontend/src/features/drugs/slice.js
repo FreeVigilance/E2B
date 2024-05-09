@@ -39,9 +39,9 @@ export const getDrug = () => {
                 item['G_k_1_CharacterisationDrugRole'];
             itemData['G_k_2_1_1a_MPIDVersion'] = item['G_k_2_1_1a_MPIDVersion'];
             itemData['G_k_2_1_1b_MPID'] = item['G_k_2_1_1b_MPID'];
-            itemData['G_k_2_1_2a_PhPIDVersion'] =
+            itemData['G_k_2_1_2a_PhpidVersion'] =
                 item['G_k_2_1_2a_PhPIDVersion'];
-            itemData['G_k_2_1_2b_PhPID'] = item['G_k_2_1_2b_PhPID'];
+            itemData['G_k_2_1_2b_Phpid'] = item['G_k_2_1_2b_PhPID'];
             itemData['G_k_2_2_MedicinalProductNamePrimarySource'] =
                 item['G_k_2_2_MedicinalProductNamePrimarySource'];
             itemData['G_k_2_4_IdentificationCountryDrugObtained'] =
@@ -55,9 +55,9 @@ export const getDrug = () => {
                     id: subItem['id'],
                     G_k_2_3_r_1_SubstanceName:
                         subItem['G_k_2_3_r_1_SubstanceName'],
-                    G_k_2_3_r_2a_SubstanceTermIDVersion:
+                    G_k_2_3_r_2a_SubstanceTermidVersion:
                         subItem['G_k_2_3_r_2a_SubstanceTermIDVersion'],
-                    G_k_2_3_r_2b_SubstanceTermID:
+                    G_k_2_3_r_2b_SubstanceTermid:
                         subItem['G_k_2_3_r_2b_SubstanceTermID'],
                     G_k_2_3_r_3a_StrengthNum:
                         subItem['G_k_2_3_r_3a_StrengthNum'],
@@ -105,31 +105,31 @@ export const getDrug = () => {
                         subItem,
                         'G_k_4_r_9_1_PharmaceuticalDoseForm',
                     ),
-                    G_k_4_r_9_2a_PharmaceuticalDoseFormTermIDVersion:
+                    G_k_4_r_9_2a_PharmaceuticalDoseFormTermidVersion:
                         subItem[
                             'G_k_4_r_9_2a_PharmaceuticalDoseFormTermIDVersion'
                         ],
-                    G_k_4_r_9_2b_PharmaceuticalDoseFormTermID:
+                    G_k_4_r_9_2b_PharmaceuticalDoseFormTermid:
                         subItem['G_k_4_r_9_2b_PharmaceuticalDoseFormTermID'],
                     G_k_4_r_10_1_RouteAdministration: getNullFlavor(
                         subItem,
                         'G_k_4_r_10_1_RouteAdministration',
                     ),
-                    G_k_4_r_10_2a_RouteAdministrationTermIDVersion:
+                    G_k_4_r_10_2a_RouteAdministrationTermidVersion:
                         subItem[
                             'G_k_4_r_10_2a_RouteAdministrationTermIDVersion'
                         ],
-                    G_k_4_r_10_2b_RouteAdministrationTermID:
+                    G_k_4_r_10_2b_RouteAdministrationTermid:
                         subItem['G_k_4_r_10_2b_RouteAdministrationTermID'],
                     G_k_4_r_11_1_ParentRouteAdministration: getNullFlavor(
                         subItem,
                         'G_k_4_r_11_1_ParentRouteAdministration',
                     ),
-                    G_k_4_r_11_2a_ParentRouteAdministrationTermIDVersion:
+                    G_k_4_r_11_2a_ParentRouteAdministrationTermidVersion:
                         subItem[
                             'G_k_4_r_11_2a_ParentRouteAdministrationTermIDVersion'
                         ],
-                    G_k_4_r_11_2b_ParentRouteAdministrationTermID:
+                    G_k_4_r_11_2b_ParentRouteAdministrationTermid:
                         subItem[
                             'G_k_4_r_11_2b_ParentRouteAdministrationTermID'
                         ],

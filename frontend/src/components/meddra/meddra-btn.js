@@ -179,6 +179,8 @@ export const MedDRABtn = ({ field, index, handleChange, lastValue }) => {
 
     const onShow = () => {
         if (!show) {
+            dispatch(getMeddraReleases());
+
             setShow(true);
         }
     };
