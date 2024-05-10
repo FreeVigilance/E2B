@@ -42,36 +42,34 @@ class Command(BaseCommand):
             d_2_2a_age_onset_reaction_num=22,
             d_2_2b_age_onset_reaction_unit='a',
             d_5_sex=D_5_sex.FEMALE,
-            d_7_2_text_medical_history="bla-bla"
+            d_7_2_text_medical_history="Hypertension, controlled with medication; No current conditions; "
+                                       "Type 2 diabetes mellitus, diet controlled; "
+                                       "Anemia; Upper respiratory tract infection"
         )
 
         E_i_reaction_event.objects.update_or_create(
             icsr=icsr,
             e_i_4_date_start_reaction='20200101',
-            # e_i_3_2a_results_death=False,
-            # e_i_3_2c_caused_prolonged_hospitalisation=False,
-            # e_i_3_2d_disabling_incapacitating=False,
             e_i_3_2b_life_threatening=True,
-            # e_i_3_2e_congenital_anomaly_birth_defect=False,
-            # e_i_3_2f_other_medically_important_condition=False,
-            e_i_1_1a_reaction_primary_source_native_language="бла-бла",
+            e_i_1_1a_reaction_primary_source_native_language=
+            '''Пациент сообщил(а) о том, что после приема лекарства почувствовал(а) головокружение и слабость '''
+            '''(легкость в голове). Он(а) заявил(а), что покрылся(лась) потом, и сердце сильно билось. '''
+            '''Пациент(ка) сказал(а), что ему(ей) могло стать плохо, и были трудности с дыханием.\n'''
+            '''Он(а) смог(ла) сесть, и симптомы прошли через несколько минут.''',
             e_i_1_1b_reaction_primary_source_language='RUS',
             e_i_1_2_reaction_primary_source_translation=
-            '''Concomitant medications and past medical/drug history have not been provided.\n'''
-            '''On an unspecified date, the patient started taking unspecified caffeine for pain.\n'''
-            '''On unspecified dates, the patient also received amitriptyline (Tablet), Botulinum toxin type A as total, Celebrex [celecoxib] (Capsule), Cesamet [nabilone] (Capsule), codeine, fentanyl, Xeomin [Botulinum toxin type A] as total, Toradol [ketorolac tromethamine], Tegretol [carbamazepine], Oxycontin [oxycodone hydrochloride] (Extended release tablet), hydromorphone and fentanyl citrate (Lipid epidural, transdermal) all for pain and mepolizumab for asthma, which were all asessed as co-suspects.\n'''
-            '''As per SmPC of caffeine, it is indicated for primary apnoea and as the patient received unspecified caffeine for pain, it was considered as an event of off label use. On an unspecified date, the patient developed a significant medical event of drug dependence. The patient’s outcome was unknown.The reporter did not assess the causal relationship between the events and unspecified caffeine.No further information is expected (case received from health authority).\n\n'''
-            '''Case comments:\n'''
-            '''This patient of an unknown age and gender experienced drug dependence and off label use while being treated with unspecified Caffeine for pain.   The event drug dependence was assessed as serious (seriousness criterion: important medical event).The event off label use was considered non-serious by convention.The drug dependence is not a listed adverse reaction for Caffeine according to the reference safety information. The off label use was considered as unlisted by convention. With reference to the event of drug dependence, causality could be related to the multiple co-suspect medications.However, taking into consideration the drug to event temporal relationship the causal role of the suspect drug cannot be denied.The company has assessed causal relationship between Caffeine and drug dependence as possible according to the WHO-UMC causality assessment method.As per the SmPC provided, suspect drug is indicated for the treatment of primary apnoea of premature newborns. This constitutes the off label use as the suspect drug was used for pain in this case.Causality was assessed as not applicable for off label use as it was not an event per se.The single individual case report does not modify the benefit/risk balance of this product. Therefore, no changes in the label or other measures is recommended at this point. However, the company will continue to monitor all respective reports received and, based on cumulative experience, will re-evaluate the available evidence on an ongoing basis.''',
+            '''The patient reported feeling dizzy and lightheaded after taking the medication. '''
+            '''They stated that they broke out in a sweat and their heart was racing. '''
+            '''The patient said they felt like they might faint and had difficulty breathing. '''
+            '''They were able to sit down and the symptoms subsided after a few minutes.''',
             e_i_7_outcome_reaction_last_observation=E_i_7_outcome_reaction_last_observation.RECOVERED_OR_RESOLVED,
             e_i_9_identification_country_reaction='RU'
         )
 
         F_r_results_tests_procedures_investigation_patient.objects.update_or_create(
             icsr=icsr,
-            f_r_3_4_result_unstructured_data="blaaaaa"
+            f_r_3_4_result_unstructured_data="blood glucose 550 mg/dL"
         )
-
 
         drug_information1, _ = G_k_drug_information.objects.update_or_create(
             icsr=icsr,
@@ -99,8 +97,8 @@ class Command(BaseCommand):
             g_k_4_r_4_date_time_drug='20200101',
             g_k_4_r_5_date_time_last_administration='20200102',
             g_k_4_r_7_batch_lot_number="123",
-            g_k_4_r_8_dosage_text="dosage1",
-            g_k_4_r_10_1_route_administration="route1"
+            g_k_4_r_8_dosage_text="as needed",
+            g_k_4_r_10_1_route_administration="Intramuscular"
         )
 
         G_k_4_r_dosage_information.objects.update_or_create(
@@ -108,8 +106,8 @@ class Command(BaseCommand):
             g_k_4_r_4_date_time_drug='20200101',
             g_k_4_r_5_date_time_last_administration='20200102',
             g_k_4_r_7_batch_lot_number="123",
-            g_k_4_r_8_dosage_text="dosage11",
-            g_k_4_r_10_1_route_administration="route11"
+            g_k_4_r_8_dosage_text="500 mg twice a day for 7 days",
+            g_k_4_r_10_1_route_administration="Oral"
         )
 
         G_k_4_r_dosage_information.objects.update_or_create(
@@ -117,8 +115,8 @@ class Command(BaseCommand):
             g_k_4_r_4_date_time_drug='20200101',
             g_k_4_r_5_date_time_last_administration='20200102',
             g_k_4_r_7_batch_lot_number="456",
-            g_k_4_r_8_dosage_text="dosage11_11",
-            g_k_4_r_10_1_route_administration="route11_11"
+            g_k_4_r_8_dosage_text="2 teaspoons",
+            g_k_4_r_10_1_route_administration="Intravenous"
         )
 
         G_k_4_r_dosage_information.objects.update_or_create(
@@ -130,25 +128,37 @@ class Command(BaseCommand):
 
         G_k_7_r_indication_use_case.objects.update_or_create(
             g_k_drug_information=drug_information1,
-            g_k_7_r_1_indication_primary_source="indication"
+            g_k_7_r_1_indication_primary_source="chronic pain"
         )
 
         G_k_7_r_indication_use_case.objects.update_or_create(
             g_k_drug_information=drug_information1,
-            g_k_7_r_1_indication_primary_source="indication2"
+            g_k_7_r_1_indication_primary_source="help sleep"
         )
 
         G_k_7_r_indication_use_case.objects.update_or_create(
             g_k_drug_information=drug_information1,
-            g_k_7_r_1_indication_primary_source="indication3"
+            g_k_7_r_1_indication_primary_source="prevent infection"
         )
 
         G_k_7_r_indication_use_case.objects.update_or_create(
             g_k_drug_information=drug_information11,
-            g_k_7_r_1_indication_primary_source="indication"
+            g_k_7_r_1_indication_primary_source="for migraine headaches"
         )
 
         H_narrative_case_summary.objects.update_or_create(
             icsr=icsr,
-            h_1_case_narrative="Bla bla. Bla bla. Bla."
+            h_1_case_narrative=
+            '''The patient, a 75-year-old male with a history of hypertension and diabetes, presented to the '''
+            '''emergency department complaining of sudden onset chest pain radiating to the left arm. The pain started '''
+            '''30 minutes prior to arrival and was described as crushing and severe. He also reported shortness of breath '''
+            '''and diaphoresis. Past medical history was significant for hypertension and diabetes, both controlled '''
+            '''with medications. No prior history of chest pain or cardiac events. Social history revealed a 50-pack-year '''
+            '''smoking history and occasional alcohol use. Physical examination showed normal vital signs except for '''
+            '''mild tachycardia. Electrocardiogram (ECG) demonstrated ST-segment elevation in leads I, aVL, and V5-V6 '''
+            '''suggestive of acute myocardial infarction. The patient was emergently transferred to the cardiac '''
+            '''catheterization lab where he underwent coronary angioplasty with stent placement.\n'''
+            '''He tolerated the procedure well and reported significant improvement in his symptoms. '''
+            '''The patient remained stable throughout his hospitalization and was discharged home on a cardiac '''
+            '''rehabilitation program.'''
         )
