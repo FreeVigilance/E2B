@@ -88,7 +88,7 @@ class ModelCIOMSView(View):
     cioms_service: CIOMSServiceProtocol = ...
 
     def get(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
-        return render(request, 'templates/cioms.html', self.cioms_service.convert_icsr_to_cioms(pk).__dict__)
+        return render(request, 'cioms.html', self.cioms_service.convert_icsr_to_cioms(pk).__dict__)
 
 
 class MedDRAReleaseView(View):
