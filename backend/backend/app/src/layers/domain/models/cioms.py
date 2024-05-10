@@ -3,7 +3,8 @@ from typing import Any
 from pydantic import BaseModel
 
 from app.src.enums import C_2_r_4_qualification, C_1_3_type_report, G_k_1_characterisation_drug_role, \
-    G_k_8_action_taken_drug, E_i_7_outcome_reaction_last_observation, D_2_2b_age_onset_reaction_unit, D_5_sex
+    G_k_8_action_taken_drug, E_i_7_outcome_reaction_last_observation, D_2_2b_age_onset_reaction_unit, D_5_sex, \
+    G_k_4_r_6b_duration_drug_administration_unit, G_k_9_i_4_reaction_recur_readministration
 import enum
 
 
@@ -64,6 +65,17 @@ def get_reaction_abate_after_stopping_drug(action_taken: G_k_8_action_taken_drug
         return None
 
 
+def get_reaction_reappear_after_reintroduction(reaction_matrix, primary_reaction):
+    for reaction in reaction_matrix:
+        if reaction != primary_reaction:
+            continue
+        if reaction.g_k_9_i_4_reaction_recur_readministration == G_k_9_i_4_reaction_recur_readministration.YES_YES:
+            return YesNoNA.YES
+        if reaction.g_k_9_i_4_reaction_recur_readministration == G_k_9_i_4_reaction_recur_readministration.YES_NO:
+            return YesNoNA.NO
+    return YesNoNA.NA
+
+
 def get_date(day: str | None, month: str | None, year: str | None):
     if day is not None:
         return f"{day}.{month}.{year}"
@@ -71,6 +83,11 @@ def get_date(day: str | None, month: str | None, year: str | None):
         return f"{month}.{year}"
     if year is not None:
         return f"{year}"
+
+
+def get_therapy_duration(num: int | None, unit: str | None):
+    if num and unit:
+        return f"{num} {G_k_4_r_6b_duration_drug_administration_unit(unit).name.lower()}s"
 
 
 class CIOMS(BaseModel):
@@ -103,7 +120,7 @@ class CIOMS(BaseModel):
     f22_concomitant_drugs_and_dates_of_administration: str | None
     f23_other_relevant_history: str | None
 
-    f24a_name_and_address_of_manufacturer: str | None = ""
+    f24a_name_and_address_of_manufacturer: str | None
     f24b_MFR_control_no: str
 
     f24c_date_received_by_manufacturer: str
@@ -172,11 +189,14 @@ class CIOMS(BaseModel):
                     "dosages_information": [{
                         "batch_number": dosage_information.g_k_4_r_7_batch_lot_number,
                         "daily_dose": dosage_information.g_k_4_r_8_dosage_text,
-                        "route_of_administration": dosage_information.g_k_4_r_10_2b_route_administration_termid or dosage_information.g_k_4_r_10_1_route_administration,
+                        "route_of_administration": dosage_information.g_k_4_r_10_2b_route_administration_termid or \
+                                                   dosage_information.g_k_4_r_10_1_route_administration,
                         "therapy_dates_from": get_date(*parse_date(dosage_information.g_k_4_r_4_date_time_drug)),
                         "therapy_dates_to": get_date(
                             *parse_date(dosage_information.g_k_4_r_5_date_time_last_administration)),
-                        "therapy_duration": f"{dosage_information.g_k_4_r_6a_duration_drug_administration_num}{dosage_information.g_k_4_r_6b_duration_drug_administration_unit}"
+                        "therapy_duration": get_therapy_duration(
+                            dosage_information.g_k_4_r_6a_duration_drug_administration_num,
+                            dosage_information.g_k_4_r_6b_duration_drug_administration_unit),
                     } for dosage_information in drug_information.g_k_4_r_dosage_information],
                     "indications_for_use": [{
                         "primary_source": indication_for_use.g_k_7_r_1_indication_primary_source,
@@ -184,7 +204,8 @@ class CIOMS(BaseModel):
                         "meddra_version": indication_for_use.g_k_7_r_2a_meddra_version_indication
                     } for indication_for_use in drug_information.g_k_7_r_indication_use_case],
                     "abate": get_reaction_abate_after_stopping_drug(drug_information.g_k_8_action_taken_drug, outcome),
-                    "reappear": YesNoNA.NA
+                    "reappear": get_reaction_reappear_after_reintroduction(
+                        drug_information.g_k_9_i_drug_reaction_matrix, primary_reaction_event)
                 })
 
                 if drug_information.g_k_8_action_taken_drug != G_k_8_action_taken_drug.UNKNOWN:
@@ -231,6 +252,9 @@ class CIOMS(BaseModel):
             f22_concomitant_drugs_and_dates_of_administration='\n'.join(concomitant_drugs),
 
             f23_other_relevant_history=icsr.d_patient_characteristics.d_7_2_text_medical_history,
+
+            f24a_name_and_address_of_manufacturer='\n'.join(source.c_1_9_1_r_1_source_case_id for source in
+                                                           icsr.c_1_identification_case_safety_report.c_1_9_1_r_source_case_id),
 
             f24b_MFR_control_no=icsr.c_1_identification_case_safety_report.c_1_8_1_worldwide_unique_case_identification_number,
 

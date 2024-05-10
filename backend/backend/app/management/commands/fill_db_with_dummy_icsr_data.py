@@ -7,7 +7,8 @@ from app.src.enums import C_1_3_type_report, D_5_sex, E_i_7_outcome_reaction_las
     G_k_1_characterisation_drug_role, G_k_8_action_taken_drug, C_2_r_4_qualification
 from app.src.layers.storage.models import ICSR, C_1_identification_case_safety_report, D_patient_characteristics, \
     E_i_reaction_event, F_r_results_tests_procedures_investigation_patient, G_k_drug_information, \
-    G_k_4_r_dosage_information, C_2_r_primary_source_information, H_narrative_case_summary, G_k_7_r_indication_use_case
+    G_k_4_r_dosage_information, C_2_r_primary_source_information, H_narrative_case_summary, G_k_7_r_indication_use_case, \
+    C_1_9_1_r_source_case_id
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +22,7 @@ class Command(BaseCommand):
     @transaction.atomic
     def handle(self, *args, **options):
         icsr, created = ICSR.objects.update_or_create(id=0)
-        C_1_identification_case_safety_report.objects.update_or_create(
+        c1, _ = C_1_identification_case_safety_report.objects.update_or_create(
             icsr=icsr,
             c_1_1_sender_safety_report_unique_id='111111',
             c_1_3_type_report=C_1_3_type_report.REPORT_FROM_STUDY,
@@ -33,6 +34,11 @@ class Command(BaseCommand):
         C_2_r_primary_source_information.objects.update_or_create(
             icsr=icsr,
             c_2_r_4_qualification=C_2_r_4_qualification.PHYSICIAN
+        )
+
+        C_1_9_1_r_source_case_id.objects.update_or_create(
+            c_1_identification_case_safety_report=c1,
+            c_1_9_1_r_1_source_case_id='HSE\n11 Pokrovsky Bulvar,\nMoscow 109028 Russia'
         )
 
         D_patient_characteristics.objects.update_or_create(
