@@ -139,3 +139,12 @@ class G_k_10_r_additional_information_drug(enum.IntEnum):
     ABUSE = 9
     OCCUPATIONAL_EXPOSURE = 10
     OFF_LABEL_USE = 11
+
+
+class D_2_2b_age_onset_reaction_unit(enum.StrEnum):
+    DECADE = "{decade}"
+    YEAR = "a"
+    MONTH = "mo"
+    WEEK = "wk"
+    DAY = "d"
+    HOUR = "h"

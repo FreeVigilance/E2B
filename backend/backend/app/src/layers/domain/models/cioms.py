@@ -1,14 +1,76 @@
+from typing import Any
+
 from pydantic import BaseModel
 
-from app.src.enums import C_2_r_4_qualification, C_1_3_type_report, G_k_1_characterisation_drug_role
+from app.src.enums import C_2_r_4_qualification, C_1_3_type_report, G_k_1_characterisation_drug_role, \
+    G_k_8_action_taken_drug, E_i_7_outcome_reaction_last_observation, D_2_2b_age_onset_reaction_unit, D_5_sex
+import enum
 
 
-def parse_date_from_str(date_str):
+class YesNoNA(enum.StrEnum):
+    YES = "Y"
+    NO = "N"
+    NA = "NA"
+
+
+def parse_date(date_str: str | None):
+    if not date_str:
+        return None, None, None
+
     year = date_str[:4] if len(date_str) >= 4 else None
     month = date_str[4:6] if len(date_str) >= 6 else None
     day = date_str[6:8] if len(date_str) >= 8 else None
 
     return day, month, year
+
+
+def get_age(num: int | None, unit: str | None):
+    if num and unit:
+        return f"{num} {D_2_2b_age_onset_reaction_unit(unit).name.lower()}s"
+
+
+def get_outcome(outcome: E_i_7_outcome_reaction_last_observation | None):
+    if outcome:
+        return E_i_7_outcome_reaction_last_observation(outcome).name.replace('_OR_', '/').replace("_", " ").title()
+
+
+def get_action_taken_drug(action_taken: G_k_8_action_taken_drug | None):
+    if action_taken:
+        return G_k_8_action_taken_drug(action_taken).name.replace("_", " ").title()
+
+
+def get_sex(sex: D_5_sex | None):
+    if sex:
+        return D_5_sex(sex).name[0]
+
+
+def get_reaction_abate_after_stopping_drug(action_taken: G_k_8_action_taken_drug | None,
+                                           outcome: E_i_7_outcome_reaction_last_observation | None):
+    if action_taken in {G_k_8_action_taken_drug.DRUG_WITHDRAWN, G_k_8_action_taken_drug.DOSE_REDUCED}:
+        if outcome in {E_i_7_outcome_reaction_last_observation.RECOVERED_OR_RESOLVED,
+                       E_i_7_outcome_reaction_last_observation.RECOVERING_OR_RESOLVING,
+                       E_i_7_outcome_reaction_last_observation.RECOVERED_OR_RESOLVED_WITH_SEQUELAE}:
+            return YesNoNA.YES
+        elif outcome in {E_i_7_outcome_reaction_last_observation.NOT_RECOVERED_OR_NOT_RESOLVED_OR_ONGOING,
+                         E_i_7_outcome_reaction_last_observation.FATAL}:
+            return YesNoNA.NO
+        else:
+            return None
+    elif action_taken in {G_k_8_action_taken_drug.DOSE_INCREASED,
+                          G_k_8_action_taken_drug.DOSE_NOT_CHANGED,
+                          G_k_8_action_taken_drug.NOT_APPLICABLE}:
+        return YesNoNA.NA
+    else:
+        return None
+
+
+def get_date(day: str | None, month: str | None, year: str | None):
+    if day is not None:
+        return f"{day}.{month}.{year}"
+    if month is not None:
+        return f"{month}.{year}"
+    if year is not None:
+        return f"{year}"
 
 
 class CIOMS(BaseModel):
@@ -28,39 +90,27 @@ class CIOMS(BaseModel):
     f5_reaction_onset_month: str | None
     f6_reaction_onset_year: str | None
 
-    f7_describe_reactions: list[str] = []
+    f7_13_describe_reactions: str | None
 
-    f8_patient_died: bool = False
-    f9_prolonged_hospitalization: bool = False
-    f10_disability_or_incapacity: bool = False
-    f11_life_threatening: bool = False
-    f12_other: bool = False
+    f8_patient_died: bool | None
+    f9_prolonged_hospitalization: bool | None
+    f10_disability_or_incapacity: bool | None
+    f11_life_threatening: bool | None
+    f12_other: bool | None
 
-    f13_describe_reactions_test_lab_data: list[str] = []
+    f14_21_suspect_drugs: list[dict[str, Any | None]]
 
-    f14_suspect_drugs: list[str] = []
-    f15_daily_doses: list[str] = []
-    f16_routes_of_administration: list[str] = []
-    f17_indications_for_use: list[str] = []
+    f22_concomitant_drugs_and_dates_of_administration: str | None
+    f23_other_relevant_history: str | None
 
-    f18_therapy_dates_from: str | None
-    f18_therapy_dates_to: str | None
-    f19_therapy_duration: str | None
-
-    f20_did_reaction_abate_after_stopping_drug: bool | None
-    f21_did_reaction_reappear_after_reintroduction: bool | None
-
-    f22_concomitant_drugs_and_dates_of_administration: list[str] = []
-    f23_other_relevant_history: str
-
-    f24a_name_and_address_of_manufacturer: str
+    f24a_name_and_address_of_manufacturer: str | None = ""
     f24b_MFR_control_no: str
 
     f24c_date_received_by_manufacturer: str
 
-    f24d_report_source_study: bool = False
-    f24d_report_source_literature: bool = False
-    f24d_report_source_health_professional: bool = False
+    f24d_report_source_study: bool
+    f24d_report_source_literature: bool
+    f24d_report_source_health_professional: bool
 
     f25a_report_type: bool
 
@@ -70,11 +120,13 @@ class CIOMS(BaseModel):
     def from_icsr(cls, icsr):
         primary_reaction_event = icsr.get_primary_reaction_event()
 
-        date_of_birth_day, date_of_birth_month, date_of_birth_year \
-            = parse_date_from_str(icsr.d_patient_characteristics.d_2_1_date_birth)
+        outcome = primary_reaction_event.e_i_7_outcome_reaction_last_observation
 
-        reaction_onset_day, reaction_onset_month, reaction_onset_year \
-            = parse_date_from_str(primary_reaction_event.e_i_4_date_start_reaction)
+        date_of_birth_day, date_of_birth_month, date_of_birth_year = parse_date(
+            icsr.d_patient_characteristics.d_2_1_date_birth)
+
+        reaction_onset_day, reaction_onset_month, reaction_onset_year = parse_date(
+            primary_reaction_event.e_i_4_date_start_reaction)
 
         patient_died = False
         prolonged_hospitalization = False
@@ -85,39 +137,71 @@ class CIOMS(BaseModel):
         describe_reactions = []
 
         for reaction_event in icsr.e_i_reaction_event:
-            patient_died |= reaction_event.e_i_3_2a_results_death
-            prolonged_hospitalization |= reaction_event.e_i_3_2c_caused_prolonged_hospitalisation
-            disability_or_incapacity |= reaction_event.e_i_3_2d_disabling_incapacitating
-            life_threatening |= reaction_event.e_i_3_2b_life_threatening
-            other |= (reaction_event.e_i_3_2e_congenital_anomaly_birth_defect |
-                      reaction_event.e_i_3_2f_other_medically_important_condition)
-            describe_reactions.append(
-                f"{reaction_event.e_i_1_1a_reaction_primary_source_native_language} "
-                f"({reaction_event.e_i_1_1b_reaction_primary_source_language})\n"
-                f"{reaction_event.e_i_7_outcome_reaction_last_observation.name}"
-            )
+            patient_died |= bool(reaction_event.e_i_3_2a_results_death)
+            prolonged_hospitalization |= bool(reaction_event.e_i_3_2c_caused_prolonged_hospitalisation)
+            disability_or_incapacity |= bool(reaction_event.e_i_3_2d_disabling_incapacitating)
+            life_threatening |= bool(reaction_event.e_i_3_2b_life_threatening)
+            other |= (bool(reaction_event.e_i_3_2e_congenital_anomaly_birth_defect) |
+                      bool(reaction_event.e_i_3_2f_other_medically_important_condition))
+
+            if reaction_event.e_i_1_2_reaction_primary_source_translation:
+                describe_reactions.append(
+                    f"[ENG] {reaction_event.e_i_1_2_reaction_primary_source_translation}"
+                )
+            if reaction_event.e_i_1_1a_reaction_primary_source_native_language:
+                describe_reactions.append(
+                    f"[{reaction_event.e_i_1_1b_reaction_primary_source_language}] "
+                    f"{reaction_event.e_i_1_1a_reaction_primary_source_native_language}"
+                )
+            if reaction_event.e_i_7_outcome_reaction_last_observation:
+                describe_reactions.append(
+                    f"*{get_outcome(reaction_event.e_i_7_outcome_reaction_last_observation)}*"
+                )
+            describe_reactions.append("")
 
         suspect_drugs = []
+        concomitant_drugs = []
+
+        describe_reactions.append("\nActions Taken with Drugs:")
         for drug_information in icsr.g_k_drug_information:
-            drug_id = drug_information.get_id()
+            drug_id = drug_information.g_k_2_2_medicinal_product_name_primary_source
 
             if drug_information.g_k_1_characterisation_drug_role == G_k_1_characterisation_drug_role.SUSPECT:
-                describe_reactions.append(
-                    f"{drug_id} - {drug_information.g_k_8_action_taken_drug.name}")
+                suspect_drugs.append({
+                    "name": drug_id,
+                    "dosages_information": [{
+                        "batch_number": dosage_information.g_k_4_r_7_batch_lot_number,
+                        "daily_dose": dosage_information.g_k_4_r_8_dosage_text,
+                        "route_of_administration": dosage_information.g_k_4_r_10_2b_route_administration_termid or dosage_information.g_k_4_r_10_1_route_administration,
+                        "therapy_dates_from": get_date(*parse_date(dosage_information.g_k_4_r_4_date_time_drug)),
+                        "therapy_dates_to": get_date(
+                            *parse_date(dosage_information.g_k_4_r_5_date_time_last_administration)),
+                        "therapy_duration": f"{dosage_information.g_k_4_r_6a_duration_drug_administration_num}{dosage_information.g_k_4_r_6b_duration_drug_administration_unit}"
+                    } for dosage_information in drug_information.g_k_4_r_dosage_information],
+                    "indications_for_use": [{
+                        "primary_source": indication_for_use.g_k_7_r_1_indication_primary_source,
+                        "meddra_code": indication_for_use.g_k_7_r_2b_indication_meddra_code,
+                        "meddra_version": indication_for_use.g_k_7_r_2a_meddra_version_indication
+                    } for indication_for_use in drug_information.g_k_7_r_indication_use_case],
+                    "abate": get_reaction_abate_after_stopping_drug(drug_information.g_k_8_action_taken_drug, outcome),
+                    "reappear": YesNoNA.NA
+                })
 
-                for dosage_information in drug_information.g_k_4_r_dosage_information:
-                    suspect_drugs.append(f"{drug_id} - {dosage_information.g_k_4_r_7_batch_lot_number}")
+                if drug_information.g_k_8_action_taken_drug != G_k_8_action_taken_drug.UNKNOWN:
+                    describe_reactions.append(
+                        f"{drug_id} {get_action_taken_drug(drug_information.g_k_8_action_taken_drug)}")
 
-        describe_reactions.append(f"Case Narrative: {icsr.h_narrative_case_summary.h_1_case_narrative}")
-
-        date_received_by_manufacturer_day, date_received_by_manufacturer_month, date_received_by_manufacturer_year = \
-            parse_date_from_str(icsr.c_1_identification_case_safety_report.c_1_5_date_most_recent_information)
-        date_received_by_manufacturer = f"{date_received_by_manufacturer_year}-{date_received_by_manufacturer_month}-{date_received_by_manufacturer_day}"
-
-        date_of_this_report_day, date_of_this_report_month, date_of_this_report_year = \
-            parse_date_from_str(icsr.c_1_identification_case_safety_report.c_1_2_date_creation)
-        date_of_this_report = f"{date_of_this_report_year}-{date_of_this_report_month}-{date_of_this_report_day}"
-
+            elif drug_information.g_k_1_characterisation_drug_role == G_k_1_characterisation_drug_role.CONCOMITANT:
+                concomitant_drugs.append(
+                    f'{drug_id}: {",".join([
+                        f"{get_date(*parse_date(dosage_information.g_k_4_r_4_date_time_drug))}—{get_date(*parse_date(dosage_information.g_k_4_r_5_date_time_last_administration))}"
+                        for dosage_information in drug_information.g_k_4_r_dosage_information
+                    ])}'
+                )
+        describe_reactions.append(f"\nCase Narrative: {icsr.h_narrative_case_summary.h_1_case_narrative}")
+        describe_reactions.append(f"\nRelevant tests/lab data:")
+        describe_reactions += [result.f_r_3_4_result_unstructured_data for result in
+                               icsr.f_r_results_tests_procedures_investigation_patient]
         return cls(
             f1_patient_initials=icsr.d_patient_characteristics.d_1_patient,
             f1a_country=primary_reaction_event.e_i_9_identification_country_reaction,
@@ -125,16 +209,16 @@ class CIOMS(BaseModel):
             f2_date_of_birth_day=date_of_birth_day,
             f2_date_of_birth_month=date_of_birth_month,
             f2_date_of_birth_year=date_of_birth_year,
-            f2a_age=f"{icsr.d_patient_characteristics.d_2_2a_age_onset_reaction_num} "
-                    f"{icsr.d_patient_characteristics.d_2_2b_age_onset_reaction_unit}",
+            f2a_age=get_age(icsr.d_patient_characteristics.d_2_2a_age_onset_reaction_num,
+                            icsr.d_patient_characteristics.d_2_2b_age_onset_reaction_unit),
 
-            f3_sex=icsr.d_patient_characteristics.d_5_sex.name,
+            f3_sex=get_sex(icsr.d_patient_characteristics.d_5_sex),
 
             f4_reaction_onset_day=reaction_onset_day,
             f5_reaction_onset_month=reaction_onset_month,
             f6_reaction_onset_year=reaction_onset_year,
 
-            f7_describe_reactions=describe_reactions,
+            f7_13_describe_reactions='\n'.join(describe_reactions),
 
             f8_patient_died=patient_died,
             f9_prolonged_hospitalization=prolonged_hospitalization,
@@ -142,26 +226,27 @@ class CIOMS(BaseModel):
             f11_life_threatening=life_threatening,
             f12_other=other,
 
-            f13_describe_reactions_test_lab_data=[result.f_r_3_4_result_unstructured_data for result in
-                                                  icsr.f_r_results_tests_procedures_investigation_patient],
-            f14_suspect_drugs=suspect_drugs,
+            f14_21_suspect_drugs=suspect_drugs,
+
+            f22_concomitant_drugs_and_dates_of_administration='\n'.join(concomitant_drugs),
 
             f23_other_relevant_history=icsr.d_patient_characteristics.d_7_2_text_medical_history,
 
             f24b_MFR_control_no=icsr.c_1_identification_case_safety_report.c_1_8_1_worldwide_unique_case_identification_number,
 
-            f24c_date_received_by_manufacturer=date_received_by_manufacturer,
+            f24c_date_received_by_manufacturer=get_date(
+                *parse_date(icsr.c_1_identification_case_safety_report.c_1_5_date_most_recent_information)),
 
             f24d_report_source_study=icsr.c_1_identification_case_safety_report.c_1_3_type_report == C_1_3_type_report.REPORT_FROM_STUDY,
             f24d_report_source_literature=bool(icsr.c_4_r_literature_reference),
             f24d_report_source_health_professional=any(
-                source.c_2_r_4_qualification == C_2_r_4_qualification.PHYSICIAN |
-                source.c_2_r_4_qualification == C_2_r_4_qualification.PHARMACIST |
-                source.c_2_r_4_qualification == C_2_r_4_qualification.OTHER_HEALTH_PROFESSIONAL
+                source.c_2_r_4_qualification in {C_2_r_4_qualification.PHYSICIAN,
+                                                 C_2_r_4_qualification.PHARMACIST,
+                                                 C_2_r_4_qualification.OTHER_HEALTH_PROFESSIONAL}
                 for source in icsr.c_2_r_primary_source_information
             ),
 
             f25a_report_type=icsr.is_initial(),
 
-            date_of_this_report=date_of_this_report
+            date_of_this_report=get_date(*parse_date(icsr.c_1_identification_case_safety_report.c_1_2_date_creation))
         )
