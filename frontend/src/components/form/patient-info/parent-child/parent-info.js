@@ -25,6 +25,7 @@ import { makeStyles } from '@mui/styles';
 import { ParentInfoFieldLabel } from '@src/components/field-labels/patient/parent-child/parent-info-label';
 import InputMask from 'react-input-mask';
 import { MedDRABtn } from '@src/components/meddra/meddra-btn';
+import { meddraSelector } from '@src/features/meddra/slice';
 
 const useStyles = makeStyles({
     margin: {
@@ -65,6 +66,7 @@ export const ParentInfo = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const { parentData } = useSelector(patientSelector);
+    const { meddraVersion } = useSelector(meddraSelector);
 
     const handleChange =
         (fieldName, index, isNumber = false, length = 1) =>
@@ -84,6 +86,7 @@ export const ParentInfo = () => {
     const setMeddraValue = (value, fieldName, index) => {
         let parentDataCopy = JSON.parse(JSON.stringify(parentData));
         parentDataCopy[index][fieldName].value = value;
+        parentDataCopy[index]['D_10_7_1_r_1a_MedDRAVersionMedicalHistory'].value = meddraVersion.split(' ')[0];
         dispatch(setParentData(parentDataCopy));
     };
 

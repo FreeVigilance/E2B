@@ -36,6 +36,7 @@ import {
 import { ReactionFieldLabel } from '../field-labels/reaction-field-label';
 import InputMask from 'react-input-mask';
 import { MedDRABtn } from '../meddra/meddra-btn';
+import { meddraSelector } from '@src/features/meddra/slice';
 import { matchSorter } from 'match-sorter';
 
 var snakecaseKeys = require('snakecase-keys');
@@ -84,6 +85,7 @@ export const Reactions = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const {reactionsData, LC, CC} = useSelector(reactionsSelector);
+    const { meddraVersion } = useSelector(meddraSelector);
     const {drugReactionMatrix, relatedness} = useSelector(drugsSelector);
 
     const handleChange =
@@ -116,6 +118,7 @@ export const Reactions = () => {
     const setMeddraValue = (value, fieldName, index) => {
         let reactionsDataCopy = JSON.parse(JSON.stringify(reactionsData));
         reactionsDataCopy[index][fieldName].value = value;
+        reactionsDataCopy[index]['E_i_2_1a_MedDRAVersionReaction'].value = meddraVersion.split(' ')[0];
         dispatch(setReactionsData(reactionsDataCopy));
     };
 

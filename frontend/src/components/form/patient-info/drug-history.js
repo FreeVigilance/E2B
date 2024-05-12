@@ -26,6 +26,7 @@ import { makeStyles } from '@mui/styles';
 import { DrugHistoryFieldLabel } from '@src/components/field-labels/patient/drug-history-label';
 import InputMask from 'react-input-mask';
 import { MedDRABtn } from '@src/components/meddra/meddra-btn';
+import { meddraSelector } from '@src/features/meddra/slice';
 
 const useStyles = makeStyles({
     margin: {
@@ -66,6 +67,7 @@ export const DrugsHistory = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const { drugHistory } = useSelector(patientSelector);
+    const { meddraVersion } = useSelector(meddraSelector);
 
     const handleChange =
         (fieldName, index, isNumber = false, length = 1) =>
@@ -86,6 +88,11 @@ export const DrugsHistory = () => {
     const setMeddraValue = (value, fieldName, index) => {
         let drugHistoryCopy = JSON.parse(JSON.stringify(drugHistory));
         drugHistoryCopy[index][fieldName].value = value;
+        if (fieldName === 'D_8_r_6b_IndicationMedDRACode') {
+            drugHistoryCopy[index]['D_8_r_6a_MedDRAVersionIndication'].value = meddraVersion.split(' ')[0];
+        } else {
+            drugHistoryCopy[index]['D_8_r_7a_MedDRAVersionReaction'].value = meddraVersion.split(' ')[0];
+        }
         dispatch(setDrugHistory(drugHistoryCopy));
     };
 

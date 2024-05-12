@@ -29,6 +29,7 @@ import { makeStyles } from '@mui/styles';
 import { ParentDrugHistoryFieldLabel } from '@src/components/field-labels/patient/parent-child/parent-deug-history';
 import InputMask from 'react-input-mask';
 import { MedDRABtn } from '@src/components/meddra/meddra-btn';
+import { meddraSelector } from '@src/features/meddra/slice';
 
 const useStyles = makeStyles({
     margin: {
@@ -69,6 +70,7 @@ export const ParentDrugsHistory = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const { parentDrugHistory } = useSelector(patientSelector);
+    const { meddraVersion } = useSelector(meddraSelector);
 
     const handleChange =
         (fieldName, index, isNumber = false, length = 1) =>
@@ -92,6 +94,11 @@ export const ParentDrugsHistory = () => {
             JSON.stringify(parentDrugHistory),
         );
         parentdrugHistoryCopy[index][fieldName].value = value;
+        if (fieldName === 'D_10_8_r_6b_IndicationMedDRACode') {
+            parentdrugHistoryCopy[index]['D_10_8_r_6a_MedDRAVersionIndication'].value = meddraVersion.split(' ')[0];
+        } else {
+            parentdrugHistoryCopy[index]['D_10_8_r_7a_MedDRAVersionReaction'].value = meddraVersion.split(' ')[0];
+        }
         dispatch(setParentDrugHistory(parentdrugHistoryCopy));
     };
 

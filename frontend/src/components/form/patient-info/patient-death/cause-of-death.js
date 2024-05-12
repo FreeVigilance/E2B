@@ -9,6 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { makeStyles } from '@mui/styles';
 import { CauseOfDeathFieldLabel } from '@src/components/field-labels/patient/cause-of-death-label';
 import { MedDRABtn } from '@src/components/meddra/meddra-btn';
+import { meddraSelector } from '@src/features/meddra/slice';
 
 const useStyles = makeStyles({
     margin: {
@@ -49,6 +50,7 @@ export const CausesOfDeath = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const { causeOfDeath } = useSelector(patientSelector);
+    const { meddraVersion } = useSelector(meddraSelector);
 
     const handleChange =
         (fieldName, index, isNumber = false, length = 1) =>
@@ -68,6 +70,7 @@ export const CausesOfDeath = () => {
     const setMeddraValue = (value, fieldName, index) => {
         let causeOfDeathCopy = JSON.parse(JSON.stringify(causeOfDeath));
         causeOfDeathCopy[index][fieldName].value = value;
+        causeOfDeathCopy[index]['D_9_2_r_1a_MedDRAVersionCauseDeath'].value = meddraVersion.split(' ')[0];
         dispatch(setCauseOfDeath(causeOfDeathCopy));
     };
 

@@ -27,6 +27,7 @@ import { Diagnosis } from '@src/features/narrative/narrative';
 import { makeStyles } from '@mui/styles';
 import { DiagnosisFieldLabel } from '@src/components/field-labels/narrative/diagnosis-label';
 import { MedDRABtn } from '@src/components/meddra/meddra-btn';
+import { meddraSelector } from '@src/features/meddra/slice';
 
 const useStyles = makeStyles({
     margin: {
@@ -68,6 +69,7 @@ export const DiagnosisComp = () => {
 
     const dispatch = useDispatch();
     const { diagnosis } = useSelector(narrativeSelector);
+    const { meddraVersion } = useSelector(meddraSelector);
 
     const handleChange =
         (fieldName, index, isNumber = false, length = 1) =>
@@ -87,6 +89,7 @@ export const DiagnosisComp = () => {
     const setMeddraValue = (value, fieldName, index) => {
         let diagnosisCopy = JSON.parse(JSON.stringify(diagnosis));
         diagnosisCopy[index][fieldName].value = value;
+        diagnosisCopy[index]['H_3_r_1a_MedDRAVersionSenderDiagnosis'].value = meddraVersion.split(' ')[0];
         dispatch(setDiagnosis(diagnosisCopy));
     };
 
