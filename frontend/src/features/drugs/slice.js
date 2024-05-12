@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
     AdditionalInfo,
     Dosage,
@@ -18,8 +18,16 @@ import {
     saveData,
 } from '../display/slice';
 import { e2bCaseKeys } from '../common/changekeys';
+import { api } from '@src/api';
 
 export const drugsSelector = (state) => state.drugs;
+
+export const getCountryCodes = createAsyncThunk(
+    'drugs/getCountryCodes',
+    (options) => {
+        return api.getCountryCodes(options.data);
+    },
+);
 
 export const getDrug = () => {
     return (dispatch, getState) => {
@@ -108,7 +116,7 @@ export const getDrug = () => {
                     G_k_4_r_9_2a_PharmaceuticalDoseFormTermidVersion:
                         subItem[
                             'G_k_4_r_9_2a_PharmaceuticalDoseFormTermIDVersion'
-                        ],
+                            ],
                     G_k_4_r_9_2b_PharmaceuticalDoseFormTermid:
                         subItem['G_k_4_r_9_2b_PharmaceuticalDoseFormTermID'],
                     G_k_4_r_10_1_RouteAdministration: getNullFlavor(
@@ -118,7 +126,7 @@ export const getDrug = () => {
                     G_k_4_r_10_2a_RouteAdministrationTermidVersion:
                         subItem[
                             'G_k_4_r_10_2a_RouteAdministrationTermIDVersion'
-                        ],
+                            ],
                     G_k_4_r_10_2b_RouteAdministrationTermid:
                         subItem['G_k_4_r_10_2b_RouteAdministrationTermID'],
                     G_k_4_r_11_1_ParentRouteAdministration: getNullFlavor(
@@ -128,11 +136,11 @@ export const getDrug = () => {
                     G_k_4_r_11_2a_ParentRouteAdministrationTermidVersion:
                         subItem[
                             'G_k_4_r_11_2a_ParentRouteAdministrationTermIDVersion'
-                        ],
+                            ],
                     G_k_4_r_11_2b_ParentRouteAdministrationTermid:
                         subItem[
                             'G_k_4_r_11_2b_ParentRouteAdministrationTermID'
-                        ],
+                            ],
                 });
             });
             itemData['G_k_4_r_DosageInformation'] = dosagesData;
@@ -174,19 +182,19 @@ export const getDrug = () => {
                         G_k_9_i_3_1a_IntervalDrugAdministrationReactionNum:
                             subItem[
                                 'G_k_9_i_3_1a_IntervalDrugAdministrationReactionNum'
-                            ],
+                                ],
                         G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit:
                             subItem[
                                 'G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit'
-                            ],
+                                ],
                         G_k_9_i_3_2a_IntervalLastDoseDrugReactionNum:
                             subItem[
                                 'G_k_9_i_3_2a_IntervalLastDoseDrugReactionNum'
-                            ],
+                                ],
                         G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit:
                             subItem[
                                 'G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit'
-                            ],
+                                ],
                         G_k_9_i_4_ReactionRecurReadministration:
                             subItem['G_k_9_i_4_ReactionRecurReadministration'],
                     };
@@ -198,15 +206,15 @@ export const getDrug = () => {
                                 G_k_9_i_2_r_1_SourceAssessment:
                                     subSubItem[
                                         'G_k_9_i_2_r_1_SourceAssessment'
-                                    ],
+                                        ],
                                 G_k_9_i_2_r_2_MethodAssessment:
                                     subSubItem[
                                         'G_k_9_i_2_r_2_MethodAssessment'
-                                    ],
+                                        ],
                                 G_k_9_i_2_r_3_ResultAssessment:
                                     subSubItem[
                                         'G_k_9_i_2_r_3_ResultAssessment'
-                                    ],
+                                        ],
                             });
                         },
                     );
@@ -317,10 +325,10 @@ export const parseDrug = (data) => {
 
 const getNullFlavor = (item, field, isDate = false) => {
     return item[field]['nullFlavor'] !== null
-        ? { value: null, nullFlavor: nullFlavors[item[field]['nullFlavor']] }
+        ? {value: null, nullFlavor: nullFlavors[item[field]['nullFlavor']]}
         : isDate
-        ? { value: parseDate(item[field].value), nullFlavor: null }
-        : item[field];
+            ? {value: parseDate(item[field].value), nullFlavor: null}
+            : item[field];
 };
 
 const initialState = {
@@ -331,6 +339,7 @@ const initialState = {
     drugReactionMatrix: {},
     relatedness: {},
     additionalInfo: {},
+    CC: [],
 };
 
 const drugsSlice = createSlice({
@@ -357,6 +366,9 @@ const drugsSlice = createSlice({
         },
         setAdditionalInfo: (state, action) => {
             state.additionalInfo = action.payload;
+        },
+        setCountryCodes: (state, action) => {
+            state.CC = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -421,6 +433,10 @@ const drugsSlice = createSlice({
                 state.additionalInfo = res[6];
             }
         });
+
+        builder.addCase(getCountryCodes.fulfilled, (state, action) => {
+            state.CC = action.payload;
+        });
     },
 });
 
@@ -433,4 +449,5 @@ export const {
     setDrugReactionMatrix,
     setRelatedness,
     setAdditionalInfo,
+    setCountryCodes,
 } = drugsSlice.actions;
