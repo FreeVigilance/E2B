@@ -1,8 +1,7 @@
-FROM node:18-alpine
-RUN apk add git
+FROM node:16-alpine
 WORKDIR /app
 COPY package.json .
-RUN node --max-old-space-size=4096 $(which npm) install
+RUN npm install
 COPY . .
-RUN node --max-old-space-size=4096 $(which npm) run build
+RUN npm run build
 EXPOSE 4000 

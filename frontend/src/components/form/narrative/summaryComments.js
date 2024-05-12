@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    Autocomplete,
     Stack,
     FormControlLabel,
     Box,
@@ -17,10 +16,13 @@ import {
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import AddIcon from '@mui/icons-material/Add';
+import {
+    setStudyRegistration,
+    studyIdentificationSelector,
+} from '@src/features/study-identification/slice';
 import { StudyRegistration } from '@src/features/study-identification/study-identification';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
-    getLanguageCodes,
     narrativeSelector,
     setDiagnosis,
     setSummaryComments,
@@ -28,7 +30,6 @@ import {
 import { Diagnosis, SummaryComments } from '@src/features/narrative/narrative';
 import { makeStyles } from '@mui/styles';
 import { SummaryCommentsFieldLabel } from '@src/components/field-labels/narrative/summary-comments-label';
-import { matchSorter } from 'match-sorter';
 
 const useStyles = makeStyles({
     margin: {
@@ -69,7 +70,7 @@ export const SummaryCommentsComp = () => {
     const classes = useStyles();
 
     const dispatch = useDispatch();
-    const {summaryComments, LC} = useSelector(narrativeSelector);
+    const { summaryComments } = useSelector(narrativeSelector);
 
     const handleChange = (fieldName, index) => (event) => {
         let value = event.target.value;
@@ -81,16 +82,6 @@ export const SummaryCommentsComp = () => {
         dispatch(setSummaryComments(summaryCommentsCopy));
     };
 
-    const handleAutocompleteChange = (fieldName, index) => (_, value) => {
-        let summaryCommentsCopy = JSON.parse(JSON.stringify(summaryComments));
-        summaryCommentsCopy[index][fieldName].value = value?.code ?? null;
-        dispatch(setSummaryComments(summaryCommentsCopy));
-    };
-
-    const getLanguageByCode = (code) => LC.find(country => country.code === code);
-
-    useEffect(() => {dispatch(getLanguageCodes({data: ''}));}, []);
-
     const formList = () => {
         let list = [];
         if (summaryComments.length === 0) {
@@ -98,8 +89,8 @@ export const SummaryCommentsComp = () => {
                 <span>
                     <IconButton
                         size="large"
-                        style={{top: '10px'}}
-                        sx={{color: 'white', backgroundColor: '#1976d2'}}
+                        style={{ top: '10px' }}
+                        sx={{ color: 'white', backgroundColor: '#1976d2' }}
                         onClick={addForm}
                     >
                         <AddIcon />
@@ -127,9 +118,9 @@ export const SummaryCommentsComp = () => {
                                 ></SummaryCommentsFieldLabel>
                             </Grid>
                             <Grid item xs={6}>
-                                {LC.length === 0 && <TextField
+                                <TextField
                                     variant="outlined"
-                                    className={classes.textLarge}
+                                    className={classes.textXshort}
                                     onChange={handleChange(
                                         'H_5_r_1b_CaseSummaryReporterCommentsLanguage',
                                         index,
@@ -137,33 +128,9 @@ export const SummaryCommentsComp = () => {
                                     value={
                                         item[
                                             'H_5_r_1b_CaseSummaryReporterCommentsLanguage'
-                                            ].value
+                                        ].value
                                     }
-                                />}
-                                {LC.length > 0 && <Autocomplete
-                                    className={classes.textLarge}
-                                    autoHighlight
-                                    autoSelect
-                                    options={LC}
-                                    getOptionLabel={(option) => option.code ?? ''}
-                                    value={getLanguageByCode(item['H_5_r_1b_CaseSummaryReporterCommentsLanguage'].value) ?? ''}
-                                    onChange={handleAutocompleteChange('H_5_r_1b_CaseSummaryReporterCommentsLanguage', index)}
-                                    filterOptions={(options, {inputValue}) =>
-                                        matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.CONTAINS})}
-                                    renderOption={(props2, option) => {
-                                        return (
-                                            <li {...props2} key={props2.key}>
-                                                {`${option.code}\t${option.name}`}
-                                            </li>
-                                        );
-                                    }}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            label="3-alpha language code"
-                                            {...params}
-                                        />
-                                    )}
-                                ></Autocomplete>}
+                                />
                             </Grid>
                         </Grid>
 
@@ -185,7 +152,7 @@ export const SummaryCommentsComp = () => {
                                 value={
                                     item[
                                         'H_5_r_1a_CaseSummaryReporterCommentsText'
-                                        ].value
+                                    ].value
                                 }
                             />
                         </Stack>
@@ -195,7 +162,7 @@ export const SummaryCommentsComp = () => {
                                 <span>
                                     <IconButton
                                         size="large"
-                                        style={{top: '10px', right: '10px'}}
+                                        style={{ top: '10px', right: '10px' }}
                                         sx={{
                                             color: 'white',
                                             backgroundColor: '#1976d2',
@@ -209,7 +176,7 @@ export const SummaryCommentsComp = () => {
                             <span>
                                 <IconButton
                                     size="large"
-                                    style={{top: '10px'}}
+                                    style={{ top: '10px' }}
                                     sx={{
                                         color: 'white',
                                         backgroundColor: '#000066',

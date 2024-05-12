@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { matchSorter } from 'match-sorter';
 import {
-    Autocomplete,
     Stack,
     FormControlLabel,
     Select,
@@ -19,7 +17,6 @@ import { Box } from '@mui/system';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import {
-    getCountryCodes,
     primarySourceSelector,
     setPrimarySourceData,
 } from '@src/features/primary-source/slice';
@@ -69,7 +66,7 @@ export const PrimarySourceComp = () => {
     const classes = useStyles();
 
     const dispatch = useDispatch();
-    const {primarySourceData, CC} = useSelector(primarySourceSelector);
+    const { primarySourceData } = useSelector(primarySourceSelector);
 
     const handleChange = (fieldName, index) => (event) => {
         let value = event.target.value;
@@ -87,16 +84,6 @@ export const PrimarySourceComp = () => {
         }
         dispatch(setPrimarySourceData(primarySourceDataCopy));
     };
-
-    const handleAutocompleteChange = (fieldName, index) => (event, value) => {
-        let primarySourceDataCopy = JSON.parse(JSON.stringify(primarySourceData));
-        primarySourceDataCopy[index][fieldName].value = value?.code ?? null;
-        dispatch(setPrimarySourceData(primarySourceDataCopy));
-    };
-
-    const getCountryByCode = (code) => CC.find(country => country.code === code);
-
-    useEffect(() => {dispatch(getCountryCodes({data: ''}));}, []);
 
     const setNullFlavor = (fieldName, index) => (event) => {
         let primarySourceDataCopy = JSON.parse(
@@ -126,8 +113,8 @@ export const PrimarySourceComp = () => {
                 <span>
                     <IconButton
                         size="large"
-                        style={{top: '10px'}}
-                        sx={{color: 'white', backgroundColor: '#1976d2'}}
+                        style={{ top: '10px' }}
+                        sx={{ color: 'white', backgroundColor: '#1976d2' }}
                         onClick={addForm}
                     >
                         <AddIcon />
@@ -164,7 +151,7 @@ export const PrimarySourceComp = () => {
                                                         checked={
                                                             item[
                                                                 'C_2_r_1_1_ReporterTitle'
-                                                                ].nullFlavor !==
+                                                            ].nullFlavor !==
                                                             null
                                                         }
                                                         onChange={setUnknown(
@@ -178,7 +165,7 @@ export const PrimarySourceComp = () => {
                                         </Box>
                                         {primarySourceData[index][
                                             'C_2_r_1_1_ReporterTitle'
-                                            ]['nullFlavor'] === null ? (
+                                        ]['nullFlavor'] === null ? (
                                             <TextField
                                                 variant="outlined"
                                                 className={classes.textMedium}
@@ -189,7 +176,7 @@ export const PrimarySourceComp = () => {
                                                 value={
                                                     item[
                                                         'C_2_r_1_1_ReporterTitle'
-                                                        ].value
+                                                    ].value
                                                 }
                                             />
                                         ) : (
@@ -203,7 +190,7 @@ export const PrimarySourceComp = () => {
                                                     value={
                                                         item[
                                                             'C_2_r_1_1_ReporterTitle'
-                                                            ].nullFlavor
+                                                        ].nullFlavor
                                                     }
                                                     onChange={setNullFlavor(
                                                         'C_2_r_1_1_ReporterTitle',
@@ -244,7 +231,7 @@ export const PrimarySourceComp = () => {
                                                         checked={
                                                             item[
                                                                 'C_2_r_1_2_ReporterGivenName'
-                                                                ].nullFlavor !==
+                                                            ].nullFlavor !==
                                                             null
                                                         }
                                                         onChange={setUnknown(
@@ -258,7 +245,7 @@ export const PrimarySourceComp = () => {
                                         </Box>
                                         {primarySourceData[index][
                                             'C_2_r_1_2_ReporterGivenName'
-                                            ]['nullFlavor'] === null ? (
+                                        ]['nullFlavor'] === null ? (
                                             <TextField
                                                 variant="outlined"
                                                 className={classes.textMedium}
@@ -269,7 +256,7 @@ export const PrimarySourceComp = () => {
                                                 value={
                                                     item[
                                                         'C_2_r_1_2_ReporterGivenName'
-                                                        ].value
+                                                    ].value
                                                 }
                                             />
                                         ) : (
@@ -283,7 +270,7 @@ export const PrimarySourceComp = () => {
                                                     value={
                                                         item[
                                                             'C_2_r_1_2_ReporterGivenName'
-                                                            ].nullFlavor
+                                                        ].nullFlavor
                                                     }
                                                     onChange={setNullFlavor(
                                                         'C_2_r_1_2_ReporterGivenName',
@@ -321,7 +308,7 @@ export const PrimarySourceComp = () => {
                                                         checked={
                                                             item[
                                                                 'C_2_r_1_3_ReporterMiddleName'
-                                                                ].nullFlavor !==
+                                                            ].nullFlavor !==
                                                             null
                                                         }
                                                         onChange={setUnknown(
@@ -335,7 +322,7 @@ export const PrimarySourceComp = () => {
                                         </Box>
                                         {primarySourceData[index][
                                             'C_2_r_1_3_ReporterMiddleName'
-                                            ]['nullFlavor'] === null ? (
+                                        ]['nullFlavor'] === null ? (
                                             <TextField
                                                 variant="outlined"
                                                 onChange={handleChange(
@@ -345,7 +332,7 @@ export const PrimarySourceComp = () => {
                                                 value={
                                                     item[
                                                         'C_2_r_1_3_ReporterMiddleName'
-                                                        ].value
+                                                    ].value
                                                 }
                                                 className={classes.textMedium}
                                             />
@@ -360,7 +347,7 @@ export const PrimarySourceComp = () => {
                                                     value={
                                                         item[
                                                             'C_2_r_1_3_ReporterMiddleName'
-                                                            ].nullFlavor
+                                                        ].nullFlavor
                                                     }
                                                     onChange={setNullFlavor(
                                                         'C_2_r_1_3_ReporterMiddleName',
@@ -398,7 +385,7 @@ export const PrimarySourceComp = () => {
                                                         checked={
                                                             item[
                                                                 'C_2_r_1_4_ReporterFamilyName'
-                                                                ].nullFlavor !==
+                                                            ].nullFlavor !==
                                                             null
                                                         }
                                                         onChange={setUnknown(
@@ -412,7 +399,7 @@ export const PrimarySourceComp = () => {
                                         </Box>
                                         {primarySourceData[index][
                                             'C_2_r_1_4_ReporterFamilyName'
-                                            ]['nullFlavor'] === null ? (
+                                        ]['nullFlavor'] === null ? (
                                             <TextField
                                                 variant="outlined"
                                                 onChange={handleChange(
@@ -422,7 +409,7 @@ export const PrimarySourceComp = () => {
                                                 value={
                                                     item[
                                                         'C_2_r_1_4_ReporterFamilyName'
-                                                        ].value
+                                                    ].value
                                                 }
                                                 className={classes.textMedium}
                                             />
@@ -437,7 +424,7 @@ export const PrimarySourceComp = () => {
                                                     value={
                                                         item[
                                                             'C_2_r_1_4_ReporterFamilyName'
-                                                            ].nullFlavor
+                                                        ].nullFlavor
                                                     }
                                                     onChange={setNullFlavor(
                                                         'C_2_r_1_4_ReporterFamilyName',
@@ -475,7 +462,7 @@ export const PrimarySourceComp = () => {
                                                         checked={
                                                             item[
                                                                 'C_2_r_2_1_ReporterOrganisation'
-                                                                ].nullFlavor !==
+                                                            ].nullFlavor !==
                                                             null
                                                         }
                                                         onChange={setUnknown(
@@ -489,7 +476,7 @@ export const PrimarySourceComp = () => {
                                         </Box>
                                         {primarySourceData[index][
                                             'C_2_r_2_1_ReporterOrganisation'
-                                            ]['nullFlavor'] === null ? (
+                                        ]['nullFlavor'] === null ? (
                                             <TextField
                                                 variant="outlined"
                                                 onChange={handleChange(
@@ -499,7 +486,7 @@ export const PrimarySourceComp = () => {
                                                 value={
                                                     item[
                                                         'C_2_r_2_1_ReporterOrganisation'
-                                                        ].value
+                                                    ].value
                                                 }
                                                 className={classes.textMedium}
                                             />
@@ -514,7 +501,7 @@ export const PrimarySourceComp = () => {
                                                     value={
                                                         item[
                                                             'C_2_r_2_1_ReporterOrganisation'
-                                                            ].nullFlavor
+                                                        ].nullFlavor
                                                     }
                                                     onChange={setNullFlavor(
                                                         'C_2_r_2_1_ReporterOrganisation',
@@ -552,7 +539,7 @@ export const PrimarySourceComp = () => {
                                                         checked={
                                                             item[
                                                                 'C_2_r_2_2_ReporterDepartment'
-                                                                ].nullFlavor !==
+                                                            ].nullFlavor !==
                                                             null
                                                         }
                                                         onChange={setUnknown(
@@ -566,7 +553,7 @@ export const PrimarySourceComp = () => {
                                         </Box>
                                         {primarySourceData[index][
                                             'C_2_r_2_2_ReporterDepartment'
-                                            ]['nullFlavor'] === null ? (
+                                        ]['nullFlavor'] === null ? (
                                             <TextField
                                                 variant="outlined"
                                                 onChange={handleChange(
@@ -576,7 +563,7 @@ export const PrimarySourceComp = () => {
                                                 value={
                                                     item[
                                                         'C_2_r_2_2_ReporterDepartment'
-                                                        ].value
+                                                    ].value
                                                 }
                                                 className={classes.textMedium}
                                             />
@@ -591,7 +578,7 @@ export const PrimarySourceComp = () => {
                                                     value={
                                                         item[
                                                             'C_2_r_2_2_ReporterDepartment'
-                                                            ].nullFlavor
+                                                        ].nullFlavor
                                                     }
                                                     onChange={setNullFlavor(
                                                         'C_2_r_2_2_ReporterDepartment',
@@ -629,7 +616,7 @@ export const PrimarySourceComp = () => {
                                                         checked={
                                                             item[
                                                                 'C_2_r_2_3_ReporterStreet'
-                                                                ].nullFlavor !==
+                                                            ].nullFlavor !==
                                                             null
                                                         }
                                                         onChange={setUnknown(
@@ -643,7 +630,7 @@ export const PrimarySourceComp = () => {
                                         </Box>
                                         {primarySourceData[index][
                                             'C_2_r_2_3_ReporterStreet'
-                                            ]['nullFlavor'] === null ? (
+                                        ]['nullFlavor'] === null ? (
                                             <TextField
                                                 variant="outlined"
                                                 onChange={handleChange(
@@ -653,7 +640,7 @@ export const PrimarySourceComp = () => {
                                                 value={
                                                     item[
                                                         'C_2_r_2_3_ReporterStreet'
-                                                        ].value
+                                                    ].value
                                                 }
                                                 className={classes.textMedium}
                                                 multiline
@@ -670,7 +657,7 @@ export const PrimarySourceComp = () => {
                                                     value={
                                                         item[
                                                             'C_2_r_2_3_ReporterStreet'
-                                                            ].nullFlavor
+                                                        ].nullFlavor
                                                     }
                                                     onChange={setNullFlavor(
                                                         'C_2_r_2_3_ReporterStreet',
@@ -709,7 +696,7 @@ export const PrimarySourceComp = () => {
                                                         checked={
                                                             item[
                                                                 'C_2_r_2_4_ReporterCity'
-                                                                ].nullFlavor !==
+                                                            ].nullFlavor !==
                                                             null
                                                         }
                                                         onChange={setUnknown(
@@ -723,7 +710,7 @@ export const PrimarySourceComp = () => {
                                         </Box>
                                         {primarySourceData[index][
                                             'C_2_r_2_4_ReporterCity'
-                                            ]['nullFlavor'] === null ? (
+                                        ]['nullFlavor'] === null ? (
                                             <TextField
                                                 variant="outlined"
                                                 onChange={handleChange(
@@ -733,7 +720,7 @@ export const PrimarySourceComp = () => {
                                                 value={
                                                     item[
                                                         'C_2_r_2_4_ReporterCity'
-                                                        ].value
+                                                    ].value
                                                 }
                                                 className={classes.textShort}
                                             />
@@ -748,7 +735,7 @@ export const PrimarySourceComp = () => {
                                                     value={
                                                         item[
                                                             'C_2_r_2_4_ReporterCity'
-                                                            ].nullFlavor
+                                                        ].nullFlavor
                                                     }
                                                     onChange={setNullFlavor(
                                                         'C_2_r_2_4_ReporterCity',
@@ -786,7 +773,7 @@ export const PrimarySourceComp = () => {
                                                         checked={
                                                             item[
                                                                 'C_2_r_2_5_ReporterStateProvince'
-                                                                ].nullFlavor !==
+                                                            ].nullFlavor !==
                                                             null
                                                         }
                                                         onChange={setUnknown(
@@ -800,7 +787,7 @@ export const PrimarySourceComp = () => {
                                         </Box>
                                         {primarySourceData[index][
                                             'C_2_r_2_5_ReporterStateProvince'
-                                            ]['nullFlavor'] === null ? (
+                                        ]['nullFlavor'] === null ? (
                                             <TextField
                                                 variant="outlined"
                                                 onChange={handleChange(
@@ -810,7 +797,7 @@ export const PrimarySourceComp = () => {
                                                 value={
                                                     item[
                                                         'C_2_r_2_5_ReporterStateProvince'
-                                                        ].value
+                                                    ].value
                                                 }
                                                 className={classes.textMedium}
                                             />
@@ -825,7 +812,7 @@ export const PrimarySourceComp = () => {
                                                     value={
                                                         item[
                                                             'C_2_r_2_5_ReporterStateProvince'
-                                                            ].nullFlavor
+                                                        ].nullFlavor
                                                     }
                                                     onChange={setNullFlavor(
                                                         'C_2_r_2_5_ReporterStateProvince',
@@ -863,7 +850,7 @@ export const PrimarySourceComp = () => {
                                                         checked={
                                                             item[
                                                                 'C_2_r_2_7_ReporterTelephone'
-                                                                ].nullFlavor !==
+                                                            ].nullFlavor !==
                                                             null
                                                         }
                                                         onChange={setUnknown(
@@ -877,7 +864,7 @@ export const PrimarySourceComp = () => {
                                         </Box>
                                         {primarySourceData[index][
                                             'C_2_r_2_7_ReporterTelephone'
-                                            ]['nullFlavor'] === null ? (
+                                        ]['nullFlavor'] === null ? (
                                             <TextField
                                                 variant="outlined"
                                                 onChange={handleChange(
@@ -887,7 +874,7 @@ export const PrimarySourceComp = () => {
                                                 value={
                                                     item[
                                                         'C_2_r_2_7_ReporterTelephone'
-                                                        ].value
+                                                    ].value
                                                 }
                                                 className={classes.textShort}
                                             />
@@ -902,7 +889,7 @@ export const PrimarySourceComp = () => {
                                                     value={
                                                         item[
                                                             'C_2_r_2_7_ReporterTelephone'
-                                                            ].nullFlavor
+                                                        ].nullFlavor
                                                     }
                                                     onChange={setNullFlavor(
                                                         'C_2_r_2_7_ReporterTelephone',
@@ -940,7 +927,7 @@ export const PrimarySourceComp = () => {
                                                         checked={
                                                             item[
                                                                 'C_2_r_2_6_ReporterPostcode'
-                                                                ].nullFlavor !==
+                                                            ].nullFlavor !==
                                                             null
                                                         }
                                                         onChange={setUnknown(
@@ -954,7 +941,7 @@ export const PrimarySourceComp = () => {
                                         </Box>
                                         {primarySourceData[index][
                                             'C_2_r_2_6_ReporterPostcode'
-                                            ]['nullFlavor'] === null ? (
+                                        ]['nullFlavor'] === null ? (
                                             <TextField
                                                 variant="outlined"
                                                 onChange={handleChange(
@@ -964,7 +951,7 @@ export const PrimarySourceComp = () => {
                                                 value={
                                                     item[
                                                         'C_2_r_2_6_ReporterPostcode'
-                                                        ].value
+                                                    ].value
                                                 }
                                                 className={classes.textXshort}
                                             />
@@ -979,7 +966,7 @@ export const PrimarySourceComp = () => {
                                                     value={
                                                         item[
                                                             'C_2_r_2_6_ReporterPostcode'
-                                                            ].nullFlavor
+                                                        ].nullFlavor
                                                     }
                                                     onChange={setNullFlavor(
                                                         'C_2_r_2_6_ReporterPostcode',
@@ -1009,41 +996,18 @@ export const PrimarySourceComp = () => {
                                     ></PrimarySourceFieldLabel>
                                 </Grid>
                                 <Grid item xs={9}>
-                                    {CC.length === 0 && <TextField
+                                    <TextField
                                         variant="outlined"
-                                        className={classes.textShort}
+                                        className={classes.textXshort}
                                         onChange={handleChange(
                                             'C_2_r_3_ReporterCountryCode',
                                             index,
                                         )}
                                         value={
-                                            item['C_2_r_3_ReporterCountryCode'].value
+                                            item['C_2_r_3_ReporterCountryCode']
+                                                .value
                                         }
-                                    />}
-                                    {CC.length > 0 && <Autocomplete
-                                        className={classes.textShort}
-                                        autoHighlight
-                                        autoSelect
-                                        options={CC}
-                                        getOptionLabel={(option) => option.code ?? ''}
-                                        value={getCountryByCode(primarySourceData[index]['C_2_r_3_ReporterCountryCode'].value) ?? ''}
-                                        onChange={handleAutocompleteChange('C_2_r_3_ReporterCountryCode', index)}
-                                        filterOptions={(options, {inputValue}) =>
-                                            matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.ACRONYM})}
-                                        renderOption={(props2, option) => {
-                                            return (
-                                                <li {...props2} key={props2.key}>
-                                                    {`${option.code}\t${option.name}`}
-                                                </li>
-                                            );
-                                        }}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                label="2-alpha country code"
-                                                {...params}
-                                            />
-                                        )}
-                                    ></Autocomplete>}
+                                    />
                                 </Grid>
 
                                 <Grid item xs={3}>
@@ -1062,7 +1026,7 @@ export const PrimarySourceComp = () => {
                                                         checked={
                                                             item[
                                                                 'C_2_r_4_Qualification'
-                                                                ].nullFlavor !==
+                                                            ].nullFlavor !==
                                                             null
                                                         }
                                                         onChange={setUnknown(
@@ -1076,7 +1040,7 @@ export const PrimarySourceComp = () => {
                                         </Box>
                                         {primarySourceData[index][
                                             'C_2_r_4_Qualification'
-                                            ]['nullFlavor'] === null ? (
+                                        ]['nullFlavor'] === null ? (
                                             <Select
                                                 className={classes.textShort}
                                                 label="Qualification"
@@ -1088,7 +1052,7 @@ export const PrimarySourceComp = () => {
                                                 value={
                                                     item[
                                                         'C_2_r_4_Qualification'
-                                                        ].value
+                                                    ].value
                                                 }
                                             >
                                                 <MenuItem value={1}>
@@ -1127,7 +1091,7 @@ export const PrimarySourceComp = () => {
                                                 checked={
                                                     item[
                                                         'C_2_r_5_PrimarySourceRegulatoryPurposes'
-                                                        ].value
+                                                    ].value
                                                 }
                                                 onChange={handleChange(
                                                     'C_2_r_5_PrimarySourceRegulatoryPurposes',
@@ -1144,7 +1108,7 @@ export const PrimarySourceComp = () => {
                             <span>
                                 <IconButton
                                     size="large"
-                                    style={{top: '10px', right: '10px'}}
+                                    style={{ top: '10px', right: '10px' }}
                                     sx={{
                                         color: 'white',
                                         backgroundColor: '#1976d2',
@@ -1159,7 +1123,7 @@ export const PrimarySourceComp = () => {
                         <span>
                             <IconButton
                                 size="large"
-                                style={{top: '10px'}}
+                                style={{ top: '10px' }}
                                 sx={{
                                     color: 'white',
                                     backgroundColor: '#000066',

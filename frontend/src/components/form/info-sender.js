@@ -1,16 +1,15 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { matchSorter } from 'match-sorter';
 import {
-    Autocomplete,
     Select,
     MenuItem,
+    FormControl,
+    InputLabel,
     Grid,
     Stack,
 } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import {
-    getCountryCodes,
     infoSenderSelector,
     setInfoSenderData,
 } from '@src/features/info-sender/slice';
@@ -57,10 +56,7 @@ export const InfoSenderComp = () => {
     const classes = useStyles();
 
     const dispatch = useDispatch();
-    const {
-        infoSenderData,
-        CC,
-    } = useSelector(infoSenderSelector);
+    const { infoSenderData } = useSelector(infoSenderSelector);
 
     const handleChange = (fieldName) => (event) => {
         let value = event.target.value;
@@ -71,16 +67,6 @@ export const InfoSenderComp = () => {
         infoSenderDataCopy[fieldName].value = value;
         dispatch(setInfoSenderData(infoSenderDataCopy));
     };
-
-    const handleAutocompleteChange = (fieldName) => (_, value) => {
-        let infoSenderDataCopy = JSON.parse(JSON.stringify(infoSenderData));
-        infoSenderDataCopy[fieldName].value = value?.code ?? null;
-        dispatch(setInfoSenderData(infoSenderDataCopy));
-    };
-
-    const getCountryByCode = (code) => CC.find(country => country.code === code);
-
-    useEffect(() => {dispatch(getCountryCodes({data: ''}));}, []);
 
     return (
         <Stack direction={'row'} gap={2}>
@@ -282,39 +268,16 @@ export const InfoSenderComp = () => {
                     ></InfoSenderFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
-                    {CC.length === 0 && <TextField
+                    <TextField
                         variant="outlined"
-                        className={classes.textShort}
+                        className={classes.textXshort}
                         onChange={handleChange('C_3_4_5_SenderCountryCode')}
                         value={
                             infoSenderData['C_3_4_5_SenderCountryCode'].value
                         }
-                    />}
-                    {CC.length > 0 && <Autocomplete
-                        className={classes.textShort}
-                        autoHighlight
-                        autoSelect
-                        options={CC}
-                        getOptionLabel={(option) => option.code ?? ''}
-                        value={getCountryByCode(infoSenderData['C_3_4_5_SenderCountryCode'].value) ?? ''}
-                        onChange={handleAutocompleteChange('C_3_4_5_SenderCountryCode')}
-                        filterOptions={(options, {inputValue}) =>
-                            matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.ACRONYM})}
-                        renderOption={(props2, option) => {
-                            return (
-                                <li {...props2} key={props2.key}>
-                                    {`${option.code}\t${option.name}`}
-                                </li>
-                            );
-                        }}
-                        renderInput={(params) => (
-                            <TextField
-                                label="2-alpha country code"
-                                {...params}
-                            />
-                        )}
-                    ></Autocomplete>}
+                    />
                 </Grid>
+
                 <Grid item xs={3}>
                     <InfoSenderFieldLabel
                         label="Sender’s Telephone"

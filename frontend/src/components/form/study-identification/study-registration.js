@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    Autocomplete,
     Stack,
     FormControlLabel,
     Box,
@@ -18,7 +17,6 @@ import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import AddIcon from '@mui/icons-material/Add';
 import {
-    getCountryCodes,
     setStudyRegistration,
     studyIdentificationSelector,
 } from '@src/features/study-identification/slice';
@@ -26,7 +24,6 @@ import { StudyRegistration } from '@src/features/study-identification/study-iden
 import DeleteIcon from '@mui/icons-material/Delete';
 import { makeStyles } from '@mui/styles';
 import { StudyRegistrationFieldLabel } from '@src/components/field-labels/study-identification/study-registration-label';
-import { matchSorter } from 'match-sorter';
 
 const useStyles = makeStyles({
     margin: {
@@ -67,7 +64,7 @@ export const StudyRegistrationComp = () => {
     const classes = useStyles();
 
     const dispatch = useDispatch();
-    const {studyRegistration, CC} = useSelector(studyIdentificationSelector);
+    const { studyRegistration } = useSelector(studyIdentificationSelector);
 
     const handleChange = (fieldName, index) => (event) => {
         let value = event.target.value;
@@ -80,16 +77,6 @@ export const StudyRegistrationComp = () => {
         studyRegistrationCopy[index][fieldName].value = value;
         dispatch(setStudyRegistration(studyRegistrationCopy));
     };
-
-    const handleAutocompleteChange = (fieldName, index) => (event, value) => {
-        let studyRegistrationCopy = JSON.parse(JSON.stringify(studyRegistration));
-        studyRegistrationCopy[index][fieldName].value = value?.code ?? null;
-        dispatch(setStudyRegistration(studyRegistrationCopy));
-    };
-
-    const getCountryByCode = (code) => CC.find(country => country.code === code);
-
-    useEffect(() => {dispatch(getCountryCodes({data: ''}));}, []);
 
     const setNullFlavor = (fieldName, index) => (event) => {
         let studyRegistrationCopy = JSON.parse(
@@ -118,8 +105,8 @@ export const StudyRegistrationComp = () => {
                 <span>
                     <IconButton
                         size="large"
-                        style={{top: '10px'}}
-                        sx={{color: 'white', backgroundColor: '#1976d2'}}
+                        style={{ top: '10px' }}
+                        sx={{ color: 'white', backgroundColor: '#1976d2' }}
                         onClick={addForm}
                     >
                         <AddIcon />
@@ -155,7 +142,7 @@ export const StudyRegistrationComp = () => {
                                                     checked={
                                                         item[
                                                             'C_5_1_r_1_StudyRegistrationNumber'
-                                                            ].nullFlavor !== null
+                                                        ].nullFlavor !== null
                                                     }
                                                     onChange={setUnknown(
                                                         'C_5_1_r_1_StudyRegistrationNumber',
@@ -168,7 +155,7 @@ export const StudyRegistrationComp = () => {
                                     </Box>
                                     {item['C_5_1_r_1_StudyRegistrationNumber'][
                                         'nullFlavor'
-                                        ] === null ? (
+                                    ] === null ? (
                                         <TextField
                                             variant="outlined"
                                             className={classes.textMedium}
@@ -179,7 +166,7 @@ export const StudyRegistrationComp = () => {
                                             value={
                                                 item[
                                                     'C_5_1_r_1_StudyRegistrationNumber'
-                                                    ].value
+                                                ].value
                                             }
                                         />
                                     ) : (
@@ -191,7 +178,7 @@ export const StudyRegistrationComp = () => {
                                                 value={
                                                     item[
                                                         'C_5_1_r_1_StudyRegistrationNumber'
-                                                        ].nullFlavor
+                                                    ].nullFlavor
                                                 }
                                                 onChange={setNullFlavor(
                                                     'C_5_1_r_1_StudyRegistrationNumber',
@@ -230,7 +217,7 @@ export const StudyRegistrationComp = () => {
                                                     checked={
                                                         item[
                                                             'C_5_1_r_2_StudyRegistrationCountry'
-                                                            ].nullFlavor !== null
+                                                        ].nullFlavor !== null
                                                     }
                                                     onChange={setUnknown(
                                                         'C_5_1_r_2_StudyRegistrationCountry',
@@ -243,10 +230,10 @@ export const StudyRegistrationComp = () => {
                                     </Box>
                                     {item['C_5_1_r_2_StudyRegistrationCountry'][
                                         'nullFlavor'
-                                        ] === null ? (<>
-                                        {CC.length === 0 && <TextField
+                                    ] === null ? (
+                                        <TextField
                                             variant="outlined"
-                                            className={classes.textShort}
+                                            className={classes.textXshort}
                                             onChange={handleChange(
                                                 'C_5_1_r_2_StudyRegistrationCountry',
                                                 index,
@@ -254,34 +241,10 @@ export const StudyRegistrationComp = () => {
                                             value={
                                                 item[
                                                     'C_5_1_r_2_StudyRegistrationCountry'
-                                                    ].value
+                                                ].value
                                             }
-                                        />}
-                                        {CC.length > 0 && <Autocomplete
-                                            className={classes.textShort}
-                                            autoHighlight
-                                            autoSelect
-                                            options={CC}
-                                            getOptionLabel={(option) => option.code ?? ''}
-                                            value={getCountryByCode(item['C_5_1_r_2_StudyRegistrationCountry'].value) ?? ''}
-                                            onChange={handleAutocompleteChange('C_5_1_r_2_StudyRegistrationCountry', index)}
-                                            filterOptions={(options, {inputValue}) =>
-                                                matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.ACRONYM})}
-                                            renderOption={(props2, option) => {
-                                                return (
-                                                    <li {...props2} key={props2.key}>
-                                                        {`${option.code}\t${option.name}`}
-                                                    </li>
-                                                );
-                                            }}
-                                            renderInput={(params) => (
-                                                <TextField
-                                                    label="2-alpha country code"
-                                                    {...params}
-                                                />
-                                            )}
-                                        ></Autocomplete>}
-                                    </>) : (
+                                        />
+                                    ) : (
                                         <FormControl
                                             className={classes.textXshort}
                                         >
@@ -290,7 +253,7 @@ export const StudyRegistrationComp = () => {
                                                 value={
                                                     item[
                                                         'C_5_1_r_2_StudyRegistrationCountry'
-                                                        ].nullFlavor
+                                                    ].nullFlavor
                                                 }
                                                 onChange={setNullFlavor(
                                                     'C_5_1_r_2_StudyRegistrationCountry',
@@ -315,7 +278,7 @@ export const StudyRegistrationComp = () => {
                                 <span>
                                     <IconButton
                                         size="large"
-                                        style={{top: '10px', right: '10px'}}
+                                        style={{ top: '10px', right: '10px' }}
                                         sx={{
                                             color: 'white',
                                             backgroundColor: '#1976d2',
@@ -330,7 +293,7 @@ export const StudyRegistrationComp = () => {
                             <span>
                                 <IconButton
                                     size="large"
-                                    style={{top: '10px'}}
+                                    style={{ top: '10px' }}
                                     sx={{
                                         color: 'white',
                                         backgroundColor: '#000066',
@@ -343,8 +306,7 @@ export const StudyRegistrationComp = () => {
                         </Stack>
                     </CardContent>
                 </Card>,
-            )
-            ;
+            );
         });
         return list;
     };
