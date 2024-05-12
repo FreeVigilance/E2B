@@ -1,10 +1,15 @@
 from django.db import models
 from django.core.validators import MinLengthValidator
+from django.contrib.postgres.operations import UnaccentExtension
 
 
 class CountryCode(models.Model):
     class Meta:
         unique_together = ('code', 'language')
+
+    operations = [
+        UnaccentExtension()
+    ]
 
     code = models.CharField(
         max_length=2,
@@ -23,6 +28,10 @@ class CountryCode(models.Model):
 class LanguageCode(models.Model):
     class Meta:
         unique_together = ('code', 'language')
+
+    operations = [
+        UnaccentExtension()
+    ]
 
     code = models.CharField(
         max_length=3,

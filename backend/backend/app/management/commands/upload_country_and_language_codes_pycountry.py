@@ -4,7 +4,7 @@ import pycountry
 from django.core.management import BaseCommand
 from django.db import transaction
 
-from app.src.layers.storage.models.international_standard_code_set import LanguageCode, CountryCode
+from app.src.layers.storage.models.code_set import LanguageCode, CountryCode
 
 logger = logging.getLogger(__name__)
 

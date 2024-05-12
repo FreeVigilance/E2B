@@ -44,4 +44,5 @@ class Command(BaseCommand):
             raise AttributeError(f'{language_codes_file} is not a file. '
                                  f'Country codes should be uploaded from a file specified with the path argument')
 
+        # TODO: Add check whether we have interface in specified language
         parse_language_codes_file(language_codes_file, options['language'] or 'ENG')

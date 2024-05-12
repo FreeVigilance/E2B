@@ -1,16 +1,14 @@
-import collections
-import dataclasses
 import typing as t
 
 from django.db.models import Q
 
-from app.src.layers.api.models import meddra
+from app.src.layers.api.models import meddra, code_set
 from app.src.layers.base.services import ServiceProtocol, BusinessServiceProtocol, CIOMSServiceProtocol, \
-    MedDRAServiceProtocol
+    MedDRAServiceProtocol, CodeSetServiceProtocol
 from app.src.layers.domain.models import DomainModel, ICSR
 from app.src.layers.domain.models import CIOMS
 from app.src.layers.storage.models import soc_term, hlt_pref_term, hlgt_pref_term, pref_term, low_level_term, \
-    meddra_release
+    meddra_release, CountryCode, LanguageCode
 
 
 class DomainService(BusinessServiceProtocol[DomainModel]):
@@ -37,11 +35,11 @@ class DomainService(BusinessServiceProtocol[DomainModel]):
         return self.storage_service.delete(model_class, pk)
 
     def business_validate(
-        self, 
-        model: DomainModel, 
-        initial_data: dict[str, t.Any] | None = None
+            self,
+            model: DomainModel,
+            initial_data: dict[str, t.Any] | None = None
     ) -> tuple[DomainModel, bool]:
-        
+
         model = model.model_business_validate(initial_data)
         return model, model.is_valid
 
@@ -92,3 +90,31 @@ class MedDRAService(MedDRAServiceProtocol):
 
         return meddra.SearchResponse(terms=[meddra.Term(code=obj.code, name=obj.name) for obj in queryset],
                                      level=search_request.search.level)
+
+
+class CodeSetService(CodeSetServiceProtocol):
+    def __init__(self, storage_service) -> None:
+        self.storage_service = storage_service
+
+    def search(self, codeset: str, query: str, language: str) -> code_set.SearchResponse:
+        match codeset:
+            case 'country':
+                model = CountryCode
+            case 'language':
+                model = LanguageCode
+            case _:
+                model = None
+
+        queryset = model.objects.filter(language=language)
+        queryset_exact = model.objects.none()
+        queryset_start_with = model.objects.none()
+
+        if query:
+            queryset_exact = queryset.filter(Q(code__iexact=query))
+            queryset_start_with = queryset.filter(Q(name__unaccent__istartswith=query) & ~Q(code__iexact=query))
+            queryset = queryset.filter(Q(name__unaccent__icontains=query) &
+                                       ~Q(name__unaccent__istartswith=query) & ~Q(code__iexact=query))
+
+        return code_set.SearchResponse([code_set.Term(code=obj.code, name=obj.name) for obj in queryset_exact] +
+                                       [code_set.Term(code=obj.code, name=obj.name) for obj in queryset_start_with] +
+                                       [code_set.Term(code=obj.code, name=obj.name) for obj in queryset])
