@@ -7,8 +7,9 @@ from django import http
 from django.shortcuts import render
 from django.views import View
 
-from app.src.layers.api.models import ApiModel, meddra
-from app.src.layers.base.services import BusinessServiceProtocol, CIOMSServiceProtocol, MedDRAServiceProtocol
+from app.src.layers.api.models import ApiModel, meddra, code_set
+from app.src.layers.base.services import BusinessServiceProtocol, CIOMSServiceProtocol, MedDRAServiceProtocol, \
+    CodeSetServiceProtocol
 from extensions import utils
 
 
@@ -105,4 +106,12 @@ class MedDRASearchView(View):
     def post(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
         search_request = meddra.SearchRequest.parse_raw(request.body)
         response = self.meddra_service.search(search_request, pk)
+        return http.HttpResponse(response.model_dump_json(), status=HTTPStatus.OK, content_type='application/json')
+
+
+class CodeSetSearchView(View):
+    code_set_service: CodeSetServiceProtocol = ...
+
+    def get(self, request: http.HttpRequest, codeset: str) -> http.HttpResponse:
+        response = self.code_set_service.search(codeset, request.GET.get('q', ''), request.GET.get('lang', 'ENG'))
         return http.HttpResponse(response.model_dump_json(), status=HTTPStatus.OK, content_type='application/json')
