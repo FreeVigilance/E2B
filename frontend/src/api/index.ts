@@ -40,7 +40,7 @@ export const api = {
     },
     getReleases: () => {
         return clientER.get(`/meddra/release`);
-    }
+    },
     // {
     //     "state": {"SOC": 10036585, "HLT": 10000232},
     //     "search": {
@@ -48,4 +48,11 @@ export const api = {
     //         "input": "abortion"
     //     }
     // }
+    getCountryCodes: (data: any) => {
+        console.log(`getCountryCodes: /codeset/country/search?q=${data}`)
+        return clientER.get(`/codeset/country/search?q=${data}`);
+    },
+    getLanguageCodes: (data: any) => {
+        return clientER.get(`/codeset/language/search?q=${data}`);
+    },
 };
