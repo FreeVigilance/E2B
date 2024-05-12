@@ -9,6 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { makeStyles } from '@mui/styles';
 import { AutopsyFieldLabel } from '@src/components/field-labels/patient/autopsy-label';
 import { MedDRABtn } from '@src/components/meddra/meddra-btn';
+import { meddraSelector } from '@src/features/meddra/slice';
 
 const useStyles = makeStyles({
     margin: {
@@ -49,6 +50,7 @@ export const Autopsy = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const { autopsy } = useSelector(patientSelector);
+    const { meddraVersion } = useSelector(meddraSelector);
 
     const handleChange =
         (fieldName, index, isNumber = false, length = 1) =>
@@ -67,7 +69,8 @@ export const Autopsy = () => {
 
     const setMeddraValue = (value, fieldName, index) => {
         let autopsyCopy = JSON.parse(JSON.stringify(autopsy));
-        autopsyCopy[index][fieldName].value = event.target.value;
+        autopsyCopy[index][fieldName].value = value;
+        autopsyCopy[index]['D_9_4_r_1a_MedDRAVersionAutopsyDeterminedCauseDeath'].value = meddraVersion.split(' ')[0];
         dispatch(setAutopsy(autopsyCopy));
     };
 

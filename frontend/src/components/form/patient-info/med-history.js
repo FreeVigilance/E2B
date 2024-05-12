@@ -30,6 +30,7 @@ import InputMask from 'react-input-mask';
 import { makeStyles } from '@mui/styles';
 import { MedHistoryFieldLabel } from '@src/components/field-labels/patient/med-history-label';
 import { MedDRABtn } from '@src/components/meddra/meddra-btn';
+import { meddraSelector } from '@src/features/meddra/slice';
 
 const useStyles = makeStyles({
     margin: {
@@ -70,6 +71,7 @@ export const MedicalHistory = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const { medicalHistory } = useSelector(patientSelector);
+    const { meddraVersion } = useSelector(meddraSelector);
 
     const handleChange =
         (fieldName, index, isNumber = false, length = 1) =>
@@ -89,6 +91,7 @@ export const MedicalHistory = () => {
     const setMeddraValue = (value, fieldName, index) => {
         let medicalHistoryCopy = JSON.parse(JSON.stringify(medicalHistory));
         medicalHistoryCopy[index][fieldName].value = value;
+        medicalHistoryCopy[index]['D_7_1_r_1a_MedDRAVersionMedicalHistory'].value = meddraVersion.split(' ')[0];
         dispatch(setMedicalHistory(medicalHistoryCopy));
     };
 

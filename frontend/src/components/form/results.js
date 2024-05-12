@@ -26,6 +26,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { ResultFieldLabel } from '../field-labels/result-field-label';
 import InputMask from 'react-input-mask';
 import { MedDRABtn } from '../meddra/meddra-btn';
+import { meddraSelector } from '@src/features/meddra/slice';
 
 const useStyles = makeStyles({
     margin: {
@@ -66,6 +67,8 @@ export const Results = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const { resultsData } = useSelector(resultsSelector);
+    const { meddraVersion } = useSelector(meddraSelector);
+
 
     const handleChange =
         (fieldName, index, isNumber = false, length = 1) =>
@@ -95,6 +98,7 @@ export const Results = () => {
     const setMeddraValue = (value, fieldName, index) => {
         let resultsDataCopy = JSON.parse(JSON.stringify(resultsData));
         resultsDataCopy[index][fieldName].value = value;
+        resultsDataCopy[index]['F_r_2_2a_MedDRAVersionTestName'].value = meddraVersion.split(' ')[0];
         dispatch(setResultsData(resultsDataCopy));
     };
 

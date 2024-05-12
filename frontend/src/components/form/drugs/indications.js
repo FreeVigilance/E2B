@@ -22,6 +22,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { makeStyles } from '@mui/styles';
 import { IndicationsFieldLabel } from '@src/components/field-labels/drugs/indications-label';
 import { MedDRABtn } from '@src/components/meddra/meddra-btn';
+import { meddraSelector } from '@src/features/meddra/slice';
 
 const useStyles = makeStyles({
     margin: {
@@ -63,6 +64,8 @@ export const Indications = ({ drugIndex }) => {
 
     const dispatch = useDispatch();
     const { indications } = useSelector(drugsSelector);
+    const { meddraVersion } = useSelector(meddraSelector);
+
 
     useEffect(() => {
         console.log('STATE');
@@ -87,6 +90,7 @@ export const Indications = ({ drugIndex }) => {
     const setMeddraValue = (value, fieldName, index) => {
         let indicationsCopy = JSON.parse(JSON.stringify(indications));
         indicationsCopy[drugIndex][index][fieldName].value = value;
+        indicationsCopy[drugIndex][index]['G_k_7_r_2a_MedDRAVersionIndication'].value = meddraVersion.split(' ')[0];
         dispatch(setIndications(indicationsCopy));
     };
 
