@@ -80,7 +80,7 @@ export const InfoSenderComp = () => {
 
     const getCountryByCode = (code) => CC.find(country => country.code === code);
 
-    useEffect(() => {dispatch(getCountryCodes({data: ""}));}, []);
+    useEffect(() => {dispatch(getCountryCodes({data: ''}));}, []);
 
     return (
         <Stack direction={'row'} gap={2}>

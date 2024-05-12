@@ -28,7 +28,7 @@ import {
 import { Diagnosis, SummaryComments } from '@src/features/narrative/narrative';
 import { makeStyles } from '@mui/styles';
 import { SummaryCommentsFieldLabel } from '@src/components/field-labels/narrative/summary-comments-label';
-import { matchSorter } from "match-sorter";
+import { matchSorter } from 'match-sorter';
 
 const useStyles = makeStyles({
     margin: {
@@ -89,7 +89,7 @@ export const SummaryCommentsComp = () => {
 
     const getLanguageByCode = (code) => LC.find(country => country.code === code);
 
-    useEffect(() => {dispatch(getLanguageCodes({data: ""}));}, []);
+    useEffect(() => {dispatch(getLanguageCodes({data: ''}));}, []);
 
     const formList = () => {
         let list = [];
@@ -102,7 +102,7 @@ export const SummaryCommentsComp = () => {
                         sx={{color: 'white', backgroundColor: '#1976d2'}}
                         onClick={addForm}
                     >
-                        <AddIcon/>
+                        <AddIcon />
                     </IconButton>
                 </span>
             );
@@ -202,7 +202,7 @@ export const SummaryCommentsComp = () => {
                                         }}
                                         onClick={addForm}
                                     >
-                                        <AddIcon/>
+                                        <AddIcon />
                                     </IconButton>
                                 </span>
                             ) : null}
@@ -216,7 +216,7 @@ export const SummaryCommentsComp = () => {
                                     }}
                                     onClick={() => removeForm(index)}
                                 >
-                                    <DeleteIcon/>
+                                    <DeleteIcon />
                                 </IconButton>
                             </span>
                         </Stack>

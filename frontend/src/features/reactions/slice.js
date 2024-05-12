@@ -10,7 +10,7 @@ import {
     saveData,
 } from '../display/slice';
 import { Reaction } from './reaction';
-import { api } from "@src/api";
+import { api } from '@src/api';
 
 export const reactionsSelector = (state) => state.reactions;
 
@@ -171,7 +171,7 @@ export const getReaction = () => {
 const initialState = {
     reactionsData: [],
     LC: [],
-    CC: []
+    CC: [],
 };
 
 const reactionsSlice = createSlice({

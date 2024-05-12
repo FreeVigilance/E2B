@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+    Autocomplete,
     Stack,
     FormControlLabel,
     Box,
@@ -10,7 +11,7 @@ import {
     InputLabel,
     Grid,
     Divider,
-    FormLabel, Autocomplete,
+    FormLabel,
 } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
@@ -20,7 +21,7 @@ import { Indications } from './indications';
 import { AddInfo } from './add-info';
 import { makeStyles } from '@mui/styles';
 import { DrugsFieldLabel } from '@src/components/field-labels/drugs/drugs-label';
-import { matchSorter } from "match-sorter";
+import { matchSorter } from 'match-sorter';
 
 const useStyles = makeStyles({
     margin: {
@@ -87,7 +88,7 @@ export const Drugs = ({index}) => {
 
     const getCountryByCode = (code) => CC.find(country => country.code === code);
 
-    useEffect(() => {dispatch(getCountryCodes({data: ""}));}, []);
+    useEffect(() => {dispatch(getCountryCodes({data: ''}));}, []);
 
     return (
         <>
@@ -550,7 +551,7 @@ export const Drugs = ({index}) => {
                 </Grid>
             </Stack>
 
-            <Divider sx={{borderBottomWidth: 5, padding: 2}}/>
+            <Divider sx={{borderBottomWidth: 5, padding: 2}} />
 
             <Grid container direction="row" columnGap={2}>
                 <Grid container item xs direction="column" rowGap={1}>

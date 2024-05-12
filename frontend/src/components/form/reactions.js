@@ -36,7 +36,7 @@ import {
 import { ReactionFieldLabel } from '../field-labels/reaction-field-label';
 import InputMask from 'react-input-mask';
 import { MedDRABtn } from '../meddra/meddra-btn';
-import { matchSorter } from "match-sorter";
+import { matchSorter } from 'match-sorter';
 
 var snakecaseKeys = require('snakecase-keys');
 
@@ -110,8 +110,8 @@ export const Reactions = () => {
     const getLanguageByCode = (code) => LC.find(country => country.code === code);
     const getCountryByCode = (code) => CC.find(country => country.code === code);
 
-    useEffect(() => {dispatch(getLanguageCodes({data: ""}));}, []);
-    useEffect(() => {dispatch(getCountryCodes({data: ""}));}, []);
+    useEffect(() => {dispatch(getLanguageCodes({data: ''}));}, []);
+    useEffect(() => {dispatch(getCountryCodes({data: ''}));}, []);
 
     const setMeddraValue = (value, fieldName, index) => {
         let reactionsDataCopy = JSON.parse(JSON.stringify(reactionsData));
@@ -147,7 +147,7 @@ export const Reactions = () => {
                         sx={{color: 'white', backgroundColor: '#1976d2'}}
                         onClick={addForm}
                     >
-                        <AddIcon/>
+                        <AddIcon />
                     </IconButton>
                 </span>
             );
@@ -954,7 +954,7 @@ export const Reactions = () => {
                                     }}
                                     onClick={addForm}
                                 >
-                                    <AddIcon/>
+                                    <AddIcon />
                                 </IconButton>
                             </span>
                         ) : null}
@@ -968,7 +968,7 @@ export const Reactions = () => {
                                 }}
                                 onClick={() => removeForm(index)}
                             >
-                                <DeleteIcon/>
+                                <DeleteIcon />
                             </IconButton>
                         </span>
                     </CardContent>

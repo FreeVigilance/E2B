@@ -26,7 +26,7 @@ import { StudyRegistration } from '@src/features/study-identification/study-iden
 import DeleteIcon from '@mui/icons-material/Delete';
 import { makeStyles } from '@mui/styles';
 import { StudyRegistrationFieldLabel } from '@src/components/field-labels/study-identification/study-registration-label';
-import { matchSorter } from "match-sorter";
+import { matchSorter } from 'match-sorter';
 
 const useStyles = makeStyles({
     margin: {
@@ -89,7 +89,7 @@ export const StudyRegistrationComp = () => {
 
     const getCountryByCode = (code) => CC.find(country => country.code === code);
 
-    useEffect(() => {dispatch(getCountryCodes({data: ""}));}, []);
+    useEffect(() => {dispatch(getCountryCodes({data: ''}));}, []);
 
     const setNullFlavor = (fieldName, index) => (event) => {
         let studyRegistrationCopy = JSON.parse(
@@ -122,7 +122,7 @@ export const StudyRegistrationComp = () => {
                         sx={{color: 'white', backgroundColor: '#1976d2'}}
                         onClick={addForm}
                     >
-                        <AddIcon/>
+                        <AddIcon />
                     </IconButton>
                 </span>
             );
@@ -322,7 +322,7 @@ export const StudyRegistrationComp = () => {
                                         }}
                                         onClick={addForm}
                                     >
-                                        <AddIcon/>
+                                        <AddIcon />
                                     </IconButton>
                                 </span>
                             ) : null}
@@ -337,7 +337,7 @@ export const StudyRegistrationComp = () => {
                                     }}
                                     onClick={() => removeForm(index)}
                                 >
-                                    <DeleteIcon/>
+                                    <DeleteIcon />
                                 </IconButton>
                             </span>
                         </Stack>

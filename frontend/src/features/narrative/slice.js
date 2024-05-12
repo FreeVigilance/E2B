@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { e2bCaseKeys } from '../common/changekeys';
 import { changeData, getData, getJsonFromXml, revertAll, saveData } from '../display/slice';
 import { NarrativeCaseSummary } from './narrative';
-import { api } from "@src/api";
+import { api } from '@src/api';
 
 export const narrativeSelector = (state) => state.narrative;
 

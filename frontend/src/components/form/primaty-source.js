@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { matchSorter } from "match-sorter";
+import { matchSorter } from 'match-sorter';
 import {
     Autocomplete,
     Stack,
@@ -96,7 +96,7 @@ export const PrimarySourceComp = () => {
 
     const getCountryByCode = (code) => CC.find(country => country.code === code);
 
-    useEffect(() => {dispatch(getCountryCodes({data: ""}));}, []);
+    useEffect(() => {dispatch(getCountryCodes({data: ''}));}, []);
 
     const setNullFlavor = (fieldName, index) => (event) => {
         let primarySourceDataCopy = JSON.parse(
@@ -130,7 +130,7 @@ export const PrimarySourceComp = () => {
                         sx={{color: 'white', backgroundColor: '#1976d2'}}
                         onClick={addForm}
                     >
-                        <AddIcon/>
+                        <AddIcon />
                     </IconButton>
                 </span>
             );
@@ -1151,7 +1151,7 @@ export const PrimarySourceComp = () => {
                                     }}
                                     onClick={addForm}
                                 >
-                                    <AddIcon/>
+                                    <AddIcon />
                                 </IconButton>
                             </span>
                         ) : null}
@@ -1166,7 +1166,7 @@ export const PrimarySourceComp = () => {
                                 }}
                                 onClick={() => removeForm(index)}
                             >
-                                <DeleteIcon/>
+                                <DeleteIcon />
                             </IconButton>
                         </span>
                     </CardContent>
