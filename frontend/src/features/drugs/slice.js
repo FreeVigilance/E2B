@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
     AdditionalInfo,
     Dosage,
@@ -18,8 +18,16 @@ import {
     saveData,
 } from '../display/slice';
 import { e2bCaseKeys } from '../common/changekeys';
+import { api } from "@src/api";
 
 export const drugsSelector = (state) => state.drugs;
+
+export const getCountryCodes = createAsyncThunk(
+    'drugs/getCountryCodes',
+    (options) => {
+        return api.getCountryCodes(options.data);
+    },
+);
 
 export const getDrug = () => {
     return (dispatch, getState) => {
@@ -331,6 +339,7 @@ const initialState = {
     drugReactionMatrix: {},
     relatedness: {},
     additionalInfo: {},
+    CC: []
 };
 
 const drugsSlice = createSlice({
@@ -358,6 +367,9 @@ const drugsSlice = createSlice({
         setAdditionalInfo: (state, action) => {
             state.additionalInfo = action.payload;
         },
+        setCountryCodes: (state, action) => {
+            state.CC = action.payload;
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(revertAll, () => initialState);
@@ -421,6 +433,10 @@ const drugsSlice = createSlice({
                 state.additionalInfo = res[6];
             }
         });
+
+        builder.addCase(getCountryCodes.fulfilled, (state, action) => {
+            state.CC = action.payload;
+        });
     },
 });
 
@@ -433,4 +449,5 @@ export const {
     setDrugReactionMatrix,
     setRelatedness,
     setAdditionalInfo,
+    setCountryCodes,
 } = drugsSlice.actions;

@@ -1,9 +1,17 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { e2bCaseKeys } from '../common/changekeys';
 import { changeData, getData, getJsonFromXml, revertAll, saveData } from '../display/slice';
 import { InfoSender } from './info-sender';
+import { api } from "@src/api";
 
 export const infoSenderSelector = (state) => state.infoSender;
+
+export const getCountryCodes = createAsyncThunk(
+	'infoSender/getCountryCodes',
+	(options) => {
+		return api.getCountryCodes(options.data);
+	},
+);
 
 export const getInfoSender = () => {
     return (dispatch, getState) => {
@@ -20,7 +28,7 @@ export const getInfoSender = () => {
 		itemData['C_3_4_1_SenderStreetAddress'] = infoSenderData['C_3_4_1_SenderStreetAddress'];
 		itemData['C_3_4_2_SenderCity'] = infoSenderData['C_3_4_2_SenderCity'];
 		itemData['C_3_4_3_SenderStateProvince'] = infoSenderData['C_3_4_3_SenderStateProvince'];
-		itemData['C_3_4_5_SenderCountryCode'] = infoSenderData['C_3_4_5_SenderCountryCode'];
+		itemData['C_3_4_5_SenderCountryCode'] = infoSenderData['C_3_4_5_SenderCountryCode']
 		itemData['C_3_4_6_SenderTelephone'] = infoSenderData['C_3_4_6_SenderTelephone'];
 		itemData['C_3_4_7_SenderFax'] = infoSenderData['C_3_4_7_SenderFax'];
 		itemData['C_3_4_8_SenderEmail'] = infoSenderData['C_3_4_8_SenderEmail'];
@@ -29,7 +37,8 @@ export const getInfoSender = () => {
 }
 
 const initialState = {
-	infoSenderData: new InfoSender()
+	infoSenderData: new InfoSender(),
+	CC: [],
 }
 
 const infoSenderSlice = createSlice({
@@ -39,6 +48,9 @@ const infoSenderSlice = createSlice({
 		setInfoSenderData: (state, action) => {
 			state.infoSenderData = action.payload;
 		},
+		setCountryCodes: (state, action) => {
+			state.CC = action.payload;
+		}
 	},
 	extraReducers: (builder) => {
 		builder.addCase(revertAll, () => initialState);
@@ -66,11 +78,15 @@ const infoSenderSlice = createSlice({
             console.log('infoSender', data);
 			state.infoSenderData = data;
         });
+
+		builder.addCase(getCountryCodes.fulfilled, (state, action) => {
+			state.CC = action.payload;
+		});
     },
 })
 
 export default infoSenderSlice.reducer;
 export const {
-    setInfoSenderData,
-
-} =infoSenderSlice.actions;
+	setInfoSenderData,
+	setCountryCodes,
+} = infoSenderSlice.actions;

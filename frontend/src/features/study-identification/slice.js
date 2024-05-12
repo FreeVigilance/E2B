@@ -1,10 +1,18 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { nullFlavors } from '@src/components/nullFlavours';
 import { e2bCaseKeys } from '../common/changekeys';
 import { changeData, getData, getJsonFromXml, revertAll, saveData } from '../display/slice';
 import { StudyIdentification, StudyRegistration } from './study-identification';
+import { api } from "@src/api";
 
 export const studyIdentificationSelector = (state) => state.studyIdentification;
+
+export const getCountryCodes = createAsyncThunk(
+	'studyIdentification/getCountryCodes',
+	(options) => {
+		return api.getCountryCodes(options.data);
+	},
+);
 
 export const getStudyIdentification = () => {
     return (dispatch, getState) => {
@@ -38,7 +46,8 @@ const getNullFlavor = (item, field) => {
 
 const initialState = {
 	studyIdentification: new StudyIdentification(),
-	studyRegistration: []
+	studyRegistration: [],
+	CC: []
 }
 
 const studyIdentificationSlice = createSlice({
@@ -51,6 +60,9 @@ const studyIdentificationSlice = createSlice({
 		setStudyRegistration: (state, action) => {
 			state.studyRegistration = action.payload;
 		},
+		setCountryCodes: (state, action) => {
+			state.CC = action.payload;
+		}
 	}, extraReducers: (builder) => {
 		builder.addCase(revertAll, () => initialState);
 
@@ -81,6 +93,10 @@ const studyIdentificationSlice = createSlice({
 			state.studyIdentification = data;
 			state.studyRegistration = data['C_5_1_r_StudyRegistration'];
         });
+
+		builder.addCase(getCountryCodes.fulfilled, (state, action) => {
+			state.CC = action.payload;
+		});
     },
 })
 
@@ -88,5 +104,5 @@ export default studyIdentificationSlice.reducer;
 export const {
     setStudyIdentification,
 	setStudyRegistration,
-
+	setCountryCodes,
 } = studyIdentificationSlice.actions;

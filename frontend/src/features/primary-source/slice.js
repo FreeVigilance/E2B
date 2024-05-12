@@ -1,10 +1,18 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { nullFlavors } from '@src/components/nullFlavours';
 import { e2bCaseKeys } from '../common/changekeys';
 import { changeData, getData, getJsonFromXml, revertAll, saveData } from '../display/slice';
 import { PrimarySource } from './primary-source';
+import { api } from "@src/api";
 
 export const primarySourceSelector = (state) => state.primarySource;
+
+export const getCountryCodes = createAsyncThunk(
+	'primarySource/getCountryCodes',
+	(options) => {
+		return api.getCountryCodes(options.data);
+	},
+);
 
 export const getPrimarySources = () => {
     return (dispatch, getState) => {
@@ -49,7 +57,8 @@ const getNullFlavor = (item, field) => {
 
 
 const initialState = {
-	primarySourceData: []
+	primarySourceData: [],
+	CC: [],
 };
 
 const primarySourceSlice = createSlice({
@@ -58,7 +67,10 @@ const primarySourceSlice = createSlice({
 	reducers: {
 		setPrimarySourceData: (state, action) => {
 			state.primarySourceData = action.payload;
-		},	
+		},
+		setCountryCodes: (state, action) => {
+			state.CC = action.payload;
+		}
 	},
 	extraReducers: (builder) => {
 		builder.addCase(revertAll, () => initialState);
@@ -86,11 +98,15 @@ const primarySourceSlice = createSlice({
             console.log('primarySourceData', data);
 			state.primarySourceData = data;
         });
+
+		builder.addCase(getCountryCodes.fulfilled, (state, action) => {
+			state.CC = action.payload;
+		});
     },
 })
 
 export default primarySourceSlice.reducer;
 export const {
     setPrimarySourceData,
-
+	setCountryCodes,
 } = primarySourceSlice.actions;

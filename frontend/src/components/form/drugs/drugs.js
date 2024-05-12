@@ -10,16 +10,17 @@ import {
     InputLabel,
     Grid,
     Divider,
-    FormLabel,
+    FormLabel, Autocomplete,
 } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
-import { drugsSelector, setDrugs } from '@src/features/drugs/slice';
+import { getCountryCodes, drugsSelector, setDrugs } from '@src/features/drugs/slice';
 import { Substances } from './substance';
 import { Indications } from './indications';
 import { AddInfo } from './add-info';
 import { makeStyles } from '@mui/styles';
 import { DrugsFieldLabel } from '@src/components/field-labels/drugs/drugs-label';
+import { matchSorter } from "match-sorter";
 
 const useStyles = makeStyles({
     margin: {
@@ -56,27 +57,37 @@ const useStyles = makeStyles({
     },
 });
 
-export const Drugs = ({ index }) => {
+export const Drugs = ({index}) => {
     const classes = useStyles();
 
     const dispatch = useDispatch();
-    const { drugs } = useSelector(drugsSelector);
+    const {drugs, CC} = useSelector(drugsSelector);
 
     const handleChange =
         (fieldName, index, isNumber = false, length = 1) =>
-        (event) => {
-            let value = event.target.value;
-            if (isNumber) {
-                if (value.length > length) value = value.slice(0, length);
-            }
-            if (value === '') {
-                value = null;
-            }
-            let drugsDataCopy = JSON.parse(JSON.stringify(drugs));
-            drugsDataCopy[index][fieldName].value = value;
-            console.log(drugsDataCopy[index]);
-            dispatch(setDrugs(drugsDataCopy));
-        };
+            (event) => {
+                let value = event.target.value;
+                if (isNumber) {
+                    if (value.length > length) value = value.slice(0, length);
+                }
+                if (value === '') {
+                    value = null;
+                }
+                let drugsDataCopy = JSON.parse(JSON.stringify(drugs));
+                drugsDataCopy[index][fieldName].value = value;
+                console.log(drugsDataCopy[index]);
+                dispatch(setDrugs(drugsDataCopy));
+            };
+
+    const handleAutocompleteChange = (fieldName, index) => (_, value) => {
+        let drugsDataCopy = JSON.parse(JSON.stringify(drugs));
+        drugsDataCopy[index][fieldName].value = value?.code ?? null;
+        dispatch(setDrugs(drugsDataCopy));
+    };
+
+    const getCountryByCode = (code) => CC.find(country => country.code === code);
+
+    useEffect(() => {dispatch(getCountryCodes({data: ""}));}, []);
 
     return (
         <>
@@ -93,8 +104,7 @@ export const Drugs = ({ index }) => {
                         <Select
                             className={classes.textXshort}
                             value={
-                                drugs[index]['G_k_1_CharacterisationDrugRole']
-                                    .value
+                                drugs[index]['G_k_1_CharacterisationDrugRole'].value
                             }
                             onChange={handleChange(
                                 'G_k_1_CharacterisationDrugRole',
@@ -199,7 +209,7 @@ export const Drugs = ({ index }) => {
                             value={
                                 drugs[index][
                                     'G_k_2_2_MedicinalProductNamePrimarySource'
-                                ].value
+                                    ].value
                             }
                             multiline
                             rows={4}
@@ -214,7 +224,7 @@ export const Drugs = ({ index }) => {
                         ></DrugsFieldLabel>
                     </Grid>
                     <Grid item xs={9}>
-                        <TextField
+                        {CC.length === 0 && <TextField
                             variant="outlined"
                             className={classes.textXshort}
                             onChange={handleChange(
@@ -224,9 +234,33 @@ export const Drugs = ({ index }) => {
                             value={
                                 drugs[index][
                                     'G_k_2_4_IdentificationCountryDrugObtained'
-                                ].value
+                                    ].value
                             }
-                        />
+                        />}
+                        {CC.length > 0 && <Autocomplete
+                            className={classes.textShort}
+                            autoHighlight
+                            autoSelect
+                            options={CC}
+                            getOptionLabel={(option) => option.code ?? ''}
+                            value={getCountryByCode(drugs[index]['G_k_2_4_IdentificationCountryDrugObtained'].value) ?? ''}
+                            onChange={handleAutocompleteChange('G_k_2_4_IdentificationCountryDrugObtained', index)}
+                            filterOptions={(options, {inputValue}) =>
+                                matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.ACRONYM})}
+                            renderOption={(props2, option) => {
+                                return (
+                                    <li {...props2} key={props2.key}>
+                                        {`${option.code}\t${option.name}`}
+                                    </li>
+                                );
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    label="2-alpha country code"
+                                    {...params}
+                                />
+                            )}
+                        ></Autocomplete>}
                     </Grid>
 
                     <Grid item xs={3}>
@@ -247,7 +281,7 @@ export const Drugs = ({ index }) => {
                             value={
                                 drugs[index][
                                     'G_k_3_1_AuthorisationApplicationNumber'
-                                ].value
+                                    ].value
                             }
                         />
                     </Grid>
@@ -260,7 +294,7 @@ export const Drugs = ({ index }) => {
                         ></DrugsFieldLabel>
                     </Grid>
                     <Grid item xs={9}>
-                        <TextField
+                        {CC.length === 0 && <TextField
                             variant="outlined"
                             className={classes.textXshort}
                             onChange={handleChange(
@@ -270,9 +304,33 @@ export const Drugs = ({ index }) => {
                             value={
                                 drugs[index][
                                     'G_k_3_2_CountryAuthorisationApplication'
-                                ].value
+                                    ].value
                             }
-                        />
+                        />}
+                        {CC.length > 0 && <Autocomplete
+                            className={classes.textShort}
+                            autoHighlight
+                            autoSelect
+                            options={CC}
+                            getOptionLabel={(option) => option.code ?? ''}
+                            value={getCountryByCode(drugs[index]['G_k_3_2_CountryAuthorisationApplication'].value) ?? ''}
+                            onChange={handleAutocompleteChange('G_k_3_2_CountryAuthorisationApplication', index)}
+                            filterOptions={(options, {inputValue}) =>
+                                matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.ACRONYM})}
+                            renderOption={(props2, option) => {
+                                return (
+                                    <li {...props2} key={props2.key}>
+                                        {`${option.code}\t${option.name}`}
+                                    </li>
+                                );
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    label="2-alpha country code"
+                                    {...params}
+                                />
+                            )}
+                        ></Autocomplete>}
                     </Grid>
 
                     <Grid item xs={3}>
@@ -291,8 +349,7 @@ export const Drugs = ({ index }) => {
                                 index,
                             )}
                             value={
-                                drugs[index]['G_k_3_3_NameHolderApplicant']
-                                    .value
+                                drugs[index]['G_k_3_3_NameHolderApplicant'].value
                             }
                         />
                     </Grid>
@@ -327,7 +384,7 @@ export const Drugs = ({ index }) => {
                             value={
                                 drugs[index][
                                     'G_k_5a_CumulativeDoseFirstReactionNum'
-                                ].value
+                                    ].value
                             }
                         />
                     </Grid>
@@ -350,7 +407,7 @@ export const Drugs = ({ index }) => {
                             value={
                                 drugs[index][
                                     'G_k_5b_CumulativeDoseFirstReactionUnit'
-                                ].value
+                                    ].value
                             }
                         />
                     </Grid>
@@ -384,7 +441,7 @@ export const Drugs = ({ index }) => {
                             value={
                                 drugs[index][
                                     'G_k_6a_GestationPeriodExposureNum'
-                                ].value
+                                    ].value
                             }
                         />
                     </Grid>
@@ -448,14 +505,14 @@ export const Drugs = ({ index }) => {
                         ></DrugsFieldLabel>
                     </Grid>
                     <Grid item xs={9}>
-                        <Box className="text-small" style={{ padding: 0 }}>
+                        <Box className="text-small" style={{padding: 0}}>
                             <FormControlLabel
                                 control={
                                     <Checkbox
                                         checked={
                                             drugs[index][
                                                 'G_k_2_5_InvestigationalProductBlinded'
-                                            ]
+                                                ]
                                         }
                                         onChange={handleChange(
                                             'G_k_2_5_InvestigationalProductBlinded',
@@ -484,8 +541,7 @@ export const Drugs = ({ index }) => {
                                 index,
                             )}
                             value={
-                                drugs[index]['G_k_11_AdditionalInformationDrug']
-                                    .value
+                                drugs[index]['G_k_11_AdditionalInformationDrug'].value
                             }
                             multiline
                             rows={10}
@@ -494,12 +550,12 @@ export const Drugs = ({ index }) => {
                 </Grid>
             </Stack>
 
-            <Divider sx={{ borderBottomWidth: 5, padding: 2 }} />
+            <Divider sx={{borderBottomWidth: 5, padding: 2}}/>
 
             <Grid container direction="row" columnGap={2}>
                 <Grid container item xs direction="column" rowGap={1}>
                     <FormLabel
-                        sx={{ fontSize: 30, marginLeft: '20%', color: 'black' }}
+                        sx={{fontSize: 30, marginLeft: '20%', color: 'black'}}
                     >
                         Substance Identifier and Strength
                     </FormLabel>
@@ -507,7 +563,7 @@ export const Drugs = ({ index }) => {
                 </Grid>
                 <Grid container item xs direction="column" rowGap={1}>
                     <FormLabel
-                        sx={{ fontSize: 30, marginLeft: '25%', color: 'black' }}
+                        sx={{fontSize: 30, marginLeft: '25%', color: 'black'}}
                     >
                         Indication for Use in Case
                     </FormLabel>
@@ -515,7 +571,7 @@ export const Drugs = ({ index }) => {
                 </Grid>
                 <Grid container item xs direction="column" rowGap={1}>
                     <FormLabel
-                        sx={{ fontSize: 30, marginLeft: '25%', color: 'black' }}
+                        sx={{fontSize: 30, marginLeft: '25%', color: 'black'}}
                     >
                         Additional Information on Drug
                     </FormLabel>
