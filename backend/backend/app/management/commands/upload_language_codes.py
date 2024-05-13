@@ -27,22 +27,23 @@ def parse_language_codes_file(file_path: pathlib.Path, language: str):
 
 
 class Command(BaseCommand):
-    help = 'Uploads country codes to the database'
+    help = ('Uploads language codes to the database '
+            'Be aware that script will clear the language codes for specified language before adding new data.')
 
     def add_arguments(self, parser):
         # Positional arguments
         parser.add_argument('path', type=pathlib.Path)
 
         # Named (optional) arguments
-        parser.add_argument('--language', type=str, help='Language of names of countries, default=ENG')
+        parser.add_argument('--language', type=str, help='Language of names of languages', default='ENG')
 
     @transaction.atomic
     def handle(self, *args, **options):
         language_codes_file = pathlib.Path(options['path'])
 
         if not language_codes_file.is_file():
-            raise AttributeError(f'{language_codes_file} is not a file. '
-                                 f'Country codes should be uploaded from a file specified with the path argument')
+            raise FileNotFoundError(f'{language_codes_file} is not a file. '
+                                    f'Language codes should be uploaded from a file specified with the path argument')
 
         # TODO: Add check whether we have interface in specified language
-        parse_language_codes_file(language_codes_file, options['language'] or 'ENG')
+        parse_language_codes_file(language_codes_file, options['language'])

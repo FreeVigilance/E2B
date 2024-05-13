@@ -113,5 +113,7 @@ class CodeSetSearchView(View):
     code_set_service: CodeSetServiceProtocol = ...
 
     def get(self, request: http.HttpRequest, codeset: str) -> http.HttpResponse:
-        response = self.code_set_service.search(codeset, request.GET.get('q', ''), request.GET.get('lang', 'ENG'))
+        response = self.code_set_service.search(codeset, request.GET.get('q', ''),
+                                                request.GET.get('lang', 'ENG'),
+                                                request.GET.get('property', None))
         return http.HttpResponse(response.model_dump_json(), status=HTTPStatus.OK, content_type='application/json')
