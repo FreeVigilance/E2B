@@ -168,30 +168,26 @@ export const DrugReactionsMatrix = ({ drugIndex }) => {
 
                                     <Grid item xs={4}>
                                         <MatrixFieldLabel
-                                            label="(unit) Time Interval Beginning of Drug Administration and Start of Reaction"
+                                            label="Time Interval Beginning of Drug Administration and Start of Reaction (unit)"
                                             field="G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit"
                                             drugIndex={drugIndex}
                                             index={index}
                                         ></MatrixFieldLabel>
                                     </Grid>
                                     <Grid item xs={8}>
-                                        <FormControl>
-                                            <InputLabel>Time Interval between Beginning of Drug Administration and Start of Reaction / Event (unit)</InputLabel>
-                                            <Select
-                                                label="Time Interval between Beginning of Drug Administration and Start of Reaction / Event (unit)"
-                                                sx={{width: '100%'}}
-                                                onChange={handleChange('G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit', index)}
-                                                value={item['G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit'].value}
-                                            >
-                                                <MenuItem value={'s'}>Second (s)</MenuItem>
-                                                <MenuItem value={'min'}>Minute (min)</MenuItem>
-                                                <MenuItem value={'h'}>Hour (h)</MenuItem>
-                                                <MenuItem value={'d'}>Day (d)</MenuItem>
-                                                <MenuItem value={'wk'}>Week (wk)</MenuItem>
-                                                <MenuItem value={'mo'}>Month (mo)</MenuItem>
-                                                <MenuItem value={'a'}>Year (a)</MenuItem>
-                                            </Select>
-                                        </FormControl>
+                                        <Select
+                                            className={classes.textXshort}
+                                            onChange={handleChange('G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit', index)}
+                                            value={item['G_k_9_i_3_1b_IntervalDrugAdministrationReactionUnit'].value}
+                                        >
+                                            <MenuItem value={'s'}>Second (s)</MenuItem>
+                                            <MenuItem value={'min'}>Minute (min)</MenuItem>
+                                            <MenuItem value={'h'}>Hour (h)</MenuItem>
+                                            <MenuItem value={'d'}>Day (d)</MenuItem>
+                                            <MenuItem value={'wk'}>Week (wk)</MenuItem>
+                                            <MenuItem value={'mo'}>Month (mo)</MenuItem>
+                                            <MenuItem value={'a'}>Year (a)</MenuItem>
+                                        </Select>
                                     </Grid>
 
                                     <Grid item xs={4}>
@@ -231,30 +227,26 @@ export const DrugReactionsMatrix = ({ drugIndex }) => {
 
                                     <Grid item xs={4}>
                                         <MatrixFieldLabel
-                                            label="(unit) Time Interval Last Dose of Drug and Start of Reaction / Event"
+                                            label="Time Interval Last Dose of Drug and Start of Reaction / Event (unit)"
                                             field="G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit"
                                             drugIndex={drugIndex}
                                             index={index}
                                         ></MatrixFieldLabel>
                                     </Grid>
                                     <Grid item xs={8}>
-                                        <FormControl>
-                                            <InputLabel>Time Interval between Beginning of Drug Administration and Start of Reaction / Event (unit)</InputLabel>
-                                            <Select
-                                                label="Time Interval between Last Dose of Drug and Start of Reaction / Event (unit)"
-                                                sx={{width: '100%'}}
-                                                onChange={handleChange('G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit', index)}
-                                                value={item['G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit'].value}
-                                            >
-                                                <MenuItem value={'s'}>Second (s)</MenuItem>
-                                                <MenuItem value={'min'}>Minute (min)</MenuItem>
-                                                <MenuItem value={'h'}>Hour (h)</MenuItem>
-                                                <MenuItem value={'d'}>Day (d)</MenuItem>
-                                                <MenuItem value={'wk'}>Week (wk)</MenuItem>
-                                                <MenuItem value={'mo'}>Month (mo)</MenuItem>
-                                                <MenuItem value={'a'}>Year (a)</MenuItem>
-                                            </Select>
-                                        </FormControl>
+                                        <Select
+                                            className={classes.textXshort}
+                                            onChange={handleChange('G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit', index)}
+                                            value={item['G_k_9_i_3_2b_IntervalLastDoseDrugReactionUnit'].value}
+                                        >
+                                            <MenuItem value={'s'}>Second (s)</MenuItem>
+                                            <MenuItem value={'min'}>Minute (min)</MenuItem>
+                                            <MenuItem value={'h'}>Hour (h)</MenuItem>
+                                            <MenuItem value={'d'}>Day (d)</MenuItem>
+                                            <MenuItem value={'wk'}>Week (wk)</MenuItem>
+                                            <MenuItem value={'mo'}>Month (mo)</MenuItem>
+                                            <MenuItem value={'a'}>Year (a)</MenuItem>
+                                        </Select>
                                     </Grid>
 
                                     <Grid item xs={4}>

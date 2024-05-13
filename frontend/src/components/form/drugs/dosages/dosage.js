@@ -484,19 +484,19 @@ export const Dosages = ({ drugIndex }) => {
                                     ></DosageFieldLabel>
                                 </Grid>
                                 <Grid item xs={9}>
-                                    <TextField
-                                        variant="outlined"
-                                        className={classes.textLong}
-                                        onChange={handleChange(
-                                            'G_k_4_r_6b_DurationDrugAdministrationUnit',
-                                            index,
-                                        )}
-                                        value={
-                                            item[
-                                                'G_k_4_r_6b_DurationDrugAdministrationUnit'
-                                            ].value
-                                        }
-                                    />
+                                    <Select
+                                        className={classes.textXshort}
+                                        onChange={handleChange('G_k_4_r_6b_DurationDrugAdministrationUnit', index)}
+                                        value={item['G_k_4_r_6b_DurationDrugAdministrationUnit'].value}
+                                    >
+                                        <MenuItem value={'s'}>Second (s)</MenuItem>
+                                        <MenuItem value={'min'}>Minute (min)</MenuItem>
+                                        <MenuItem value={'h'}>Hour (h)</MenuItem>
+                                        <MenuItem value={'d'}>Day (d)</MenuItem>
+                                        <MenuItem value={'wk'}>Week (wk)</MenuItem>
+                                        <MenuItem value={'mo'}>Month (mo)</MenuItem>
+                                        <MenuItem value={'a'}>Year (a)</MenuItem>
+                                    </Select>
                                 </Grid>
 
                                 <Grid item xs={3}>
@@ -934,19 +934,21 @@ export const Dosages = ({ drugIndex }) => {
                                     ></DosageFieldLabel>
                                 </Grid>
                                 <Grid item xs={9}>
-                                    <TextField
-                                        variant="outlined"
-                                        className={classes.textShort}
-                                        onChange={handleChange(
-                                            'G_k_4_r_3_DefinitionIntervalUnit',
-                                            index,
-                                        )}
-                                        value={
-                                            item[
-                                                'G_k_4_r_3_DefinitionIntervalUnit'
-                                            ].value
-                                        }
-                                    />
+                                    <Select
+                                        className={classes.textXshort}
+                                        onChange={handleChange('G_k_4_r_3_DefinitionIntervalUnit', index)}
+                                        value={item['G_k_4_r_3_DefinitionIntervalUnit'].value}
+                                    >
+                                        <MenuItem value={'min'}>Minute (min)</MenuItem>
+                                        <MenuItem value={'h'}>Hour (h)</MenuItem>
+                                        <MenuItem value={'d'}>Day (d)</MenuItem>
+                                        <MenuItem value={'wk'}>Week (wk)</MenuItem>
+                                        <MenuItem value={'mo'}>Month (mo)</MenuItem>
+                                        <MenuItem value={'a'}>Year (a)</MenuItem>
+                                        <MenuItem value={'{cyclical}'}>Cyclical</MenuItem>
+                                        <MenuItem value={'{asnecessary}'}>As necessary</MenuItem>
+                                        <MenuItem value={'{total}'}>Total</MenuItem>
+                                    </Select>
                                 </Grid>
                             </Grid>
                         </Stack>
