@@ -111,7 +111,7 @@ class ICSR(DomainModel):
         return is_valid
 
     def get_primary_reaction_event(self) -> 'E_i_reaction_event':
-        return self.e_i_reaction_event[0]
+        return self.e_i_reaction_event[0] if self.e_i_reaction_event else None
 
     def is_initial(self) -> bool:
         return (self.c_1_identification_case_safety_report.c_1_8_1_worldwide_unique_case_identification_number ==

@@ -121,9 +121,9 @@ class CIOMS(BaseModel):
     f23_other_relevant_history: str | None
 
     f24a_name_and_address_of_manufacturer: str | None
-    f24b_MFR_control_no: str
+    f24b_MFR_control_no: str | None
 
-    f24c_date_received_by_manufacturer: str
+    f24c_date_received_by_manufacturer: str | None
 
     f24d_report_source_study: bool
     f24d_report_source_literature: bool
@@ -131,19 +131,19 @@ class CIOMS(BaseModel):
 
     f25a_report_type: bool
 
-    date_of_this_report: str
+    date_of_this_report: str | None
 
     @classmethod
     def from_icsr(cls, icsr):
         primary_reaction_event = icsr.get_primary_reaction_event()
 
-        outcome = primary_reaction_event.e_i_7_outcome_reaction_last_observation
+        outcome = primary_reaction_event.e_i_7_outcome_reaction_last_observation if primary_reaction_event else None
 
         date_of_birth_day, date_of_birth_month, date_of_birth_year = parse_date(
             icsr.d_patient_characteristics.d_2_1_date_birth)
 
         reaction_onset_day, reaction_onset_month, reaction_onset_year = parse_date(
-            primary_reaction_event.e_i_4_date_start_reaction)
+            primary_reaction_event.e_i_4_date_start_reaction if primary_reaction_event else None)
 
         patient_died = False
         prolonged_hospitalization = False
@@ -152,6 +152,7 @@ class CIOMS(BaseModel):
         other = False
 
         describe_reactions = []
+        describe_reactions_events = []
 
         for reaction_event in icsr.e_i_reaction_event:
             patient_died |= bool(reaction_event.e_i_3_2a_results_death)
@@ -162,24 +163,27 @@ class CIOMS(BaseModel):
                       bool(reaction_event.e_i_3_2f_other_medically_important_condition))
 
             if reaction_event.e_i_1_2_reaction_primary_source_translation:
-                describe_reactions.append(
+                describe_reactions_events.append(
                     f"[ENG] {reaction_event.e_i_1_2_reaction_primary_source_translation}"
                 )
             if reaction_event.e_i_1_1a_reaction_primary_source_native_language:
-                describe_reactions.append(
+                describe_reactions_events.append(
                     f"[{reaction_event.e_i_1_1b_reaction_primary_source_language}] "
                     f"{reaction_event.e_i_1_1a_reaction_primary_source_native_language}"
                 )
             if reaction_event.e_i_7_outcome_reaction_last_observation:
-                describe_reactions.append(
+                describe_reactions_events.append(
                     f"*{get_outcome(reaction_event.e_i_7_outcome_reaction_last_observation)}*"
                 )
+
+        if describe_reactions_events:
+            describe_reactions += describe_reactions_events
             describe_reactions.append("")
 
         suspect_drugs = []
         concomitant_drugs = []
+        describe_reactions_drugs = []
 
-        describe_reactions.append("\nActions Taken with Drugs:")
         for drug_information in icsr.g_k_drug_information:
             drug_id = drug_information.g_k_2_2_medicinal_product_name_primary_source
 
@@ -209,7 +213,7 @@ class CIOMS(BaseModel):
                 })
 
                 if drug_information.g_k_8_action_taken_drug != G_k_8_action_taken_drug.UNKNOWN:
-                    describe_reactions.append(
+                    describe_reactions_drugs.append(
                         f"{drug_id} {get_action_taken_drug(drug_information.g_k_8_action_taken_drug)}")
 
             elif drug_information.g_k_1_characterisation_drug_role == G_k_1_characterisation_drug_role.CONCOMITANT:
@@ -219,13 +223,26 @@ class CIOMS(BaseModel):
                         for dosage_information in drug_information.g_k_4_r_dosage_information
                     ])}'
                 )
-        describe_reactions.append(f"\nCase Narrative: {icsr.h_narrative_case_summary.h_1_case_narrative}")
-        describe_reactions.append(f"\nRelevant tests/lab data:")
-        describe_reactions += [result.f_r_3_4_result_unstructured_data for result in
-                               icsr.f_r_results_tests_procedures_investigation_patient]
+        if describe_reactions_drugs:
+            describe_reactions.append("\nActions Taken with Drugs:")
+            describe_reactions += describe_reactions_drugs
+
+        if icsr.h_narrative_case_summary.h_1_case_narrative:
+            describe_reactions.append(f"\nCase Narrative: {icsr.h_narrative_case_summary.h_1_case_narrative}")
+
+        describe_reactions_tests = []
+        if icsr.f_r_results_tests_procedures_investigation_patient:
+            for result in icsr.f_r_results_tests_procedures_investigation_patient:
+                if result.f_r_3_4_result_unstructured_data:
+                    describe_reactions_tests.append(f"{result.f_r_3_4_result_unstructured_data}")
+
+        if describe_reactions_tests:
+            describe_reactions.append(f"\nRelevant tests/lab data:")
+            describe_reactions += describe_reactions_tests
+
         return cls(
             f1_patient_initials=icsr.d_patient_characteristics.d_1_patient,
-            f1a_country=primary_reaction_event.e_i_9_identification_country_reaction,
+            f1a_country=primary_reaction_event.e_i_9_identification_country_reaction if primary_reaction_event else None,
 
             f2_date_of_birth_day=date_of_birth_day,
             f2_date_of_birth_month=date_of_birth_month,
@@ -254,7 +271,7 @@ class CIOMS(BaseModel):
             f23_other_relevant_history=icsr.d_patient_characteristics.d_7_2_text_medical_history,
 
             f24a_name_and_address_of_manufacturer='\n'.join(source.c_1_9_1_r_1_source_case_id for source in
-                                                           icsr.c_1_identification_case_safety_report.c_1_9_1_r_source_case_id),
+                                                            icsr.c_1_identification_case_safety_report.c_1_9_1_r_source_case_id),
 
             f24b_MFR_control_no=icsr.c_1_identification_case_safety_report.c_1_8_1_worldwide_unique_case_identification_number,
 
