@@ -1,272 +1,45 @@
-%,percent,strength_dose
-%{vol},percent by volume,strength_dose
-/10*10,per 10 billion,other
-/10*12,per trillion,other
-/10*6,per million,other
-/10*9,per billion,other
-/100,per 100,other
-/L,per liter,strength_dose
-/[arb'U],per arbitrary unit,other
-/dL,per deciliter,strength_dose
-/g,per gram,other
-/g{creat},per gram of creatinine,other
-/kg,per kilogram,other
-/m2,per square meter,other
-/mL,per milliliter,strength_dose
-/mg,per milligram,other
-/uL,per microliter,strength_dose
-10*12/L,trillion per liter,strength_dose
-10*3,thousand,other
-10*3/L,thousand per liter,strength_dose
-10*3/mL,thousand per milliliter,strength_dose
-10*3/uL,thousand per microliter,strength_dose
-10*5,one hundred thousand,other
-10*6,million,other
-10*6.[IU],million international unit,other
-10*6/L,million per liter,strength_dose
-10*6/mL,million per milliliter,strength_dose
-10*6/uL,million per microliter,strength_dose
-10*8,100 million,other
-10*9/L,billion per liter,strength_dose
-10*9/mL,billion per milliliter,strength_dose
-10*9/uL,billion per microliter,strength_dose
-A,ampere,other
-Bq,Becquerel,strength_dose
-Cel,degree Celsius,other
-F,Farad,other
-Gy,Gray,other
-H,Henry,other
-Hz,Hertz,other
-J,joule,other
-K,degree Kelvin,other
-K/W,degree Kelvin per Watt,other
-L,liter,strength_dose
-L/kg,liter per kilogram,strength_dose
-Ms,megasecond,time
-N,Newton,other
-Ohm,Ohm,other
-Pa,Pascal,other
-S,Siemens,other
-Sv,Sievert,other
-T,Tesla,other
-U,enzyme unit,other
-U/L,enzyme unit per liter,other
-U/g,enzyme unit per gram,other
-V,volt,other
-Wb,Weber,other
-[APL'U],IgA anticardiolipin unit**,other
-[CFU],colony forming unit,other
-[CFU]/mL,colony forming unit per milliliter,other
-[Ch],French (catheter gauge),other
-[GPL'U],IgG anticardiolipin unit**,other
-[HPF],high power field,other
-[IU],international unit,strength_dose
-[IU]/L,international unit per liter,strength_dose
-[IU]/dL,international unit per deciliter,strength_dose
-[IU]/g,international unit per gram,strength_dose
-[IU]/kg,international unit per kilogram,strength_dose
-[IU]/mL,international unit per milliliter,strength_dose
-[LPF],low power field,other
-[MPL'U],IgM anticardiolipin unit**,other
-[arb'U],arbitrary unit,other
-[bdsk'U],Bodansky unit,other
-[beth'U],Bethesda unit,other
-[cin_i],cubic inch (international),strength_dose
-[degF],degree Fahrenheit,other
-[diop],diopter,other
-[dr_av],dram  (US and British),strength_dose
-[drp],drop (1/12 milliliter),strength_dose
-[foz_us],fluid ounce (US),other
-[ft_i],foot (international),other
-[gal_us],gallon (US),other
-[in_i'H2O],inch (international) of water,other
-[in_i],inch (international),other
-[in_us],inches (US),other
-[ka'U],King Armstrong unit,other
-[knk'U],Kunkel unit,other
-[lb_av],pound (US and British),strength_dose
-[mclg'U],Maclagan unit,other
-[mi_i],mile (international),other
-[oz_av],ounce (US and British),strength_dose
-[oz_tr],Troy ounce,strength_dose
-[pH],pH,other
-[ppb],part per billion,strength_dose
-[ppm],part per million,strength_dose
-[ppth],part per thousand,strength_dose
-[pptr],part per trillion,strength_dose
-[psi],pound per square inch,other
-[pt_us],pint (US),other
-[qt_us],quart (US),other
-[sft_i],square foot (international),other
-[sin_i],square inch (international),other
-[syd_i],square yard (international),other
-[tb'U],tuberculin unit,other
-[tbs_us],tablespoon (US),strength_dose
-[todd'U],Todd unit,other
-[tsp_us],teaspoon (US),strength_dose
-[yd_i],yard (international),other
-a,year,time
-atm,atmosphere,other
-bar,bar,other
-cL,centiliter,strength_dose
-cal,calorie,other
-cg,centigram,strength_dose
-cm,centimeter,other
-cm2,square centimeter,other
-d,day,time
-dL,deciliter,strength_dose
-deg,degree (plane angle),other
-dg,decigram,strength_dose
-dm,decimeter,other
-eV,electron Volt,other
-eq,equivalent,strength_dose
-eq/L,equivalent per liter,strength_dose
-eq/mL,equivalent per milliliter,strength_dose
-eq/mmol,equivalent per millimole,strength_dose
-eq/umol,equivalent per micromole,strength_dose
-erg,erg,other
-fL,femtoliter,strength_dose
-fg,femtogram,strength_dose
-fm,femtometer,other
-fmol,femtomole,strength_dose
-fmol/g,femtomole per gram,strength_dose
-fmol/mL,femtomole per milliliter,strength_dose
-fmol/mg,femtomole per milligram,strength_dose
-g,gram,strength_dose
-g.m,gram meter,other
-g/L,gram per liter,strength_dose
-g/dL,gram per deciliter,strength_dose
-g/g,gram per gram,strength_dose
-g/kg,gram per kilogram,strength_dose
-g/m2,gram per square meter,strength_dose
-g/mL,gram per milliliter,strength_dose
-h,hour,time
-kL,kiloliter,strength_dose
-kU/g,kilo enzyme unit per gram,other
-k[IU]/mL,kilo international unit per milliliter,strength_dose
-kat,katal,other
-kat/kg,katal per kilogram,other
 kg,kilogram,strength_dose
-kg/L,kilogram per liter,strength_dose
-kg/m2,kilogram per square meter,strength_dose
-kg/m3,kilogram per cubic meter,strength_dose
-kg/mol,kilogram per mole,strength_dose
-km,kilometer,other
-ks,kilosecond,time
-lm,lumen,other
-m,meter,other
-m2,square meter,other
-mL,milliliter,strength_dose
-mL/dL,milliliter per deciliter,strength_dose
-mL/kg,milliliter per kilogram,strength_dose
-mL/min,milliliter per minute,other
-mU/g,milli  enzyme unit per gram,other
-mU/mg,milli enzyme unit per milligram,other
-m[IU]/L,milli international unit per liter,strength_dose
-m[IU]/mL,milli  international unit per milliliter,strength_dose
-meq,milliequivalent,strength_dose
-meq/L,milliequivalent per liter,strength_dose
-meq/dL,milliequivalent per deciliter,strength_dose
-meq/g,milliequivalent per gram,strength_dose
-meq/kg,milliequivalent per kilogram,strength_dose
-meq/m2,milliequivalent per square meter,strength_dose
-meq/mL,milliequivalent per milliliter,strength_dose
+g,gram,strength_dose
 mg,milligram,strength_dose
-mg/L,milligram per liter,strength_dose
-mg/dL,milligram per deciliter,strength_dose
-mg/g,milligram per gram,strength_dose
-mg/kg,milligram per kilogram,strength_dose
-mg/m2,milligram per square meter,strength_dose
-mg/m3,milligram per cubic meter,strength_dose
-mg/mL,milligram per milliliter,strength_dose
-mg/mg,milligram per milligram,strength_dose
-min,minute,time
-mm,millimeter,other
-mm2,square millimeter,other
-mm[Hg],millimeter of mercury,other
-mmol,millimole,strength_dose
-mmol/L,millimole per liter,strength_dose
-mmol/dL,millimole per deciliter,strength_dose
-mmol/g,millimole per gram,strength_dose
-mmol/kg,millimole per kilogram,strength_dose
-mmol/m2,millimole per square meter,strength_dose
-mmol/mol,millimole per mole,strength_dose
-mo,month,time
-mol,mole,strength_dose
-mol/L,mole per liter,strength_dose
-mol/kg,mole per kilogram,strength_dose
-mol/m3,mole per cubic meter,strength_dose
-mol/mL,mole per milliliter,strength_dose
-mosm,milliosmole,strength_dose
-mosm/L,milliosmole per liter,strength_dose
-mosm/kg,milliosmole per kilogram,strength_dose
-ms,millisecond,time
-nL,nanoliter,strength_dose
+ug,microgram,strength_dose
 ng,nanogram,strength_dose
-ng/L,nanogram per liter,strength_dose
-ng/dL,nanogram per deciliter,strength_dose
-ng/g,nanogram per gram,strength_dose
-ng/kg,nanogram per kilogram,strength_dose
-ng/m2,nanogram per square meter,strength_dose
-ng/mL,nanogram per milliliter,strength_dose
-ng/mg,nanogram per milligram,strength_dose
-nm,nanometer,other
-nmol,nanomole,strength_dose
-nmol/L,nanomole per liter,strength_dose
-nmol/dL,nanomole per deciliter,strength_dose
-nmol/g,nanomole per gram,strength_dose
-nmol/mL,nanomole per milliliter,strength_dose
-nmol/mg,nanomole per milligram,strength_dose
-nmol/mmol,nanomole per millimole,strength_dose
-nmol/mol,nanomole per mole,strength_dose
-ns,nanosecond,time
-osm,osmole,strength_dose
-osm/L,osmole per liter,strength_dose
-osm/kg,osmole per kilogram,strength_dose
-pL,picoliter,strength_dose
 pg,picogram,strength_dose
-pg/L,picogram per liter,strength_dose
-pg/dL,picogram per deciliter,strength_dose
-pg/mL,picogram per milliliter,strength_dose
-pg/mm,picogram per millimeter,strength_dose
-pm,picometer,other
-pmol,picomole,strength_dose
-pmol/L,picomole per liter,strength_dose
-pmol/dL,picomole per deciliter,strength_dose
-pmol/mL,picomole per milliliter,strength_dose
-pmol/umol,picomole per micromole,strength_dose
+mg/kg,milligram/kilogram,strength_dose
+ug/kg,microgram/kilogram,strength_dose
+mg/mL,milligram/milliliter,strength_dose
+mg/m2,milligram/sq. meter,strength_dose
+ug/m2,microgram/sq. meter,strength_dose
+L,liter,strength_dose
+mL,milliliter,strength_dose
+uL,microliter,strength_dose
+Bq,becquerel,strength_dose
+GBq,gigabecquerel,strength_dose
+MBq,megabecquerel,strength_dose
+kBq,killobecquerel,strength_dose
+Ci,curie,strength_dose
+mCi,millicurie,strength_dose
+uCi,microcurie,strength_dose
+nCi,nanocurie,strength_dose
+mol,mole,strength_dose
+mmol,millimole,strength_dose
+umol,micromole,strength_dose
+[iU],international unit,strength_dose
+k[iU],kilo-international unit,strength_dose
+M[iU],mega-international unit,strength_dose
+[iU]/kg,international unit/kilogram,strength_dose
+meq,milliequivalent,strength_dose
+%,percent,strength_dose
+[drp],drop,strength_dose
+Ms,megasecond,time
+a,year,time
+d,day,time
+h,hour,time
+ks,kilosecond,time
+min,minute,time
+mo,month,time
+ms,millisecond,time
+ns,nanosecond,time
 ps,picosecond,time
 s,second,time
-t,metric ton,strength_dose
-uL,microliter,strength_dose
-u[IU],micro international unit,other
-u[IU]/mL,micro international unit per milliliter,strength_dose
-ueq,microequivalent,strength_dose
-ueq/L,microequivalent per liter,strength_dose
-ueq/mL,microequivalent per milliliter,strength_dose
-ug,microgram,strength_dose
-ug/L,microgram per liter,strength_dose
-ug/dL,microgram per deciliter,other
-ug/g,microgram per gram,strength_dose
-ug/kg,microgram per kilogram,strength_dose
-ug/m2,microgram per square meter,strength_dose
-ug/mL,microgram per milliliter,strength_dose
-ug/mg,microgram per milligram,strength_dose
-ug/ng,microgram per nanogram,strength_dose
-um,micrometer,other
-umol,micromole,strength_dose
-umol/L,micromole per liter,strength_dose
-umol/dL,micromole per deciliter,strength_dose
-umol/g,micromole per gram,strength_dose
-umol/mL,micromole per milliliter,strength_dose
-umol/mg,micromole per milligram,strength_dose
-umol/min/g,micromole per minute per gram,other
-umol/mol,micromole per mole,strength_dose
 us,microsecond,time
 wk,week,time
-{#},number,other
-{Ct_value},Cycle threshold value,other
-{count},count,other
-{index_val},index value,other
-{s_co_ratio},signal to cutoff ratio,other
-{titer},titer,other
