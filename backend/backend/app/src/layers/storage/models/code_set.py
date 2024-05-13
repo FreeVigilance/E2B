@@ -45,3 +45,16 @@ class LanguageCode(models.Model):
         max_length=3,
         validators=[MinLengthValidator(3)],
     )
+
+
+class UCUMCode(models.Model):
+    class Meta:
+        unique_together = ('code', 'language')
+
+    code = models.CharField(help_text='The UCUM code')
+    name = models.CharField(help_text='The name of the UCUM code from ucum/common-units')
+    property = models.CharField(help_text='The type of the UCUM code')
+    language = models.CharField(
+        max_length=3,
+        validators=[MinLengthValidator(3)]
+    )

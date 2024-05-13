@@ -27,7 +27,8 @@ def parse_country_codes_file(file_path: pathlib.Path, language: str):
 
 
 class Command(BaseCommand):
-    help = 'Uploads country codes to the database'
+    help = ('Uploads country codes to the database. '
+            'Be aware that script will clear the country codes for specified language before adding new data.')
 
     def add_arguments(self, parser):
         # Positional arguments
@@ -41,8 +42,8 @@ class Command(BaseCommand):
         country_codes_file = pathlib.Path(options['path'])
 
         if not country_codes_file.is_file():
-            raise AttributeError(f'{country_codes_file} is not a file. '
-                                 f'Country codes should be uploaded from a file specified with the path argument')
+            raise FileNotFoundError(f'{country_codes_file} is not a file. '
+                                    f'Country codes should be uploaded from a file specified with the path argument')
 
         # TODO: Add check whether we have interface in specified language
         parse_country_codes_file(country_codes_file, options['language'] or 'ENG')

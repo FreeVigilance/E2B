@@ -8,7 +8,7 @@ from app.src.layers.base.services import ServiceProtocol, BusinessServiceProtoco
 from app.src.layers.domain.models import DomainModel, ICSR
 from app.src.layers.domain.models import CIOMS
 from app.src.layers.storage.models import soc_term, hlt_pref_term, hlgt_pref_term, pref_term, low_level_term, \
-    meddra_release, CountryCode, LanguageCode
+    meddra_release, CountryCode, LanguageCode, UCUMCode
 
 
 class DomainService(BusinessServiceProtocol[DomainModel]):
@@ -96,25 +96,35 @@ class CodeSetService(CodeSetServiceProtocol):
     def __init__(self, storage_service) -> None:
         self.storage_service = storage_service
 
-    def search(self, codeset: str, query: str, language: str) -> code_set.SearchResponse:
+    def search(self, codeset: str, query: str, language: str, property: str | None = None) -> code_set.SearchResponse:
         match codeset:
             case 'country':
                 model = CountryCode
             case 'language':
                 model = LanguageCode
+            case 'ucum':
+                model = UCUMCode
             case _:
-                model = None
+                raise ValueError(f"Unknown codeset: {codeset}")
 
-        queryset = model.objects.filter(language=language)
-        queryset_exact = model.objects.none()
-        queryset_start_with = model.objects.none()
+        if model is CountryCode or model is LanguageCode:
+            queryset = model.objects.filter(language=language)
+            queryset_exact = model.objects.none()
+            queryset_start_with = model.objects.none()
 
-        if query:
-            queryset_exact = queryset.filter(Q(code__iexact=query))
-            queryset_start_with = queryset.filter(Q(name__unaccent__istartswith=query) & ~Q(code__iexact=query))
-            queryset = queryset.filter(Q(name__unaccent__icontains=query) &
-                                       ~Q(name__unaccent__istartswith=query) & ~Q(code__iexact=query))
+            if query:
+                queryset_exact = queryset.filter(Q(code__iexact=query))
+                queryset_start_with = queryset.filter(Q(name__unaccent__istartswith=query) & ~Q(code__iexact=query))
+                queryset = queryset.filter(Q(name__unaccent__icontains=query) &
+                                           ~Q(name__unaccent__istartswith=query) & ~Q(code__iexact=query))
 
-        return code_set.SearchResponse([code_set.Term(code=obj.code, name=obj.name) for obj in queryset_exact] +
-                                       [code_set.Term(code=obj.code, name=obj.name) for obj in queryset_start_with] +
-                                       [code_set.Term(code=obj.code, name=obj.name) for obj in queryset])
+            return code_set.SearchResponse([code_set.Term(code=obj.code, name=obj.name) for obj in queryset_exact] +
+                                           [code_set.Term(code=obj.code, name=obj.name) for obj in queryset_start_with] +
+                                           [code_set.Term(code=obj.code, name=obj.name) for obj in queryset])
+        if model is UCUMCode:
+            queryset = model.objects.filter(language=language)
+            if property:
+                queryset = queryset.filter(property=property)
+            if query:
+                queryset = queryset.filter(Q(code__iexact=query) | Q(name__istartswith=query))
+            return code_set.SearchResponse([code_set.Term(code=obj.code, name=obj.name) for obj in queryset])
