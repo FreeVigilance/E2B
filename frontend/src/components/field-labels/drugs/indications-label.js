@@ -43,7 +43,10 @@ export const IndicationsFieldLabel = ({ label, field, drugIndex, index }) => {
                 }
                 return value['_Self'];
             } else {
-                continue;
+                if (key === '_Self') {
+                    return null;
+                }
+                return getErrorText(value);
             }
         }
         return null;

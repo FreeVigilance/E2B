@@ -10,12 +10,27 @@ import {
     saveData,
 } from '../display/slice';
 import { Reaction } from './reaction';
+import { api } from '@src/api';
 
 export const reactionsSelector = (state) => state.reactions;
 
 export const save = createAsyncThunk('reactions/save', (data) => {
     return api.save(data);
 });
+
+export const getLanguageCodes = createAsyncThunk(
+    'reactions/getLanguageCodes',
+    (options) => {
+        return api.getLanguageCodes(options.data);
+    },
+);
+
+export const getCountryCodes = createAsyncThunk(
+    'reactions/getCountryCodes',
+    (options) => {
+        return api.getCountryCodes(options.data);
+    },
+);
 
 export const getReaction = () => {
     return (dispatch, getState) => {
@@ -43,92 +58,92 @@ export const getReaction = () => {
             itemData['E_i_3_2a_ResultsDeath'] =
                 item['E_i_3_2a_ResultsDeath']['value'] === false ||
                 item['E_i_3_2a_ResultsDeath']['value'] === null
-                    ? { value: null, nullFlavor: 'NI' }
+                    ? {value: null, nullFlavor: 'NI'}
                     : {
-                          value: item['E_i_3_2a_ResultsDeath']['value'],
-                          nullFlavor: null,
-                      };
+                        value: item['E_i_3_2a_ResultsDeath']['value'],
+                        nullFlavor: null,
+                    };
             itemData['E_i_3_2b_LifeThreatening'] =
                 item['E_i_3_2b_LifeThreatening']['value'] === false ||
                 item['E_i_3_2b_LifeThreatening']['value'] === null
-                    ? { value: null, nullFlavor: 'NI' }
+                    ? {value: null, nullFlavor: 'NI'}
                     : {
-                          value: item['E_i_3_2b_LifeThreatening']['value'],
-                          nullFlavor: null,
-                      };
+                        value: item['E_i_3_2b_LifeThreatening']['value'],
+                        nullFlavor: null,
+                    };
             itemData['E_i_3_2c_CausedProlongedHospitalisation'] =
                 item['E_i_3_2c_CausedProlongedHospitalisation']['value'] ===
-                    false ||
+                false ||
                 item['E_i_3_2c_CausedProlongedHospitalisation']['value'] ===
-                    null
-                    ? { value: null, nullFlavor: 'NI' }
+                null
+                    ? {value: null, nullFlavor: 'NI'}
                     : {
-                          value: item[
-                              'E_i_3_2c_CausedProlongedHospitalisation'
-                          ]['value'],
-                          nullFlavor: null,
-                      };
+                        value: item[
+                            'E_i_3_2c_CausedProlongedHospitalisation'
+                            ]['value'],
+                        nullFlavor: null,
+                    };
             itemData['E_i_3_2d_DisablingIncapacitating'] =
                 item['E_i_3_2d_DisablingIncapacitating']['value'] === false ||
                 item['E_i_3_2d_DisablingIncapacitating']['value'] === null
-                    ? { value: null, nullFlavor: 'NI' }
+                    ? {value: null, nullFlavor: 'NI'}
                     : {
-                          value: item['E_i_3_2d_DisablingIncapacitating'][
-                              'value'
-                          ],
-                          nullFlavor: null,
-                      };
+                        value: item['E_i_3_2d_DisablingIncapacitating'][
+                            'value'
+                            ],
+                        nullFlavor: null,
+                    };
             itemData['E_i_3_2e_CongenitalAnomalyBirthDefect'] =
                 item['E_i_3_2e_CongenitalAnomalyBirthDefect']['value'] ===
-                    false ||
+                false ||
                 item['E_i_3_2e_CongenitalAnomalyBirthDefect']['value'] === null
-                    ? { value: null, nullFlavor: 'NI' }
+                    ? {value: null, nullFlavor: 'NI'}
                     : {
-                          value: item['E_i_3_2e_CongenitalAnomalyBirthDefect'][
-                              'value'
-                          ],
-                          nullFlavor: null,
-                      };
+                        value: item['E_i_3_2e_CongenitalAnomalyBirthDefect'][
+                            'value'
+                            ],
+                        nullFlavor: null,
+                    };
             itemData['E_i_3_2f_OtherMedicallyImportantCondition'] =
                 item['E_i_3_2f_OtherMedicallyImportantCondition']['value'] ===
-                    false ||
+                false ||
                 item['E_i_3_2f_OtherMedicallyImportantCondition']['value'] ===
-                    null
-                    ? { value: null, nullFlavor: 'NI' }
+                null
+                    ? {value: null, nullFlavor: 'NI'}
                     : {
-                          value: item[
-                              'E_i_3_2f_OtherMedicallyImportantCondition'
-                          ]['value'],
-                          nullFlavor: null,
-                      };
+                        value: item[
+                            'E_i_3_2f_OtherMedicallyImportantCondition'
+                            ]['value'],
+                        nullFlavor: null,
+                    };
             itemData['E_i_4_DateStartReaction'] =
                 item['E_i_4_DateStartReaction']['nullFlavor'] !== null
                     ? {
-                          value: null,
-                          nullFlavor:
-                              nullFlavors[
-                                  item['E_i_4_DateStartReaction']['nullFlavor']
-                              ],
-                      }
+                        value: null,
+                        nullFlavor:
+                            nullFlavors[
+                                item['E_i_4_DateStartReaction']['nullFlavor']
+                                ],
+                    }
                     : {
-                          value: parseDate(
-                              item['E_i_4_DateStartReaction'].value,
-                          ),
-                          nullFlavor: null,
-                      };
+                        value: parseDate(
+                            item['E_i_4_DateStartReaction'].value,
+                        ),
+                        nullFlavor: null,
+                    };
             itemData['E_i_5_DateEndReaction'] =
                 item['E_i_5_DateEndReaction']['nullFlavor'] !== null
                     ? {
-                          value: null,
-                          nullFlavor:
-                              nullFlavors[
-                                  item['E_i_5_DateEndReaction']['nullFlavor']
-                              ],
-                      }
+                        value: null,
+                        nullFlavor:
+                            nullFlavors[
+                                item['E_i_5_DateEndReaction']['nullFlavor']
+                                ],
+                    }
                     : {
-                          value: parseDate(item['E_i_5_DateEndReaction'].value),
-                          nullFlavor: null,
-                      };
+                        value: parseDate(item['E_i_5_DateEndReaction'].value),
+                        nullFlavor: null,
+                    };
             itemData['E_i_6a_DurationReactionNum'] =
                 item['E_i_6a_DurationReactionNum'];
             itemData['E_i_6b_DurationReactionUnit'] =
@@ -155,6 +170,8 @@ export const getReaction = () => {
 
 const initialState = {
     reactionsData: [],
+    LC: [],
+    CC: [],
 };
 
 const reactionsSlice = createSlice({
@@ -163,6 +180,12 @@ const reactionsSlice = createSlice({
     reducers: {
         setReactionsData: (state, action) => {
             state.reactionsData = action.payload;
+        },
+        setLanguageCodes: (state, action) => {
+            state.LC = action.payload;
+        },
+        setCountryCodes: (state, action) => {
+            state.CC = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -206,8 +229,20 @@ const reactionsSlice = createSlice({
                 state.reactionsData = data;
             }
         });
+
+        builder.addCase(getLanguageCodes.fulfilled, (state, action) => {
+            state.LC = action.payload;
+        });
+
+        builder.addCase(getCountryCodes.fulfilled, (state, action) => {
+            state.CC = action.payload;
+        });
     },
 });
 
 export default reactionsSlice.reducer;
-export const { setReactionsData } = reactionsSlice.actions;
+export const {
+    setReactionsData,
+    setLanguageCodes,
+    setCountryCodes,
+} = reactionsSlice.actions;

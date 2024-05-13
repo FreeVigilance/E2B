@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+    Autocomplete,
     Stack,
     FormControlLabel,
     Select,
@@ -17,6 +18,8 @@ import Checkbox from '@mui/material/Checkbox';
 import AddIcon from '@mui/icons-material/Add';
 import { Box } from '@mui/system';
 import {
+    getLanguageCodes,
+    getCountryCodes,
     reactionsSelector,
     setReactionsData,
 } from '@src/features/reactions/slice';
@@ -34,6 +37,7 @@ import { ReactionFieldLabel } from '../field-labels/reaction-field-label';
 import InputMask from 'react-input-mask';
 import { MedDRABtn } from '../meddra/meddra-btn';
 import { meddraSelector } from '@src/features/meddra/slice';
+import { matchSorter } from 'match-sorter';
 
 var snakecaseKeys = require('snakecase-keys');
 
@@ -80,24 +84,36 @@ const useStyles = makeStyles({
 export const Reactions = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const { reactionsData } = useSelector(reactionsSelector);
+    const {reactionsData, LC, CC} = useSelector(reactionsSelector);
     const { meddraVersion } = useSelector(meddraSelector);
-    const { drugReactionMatrix, relatedness } = useSelector(drugsSelector);
+    const {drugReactionMatrix, relatedness} = useSelector(drugsSelector);
 
     const handleChange =
         (fieldName, index, isNumber = false, length = 1) =>
-        (event) => {
-            let value = event.target.value;
-            if (isNumber) {
-                if (value.length > length) value = value.slice(0, length);
-            }
-            if (value === '') {
-                value = null;
-            }
-            let reactionsDataCopy = JSON.parse(JSON.stringify(reactionsData));
-            reactionsDataCopy[index][fieldName].value = value;
-            dispatch(setReactionsData(reactionsDataCopy));
-        };
+            (event) => {
+                let value = event.target.value;
+                if (isNumber) {
+                    if (value.length > length) value = value.slice(0, length);
+                }
+                if (value === '') {
+                    value = null;
+                }
+                let reactionsDataCopy = JSON.parse(JSON.stringify(reactionsData));
+                reactionsDataCopy[index][fieldName].value = value;
+                dispatch(setReactionsData(reactionsDataCopy));
+            };
+
+    const handleAutocompleteChange = (fieldName, index) => (_, value) => {
+        let reactionsDataCopy = JSON.parse(JSON.stringify(reactionsData));
+        reactionsDataCopy[index][fieldName].value = value?.code ?? null;
+        dispatch(setReactionsData(reactionsDataCopy));
+    };
+
+    const getLanguageByCode = (code) => LC.find(country => country.code === code);
+    const getCountryByCode = (code) => CC.find(country => country.code === code);
+
+    useEffect(() => {dispatch(getLanguageCodes({data: ''}));}, []);
+    useEffect(() => {dispatch(getCountryCodes({data: ''}));}, []);
 
     const setMeddraValue = (value, fieldName, index) => {
         let reactionsDataCopy = JSON.parse(JSON.stringify(reactionsData));
@@ -130,8 +146,8 @@ export const Reactions = () => {
                 <span>
                     <IconButton
                         size="large"
-                        style={{ top: '10px' }}
-                        sx={{ color: 'white', backgroundColor: '#1976d2' }}
+                        style={{top: '10px'}}
+                        sx={{color: 'white', backgroundColor: '#1976d2'}}
                         onClick={addForm}
                     >
                         <AddIcon />
@@ -189,7 +205,7 @@ export const Reactions = () => {
                                         value={
                                             item[
                                                 'E_i_1_1a_ReactionPrimarySourceNativeLanguage'
-                                            ].value
+                                                ].value
                                         }
                                         multiline
                                         rows={2}
@@ -204,9 +220,9 @@ export const Reactions = () => {
                                     ></ReactionFieldLabel>
                                 </Grid>
                                 <Grid item xs={9}>
-                                    <TextField
+                                    {LC.length === 0 && <TextField
                                         variant="outlined"
-                                        className={classes.textLong}
+                                        className={classes.textXshort}
                                         onChange={handleChange(
                                             'E_i_1_1b_ReactionPrimarySourceLanguage',
                                             index,
@@ -214,11 +230,35 @@ export const Reactions = () => {
                                         value={
                                             item[
                                                 'E_i_1_1b_ReactionPrimarySourceLanguage'
-                                            ].value
+                                                ].value
                                         }
                                         multiline
                                         rows={2}
-                                    />
+                                    />}
+                                    {LC.length > 0 && <Autocomplete
+                                        className={classes.textXshort}
+                                        autoHighlight
+                                        autoSelect
+                                        options={LC}
+                                        getOptionLabel={(option) => option.code ?? ''}
+                                        value={getLanguageByCode(item['E_i_1_1b_ReactionPrimarySourceLanguage'].value) ?? ''}
+                                        onChange={handleAutocompleteChange('E_i_1_1b_ReactionPrimarySourceLanguage', index)}
+                                        filterOptions={(options, {inputValue}) =>
+                                            matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.CONTAINS})}
+                                        renderOption={(props2, option) => {
+                                            return (
+                                                <li {...props2} key={props2.key}>
+                                                    {`${option.code}\t${option.name}`}
+                                                </li>
+                                            );
+                                        }}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                label="3-alpha language code"
+                                                {...params}
+                                            />
+                                        )}
+                                    ></Autocomplete>}
                                 </Grid>
 
                                 <Grid item xs={3}>
@@ -239,7 +279,7 @@ export const Reactions = () => {
                                         value={
                                             item[
                                                 'E_i_1_2_ReactionPrimarySourceTranslation'
-                                            ].value
+                                                ].value
                                         }
                                         multiline
                                         rows={2}
@@ -248,7 +288,7 @@ export const Reactions = () => {
                             </Grid>
 
                             <Divider
-                                sx={{ borderWidth: 0, padding: 2 }}
+                                sx={{borderWidth: 0, padding: 2}}
                             ></Divider>
 
                             <Stack direction={'row'}>
@@ -267,7 +307,7 @@ export const Reactions = () => {
                                             value={
                                                 item[
                                                     'E_i_2_1a_MedDRAVersionReaction'
-                                                ].value
+                                                    ].value
                                             }
                                             onChange={handleChange(
                                                 'E_i_2_1a_MedDRAVersionReaction',
@@ -304,7 +344,7 @@ export const Reactions = () => {
                                             value={
                                                 item[
                                                     'E_i_2_1b_ReactionMedDRACode'
-                                                ].value
+                                                    ].value
                                             }
                                             autoComplete="off"
                                             type="number"
@@ -323,7 +363,7 @@ export const Reactions = () => {
                                             handleChange={setMeddraValue}
                                             lastValue={item[
                                                 'E_i_2_1b_ReactionMedDRACode'
-                                            ].value}
+                                                ].value}
                                         ></MedDRABtn>
                                     </Grid>
                                     <Grid item xs={4}>
@@ -339,7 +379,7 @@ export const Reactions = () => {
                                             value={
                                                 item[
                                                     'E_i_3_1_TermHighlightedReporter'
-                                                ].value
+                                                    ].value
                                             }
                                             onChange={handleChange(
                                                 'E_i_3_1_TermHighlightedReporter',
@@ -382,7 +422,7 @@ export const Reactions = () => {
                                             value={
                                                 item[
                                                     'E_i_7_OutcomeReactionLastObservation'
-                                                ].value
+                                                    ].value
                                             }
                                         >
                                             <MenuItem value={1}>
@@ -425,7 +465,7 @@ export const Reactions = () => {
                                             value={
                                                 item[
                                                     'E_i_8_MedicalConfirmationHealthcareProfessional'
-                                                ].value
+                                                    ].value
                                             }
                                             defaultValue={0}
                                         >
@@ -446,8 +486,8 @@ export const Reactions = () => {
                                         ></ReactionFieldLabel>
                                     </Grid>
                                     <Grid item xs={8}>
-                                        <TextField
-                                            className={classes.textXshort}
+                                        {CC.length === 0 && <TextField
+                                            className={classes.textShort}
                                             variant="outlined"
                                             onChange={handleChange(
                                                 'E_i_9_IdentificationCountryReaction',
@@ -456,9 +496,33 @@ export const Reactions = () => {
                                             value={
                                                 item[
                                                     'E_i_9_IdentificationCountryReaction'
-                                                ].value
+                                                    ].value
                                             }
-                                        />
+                                        />}
+                                        {CC.length > 0 && <Autocomplete
+                                            className={classes.textShort}
+                                            autoHighlight
+                                            autoSelect
+                                            options={CC}
+                                            getOptionLabel={(option) => option.code ?? ''}
+                                            value={getCountryByCode(item['E_i_9_IdentificationCountryReaction'].value) ?? ''}
+                                            onChange={handleAutocompleteChange('E_i_9_IdentificationCountryReaction', index)}
+                                            filterOptions={(options, {inputValue}) =>
+                                                matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.ACRONYM})}
+                                            renderOption={(props2, option) => {
+                                                return (
+                                                    <li {...props2} key={props2.key}>
+                                                        {`${option.code}\t${option.name}`}
+                                                    </li>
+                                                );
+                                            }}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    label="2-alpha country code"
+                                                    {...params}
+                                                />
+                                            )}
+                                        ></Autocomplete>}
                                     </Grid>
 
                                     <Grid item xs={4}>
@@ -477,7 +541,7 @@ export const Reactions = () => {
                                                             checked={
                                                                 item[
                                                                     'E_i_4_DateStartReaction'
-                                                                ].nullFlavor !==
+                                                                    ].nullFlavor !==
                                                                 null
                                                             }
                                                             onChange={setUnknown(
@@ -491,7 +555,7 @@ export const Reactions = () => {
                                             </Box>
                                             {reactionsData[index][
                                                 'E_i_4_DateStartReaction'
-                                            ]['nullFlavor'] === null ? (
+                                                ]['nullFlavor'] === null ? (
                                                 <InputMask
                                                     mask="9999-99-99 99:99:99"
                                                     maskChar="_"
@@ -501,7 +565,7 @@ export const Reactions = () => {
                                                     value={
                                                         item[
                                                             'E_i_4_DateStartReaction'
-                                                        ].value
+                                                            ].value
                                                     }
                                                     onChange={handleChange(
                                                         'E_i_4_DateStartReaction',
@@ -528,7 +592,7 @@ export const Reactions = () => {
                                                         value={
                                                             item[
                                                                 'E_i_4_DateStartReaction'
-                                                            ].nullFlavor
+                                                                ].nullFlavor
                                                         }
                                                         onChange={setNullFlavor(
                                                             'E_i_4_DateStartReaction',
@@ -566,7 +630,7 @@ export const Reactions = () => {
                                                             checked={
                                                                 item[
                                                                     'E_i_5_DateEndReaction'
-                                                                ].nullFlavor !==
+                                                                    ].nullFlavor !==
                                                                 null
                                                             }
                                                             onChange={setUnknown(
@@ -581,7 +645,7 @@ export const Reactions = () => {
 
                                             {reactionsData[index][
                                                 'E_i_5_DateEndReaction'
-                                            ]['nullFlavor'] === null ? (
+                                                ]['nullFlavor'] === null ? (
                                                 <InputMask
                                                     mask="9999-99-99 99:99:99"
                                                     maskChar="_"
@@ -591,7 +655,7 @@ export const Reactions = () => {
                                                     value={
                                                         item[
                                                             'E_i_5_DateEndReaction'
-                                                        ].value
+                                                            ].value
                                                     }
                                                     onChange={handleChange(
                                                         'E_i_5_DateEndReaction',
@@ -618,7 +682,7 @@ export const Reactions = () => {
                                                         value={
                                                             item[
                                                                 'E_i_5_DateEndReaction'
-                                                            ].nullFlavor
+                                                                ].nullFlavor
                                                         }
                                                         onChange={setNullFlavor(
                                                             'E_i_5_DateEndReaction',
@@ -653,8 +717,7 @@ export const Reactions = () => {
                                         <Select
                                             className={classes.textXshort}
                                             value={
-                                                item['E_i_3_2a_ResultsDeath']
-                                                    .value
+                                                item['E_i_3_2a_ResultsDeath'].value
                                             }
                                             defaultValue={false}
                                             onChange={handleChange(
@@ -682,8 +745,7 @@ export const Reactions = () => {
                                         <Select
                                             className={classes.textXshort}
                                             value={
-                                                item['E_i_3_2b_LifeThreatening']
-                                                    .value
+                                                item['E_i_3_2b_LifeThreatening'].value
                                             }
                                             defaultValue={false}
                                             onChange={handleChange(
@@ -713,7 +775,7 @@ export const Reactions = () => {
                                             value={
                                                 item[
                                                     'E_i_3_2c_CausedProlongedHospitalisation'
-                                                ].value
+                                                    ].value
                                             }
                                             defaultValue={false}
                                             onChange={handleChange(
@@ -743,7 +805,7 @@ export const Reactions = () => {
                                             value={
                                                 item[
                                                     'E_i_3_2d_DisablingIncapacitating'
-                                                ].value
+                                                    ].value
                                             }
                                             defaultValue={false}
                                             onChange={handleChange(
@@ -774,7 +836,7 @@ export const Reactions = () => {
                                             value={
                                                 item[
                                                     'E_i_3_2e_CongenitalAnomalyBirthDefect'
-                                                ].value
+                                                    ].value
                                             }
                                             onChange={handleChange(
                                                 'E_i_3_2e_CongenitalAnomalyBirthDefect',
@@ -804,7 +866,7 @@ export const Reactions = () => {
                                             value={
                                                 item[
                                                     'E_i_3_2f_OtherMedicallyImportantCondition'
-                                                ].value
+                                                    ].value
                                             }
                                             onChange={handleChange(
                                                 'E_i_3_2f_OtherMedicallyImportantCondition',
@@ -833,7 +895,7 @@ export const Reactions = () => {
                                             value={
                                                 item[
                                                     'E_i_6a_DurationReactionNum'
-                                                ].value
+                                                    ].value
                                             }
                                             onChange={handleChange(
                                                 'E_i_6a_DurationReactionNum',
@@ -862,19 +924,23 @@ export const Reactions = () => {
                                         ></ReactionFieldLabel>
                                     </Grid>
                                     <Grid item xs={8}>
-                                        <TextField
-                                            className={classes.textMedium}
-                                            value={
-                                                item[
-                                                    'E_i_6b_DurationReactionUnit'
-                                                ].value
-                                            }
-                                            variant="outlined"
-                                            onChange={handleChange(
-                                                'E_i_6b_DurationReactionUnit',
-                                                index,
-                                            )}
-                                        />
+                                        <FormControl>
+                                            <InputLabel>Duration of Reaction (unit)</InputLabel>
+                                            <Select
+                                                label="Duration of Reaction (unit)"
+                                                sx={{width: '100%'}}
+                                                onChange={handleChange('E_i_6b_DurationReactionUnit', index)}
+                                                value={item['E_i_6b_DurationReactionUnit'].value}
+                                            >
+                                                <MenuItem value={'s'}>Second (s)</MenuItem>
+                                                <MenuItem value={'min'}>Minute (min)</MenuItem>
+                                                <MenuItem value={'h'}>Hour (h)</MenuItem>
+                                                <MenuItem value={'d'}>Day (d)</MenuItem>
+                                                <MenuItem value={'wk'}>Week (wk)</MenuItem>
+                                                <MenuItem value={'mo'}>Month (mo)</MenuItem>
+                                                <MenuItem value={'a'}>Year (a)</MenuItem>
+                                            </Select>
+                                        </FormControl>
                                     </Grid>
                                 </Grid>
                             </Stack>
@@ -884,7 +950,7 @@ export const Reactions = () => {
                             <span>
                                 <IconButton
                                     size="large"
-                                    style={{ top: '10px', right: '10px' }}
+                                    style={{top: '10px', right: '10px'}}
                                     sx={{
                                         color: 'white',
                                         backgroundColor: '#1976d2',
@@ -898,7 +964,7 @@ export const Reactions = () => {
                         <span>
                             <IconButton
                                 size="large"
-                                style={{ top: '10px' }}
+                                style={{top: '10px'}}
                                 sx={{
                                     color: 'white',
                                     backgroundColor: '#000066',
@@ -934,9 +1000,9 @@ export const Reactions = () => {
             drug.forEach((matrix, matrixIndex) => {
                 if (
                     matrix['G_k_9_i_1_ReactionAssessed'] ===
-                        reactionsData[index]['id'] ||
+                    reactionsData[index]['id'] ||
                     matrix['G_k_9_i_1_ReactionAssessed'] ===
-                        reactionsData[index]['uuid']
+                    reactionsData[index]['uuid']
                 ) {
                     drugInd = drugIndex;
                     matrixInd = matrixIndex;

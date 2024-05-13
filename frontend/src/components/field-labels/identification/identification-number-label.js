@@ -43,7 +43,10 @@ export const IdentificationNumberFieldLabel = ({ label, field, index }) => {
                 }
                 return value['_Self'];
             } else {
-                continue;
+                if (key === '_Self') {
+                    return null;
+                }
+                return getErrorText(value);
             }
         }
         return null;

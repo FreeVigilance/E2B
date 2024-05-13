@@ -43,7 +43,10 @@ export const StudyIdentificationFieldLabel = ({ label, field }) => {
                 }
                 return value['_Self'];
             } else {
-                continue;
+                if (key === '_Self') {
+                    return null;
+                }
+                return getErrorText(value);
             }
         }
         return null;

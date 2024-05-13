@@ -48,7 +48,12 @@ export const PrimarySourceFieldLabel = ({ label, field, index }) => {
                 }
                 return value['_Self'];
             } else {
-                continue;
+                console.log(2)
+                if (key === '_Self') {
+                    console.log(3)
+                    return null;
+                }
+                return getErrorText(value);
             }
         }
         return null;

@@ -520,9 +520,6 @@ class G_k_drug_information(DomainModel):
                 len(set(x.g_k_9_i_1_reaction_assessed for x in g_k_9_i_drug_reaction_matrix))
         )
 
-    def get_id(self) -> str:
-        return self.g_k_2_1_1b_mpid or self.g_k_2_1_2b_phpid
-
 
 class G_k_2_3_r_substance_id_strength(DomainModel):
     g_k_2_3_r_1_substance_name: AN[L[250]] | None = None

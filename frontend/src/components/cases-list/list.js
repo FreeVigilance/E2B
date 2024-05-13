@@ -155,12 +155,10 @@ export const CasesList = () => {
                 afterOnCellMouseDown={function (event, cords, TD) {
                     console.log(cords);
                     if (cords['col'] === 0) {
-                        if (cords['row'] !== -1) {
-                            const id = hotTableRef.current.hotInstance.getDataAtRow(
-                                cords['row'],
-                            )[1];
-                            openReport(id);
-                        }
+                        const id = hotTableRef.current.hotInstance.getDataAtRow(
+                            cords['row'],
+                        )[1];
+                        openReport(id);
                     }
                     if (cords['col'] === 9) {
                         const id = hotTableRef.current.hotInstance.getDataAtRow(
