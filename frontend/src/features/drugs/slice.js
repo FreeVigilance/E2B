@@ -355,6 +355,7 @@ const initialState = {
     additionalInfo: {},
     CC: [],
     strengthCodes: [],
+    doseCodes: []
 };
 
 const drugsSlice = createSlice({
