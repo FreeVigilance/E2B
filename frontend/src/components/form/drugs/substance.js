@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Stack, Card, CardContent, IconButton, Grid } from '@mui/material';
+import { Autocomplete, Card, CardContent, IconButton, Grid } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import AddIcon from '@mui/icons-material/Add';
-import { drugsSelector, setSubstances } from '@src/features/drugs/slice';
+import { drugsSelector, setSubstances, getStrengthCodes } from '@src/features/drugs/slice';
 import { Substance } from '@src/features/drugs/drugs';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { makeStyles } from '@mui/styles';
 import { SubstanceFieldLabel } from '@src/components/field-labels/drugs/substance-label';
+import { matchSorter } from 'match-sorter';
 
 const useStyles = makeStyles({
     margin: {
@@ -48,22 +49,32 @@ export const Substances = ({ drugIndex }) => {
     const classes = useStyles();
 
     const dispatch = useDispatch();
-    const { substances } = useSelector(drugsSelector);
+    const { substances, strengthCodes } = useSelector(drugsSelector);
 
     const handleChange =
         (fieldName, index, isNumber = false, length = 1) =>
-        (event) => {
-            let value = event.target.value;
-            if (isNumber) {
-                if (value.length > length) value = value.slice(0, length);
-            }
-            if (value === '') {
-                value = null;
-            }
-            let substancesCopy = JSON.parse(JSON.stringify(substances));
-            substancesCopy[drugIndex][index][fieldName].value = value;
-            dispatch(setSubstances(substancesCopy));
-        };
+            (event) => {
+                let value = event.target.value;
+                if (isNumber) {
+                    if (value.length > length) value = value.slice(0, length);
+                }
+                if (value === '') {
+                    value = null;
+                }
+                let substancesCopy = JSON.parse(JSON.stringify(substances));
+                substancesCopy[drugIndex][index][fieldName].value = value;
+                dispatch(setSubstances(substancesCopy));
+            };
+
+    const handleAutocompleteChange = (fieldName, index) => (_, value) => {
+        let substancesCopy = JSON.parse(JSON.stringify(substances));
+        substancesCopy[drugIndex][index][fieldName].value = value?.code ?? null;
+        dispatch(setSubstances(substancesCopy));
+    };
+
+    const getStrengthByCode = (code) => strengthCodes.find(strength => strength.code === code);
+
+    useEffect(() => {dispatch(getStrengthCodes({data: ''}));}, []);
 
     const formList = () => {
         let list = [];
@@ -160,8 +171,7 @@ export const Substances = ({ drugIndex }) => {
                                         index,
                                     )}
                                     value={
-                                        item['G_k_2_3_r_2b_SubstanceTermID']
-                                            .value
+                                        item['G_k_2_3_r_2b_SubstanceTermID'].value
                                     }
                                 />
                             </Grid>
@@ -208,7 +218,7 @@ export const Substances = ({ drugIndex }) => {
                                 ></SubstanceFieldLabel>
                             </Grid>
                             <Grid item xs={9}>
-                                <TextField
+                                {strengthCodes.length === 0 && <TextField
                                     variant="outlined"
                                     className={classes.textLong}
                                     onChange={handleChange(
@@ -218,7 +228,30 @@ export const Substances = ({ drugIndex }) => {
                                     value={
                                         item['G_k_2_3_r_3b_StrengthUnit'].value
                                     }
-                                />
+                                />}
+                                {strengthCodes.length > 0 && <Autocomplete
+                                    className={classes.textLong}
+                                    freeSolo
+                                    options={strengthCodes}
+                                    getOptionLabel={(option) => option.code ?? ''}
+                                    value={getStrengthByCode(item['G_k_2_3_r_3b_StrengthUnit'].value) ?? ''}
+                                    onChange={handleAutocompleteChange('G_k_2_3_r_3b_StrengthUnit', index)}
+                                    filterOptions={(options, {inputValue}) =>
+                                        matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.WORD_STARTS_WITH})}
+                                    renderOption={(props2, option) => {
+                                        return (
+                                            <li {...props2} key={props2.key}>
+                                                {`${option.code}, ${option.name}`}
+                                            </li>
+                                        );
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            label="UCUM code"
+                                            {...params}
+                                        />
+                                    )}
+                                ></Autocomplete>}
                             </Grid>
                         </Grid>
 
