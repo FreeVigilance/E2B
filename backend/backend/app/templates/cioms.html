@@ -501,9 +501,7 @@
     </div>
     <div class="describe_reaction">
         <label for="describe_reaction">7 + 13 DESCRIBE REACTION(S) (including relevant tests/lab data)</label>
-        <textarea rows="13" id="describe_reaction" name="describe_reaction" autocomplete="off" readonly>
-{{ f7_13_describe_reactions|default:"UNK" }}
-        </textarea>
+        <textarea rows="13" id="describe_reaction" name="describe_reaction" autocomplete="off" readonly>{{ f7_13_describe_reactions }}</textarea>
     </div>
 
     <div class="severity">
@@ -543,7 +541,7 @@
     <div class="suspect_drug_1_name">
         <label for="suspect_drug_1_name">14. SUSPECT DRUG(S) (include generic name)</label>
         <input type="text" id="suspect_drug_1_name" name="suspect_drug_1_name"
-               value="{{ f14_21_suspect_drugs.0.name }} {{ f14_21_suspect_drugs.0.dosages_information.0.batch_number|default:"" }}"
+               value="{{ f14_21_suspect_drugs.0.name }}{% if f14_21_suspect_drugs.0.dosages_information.0.lot_number %} {{ f14_21_suspect_drugs.0.dosages_information.0.lot_number }}{% endif %}"
                readonly>
     </div>
     <div class="suspect_drug_1_daily_dose">
@@ -778,7 +776,7 @@
                                     {% for dosage_information in suspect_drug.dosages_information %}
                                         {% if not forloop.parentloop.first or not forloop.first %}
                                             <tr>
-                                                <td>{{ dosage_information.batch_number|default:"UNK" }}</td>
+                                                <td>{{ dosage_information.lot_number|default:"UNK" }}</td>
                                                 <td>{{ dosage_information.daily_dose|default:"UNK" }}</td>
                                                 <td>{{ dosage_information.route_of_administration|default:"UNK" }}</td>
                                                 <td>{{ dosage_information.therapy_dates_from|default:"UNK" }}/

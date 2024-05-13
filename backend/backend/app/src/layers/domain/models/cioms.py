@@ -191,7 +191,7 @@ class CIOMS(BaseModel):
                 suspect_drugs.append({
                     "name": drug_id,
                     "dosages_information": [{
-                        "batch_number": dosage_information.g_k_4_r_7_batch_lot_number,
+                        "lot_number": dosage_information.g_k_4_r_7_batch_lot_number,
                         "daily_dose": dosage_information.g_k_4_r_8_dosage_text,
                         "route_of_administration": dosage_information.g_k_4_r_10_2b_route_administration_termid or \
                                                    dosage_information.g_k_4_r_10_1_route_administration,
@@ -240,6 +240,11 @@ class CIOMS(BaseModel):
             describe_reactions.append(f"\nRelevant tests/lab data:")
             describe_reactions += describe_reactions_tests
 
+        name_and_address_of_manufacturer = []
+        if icsr.c_1_identification_case_safety_report.c_1_9_1_r_source_case_id:
+            for source in icsr.c_1_identification_case_safety_report.c_1_9_1_r_source_case_id:
+                name_and_address_of_manufacturer.append(f"{source.c_1_9_1_r_1_source_case_id}")
+
         return cls(
             f1_patient_initials=icsr.d_patient_characteristics.d_1_patient,
             f1a_country=primary_reaction_event.e_i_9_identification_country_reaction if primary_reaction_event else None,
@@ -270,8 +275,7 @@ class CIOMS(BaseModel):
 
             f23_other_relevant_history=icsr.d_patient_characteristics.d_7_2_text_medical_history,
 
-            f24a_name_and_address_of_manufacturer='\n'.join(source.c_1_9_1_r_1_source_case_id for source in
-                                                            icsr.c_1_identification_case_safety_report.c_1_9_1_r_source_case_id),
+            f24a_name_and_address_of_manufacturer='\n'.join(name_and_address_of_manufacturer),
 
             f24b_MFR_control_no=icsr.c_1_identification_case_safety_report.c_1_8_1_worldwide_unique_case_identification_number,
 
