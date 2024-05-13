@@ -35,7 +35,7 @@ class Command(BaseCommand):
         parser.add_argument('path', type=pathlib.Path)
 
         # Named (optional) arguments
-        parser.add_argument('--language', type=str, help='Language of names of languages, default=ENG')
+        parser.add_argument('--language', type=str, help='Language of names of languages', default='ENG')
 
     @transaction.atomic
     def handle(self, *args, **options):
@@ -46,4 +46,4 @@ class Command(BaseCommand):
                                     f'Language codes should be uploaded from a file specified with the path argument')
 
         # TODO: Add check whether we have interface in specified language
-        parse_language_codes_file(language_codes_file, options['language'] or 'ENG')
+        parse_language_codes_file(language_codes_file, options['language'])

@@ -12,14 +12,19 @@ logger = logging.getLogger(__name__)
 
 def parse_ucum_file(file_path: pathlib.Path, language: str) -> None:
     logger.info('Clearing UCUM table')
-    UCUMCode.objects.all(language=language).delete()
+    UCUMCode.objects.filter(language=language).delete()
     logger.info('Table UCUM cleared')
 
     logger.info(f'Parsing {file_path}')
 
     with file_path.open() as f:
         reader = csv.reader(f)
-        UCUMCode.objects.bulk_create([UCUMCode(code=code, name=name, property=property) for code, name, property in reader])
+        objects = []
+        for data in reader:
+            code, name = data[:2]
+            property = data[2] if len(data) > 2 else 'other'
+            objects.append(UCUMCode(code=code, name=name, property=property, language=language))
+        UCUMCode.objects.bulk_create(objects)
 
     logger.info(f'{file_path} parsed successfully')
 
@@ -32,6 +37,9 @@ class Command(BaseCommand):
         # Positional arguments
         parser.add_argument('path', type=pathlib.Path)
 
+        # Named (optional) arguments
+        parser.add_argument('--language', type=str, help='Language of names of languages', default='ENG')
+
     @transaction.atomic
     def handle(self, *args, **options):
         ucum_file = pathlib.Path(options['path'])
@@ -40,4 +48,4 @@ class Command(BaseCommand):
             raise FileNotFoundError(f'{ucum_file} is not a file. '
                                     f'UCUM codes should be uploaded from a file specified with the path argument')
 
-        parse_ucum_file(ucum_file)
+        parse_ucum_file(ucum_file, options['language'])
