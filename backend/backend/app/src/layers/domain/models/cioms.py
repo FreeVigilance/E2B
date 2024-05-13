@@ -243,7 +243,8 @@ class CIOMS(BaseModel):
         name_and_address_of_manufacturer = []
         if icsr.c_1_identification_case_safety_report.c_1_9_1_r_source_case_id:
             for source in icsr.c_1_identification_case_safety_report.c_1_9_1_r_source_case_id:
-                name_and_address_of_manufacturer.append(f"{source.c_1_9_1_r_1_source_case_id}")
+                if source.c_1_9_1_r_1_source_case_id:
+                    name_and_address_of_manufacturer.append(source.c_1_9_1_r_1_source_case_id)
 
         return cls(
             f1_patient_initials=icsr.d_patient_characteristics.d_1_patient,
