@@ -215,7 +215,7 @@ export const Dosages = ({ drugIndex }) => {
                                         value={getDoseByCode(item['G_k_4_r_1b_DoseUnit'].value) ?? ''}
                                         onChange={handleAutocompleteChange('G_k_4_r_1b_DoseUnit', index)}
                                         filterOptions={(options, {inputValue}) =>
-                                            matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.WORD_STARTS_WITH})}
+                                            matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.CONTAINS})}
                                         renderOption={(props2, option) => {
                                             return (
                                                 <li {...props2} key={props2.key}>
