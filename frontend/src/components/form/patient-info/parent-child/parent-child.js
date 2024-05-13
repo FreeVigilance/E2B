@@ -420,18 +420,14 @@ export const ParentChild = () => {
                         ></ParentChildFieldLabel>
                     </Grid>
                     <Grid item xs={9}>
-                        <FormControl>
-                            <InputLabel>Age of Parent (unit)</InputLabel>
-                            <Select
-                                label="Age of Parent (unit)"
-                                sx={{width: '100%'}}
-                                onChange={handleChange('D_10_2_2b_AgeParentUnit')}
-                                value={parentChildData['D_10_2_2b_AgeParentUnit'].value}
-                            >
-                                <MenuItem value={'{decade}'}>Decade</MenuItem>
-                                <MenuItem value={'a'}>Year (a)</MenuItem>
-                            </Select>
-                        </FormControl>
+                        <TextField
+                            variant="outlined"
+                            className={classes.textMedium}
+                            onChange={handleChange('D_10_2_2b_AgeParentUnit')}
+                            value={
+                                parentChildData['D_10_2_2b_AgeParentUnit'].value
+                            }
+                        />
                     </Grid>
 
                     <Grid item xs={3}>

@@ -1,6 +1,6 @@
 import typing as t
 
-from app.src.layers.api.models import meddra, code_set
+from app.src.layers.api.models import meddra
 from app.src.layers.domain.models.cioms import CIOMS
 
 
@@ -28,7 +28,3 @@ class MedDRAServiceProtocol(t.Protocol):
     def list(self) -> meddra.ReleaseResponse: ...
 
     def search(self, search_request: meddra.SearchRequest, pk: int) -> meddra.SearchResponse: ...
-
-
-class CodeSetServiceProtocol(t.Protocol):
-    def search(self, codeset: str, query: str, lang: str) -> code_set.SearchResponse: ...

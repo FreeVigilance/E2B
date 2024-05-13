@@ -43,10 +43,7 @@ export const OtherIdentifiersFieldLabel = ({ label, field, index }) => {
                 }
                 return value['_Self'];
             } else {
-                if (key === '_Self') {
-                    return null;
-                }
-                return getErrorText(value);
+                continue;
             }
         }
         return null;

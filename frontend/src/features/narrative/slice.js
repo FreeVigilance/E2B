@@ -1,22 +1,14 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit'
 import { e2bCaseKeys } from '../common/changekeys';
 import { changeData, getData, getJsonFromXml, revertAll, saveData } from '../display/slice';
 import { NarrativeCaseSummary } from './narrative';
-import { api } from '@src/api';
 
 export const narrativeSelector = (state) => state.narrative;
 
-export const getLanguageCodes = createAsyncThunk(
-    'narrative/getLanguageCodes',
-    (options) => {
-        return api.getLanguageCodes(options.data);
-    },
-);
-
 export const getNarrative = () => {
     return (dispatch, getState) => {
-        let narrativeCaseSummary = getState().narrative.narrativeCaseSummary;
-        let diagnosis = getState().narrative.diagnosis;
+		let narrativeCaseSummary = getState().narrative.narrativeCaseSummary;
+		let diagnosis = getState().narrative.diagnosis;
         let summaryComments = getState().narrative.summaryComments;
 
         let jsonResult = {
@@ -25,41 +17,37 @@ export const getNarrative = () => {
             'H_2_ReporterComments': narrativeCaseSummary['H_2_ReporterComments'],
             'H_4_SenderComments': narrativeCaseSummary['H_4_SenderComments'],
             'H_3_r_SenderDiagnosisMeddraCode': diagnosis,
-            'H_5_r_CaseSummaryReporterCommentsNativeLanguage': summaryComments,
-        };
-        return jsonResult;
-    };
-};
+            'H_5_r_CaseSummaryReporterCommentsNativeLanguage': summaryComments
+        }
+		return jsonResult;
+	}
+}
 
 const initialState = {
-    narrativeCaseSummary: new NarrativeCaseSummary(),
-    diagnosis: [],
+	narrativeCaseSummary: new NarrativeCaseSummary(),
+	diagnosis: [],
     summaryComments: [],
-    LC: [],
-};
+}
 
 const narrativeSlice = createSlice({
-    name: 'narrative',
-    initialState: initialState,
-    reducers: {
-        setNarrativeCaseSummary: (state, action) => {
-            state.narrativeCaseSummary = action.payload;
-        },
-        setDiagnosis: (state, action) => {
-            state.diagnosis = action.payload;
-        },
+	name: 'narrative',
+	initialState: initialState,
+	reducers: {
+		setNarrativeCaseSummary: (state, action) => {
+			state.narrativeCaseSummary = action.payload;
+		},
+		setDiagnosis: (state, action) => {
+			state.diagnosis = action.payload;
+		},
         setSummaryComments: (state, action) => {
-            state.summaryComments = action.payload;
-        },
-        setLanguageCodes: (state, action) => {
-            state.LC = action.payload;
-        },
+			state.summaryComments = action.payload;
+		},
 
-    }, extraReducers: (builder) => {
-        builder.addCase(revertAll, () => initialState);
+	}, extraReducers: (builder) => {
+		builder.addCase(revertAll, () => initialState);
 
         builder.addCase(getData.fulfilled, (state, action) => {
-            const data = e2bCaseKeys(action.payload.h_narrative_case_summary);
+			const data = e2bCaseKeys(action.payload.h_narrative_case_summary);
             if (data) {
                 console.log('narrative', data);
                 let narrativeCaseSummary = new NarrativeCaseSummary();
@@ -80,8 +68,8 @@ const narrativeSlice = createSlice({
             }
         });
 
-        builder.addCase(saveData.fulfilled, (state, action) => {
-            const data = e2bCaseKeys(action.payload.h_narrative_case_summary);
+		builder.addCase(saveData.fulfilled, (state, action) => {
+			const data = e2bCaseKeys(action.payload.h_narrative_case_summary);
             if (data) {
                 console.log('narrative', data);
                 let narrativeCaseSummary = new NarrativeCaseSummary();
@@ -102,7 +90,7 @@ const narrativeSlice = createSlice({
             }
         });
 
-        builder.addCase(changeData.fulfilled, (state, action) => {
+		builder.addCase(changeData.fulfilled, (state, action) => {
             const data = e2bCaseKeys(action.payload.h_narrative_case_summary);
             if (data) {
                 console.log('narrative', data);
@@ -125,7 +113,7 @@ const narrativeSlice = createSlice({
         });
 
         builder.addCase(getJsonFromXml.fulfilled, (state, action) => {
-            const data = e2bCaseKeys(action.payload.h_narrative_case_summary);
+			const data = e2bCaseKeys(action.payload.h_narrative_case_summary);
             if (data) {
                 console.log('narrative', data);
                 let narrativeCaseSummary = new NarrativeCaseSummary();
@@ -145,17 +133,13 @@ const narrativeSlice = createSlice({
                     state.summaryComments = data['H_5_r_CaseSummaryReporterCommentsNativeLanguage'];
             }
         });
-
-        builder.addCase(getLanguageCodes.fulfilled, (state, action) => {
-            state.LC = action.payload;
-        });
     },
-});
+})
 
 export default narrativeSlice.reducer;
 export const {
     setNarrativeCaseSummary,
-    setDiagnosis,
-    setSummaryComments,
-    setCountryCodes,
+	setDiagnosis,
+    setSummaryComments
+
 } = narrativeSlice.actions;
