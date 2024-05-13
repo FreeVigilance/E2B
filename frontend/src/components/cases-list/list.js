@@ -163,12 +163,12 @@ export const CasesList = () => {
                         }
                     }
                     if (cords['col'] === 9) {
-                        const id = hotTableRef.current.hotInstance.getDataAtRow(
-                            cords['row'],
-                        )[1];
-                        // openReport(id);
-                        removeReport(id);
-                        // удаление
+                        if (cords['row'] !== -1) {
+                            const id = hotTableRef.current.hotInstance.getDataAtRow(
+                                cords['row'],
+                            )[1];
+                            removeReport(id);
+                        }
                     }
                 }}
             ></HotTable>
