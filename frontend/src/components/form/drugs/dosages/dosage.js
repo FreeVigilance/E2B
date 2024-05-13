@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+    Autocomplete,
     Stack,
     FormControlLabel,
     Box,
@@ -30,6 +31,8 @@ import AddIcon from '@mui/icons-material/Add';
 import { MedHistory } from '@src/features/patient/patient';
 import {
     drugsSelector,
+    getStrengthCodes,
+    getDoseCodes,
     setDosages,
     setSubstances,
 } from '@src/features/drugs/slice';
@@ -38,6 +41,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { makeStyles } from '@mui/styles';
 import { DosageFieldLabel } from '@src/components/field-labels/drugs/dosage-label';
 import InputMask from 'react-input-mask';
+import { matchSorter } from 'match-sorter';
 
 const useStyles = makeStyles({
     margin: {
@@ -78,7 +82,7 @@ export const Dosages = ({ drugIndex }) => {
     const classes = useStyles();
 
     const dispatch = useDispatch();
-    const { dosages } = useSelector(drugsSelector);
+    const { dosages, doseCodes } = useSelector(drugsSelector);
 
     const handleChange =
         (fieldName, index, isNumber = false, length = 1) =>
@@ -94,6 +98,17 @@ export const Dosages = ({ drugIndex }) => {
             dosagesCopy[drugIndex][index][fieldName].value = value;
             dispatch(setDosages(dosagesCopy));
         };
+
+    const handleAutocompleteChange = (fieldName, index) => (_, value) => {
+        let dosagesCopy = JSON.parse(JSON.stringify(dosages));
+        dosagesCopy[drugIndex][index][fieldName].value = value?.code ?? null;
+        dispatch(setDosages(dosagesCopy));
+    };
+
+    const getDoseByCode = (code) => doseCodes.find(dose => dose.code === code);
+
+    useEffect(() => {dispatch(getDoseCodes({data: ''}));}, []);
+
 
     const setNullFlavor = (fieldName, index) => (event) => {
         let dosagesCopy = JSON.parse(JSON.stringify(dosages));
@@ -181,7 +196,7 @@ export const Dosages = ({ drugIndex }) => {
                                     ></DosageFieldLabel>
                                 </Grid>
                                 <Grid item xs={9}>
-                                    <TextField
+                                    {doseCodes.length === 0 && <TextField
                                         variant="outlined"
                                         className={classes.textShort}
                                         onChange={handleChange(
@@ -191,7 +206,30 @@ export const Dosages = ({ drugIndex }) => {
                                         value={
                                             item['G_k_4_r_1b_DoseUnit'].value
                                         }
-                                    />
+                                    />}
+                                    {doseCodes.length > 0 && <Autocomplete
+                                        className={classes.textShort}
+                                        freeSolo
+                                        options={doseCodes}
+                                        getOptionLabel={(option) => option.code ?? ''}
+                                        value={getDoseByCode(item['G_k_4_r_1b_DoseUnit'].value) ?? ''}
+                                        onChange={handleAutocompleteChange('G_k_4_r_1b_DoseUnit', index)}
+                                        filterOptions={(options, {inputValue}) =>
+                                            matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.WORD_STARTS_WITH})}
+                                        renderOption={(props2, option) => {
+                                            return (
+                                                <li {...props2} key={props2.key}>
+                                                    {`${option.code}, ${option.name}`}
+                                                </li>
+                                            );
+                                        }}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                label="UCUM code"
+                                                {...params}
+                                            />
+                                        )}
+                                    ></Autocomplete>}
                                 </Grid>
 
                                 <Grid item xs={3}>

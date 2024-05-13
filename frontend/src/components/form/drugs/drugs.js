@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
-import { getCountryCodes, drugsSelector, setDrugs } from '@src/features/drugs/slice';
+import { getCountryCodes, drugsSelector, setDrugs, setDosages, getDoseCodes } from '@src/features/drugs/slice';
 import { Substances } from './substance';
 import { Indications } from './indications';
 import { AddInfo } from './add-info';
@@ -62,7 +62,7 @@ export const Drugs = ({index}) => {
     const classes = useStyles();
 
     const dispatch = useDispatch();
-    const {drugs, CC} = useSelector(drugsSelector);
+    const { drugs, CC, doseCodes } = useSelector(drugsSelector);
 
     const handleChange =
         (fieldName, index, isNumber = false, length = 1) =>
@@ -87,8 +87,10 @@ export const Drugs = ({index}) => {
     };
 
     const getCountryByCode = (code) => CC.find(country => country.code === code);
+    const getDoseByCode = (code) => doseCodes.find(dose => dose.code === code);
 
     useEffect(() => {dispatch(getCountryCodes({data: ''}));}, []);
+    useEffect(() => {dispatch(getDoseCodes({data: ''}));}, []);
 
     return (
         <>
@@ -398,7 +400,7 @@ export const Drugs = ({index}) => {
                         ></DrugsFieldLabel>
                     </Grid>
                     <Grid item xs={9}>
-                        <TextField
+                        {doseCodes.length === 0 && <TextField
                             variant="outlined"
                             className={classes.textMedium}
                             onChange={handleChange(
@@ -410,7 +412,30 @@ export const Drugs = ({index}) => {
                                     'G_k_5b_CumulativeDoseFirstReactionUnit'
                                     ].value
                             }
-                        />
+                        />}
+                        {doseCodes.length > 0 && <Autocomplete
+                            className={classes.textShort}
+                            freeSolo
+                            options={doseCodes}
+                            getOptionLabel={(option) => option.code ?? ''}
+                            value={getDoseByCode(drugs[index]['G_k_5b_CumulativeDoseFirstReactionUnit'].value) ?? ''}
+                            onChange={handleAutocompleteChange('G_k_5b_CumulativeDoseFirstReactionUnit', index)}
+                            filterOptions={(options, {inputValue}) =>
+                                matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.WORD_STARTS_WITH})}
+                            renderOption={(props2, option) => {
+                                return (
+                                    <li {...props2} key={props2.key}>
+                                        {`${option.code}, ${option.name}`}
+                                    </li>
+                                );
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    label="UCUM code"
+                                    {...params}
+                                />
+                            )}
+                        ></Autocomplete>}
                     </Grid>
 
                     <Grid item xs={3}>

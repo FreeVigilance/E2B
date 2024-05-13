@@ -29,6 +29,20 @@ export const getCountryCodes = createAsyncThunk(
     },
 );
 
+export const getStrengthCodes = createAsyncThunk(
+    'substance/getStrengthCodes',
+    (options) => {
+        return api.getStrengthCodes(options.data);
+    },
+);
+
+export const getDoseCodes = createAsyncThunk(
+    'dosage/getStrengthCodes',
+    (options) => {
+        return api.getDoseCodes(options.data);
+    },
+);
+
 export const getDrug = () => {
     return (dispatch, getState) => {
         let drugs = getState().drugs.drugs;
@@ -340,6 +354,7 @@ const initialState = {
     relatedness: {},
     additionalInfo: {},
     CC: [],
+    strengthCodes: [],
 };
 
 const drugsSlice = createSlice({
@@ -369,6 +384,12 @@ const drugsSlice = createSlice({
         },
         setCountryCodes: (state, action) => {
             state.CC = action.payload;
+        },
+        setStrengthCodes: (state, action) => {
+            state.strengthCodes = action.payload;
+        },
+        setDoseCodes: (state, action) => {
+            state.doseCodes = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -437,6 +458,14 @@ const drugsSlice = createSlice({
         builder.addCase(getCountryCodes.fulfilled, (state, action) => {
             state.CC = action.payload;
         });
+
+        builder.addCase(getStrengthCodes.fulfilled, (state, action) => {
+            state.strengthCodes = action.payload;
+        });
+
+        builder.addCase(getDoseCodes.fulfilled, (state, action) => {
+            state.doseCodes = action.payload;
+        });
     },
 });
 
@@ -450,4 +479,6 @@ export const {
     setRelatedness,
     setAdditionalInfo,
     setCountryCodes,
+    setStrengthCodes,
+    setDoseCodes,
 } = drugsSlice.actions;

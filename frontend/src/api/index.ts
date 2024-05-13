@@ -55,4 +55,13 @@ export const api = {
     getLanguageCodes: (data: any) => {
         return clientER.get(`/codeset/language/search?q=${data}`);
     },
+    getUCUMCodes: (data: any) => {
+        return clientER.get(`/codeset/ucum/search?q=${data}`);
+    },
+    getDoseCodes: (data: any) => {
+        return clientER.get(`/codeset/ucum/search?q=${data}&property=strength_dose`);
+    },
+    getStrengthCodes: (data: any) => {
+        return clientER.get(`/codeset/ucum/search?q=${data}&property=strength_dose`);
+    },
 };
