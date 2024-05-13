@@ -435,7 +435,7 @@ export const Patient = () => {
                             onChange={handleChange('D_2_2b_AgeOnsetReactionUnit')}
                             value={patientData['D_2_2b_AgeOnsetReactionUnit'].value}
                         >
-                            <MenuItem value={'{decade}'}>Decade</MenuItem>
+                            <MenuItem value={'10.a'}>Decade</MenuItem>
                             <MenuItem value={'a'}>Year (a)</MenuItem>
                             <MenuItem value={'mo'}>Month (mo)</MenuItem>
                             <MenuItem value={'wk'}>Week (wk)</MenuItem>
