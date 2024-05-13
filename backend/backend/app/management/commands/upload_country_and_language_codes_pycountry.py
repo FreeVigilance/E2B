@@ -22,6 +22,8 @@ def create_country_codes():
         [CountryCode(code=country.alpha_2, name=country.name, language=language) for country in pycountry.countries]
     )
 
+    CountryCode.objects.create(code='EU', name='European Union', language=language)
+
     logger.info(f'Pycountries added successfully')
 
 

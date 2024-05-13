@@ -26,6 +26,7 @@ def parse_ucum_file(file_path: pathlib.Path, language: str) -> None:
             objects.append(UCUMCode(code=code, name=name, property=property, language=language))
         UCUMCode.objects.bulk_create(objects)
 
+    UCUMCode.objects.create(code='{DF}', name='dosage form', property='strength_dose', language=language)
     logger.info(f'{file_path} parsed successfully')
 
 
