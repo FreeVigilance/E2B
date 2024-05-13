@@ -446,8 +446,7 @@
     </div>
     <div class="country">
         <label for="country">1a. COUNTRY</label>
-        <input type="text" id="country" name="country"
-               value="{{ f1a_country|default:" UNK" }}" readonly>
+        <input type="text" id="country" name="country" value="{{ f1a_country|default:"UNK" }}" readonly>
     </div>
     <div class="date_of_birth">
         <label for="date_of_birth">2. DATE OF BIRTH</label>
@@ -471,8 +470,7 @@
     </div>
     <div class="age">
         <label for="age">2a. AGE</label>
-        <input type="text" id="age" name="age"
-               value="{{ f2a_age|default:" UNK" }}" readonly>
+        <input type="text" id="age" name="age" value="{{ f2a_age|default:"UNK" }}" readonly>
     </div>
     <div class="sex">
         <label for="sex">3. SEX</label>
@@ -487,24 +485,24 @@
             <div class="day">
                 <label for="reaction_onset_day">Day</label>
                 <input type="text" id="reaction_onset_day" name="reaction_onset_day"
-                       value="{{ f4_reaction_onset_day|default:" UNK" }}" readonly>
+                       value="{{ f4_reaction_onset_day|default:"UNK" }}" readonly>
             </div>
             <div class="month">
                 <label for="reaction_onset_month">Month</label>
                 <input type="text" id="reaction_onset_month" name="reaction_onset_month"
-                       value="{{ f5_reaction_onset_month|default:" UNK" }}" readonly>
+                       value="{{ f5_reaction_onset_month|default:"UNK" }}" readonly>
             </div>
             <div class="year">
                 <label for="reaction_onset_year">Year</label>
                 <input type="text" id="reaction_onset_year" name="reaction_onset_year"
-                       value="{{ f6_reaction_onset_year|default:" UNK" }}" readonly>
+                       value="{{ f6_reaction_onset_year|default:"UNK" }}" readonly>
             </div>
         </div>
     </div>
     <div class="describe_reaction">
         <label for="describe_reaction">7 + 13 DESCRIBE REACTION(S) (including relevant tests/lab data)</label>
         <textarea rows="13" id="describe_reaction" name="describe_reaction" autocomplete="off" readonly>
-{{ f7_13_describe_reactions }}
+{{ f7_13_describe_reactions|default:"UNK" }}
         </textarea>
     </div>
 
@@ -545,7 +543,7 @@
     <div class="suspect_drug_1_name">
         <label for="suspect_drug_1_name">14. SUSPECT DRUG(S) (include generic name)</label>
         <input type="text" id="suspect_drug_1_name" name="suspect_drug_1_name"
-               value="{{ f14_21_suspect_drugs.0.name }} {{ f14_21_suspect_drugs.0.dosages_information.0.batch_number|default:"UNK" }}"
+               value="{{ f14_21_suspect_drugs.0.name }} {{ f14_21_suspect_drugs.0.dosages_information.0.batch_number|default:"" }}"
                readonly>
     </div>
     <div class="suspect_drug_1_daily_dose">
@@ -641,7 +639,7 @@
             month of
             period, etc.)</label>
         <textarea rows="4" id="other_relevant_history" name="other_relevant_history" autocomplete="off"
-                  readonly>{{ f23_other_relevant_history }}</textarea>
+                  readonly>{{ f23_other_relevant_history|default:"UNK" }}</textarea>
     </div>
 
     <div class="manufacturer">
@@ -650,7 +648,7 @@
     <div class="name_and_address_of_manufacturer">
         <label for="name_and_address_of_manufacturer">24a. NAME AND ADDRESS OF MANUFACTURER</label>
         <textarea rows="6" id="name_and_address_of_manufacturer" name="name_and_address_of_manufacturer"
-                  autocomplete="off" readonly>{{ f24a_name_and_address_of_manufacturer }}</textarea>
+                  autocomplete="off" readonly>{{ f24a_name_and_address_of_manufacturer|default:"" }}</textarea>
     </div>
     <div class="text">
         <textarea></textarea>
@@ -661,12 +659,12 @@
     <div class="manufacturer_control_number">
         <label for="manufacturer_control_number">24b. MFR CONTROL NO.</label>
         <input type="text" id="manufacturer_control_number" name="manufacturer_control_number"
-               value="{{ f24b_MFR_control_no }}" readonly>
+               value="{{ f24b_MFR_control_no|default:"" }}" readonly>
     </div>
     <div class="date_received_by_manufacturer">
         <label for="date_received_by_manufacturer">24c. DATE RECEIVED BY MANUFACTURER</label>
         <input type="text" id="date_received_by_manufacturer" name="date_received_by_manufacturer"
-               value="{{ f24c_date_received_by_manufacturer }}" readonly>
+               value="{{ f24c_date_received_by_manufacturer|default:"" }}" readonly>
     </div>
     <div class="report_source">
         <label>24d. REPORT SOURCE</label>
@@ -692,7 +690,8 @@
     </div>
     <div class="date_of_report">
         <label for="date_of_report">DATE OF THIS REPORT</label>
-        <input type="text" id="date_of_report" name="date_of_report" value="{{ date_of_this_report }}" readonly>
+        <input type="text" id="date_of_report" name="date_of_report" value="{{ date_of_this_report|default:"" }}"
+               readonly>
     </div>
     <div class="report_type">
         <label for="report_type">25a. REPORT TYPE</label>
@@ -725,8 +724,7 @@
         <label for="suspect_drugs_continue">
             14-21 SUSPECT DRUG(S) INFORMATION continued
         </label>
-        <div id="suspect_drugs_continue">
-            {% if f14_21_suspect_drugs|length > 1 or f14_21_suspect_drugs.0.dosages_information|length > 1 or f14_21_suspect_drugs.0.indications_for_use|length > 1 %}
+        <div id="suspect_drugs_continue">{% if f14_21_suspect_drugs|length > 1 or f14_21_suspect_drugs.0.dosages_information|length > 1 or f14_21_suspect_drugs.0.indications_for_use|length > 1 %}
                 <table style="word-wrap:break-word;">
                     <colgroup>
                         <col span="1" style="width: 15%;">
@@ -809,8 +807,7 @@
                     {% endfor %}
                     </tbody>
                 </table>
-                </div>
-            {% endif %}
+            {% endif %}</div>
     </div>
     <div class="concomitant_drugs_continue">
         <label for="concomitant_drugs_continue">22. CONCOMITANT DRUG(S) AND DATES OF ADMINISTRATION
