@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./data/dbdata:/var/lib/postgresql/data
-      - ./install-extensions.sql:/docker-entrypoint-initdb.d/install-extensions.sql
+      - ./scripts/install-extensions.sql:/docker-entrypoint-initdb.d/install-extensions.sql
     environment:
       - POSTGRES_USER=$POSTGRES_USER
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
