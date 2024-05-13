@@ -4,34 +4,42 @@ import pathlib
 import openpyxl
 from django.core.management import BaseCommand
 
-ICH_OID_TIME_UNIT = '2.16.840.1.113883.3.989.2.1.1.26'
-ICH_OID_STRENGTH_DOSE_UNIT = '2.16.840.1.113883.3.989.2.1.1.25'
-
-CONCENTRATION_UNITS = {
-    'Mass Concentration Units',
-    'Substance Concentration Units',
-    'Number Concentration Units',
-    'Arbitrary Concentration Units'
-}
-
 STRENGTH_DOSE_UNITS = {
-    'SI Mass Units',
-    'SI Volume Units',
-
+    'amount of substance',
+    'amount of substance (dissolved particles)',
     'Substance Units',
-
-    'Areic Mass Units',
-    'Mass Concentration Units',
-    'Mass Ratio Or Mass Fraction Or Mass Content Units',
+    'Areic Substance Units',
+    'Substance Content Units',
+    'Substance Ratio Or Substance Fraction Units',
+    'Substance Concentration Units',
 
     'mass',
+    'SI Mass Units',
+    'Molar Mass Units',
+    'Areic Mass Units',
+    'Lineic Mass Units',
+    'Mass Concentration Units',
+    'Mass Ratio Or Mass Fraction Or Mass Content Units',
+    'Mass Concentration Units',
+
     'volume',
-    'amount of substance',
-    'radioactivity'
+    'SI Volume Units',
+    'Volume Fraction Units',
+    'Volume Content Units',
+
+    'radioactivity',
+
+    'arbitrary',
+    'Arbitrary Concentration Units',
+    'Arbitrary Concentration Content Units',
+
+    'fraction',
+    'Number Concentration Units'
 }
 
 TIME_UNITS = {
-    'time'
+    'time',
+    'Time Units'
 }
 
 
@@ -47,11 +55,7 @@ def get_relevant_codes_from_phin_vads_file(file_path: pathlib.Path) -> dict:
         for data in reader:
             code, _, preferred_name = data[:3]
             property = preferred_name.split('[')[-1].rstrip(']') if ']' in preferred_name else None
-
-            if property in STRENGTH_DOSE_UNITS or code == '%':
-                codes[code] = property
-            # elif property in TIME_UNITS:
-            #     codes[code] = property
+            codes[code] = property
     return codes
 
 
@@ -61,7 +65,7 @@ def get_relevant_codes_from_ucum_examples_file(file_path: pathlib.Path) -> dict:
 
     codes = dict()
     for code, name in worksheet.iter_rows(min_row=2, min_col=2, max_col=3, max_row=worksheet.max_row):
-        codes[code.value] = name.value
+        codes[code.value] = name.value.strip()
 
     return codes
 
@@ -84,5 +88,9 @@ class Command(BaseCommand):
             code_to_property = get_relevant_codes_from_phin_vads_file(phin_vads_file)
             for code in sorted(code_to_property.keys() & code_to_name.keys()):
                 property = code_to_property[code]
-                oid = ICH_OID_TIME_UNIT if property in TIME_UNITS else ICH_OID_STRENGTH_DOSE_UNIT
-                writer.writerow([code, code_to_name[code], property, oid])
+                if property in TIME_UNITS:
+                    writer.writerow([code, code_to_name[code], 'time'])
+                elif property in STRENGTH_DOSE_UNITS:
+                    writer.writerow([code, code_to_name[code], 'strength_dose'])
+                else:
+                    writer.writerow([code, code_to_name[code], 'other'])
