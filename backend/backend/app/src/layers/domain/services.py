@@ -8,7 +8,7 @@ from app.src.layers.base.services import ServiceProtocol, BusinessServiceProtoco
 from app.src.layers.domain.models import DomainModel, ICSR
 from app.src.layers.domain.models import CIOMS
 from app.src.layers.storage.models import soc_term, hlt_pref_term, hlgt_pref_term, pref_term, low_level_term, \
-    meddra_release, CountryCode, LanguageCode, UCUMCode
+    meddra_release, CountryCode, LanguageCode, UCUMCode, RouteOfAdministrationCode, DosageFormCode
 
 
 class DomainService(BusinessServiceProtocol[DomainModel]):
@@ -104,6 +104,10 @@ class CodeSetService(CodeSetServiceProtocol):
                 model = LanguageCode
             case 'ucum':
                 model = UCUMCode
+            case 'roa':
+                model = RouteOfAdministrationCode
+            case 'df':
+                model = DosageFormCode
             case _:
                 raise ValueError(f"Unknown codeset: {codeset}")
 
@@ -125,6 +129,12 @@ class CodeSetService(CodeSetServiceProtocol):
             queryset = model.objects.filter(language=language)
             if property:
                 queryset = queryset.filter(property=property)
+            if query:
+                queryset = queryset.filter(Q(code__icontains=query) | Q(name__icontains=query))
+            return code_set.SearchResponse([code_set.Term(code=obj.code, name=obj.name) for obj in queryset])
+
+        if model is RouteOfAdministrationCode or model is DosageFormCode:
+            queryset = model.objects.filter(language=language)
             if query:
                 queryset = queryset.filter(Q(code__iexact=query) | Q(name__istartswith=query))
             return code_set.SearchResponse([code_set.Term(code=obj.code, name=obj.name) for obj in queryset])
