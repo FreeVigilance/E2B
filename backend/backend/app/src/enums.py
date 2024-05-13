@@ -142,7 +142,7 @@ class G_k_10_r_additional_information_drug(enum.IntEnum):
 
 
 class D_2_2b_age_onset_reaction_unit(enum.StrEnum):
-    DECADE = "{decade}"
+    DECADE = "10.a"
     YEAR = "a"
     MONTH = "mo"
     WEEK = "wk"

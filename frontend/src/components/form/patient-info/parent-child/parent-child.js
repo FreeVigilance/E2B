@@ -425,7 +425,7 @@ export const ParentChild = () => {
                             onChange={handleChange('D_10_2_2b_AgeParentUnit')}
                             value={parentChildData['D_10_2_2b_AgeParentUnit'].value}
                         >
-                            <MenuItem value={'{decade}'}>Decade</MenuItem>
+                            <MenuItem value={'10.a'}>Decade</MenuItem>
                             <MenuItem value={'a'}>Year (a)</MenuItem>
                         </Select>
                     </Grid>
