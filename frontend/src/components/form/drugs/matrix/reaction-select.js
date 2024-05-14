@@ -29,6 +29,24 @@ export const ReactionSelect = ({ drugIndex, index }) => {
     const { drugReactionMatrix } = useSelector(drugsSelector);
     const { reactionsData } = useSelector(reactionsSelector);
 
+    
+    useEffect(() => {
+        let drugReactionMatrixCopy = JSON.parse(JSON.stringify(drugReactionMatrix));
+        console.log("!!!!!!!", drugReactionMatrixCopy);
+        let res = null;
+        Object.values(reactionsData).forEach((item, ind) => {
+            if (item['id'] === drugReactionMatrixCopy[drugIndex][index]['G_k_9_i_1_ReactionAssessed']) {
+                res = item['E_i_1_1a_ReactionPrimarySourceNativeLanguage']
+            }
+        });
+
+        console.log(res);
+        if (res !== null) {
+            drugReactionMatrixCopy[drugIndex][index]['G_k_9_i_1_ReactionAssessed'] = res.value;
+            dispatch(setDrugReactionMatrix(drugReactionMatrixCopy));
+        }
+    });
+
     const handleChange = () => (event) => {
         let value = event.target.value;
         if (value === '') {
