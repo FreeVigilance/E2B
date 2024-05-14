@@ -145,7 +145,7 @@ export const SummaryCommentsComp = () => {
                                     autoHighlight
                                     autoSelect
                                     options={languageCodes}
-                                    getOptionLabel={(option) => option.code ?? ''}
+                                    getOptionLabel={(option) => option.name ?? ''}
                                     value={getLanguageByCode(item['H_5_r_1b_CaseSummaryReporterCommentsLanguage'].value) ?? ''}
                                     onChange={handleAutocompleteChange('H_5_r_1b_CaseSummaryReporterCommentsLanguage', index)}
                                     filterOptions={(options, { inputValue }) =>
@@ -153,7 +153,7 @@ export const SummaryCommentsComp = () => {
                                     renderOption={(props2, option) => {
                                         return (
                                             <li {...props2} key={props2.key}>
-                                                {`${option.code}\t${option.name}`}
+                                                {`[${option.code}]\t${option.name}`}
                                             </li>
                                         );
                                     }}

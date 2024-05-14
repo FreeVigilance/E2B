@@ -244,7 +244,7 @@ export const Drugs = ({ index }) => {
                             autoHighlight
                             autoSelect
                             options={countryCodes}
-                            getOptionLabel={(option) => option.code ?? ''}
+                            getOptionLabel={(option) => option.name ?? ''}
                             value={getCountryByCode(drugs[index]['G_k_2_4_IdentificationCountryDrugObtained'].value) ?? ''}
                             onChange={handleAutocompleteChange('G_k_2_4_IdentificationCountryDrugObtained', index)}
                             filterOptions={(options, { inputValue }) =>
@@ -252,7 +252,7 @@ export const Drugs = ({ index }) => {
                             renderOption={(props2, option) => {
                                 return (
                                     <li {...props2} key={props2.key}>
-                                        {`${option.code}\t${option.name}`}
+                                        {`${option.code} — ${option.name}`}
                                     </li>
                                 );
                             }}
@@ -314,7 +314,7 @@ export const Drugs = ({ index }) => {
                             autoHighlight
                             autoSelect
                             options={countryCodes}
-                            getOptionLabel={(option) => option.code ?? ''}
+                            getOptionLabel={(option) => option.name ?? ''}
                             value={getCountryByCode(drugs[index]['G_k_3_2_CountryAuthorisationApplication'].value) ?? ''}
                             onChange={handleAutocompleteChange('G_k_3_2_CountryAuthorisationApplication', index)}
                             filterOptions={(options, { inputValue }) =>
@@ -322,7 +322,7 @@ export const Drugs = ({ index }) => {
                             renderOption={(props2, option) => {
                                 return (
                                     <li {...props2} key={props2.key}>
-                                        {`${option.code}\t${option.name}`}
+                                        {`${option.code} — ${option.name}`}
                                     </li>
                                 );
                             }}

@@ -574,7 +574,7 @@ export const Dosages = ({ drugIndex }) => {
                                 <Grid item xs={9}>
                                     {dosageFormCodes.length === 0 && <TextField
                                         variant="outlined"
-                                        className={classes.textShort}
+                                        className={classes.textLong}
                                         onChange={handleChange(
                                             'G_k_4_r_9_2b_PharmaceuticalDoseFormTermID',
                                             index,
@@ -584,25 +584,25 @@ export const Dosages = ({ drugIndex }) => {
                                         }
                                     />}
                                     {dosageFormCodes.length > 0 && <Autocomplete
-                                        className={classes.textShort}
+                                        className={classes.textLong}
                                         autoHighlight
                                         autoSelect
                                         options={dosageFormCodes}
-                                        getOptionLabel={(option) => option.code ?? ''}
+                                        getOptionLabel={(option) => option.name ?? ''}
                                         value={getDosageFormByCode(item['G_k_4_r_9_2b_PharmaceuticalDoseFormTermID'].value) ?? ''}
                                         onChange={handleAutocompleteChange('G_k_4_r_9_2b_PharmaceuticalDoseFormTermID', index)}
                                         filterOptions={(options, { inputValue }) =>
-                                            matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.WORD_STARTS_WITH })}
+                                            matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.CONTAINS })}
                                         renderOption={(props2, option) => {
                                             return (
-                                                <li {...props2} key={props2.key}>
+                                                <li {...props2} key={option.code}>
                                                     {`${option.code}\t${option.name}`}
                                                 </li>
                                             );
                                         }}
                                         renderInput={(params) => (
                                             <TextField
-                                                label="EDQM basic dosage form code"
+                                                label="EDQM dosage form code"
                                                 {...params}
                                             />
                                         )}
@@ -726,11 +726,11 @@ export const Dosages = ({ drugIndex }) => {
                                         autoHighlight
                                         autoSelect
                                         options={routeOfAdministrationCodes}
-                                        getOptionLabel={(option) => option.code ?? ''}
+                                        getOptionLabel={(option) => option.name ?? ''}
                                         value={getRouteOfAdministrationByCode(item['G_k_4_r_10_2b_RouteAdministrationTermID'].value) ?? ''}
                                         onChange={handleAutocompleteChange('G_k_4_r_10_2b_RouteAdministrationTermID', index)}
                                         filterOptions={(options, { inputValue }) =>
-                                            matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.WORD_STARTS_WITH })}
+                                            matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.CONTAINS })}
                                         renderOption={(props2, option) => {
                                             return (
                                                 <li {...props2} key={props2.key}>
@@ -863,11 +863,11 @@ export const Dosages = ({ drugIndex }) => {
                                         autoHighlight
                                         autoSelect
                                         options={routeOfAdministrationCodes}
-                                        getOptionLabel={(option) => option.code ?? ''}
+                                        getOptionLabel={(option) => option.name ?? ''}
                                         value={getRouteOfAdministrationByCode(item['G_k_4_r_11_2b_ParentRouteAdministrationTermID'].value) ?? ''}
                                         onChange={handleAutocompleteChange('G_k_4_r_11_2b_ParentRouteAdministrationTermID', index)}
                                         filterOptions={(options, { inputValue }) =>
-                                            matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.WORD_STARTS_WITH })}
+                                            matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.CONTAINS })}
                                         renderOption={(props2, option) => {
                                             return (
                                                 <li {...props2} key={props2.key}>
