@@ -24,7 +24,6 @@ class AuthView(View):
             username = decoded_credentials[0]
             password = decoded_credentials[1]
         except:
-            print(base64.b64decode(encoded_credentials))
             return http.HttpResponse('Invalid HTTP_AUTHORIZATION header', status=HTTPStatus.UNAUTHORIZED)
         
         is_valid = True
