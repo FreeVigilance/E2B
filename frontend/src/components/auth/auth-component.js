@@ -34,6 +34,10 @@ export const AuthComponent = () => {
     }, [token]);
 
     const TcpAuth = async () => {
+        if (username === "" || password === "") {
+            enqueueSnackbar(`Сначала введите данные для авторизации.`,{ variant: 'error' });
+            return;
+        }
         dispatch(setLoading(true));
         try {
             dispatch(postAuth({username: username, password: password}));
