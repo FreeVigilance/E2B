@@ -84,8 +84,12 @@ class MedDRAService(MedDRAServiceProtocol[low_level_term]):
             queryset = queryset.filter(Q(name__icontains=search_input) | Q(code__iexact=search_input))
         return queryset
 
-    def read(self, code: str, meddra_release_id: int) -> low_level_term:
-        return low_level_term.objects.get(meddra_release=meddra_release_id, code=code)
+    def read(self, code: str, meddra_version: str) -> low_level_term:
+        try:
+            meddra_release_id = meddra_release.objects.get(version=meddra_version).id
+            return low_level_term.objects.get(meddra_release=meddra_release_id, code=code)
+        except Exception as e:
+            return None
 
 
 class CodeSetService(CodeSetServiceProtocol):
@@ -141,4 +145,7 @@ class CodeSetService(CodeSetServiceProtocol):
             return queryset
 
     def read(self, codeset: str, code: str, language: str):
-        return self._get_model(codeset).objects.get(code=code, language=language)
+        try:
+            return self._get_model(codeset).objects.get(code=code, language=language)
+        except Exception as e:
+            return None
