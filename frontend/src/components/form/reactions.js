@@ -151,6 +151,7 @@ export const Reactions = () => {
                 >
                     <CardContent>
                         <Stack direction={'column'} spacing={3}>
+                        {item['id'] === null ?
                             <div
                                 style={{
                                     border: '2px solid',
@@ -159,16 +160,11 @@ export const Reactions = () => {
                                     background: '#1976d2',
                                 }}
                             >
-                                {item['id'] !== null ? (
                                     <FormLabel className={classes.idLabel}>
-                                        Reaction id = {item['id']}
-                                    </FormLabel>
-                                ) : (
-                                    <FormLabel className={classes.idLabel}>
-                                        Reaction id = {item['uuid']}
-                                    </FormLabel>
-                                )}
+                                    Reaction id = {item['uuid']}
+                                </FormLabel>
                             </div>
+                            : null }
 
                             <Grid container spacing={2}>
                                 <Grid item xs={3}>

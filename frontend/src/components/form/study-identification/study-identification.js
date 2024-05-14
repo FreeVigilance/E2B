@@ -265,6 +265,22 @@ export const StudyIdentificationComp = () => {
                 </Grid>
                 <Grid container item xs direction="column" rowGap={1}></Grid>
             </Grid>
+
+            <FormLabel
+            sx={{
+                position: 'fixed',
+                bottom: '2%',
+                right: '8%',
+                zIndex: 10000,
+                fontSize: 25,
+                color: 'black',
+                backgroundColor: '#f1f1fb',
+                padding: '5px',
+                fontWeight: 600
+            }}
+            >
+                STUDY IDENTIFICATION
+            </FormLabel>
         </>
     );
 };

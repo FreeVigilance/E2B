@@ -590,7 +590,7 @@ export const FormTabs = () => {
                         padding: '5px',
                     }}
                 >
-                    Report id: {currentId}
+                   Report id: {currentId}
                 </FormLabel>
 
                 <Box sx={{ position: 'fixed', top: '15px', right: '2%' }}>

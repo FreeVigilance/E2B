@@ -511,6 +511,22 @@ export const ParentChild = () => {
                     <ParentDrugsHistory></ParentDrugsHistory>
                 </Grid>
             </Grid>
+
+            <FormLabel
+            sx={{
+                position: 'fixed',
+                bottom: '2%',
+                right: '8%',
+                zIndex: 10000,
+                fontSize: 25,
+                color: 'black',
+                backgroundColor: '#f1f1fb',
+                padding: '5px',
+                fontWeight: 600
+            }}
+            >
+                PARENT CHILD
+            </FormLabel>
         </>
     );
 };

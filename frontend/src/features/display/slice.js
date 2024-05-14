@@ -272,7 +272,7 @@ const initialState = {
     showSideMenu: false,
     showCasesList: true,
     openNewReport: false,
-    currentTab: 0,
+    currentTab: '11',
     currentId: null,
     currentSaved: 0,
     uploadedFile: null,
