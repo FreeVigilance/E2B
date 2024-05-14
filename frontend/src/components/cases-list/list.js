@@ -39,6 +39,10 @@ export const CasesList = () => {
     const dispatch = useDispatch();
     const { cases } = useSelector(casesListSelector);
 
+    useEffect(() => {
+        dispatch(getCasesList());
+    }, []);
+
     const openReport = (id) => {
         dispatch(getData(id));
         dispatch(setOpenNewReport(true));

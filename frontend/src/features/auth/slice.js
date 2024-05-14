@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '../../api';
+import cookie from "react-cookies";
+
 
 export const postAuth = createAsyncThunk(
     '',
@@ -23,8 +25,10 @@ const authSlice = createSlice({
     reducers: {
         setIsAuth: (state, action) => { state.isAuth = action.payload },
         setToken: (state, action) => { state.token = action.payload },
-        setUserName: (state, action) => { state.username = action.payload },
-        setPassword: (state, action) => { state.password = action.payload },
+        setUserName: (state, action) => { state.username = action.payload; 
+            cookie.save("username", action.payload);},
+        setPassword: (state, action) => { state.password = action.payload;
+            cookie.save("password", action.payload); },
         setShow: (state, action) => { state.show = action.payload },
         setLoading: (state, action) => { state.loading = action.payload },
         getIsAuth: (state) => { return state.isAuth },
