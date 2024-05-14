@@ -30,7 +30,7 @@ const SnackbarCloseButton = ({ snackbarKey }) => {
 
 export const App = () => {
     const dispatch = useDispatch();
-    const { isAuth, token } = useSelector(authSelector);
+    const { isAuth } = useSelector(authSelector);
     const { showCasesList, openNewReport, showUpload } =
         useSelector(displaySelector);
 
@@ -40,7 +40,7 @@ export const App = () => {
     }, []);
 
     const checkAuth = () => {
-        return isAuth && token.length > 0;
+        return isAuth;
     };
 
     if (!checkAuth()) {

@@ -80,16 +80,18 @@ export class HTTP {
         }
 
         function serializeHeader(method: METHOD, data: T) {
-            // const strAuthorization = cookie.load('access_token');
-            // const header = { authorization: `Bearer ${strAuthorization}` };
+            const username = cookie.load('username');
+            const password = cookie.load('password');
+
+            const header = { authorization: `Basic ${btoa(username+':'+password)}` };
 
             // if (method === METHOD.GET || method === METHOD.DELETE) {
             //     return header;
             // }
             // if (data instanceof FormData) {
             //     return header;
-            // }  content_type='application/xml'
-            return { 'Content-Type': 'application/json' };
+            // }  
+            return { ...header, "Content-Type": "application/json" };;
         }
 
         const { method, data, responseFormat = 'json' } = options;
