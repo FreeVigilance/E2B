@@ -49,7 +49,6 @@ export const api = {
     //     }
     // }
     getCountryCodes: (data: any) => {
-        console.log(`getCountryCodes: /codeset/country/search?q=${data}`)
         return clientER.get(`/codeset/country/search?q=${data}`);
     },
     getLanguageCodes: (data: any) => {

@@ -66,9 +66,9 @@ export const Substances = ({ drugIndex }) => {
                 dispatch(setSubstances(substancesCopy));
             };
 
-    const handleAutocompleteChange = (fieldName, index) => (_, value) => {
+    const handleAutocompleteFreeSoloChange = (fieldName, index) => (_, value) => {
         let substancesCopy = JSON.parse(JSON.stringify(substances));
-        substancesCopy[drugIndex][index][fieldName].value = value?.code ?? null;
+        substancesCopy[drugIndex][index][fieldName].value = value?.code ?? value;
         dispatch(setSubstances(substancesCopy));
     };
 
@@ -78,8 +78,6 @@ export const Substances = ({ drugIndex }) => {
 
     const formList = () => {
         let list = [];
-        console.log(substances);
-        console.log(drugIndex);
         if (substances[drugIndex].length === 0) {
             return (
                 <span>
@@ -233,9 +231,10 @@ export const Substances = ({ drugIndex }) => {
                                     className={classes.textLong}
                                     freeSolo
                                     options={strengthCodes}
-                                    getOptionLabel={(option) => option.code ?? ''}
-                                    value={getStrengthByCode(item['G_k_2_3_r_3b_StrengthUnit'].value) ?? ''}
-                                    onChange={handleAutocompleteChange('G_k_2_3_r_3b_StrengthUnit', index)}
+                                    getOptionLabel={(option) => option?.code ?? option}
+                                    value={getStrengthByCode(item['G_k_2_3_r_3b_StrengthUnit'].value) ?? item['G_k_2_3_r_3b_StrengthUnit'].value}
+                                    onChange={handleAutocompleteFreeSoloChange('G_k_2_3_r_3b_StrengthUnit', index)}
+                                    onInputChange={handleAutocompleteFreeSoloChange('G_k_2_3_r_3b_StrengthUnit', index)}
                                     filterOptions={(options, {inputValue}) =>
                                         matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.CONTAINS})}
                                     renderOption={(props2, option) => {
