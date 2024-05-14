@@ -136,5 +136,5 @@ class CodeSetService(CodeSetServiceProtocol):
         if model is RouteOfAdministrationCode or model is DosageFormCode:
             queryset = model.objects.filter(language=language)
             if query:
-                queryset = queryset.filter(Q(code__iexact=query) | Q(name__istartswith=query))
+                queryset = queryset.filter(Q(code__icontains=query) | Q(name__icontains=query))
             return code_set.SearchResponse([code_set.Term(code=obj.code, name=obj.name) for obj in queryset])
