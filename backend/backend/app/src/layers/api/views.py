@@ -15,10 +15,7 @@ from app.src.layers.base.services import BusinessServiceProtocol, CIOMSServicePr
 from extensions import utils
 
 
-class BaseView(View):
-    domain_service: BusinessServiceProtocol[ApiModel] = ...
-    model_class: type[ApiModel] = ...
-
+class AuthView(View):
     def dispatch(self, request: http.HttpRequest, *args, **kwargs) -> http.HttpResponse:
         try:
             auth_header = request.META['HTTP_AUTHORIZATION']
@@ -41,6 +38,11 @@ class BaseView(View):
             return http.HttpResponse('Invalid username or password', status=HTTPStatus.UNAUTHORIZED)
 
         return super().dispatch(request, *args, **kwargs)
+
+
+class BaseView(AuthView):
+    domain_service: BusinessServiceProtocol[ApiModel] = ...
+    model_class: type[ApiModel] = ...
 
     def get_model_from_request(self, request: http.HttpRequest) -> ApiModel:
         data = json.loads(request.body)
