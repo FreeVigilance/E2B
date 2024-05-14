@@ -367,7 +367,7 @@ const initialState = {
     drugReactionMatrix: {},
     relatedness: {},
     additionalInfo: {},
-    CC: [],
+    countryCodes: [],
     strengthCodes: [],
     doseCodes: [],
     dosageFormCodes: [],
@@ -400,7 +400,7 @@ const drugsSlice = createSlice({
             state.additionalInfo = action.payload;
         },
         setCountryCodes: (state, action) => {
-            state.CC = action.payload;
+            state.countryCodes = action.payload;
         },
         setStrengthCodes: (state, action) => {
             state.strengthCodes = action.payload;
@@ -479,7 +479,7 @@ const drugsSlice = createSlice({
         });
 
         builder.addCase(getCountryCodes.fulfilled, (state, action) => {
-            state.CC = action.payload;
+            state.countryCodes = action.payload;
         });
 
         builder.addCase(getStrengthCodes.fulfilled, (state, action) => {

@@ -57,7 +57,7 @@ const getNullFlavor = (item, field) => {
 
 const initialState = {
     primarySourceData: [],
-    CC: [],
+    countryCodes: [],
 };
 
 const primarySourceSlice = createSlice({
@@ -68,7 +68,7 @@ const primarySourceSlice = createSlice({
             state.primarySourceData = action.payload;
         },
         setCountryCodes: (state, action) => {
-            state.CC = action.payload;
+            state.countryCodes = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -99,7 +99,7 @@ const primarySourceSlice = createSlice({
         });
 
         builder.addCase(getCountryCodes.fulfilled, (state, action) => {
-            state.CC = action.payload;
+            state.countryCodes = action.payload;
         });
     },
 });

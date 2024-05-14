@@ -69,7 +69,7 @@ export const PrimarySourceComp = () => {
     const classes = useStyles();
 
     const dispatch = useDispatch();
-    const { primarySourceData, CC } = useSelector(primarySourceSelector);
+    const { primarySourceData, countryCodes } = useSelector(primarySourceSelector);
 
     const handleChange = (fieldName, index) => (event) => {
         let value = event.target.value;
@@ -94,7 +94,7 @@ export const PrimarySourceComp = () => {
         dispatch(setPrimarySourceData(primarySourceDataCopy));
     };
 
-    const getCountryByCode = (code) => CC.find(country => country.code === code);
+    const getCountryByCode = (code) => countryCodes.find(country => country.code === code);
 
     useEffect(() => {dispatch(getCountryCodes({ data: '' }));}, []);
 
@@ -1009,7 +1009,7 @@ export const PrimarySourceComp = () => {
                                     ></PrimarySourceFieldLabel>
                                 </Grid>
                                 <Grid item xs={9}>
-                                    {CC.length === 0 && <TextField
+                                    {countryCodes.length === 0 && <TextField
                                         variant="outlined"
                                         className={classes.textShort}
                                         onChange={handleChange(
@@ -1020,11 +1020,11 @@ export const PrimarySourceComp = () => {
                                             item['C_2_r_3_ReporterCountryCode'].value
                                         }
                                     />}
-                                    {CC.length > 0 && <Autocomplete
+                                    {countryCodes.length > 0 && <Autocomplete
                                         className={classes.textShort}
                                         autoHighlight
                                         autoSelect
-                                        options={CC}
+                                        options={countryCodes}
                                         getOptionLabel={(option) => option.code ?? ''}
                                         value={getCountryByCode(primarySourceData[index]['C_2_r_3_ReporterCountryCode'].value) ?? ''}
                                         onChange={handleAutocompleteChange('C_2_r_3_ReporterCountryCode', index)}

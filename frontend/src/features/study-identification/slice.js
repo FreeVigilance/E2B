@@ -47,7 +47,7 @@ const getNullFlavor = (item, field) => {
 const initialState = {
     studyIdentification: new StudyIdentification(),
     studyRegistration: [],
-    CC: [],
+    countryCodes: [],
 };
 
 const studyIdentificationSlice = createSlice({
@@ -61,7 +61,7 @@ const studyIdentificationSlice = createSlice({
             state.studyRegistration = action.payload;
         },
         setCountryCodes: (state, action) => {
-            state.CC = action.payload;
+            state.countryCodes = action.payload;
         },
     }, extraReducers: (builder) => {
         builder.addCase(revertAll, () => initialState);
@@ -95,7 +95,7 @@ const studyIdentificationSlice = createSlice({
         });
 
         builder.addCase(getCountryCodes.fulfilled, (state, action) => {
-            state.CC = action.payload;
+            state.countryCodes = action.payload;
         });
     },
 });

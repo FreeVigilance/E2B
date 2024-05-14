@@ -67,7 +67,7 @@ export const StudyRegistrationComp = () => {
     const classes = useStyles();
 
     const dispatch = useDispatch();
-    const { studyRegistration, CC } = useSelector(studyIdentificationSelector);
+    const { studyRegistration, countryCodes } = useSelector(studyIdentificationSelector);
 
     const handleChange = (fieldName, index) => (event) => {
         let value = event.target.value;
@@ -87,7 +87,7 @@ export const StudyRegistrationComp = () => {
         dispatch(setStudyRegistration(studyRegistrationCopy));
     };
 
-    const getCountryByCode = (code) => CC.find(country => country.code === code);
+    const getCountryByCode = (code) => countryCodes.find(country => country.code === code);
 
     useEffect(() => {dispatch(getCountryCodes({ data: '' }));}, []);
 
@@ -244,7 +244,7 @@ export const StudyRegistrationComp = () => {
                                     {item['C_5_1_r_2_StudyRegistrationCountry'][
                                         'nullFlavor'
                                         ] === null ? (<>
-                                        {CC.length === 0 && <TextField
+                                        {countryCodes.length === 0 && <TextField
                                             variant="outlined"
                                             className={classes.textShort}
                                             onChange={handleChange(
@@ -257,11 +257,11 @@ export const StudyRegistrationComp = () => {
                                                     ].value
                                             }
                                         />}
-                                        {CC.length > 0 && <Autocomplete
+                                        {countryCodes.length > 0 && <Autocomplete
                                             className={classes.textShort}
                                             autoHighlight
                                             autoSelect
-                                            options={CC}
+                                            options={countryCodes}
                                             getOptionLabel={(option) => option.code ?? ''}
                                             value={getCountryByCode(item['C_5_1_r_2_StudyRegistrationCountry'].value) ?? ''}
                                             onChange={handleAutocompleteChange('C_5_1_r_2_StudyRegistrationCountry', index)}

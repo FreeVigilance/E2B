@@ -69,7 +69,7 @@ export const SummaryCommentsComp = () => {
     const classes = useStyles();
 
     const dispatch = useDispatch();
-    const { summaryComments, LC } = useSelector(narrativeSelector);
+    const { summaryComments, languageCodes } = useSelector(narrativeSelector);
 
     const handleChange = (fieldName, index) => (event) => {
         let value = event.target.value;
@@ -87,7 +87,7 @@ export const SummaryCommentsComp = () => {
         dispatch(setSummaryComments(summaryCommentsCopy));
     };
 
-    const getLanguageByCode = (code) => LC.find(country => country.code === code);
+    const getLanguageByCode = (code) => languageCodes.find(country => country.code === code);
 
     useEffect(() => {dispatch(getLanguageCodes({ data: '' }));}, []);
 
@@ -127,7 +127,7 @@ export const SummaryCommentsComp = () => {
                                 ></SummaryCommentsFieldLabel>
                             </Grid>
                             <Grid item xs={6}>
-                                {LC.length === 0 && <TextField
+                                {languageCodes.length === 0 && <TextField
                                     variant="outlined"
                                     className={classes.textLarge}
                                     onChange={handleChange(
@@ -140,11 +140,11 @@ export const SummaryCommentsComp = () => {
                                             ].value
                                     }
                                 />}
-                                {LC.length > 0 && <Autocomplete
+                                {languageCodes.length > 0 && <Autocomplete
                                     className={classes.textLarge}
                                     autoHighlight
                                     autoSelect
-                                    options={LC}
+                                    options={languageCodes}
                                     getOptionLabel={(option) => option.code ?? ''}
                                     value={getLanguageByCode(item['H_5_r_1b_CaseSummaryReporterCommentsLanguage'].value) ?? ''}
                                     onChange={handleAutocompleteChange('H_5_r_1b_CaseSummaryReporterCommentsLanguage', index)}

@@ -84,7 +84,7 @@ const useStyles = makeStyles({
 export const Reactions = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const { reactionsData, LC, CC } = useSelector(reactionsSelector);
+    const { reactionsData, languageCodes, countryCodes } = useSelector(reactionsSelector);
     const { meddraVersion } = useSelector(meddraSelector);
     const { drugReactionMatrix, relatedness } = useSelector(drugsSelector);
 
@@ -109,8 +109,8 @@ export const Reactions = () => {
         dispatch(setReactionsData(reactionsDataCopy));
     };
 
-    const getLanguageByCode = (code) => LC.find(country => country.code === code);
-    const getCountryByCode = (code) => CC.find(country => country.code === code);
+    const getLanguageByCode = (code) => languageCodes.find(country => country.code === code);
+    const getCountryByCode = (code) => countryCodes.find(country => country.code === code);
 
     useEffect(() => {dispatch(getLanguageCodes({ data: '' }));}, []);
     useEffect(() => {dispatch(getCountryCodes({ data: '' }));}, []);
@@ -220,7 +220,7 @@ export const Reactions = () => {
                                     ></ReactionFieldLabel>
                                 </Grid>
                                 <Grid item xs={9}>
-                                    {LC.length === 0 && <TextField
+                                    {languageCodes.length === 0 && <TextField
                                         variant="outlined"
                                         className={classes.textXshort}
                                         onChange={handleChange(
@@ -235,11 +235,11 @@ export const Reactions = () => {
                                         multiline
                                         rows={2}
                                     />}
-                                    {LC.length > 0 && <Autocomplete
+                                    {languageCodes.length > 0 && <Autocomplete
                                         className={classes.textXshort}
                                         autoHighlight
                                         autoSelect
-                                        options={LC}
+                                        options={languageCodes}
                                         getOptionLabel={(option) => option.code ?? ''}
                                         value={getLanguageByCode(item['E_i_1_1b_ReactionPrimarySourceLanguage'].value) ?? ''}
                                         onChange={handleAutocompleteChange('E_i_1_1b_ReactionPrimarySourceLanguage', index)}
@@ -486,7 +486,7 @@ export const Reactions = () => {
                                         ></ReactionFieldLabel>
                                     </Grid>
                                     <Grid item xs={8}>
-                                        {CC.length === 0 && <TextField
+                                        {countryCodes.length === 0 && <TextField
                                             className={classes.textShort}
                                             variant="outlined"
                                             onChange={handleChange(
@@ -499,11 +499,11 @@ export const Reactions = () => {
                                                     ].value
                                             }
                                         />}
-                                        {CC.length > 0 && <Autocomplete
+                                        {countryCodes.length > 0 && <Autocomplete
                                             className={classes.textShort}
                                             autoHighlight
                                             autoSelect
-                                            options={CC}
+                                            options={countryCodes}
                                             getOptionLabel={(option) => option.code ?? ''}
                                             value={getCountryByCode(item['E_i_9_IdentificationCountryReaction'].value) ?? ''}
                                             onChange={handleAutocompleteChange('E_i_9_IdentificationCountryReaction', index)}

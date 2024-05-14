@@ -170,8 +170,8 @@ export const getReaction = () => {
 
 const initialState = {
     reactionsData: [],
-    LC: [],
-    CC: [],
+    languageCodes: [],
+    countryCodes: [],
 };
 
 const reactionsSlice = createSlice({
@@ -182,10 +182,10 @@ const reactionsSlice = createSlice({
             state.reactionsData = action.payload;
         },
         setLanguageCodes: (state, action) => {
-            state.LC = action.payload;
+            state.languageCodes = action.payload;
         },
         setCountryCodes: (state, action) => {
-            state.CC = action.payload;
+            state.countryCodes = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -231,11 +231,11 @@ const reactionsSlice = createSlice({
         });
 
         builder.addCase(getLanguageCodes.fulfilled, (state, action) => {
-            state.LC = action.payload;
+            state.languageCodes = action.payload;
         });
 
         builder.addCase(getCountryCodes.fulfilled, (state, action) => {
-            state.CC = action.payload;
+            state.countryCodes = action.payload;
         });
     },
 });

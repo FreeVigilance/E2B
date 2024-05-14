@@ -62,7 +62,7 @@ export const Drugs = ({ index }) => {
     const classes = useStyles();
 
     const dispatch = useDispatch();
-    const { drugs, CC, doseCodes } = useSelector(drugsSelector);
+    const { drugs, countryCodes, doseCodes } = useSelector(drugsSelector);
 
     const handleChange =
         (fieldName, index, isNumber = false, length = 1) =>
@@ -91,7 +91,7 @@ export const Drugs = ({ index }) => {
         dispatch(setDrugs(drugsDataCopy));
     };
 
-    const getCountryByCode = (code) => CC.find(country => country.code === code);
+    const getCountryByCode = (code) => countryCodes.find(country => country.code === code);
     const getDoseByCode = (code) => doseCodes.find(dose => dose.code === code);
 
     useEffect(() => {dispatch(getCountryCodes({ data: '' }));}, []);
@@ -232,7 +232,7 @@ export const Drugs = ({ index }) => {
                         ></DrugsFieldLabel>
                     </Grid>
                     <Grid item xs={9}>
-                        {CC.length === 0 && <TextField
+                        {countryCodes.length === 0 && <TextField
                             variant="outlined"
                             className={classes.textXshort}
                             onChange={handleChange(
@@ -245,11 +245,11 @@ export const Drugs = ({ index }) => {
                                     ].value
                             }
                         />}
-                        {CC.length > 0 && <Autocomplete
+                        {countryCodes.length > 0 && <Autocomplete
                             className={classes.textShort}
                             autoHighlight
                             autoSelect
-                            options={CC}
+                            options={countryCodes}
                             getOptionLabel={(option) => option.code ?? ''}
                             value={getCountryByCode(drugs[index]['G_k_2_4_IdentificationCountryDrugObtained'].value) ?? ''}
                             onChange={handleAutocompleteChange('G_k_2_4_IdentificationCountryDrugObtained', index)}
@@ -302,7 +302,7 @@ export const Drugs = ({ index }) => {
                         ></DrugsFieldLabel>
                     </Grid>
                     <Grid item xs={9}>
-                        {CC.length === 0 && <TextField
+                        {countryCodes.length === 0 && <TextField
                             variant="outlined"
                             className={classes.textXshort}
                             onChange={handleChange(
@@ -315,11 +315,11 @@ export const Drugs = ({ index }) => {
                                     ].value
                             }
                         />}
-                        {CC.length > 0 && <Autocomplete
+                        {countryCodes.length > 0 && <Autocomplete
                             className={classes.textShort}
                             autoHighlight
                             autoSelect
-                            options={CC}
+                            options={countryCodes}
                             getOptionLabel={(option) => option.code ?? ''}
                             value={getCountryByCode(drugs[index]['G_k_3_2_CountryAuthorisationApplication'].value) ?? ''}
                             onChange={handleAutocompleteChange('G_k_3_2_CountryAuthorisationApplication', index)}
