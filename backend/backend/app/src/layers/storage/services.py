@@ -5,6 +5,7 @@ from django.core import exceptions as dje
 from django.db import models as djm
 from django.db import transaction
 
+from app.src.exceptions import UserError
 from app.src.layers.base.services import ServiceProtocol
 from app.src.layers.storage.models import StorageModel
 from extensions.django.fields import temp_relation_field_utils
@@ -24,7 +25,7 @@ class StorageService(ServiceProtocol[StorageModel]):
     @transaction.atomic
     def create(self, new_model: StorageModel) -> tuple[StorageModel, bool]:
         if new_model.id is not None:
-            raise ValueError('Id can not be specified when creating a new entity')
+            raise UserError('Id can not be specified when creating a new entity')
         
         new_model.pre_create()
         self._save_with_related(new_model, self.SaveOperation.INSERT)
@@ -37,7 +38,7 @@ class StorageService(ServiceProtocol[StorageModel]):
         try:
             old_model = self.read(type(new_model), pk)
         except dje.ObjectDoesNotExist:
-            raise ValueError(f'Cannot update not existing entity: {new_model.__class__.__name__}(id={pk})')
+            raise UserError(f'Cannot update not existing entity: {new_model.__class__.__name__}(id={pk})')
         
         new_model.pre_update()
 
@@ -72,7 +73,7 @@ class StorageService(ServiceProtocol[StorageModel]):
             new_fk_val = getattr(new_model, fk_name, None)
             old_fk_val = getattr(old_model, fk_name, None)
             if old_fk_val and new_fk_val != old_fk_val:
-                raise ValueError(
+                raise UserError(
                     f'Forbidden atempt to change the foreign key ' +
                     '"{new_model.__class__.__name__}.{fk_name}"'
                 )
