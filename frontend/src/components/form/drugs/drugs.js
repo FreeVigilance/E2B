@@ -76,7 +76,6 @@ export const Drugs = ({index}) => {
                 }
                 let drugsDataCopy = JSON.parse(JSON.stringify(drugs));
                 drugsDataCopy[index][fieldName].value = value;
-                console.log(drugsDataCopy[index]);
                 dispatch(setDrugs(drugsDataCopy));
             };
 

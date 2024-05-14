@@ -78,8 +78,6 @@ export const Substances = ({ drugIndex }) => {
 
     const formList = () => {
         let list = [];
-        console.log(substances);
-        console.log(drugIndex);
         if (substances[drugIndex].length === 0) {
             return (
                 <span>
