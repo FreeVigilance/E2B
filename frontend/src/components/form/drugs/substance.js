@@ -66,7 +66,7 @@ export const Substances = ({ drugIndex }) => {
                 dispatch(setSubstances(substancesCopy));
             };
 
-    const handleAutocompleteFreeSoloChange = (fieldName, index) => (_, value) => {
+    const handleAutocompleteChange = (fieldName, index) => (_, value) => {
         let substancesCopy = JSON.parse(JSON.stringify(substances));
         substancesCopy[drugIndex][index][fieldName].value = value?.code ?? value;
         dispatch(setSubstances(substancesCopy));
@@ -74,7 +74,7 @@ export const Substances = ({ drugIndex }) => {
 
     const getStrengthByCode = (code) => strengthCodes.find(strength => strength.code === code);
 
-    useEffect(() => {dispatch(getStrengthCodes({data: ''}));}, []);
+    useEffect(() => {dispatch(getStrengthCodes({ data: '' }));}, []);
 
     const formList = () => {
         let list = [];
@@ -147,7 +147,7 @@ export const Substances = ({ drugIndex }) => {
                                     value={
                                         item[
                                             'G_k_2_3_r_2a_SubstanceTermIDVersion'
-                                        ].value
+                                            ].value
                                     }
                                 />
                             </Grid>
@@ -230,13 +230,13 @@ export const Substances = ({ drugIndex }) => {
                                 {strengthCodes.length > 0 && <Autocomplete
                                     className={classes.textLong}
                                     freeSolo
+                                    autoSelect
                                     options={strengthCodes}
                                     getOptionLabel={(option) => option?.code ?? option}
                                     value={getStrengthByCode(item['G_k_2_3_r_3b_StrengthUnit'].value) ?? item['G_k_2_3_r_3b_StrengthUnit'].value}
-                                    onChange={handleAutocompleteFreeSoloChange('G_k_2_3_r_3b_StrengthUnit', index)}
-                                    onInputChange={handleAutocompleteFreeSoloChange('G_k_2_3_r_3b_StrengthUnit', index)}
-                                    filterOptions={(options, {inputValue}) =>
-                                        matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.CONTAINS})}
+                                    onChange={handleAutocompleteChange('G_k_2_3_r_3b_StrengthUnit', index)}
+                                    filterOptions={(options, { inputValue }) =>
+                                        matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.CONTAINS })}
                                     renderOption={(props2, option) => {
                                         return (
                                             <li {...props2} key={props2.key}>
