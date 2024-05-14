@@ -558,7 +558,7 @@
     <div class="suspect_drug_1_indication_for_use">
         <label for="suspect_drug_1_indication_for_use">17. INDICATION(S) FOR USE</label>
         <input type="text" id="suspect_drug_1_indication_for_use" name="suspect_drug_1_indication_for_use"
-               value="{{ f14_21_suspect_drugs.0.indications_for_use.0.primary_source|default:"UNK" }}" readonly>
+               value="{{ f14_21_suspect_drugs.0.indications_for_use.0.primary_source|default:"UNK" }}{% if f14_21_suspect_drugs.0.indications_for_use.0.meddra %}({{ f14_21_suspect_drugs.0.indications_for_use.0.meddra }}){% endif %}" readonly>
     </div>
     <div class="suspect_drug_1_therapy_dates">
         <label>18. THERAPY DATES (from/to)</label>
@@ -790,7 +790,7 @@
                             <td>
                                 {% for indication_for_use in suspect_drug.indications_for_use %}
                                     {% if not forloop.parentloop.first or not forloop.first %}
-                                        {{ indication_for_use.primary_source|default:"UNK" }}<br>
+                                        {{ indication_for_use.primary_source|default:"UNK" }}{% if indication_for_use.meddra %}({{ indication_for_use.meddra }}){% endif %}<br>
                                     {% endif %}
                                 {% endfor %}
                             </td>

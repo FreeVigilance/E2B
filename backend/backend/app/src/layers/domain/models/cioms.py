@@ -90,6 +90,14 @@ def get_therapy_duration(num: int | None, unit: str | None):
         return f"{num} {G_k_4_r_6b_duration_drug_administration_unit(unit).name.lower()}s"
 
 
+def get_daily_dose(num: int | None, unit: str | None, num_interval: int | None, unit_interval: str | None,
+                   dose_text: str | None):
+    dose = f'{num} {unit}' if num else ''
+    interval = f'{num_interval or ""}{unit_interval or ""}'
+    daily_dose = dose + (f'/{interval}' if interval else '')
+    return daily_dose or dose_text
+
+
 class CIOMS(BaseModel):
     f1_patient_initials: str | None
 
@@ -155,12 +163,12 @@ class CIOMS(BaseModel):
         describe_reactions_events = []
 
         for reaction_event in icsr.e_i_reaction_event:
-            patient_died |= bool(reaction_event.e_i_3_2a_results_death)
-            prolonged_hospitalization |= bool(reaction_event.e_i_3_2c_caused_prolonged_hospitalisation)
-            disability_or_incapacity |= bool(reaction_event.e_i_3_2d_disabling_incapacitating)
-            life_threatening |= bool(reaction_event.e_i_3_2b_life_threatening)
-            other |= (bool(reaction_event.e_i_3_2e_congenital_anomaly_birth_defect) |
-                      bool(reaction_event.e_i_3_2f_other_medically_important_condition))
+            patient_died |= (reaction_event.e_i_3_2a_results_death is True)
+            prolonged_hospitalization |= (reaction_event.e_i_3_2c_caused_prolonged_hospitalisation is True)
+            disability_or_incapacity |= (reaction_event.e_i_3_2d_disabling_incapacitating is True)
+            life_threatening |= (reaction_event.e_i_3_2b_life_threatening is True)
+            other |= ((reaction_event.e_i_3_2e_congenital_anomaly_birth_defect is True) |
+                      (reaction_event.e_i_3_2f_other_medically_important_condition is True))
 
             if reaction_event.e_i_1_2_reaction_primary_source_translation:
                 describe_reactions_events.append(
@@ -184,17 +192,33 @@ class CIOMS(BaseModel):
         concomitant_drugs = []
         describe_reactions_drugs = []
 
+        from app.src.layers.domain.services import CodeSetService, MedDRAService
+        codeset_service = CodeSetService()
+        meddra_service = MedDRAService()
+
         for drug_information in icsr.g_k_drug_information:
             drug_id = drug_information.g_k_2_2_medicinal_product_name_primary_source
+
+            if drug_information.g_k_8_action_taken_drug != G_k_8_action_taken_drug.UNKNOWN:
+                describe_reactions_drugs.append(
+                    f"{drug_id} {get_action_taken_drug(drug_information.g_k_8_action_taken_drug)}")
 
             if drug_information.g_k_1_characterisation_drug_role == G_k_1_characterisation_drug_role.SUSPECT:
                 suspect_drugs.append({
                     "name": drug_id,
                     "dosages_information": [{
                         "lot_number": dosage_information.g_k_4_r_7_batch_lot_number,
-                        "daily_dose": dosage_information.g_k_4_r_8_dosage_text,
-                        "route_of_administration": dosage_information.g_k_4_r_10_2b_route_administration_termid or \
-                                                   dosage_information.g_k_4_r_10_1_route_administration,
+                        "daily_dose": get_daily_dose(
+                            dosage_information.g_k_4_r_1a_dose_num,
+                            dosage_information.g_k_4_r_1b_dose_unit,
+                            dosage_information.g_k_4_r_2_number_units_interval,
+                            dosage_information.g_k_4_r_3_definition_interval_unit,
+                            dosage_information.g_k_4_r_8_dosage_text),
+                        "route_of_administration": codeset_service.read(
+                            'roa',
+                            dosage_information.g_k_4_r_10_2b_route_administration_termid,
+                            'ENG'
+                        ).name if dosage_information.g_k_4_r_10_2b_route_administration_termid else dosage_information.g_k_4_r_10_1_route_administration,
                         "therapy_dates_from": get_date(*parse_date(dosage_information.g_k_4_r_4_date_time_drug)),
                         "therapy_dates_to": get_date(
                             *parse_date(dosage_information.g_k_4_r_5_date_time_last_administration)),
@@ -204,17 +228,15 @@ class CIOMS(BaseModel):
                     } for dosage_information in drug_information.g_k_4_r_dosage_information],
                     "indications_for_use": [{
                         "primary_source": indication_for_use.g_k_7_r_1_indication_primary_source,
-                        "meddra_code": indication_for_use.g_k_7_r_2b_indication_meddra_code,
-                        "meddra_version": indication_for_use.g_k_7_r_2a_meddra_version_indication
+                        "meddra": meddra_service.read(
+                            indication_for_use.g_k_7_r_2b_indication_meddra_code,
+                            indication_for_use.g_k_7_r_2a_meddra_version_indication
+                        ).name if indication_for_use.g_k_7_r_2b_indication_meddra_code else None,
                     } for indication_for_use in drug_information.g_k_7_r_indication_use_case],
                     "abate": get_reaction_abate_after_stopping_drug(drug_information.g_k_8_action_taken_drug, outcome),
                     "reappear": get_reaction_reappear_after_reintroduction(
                         drug_information.g_k_9_i_drug_reaction_matrix, primary_reaction_event)
                 })
-
-                if drug_information.g_k_8_action_taken_drug != G_k_8_action_taken_drug.UNKNOWN:
-                    describe_reactions_drugs.append(
-                        f"{drug_id} {get_action_taken_drug(drug_information.g_k_8_action_taken_drug)}")
 
             elif drug_information.g_k_1_characterisation_drug_role == G_k_1_characterisation_drug_role.CONCOMITANT:
                 concomitant_drugs.append(
@@ -223,6 +245,7 @@ class CIOMS(BaseModel):
                         for dosage_information in drug_information.g_k_4_r_dosage_information
                     ])}'
                 )
+
         if describe_reactions_drugs:
             describe_reactions.append("\nActions Taken with Drugs:")
             describe_reactions += describe_reactions_drugs

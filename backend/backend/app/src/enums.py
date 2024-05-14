@@ -1,4 +1,5 @@
 import enum
+from enum import StrEnum
 
 
 class NullFlavor(enum.StrEnum):
@@ -158,3 +159,11 @@ class G_k_4_r_6b_duration_drug_administration_unit(enum.StrEnum):
     HOUR = "h"
     MINUTE = "min"
     SECOND = "s"
+
+
+class MedDRALevelEnum(StrEnum):
+    SOC = "SOC"
+    HLGT = "HLGT"
+    HLT = "HLT"
+    PT = "PT"
+    LLT = "LLT"
