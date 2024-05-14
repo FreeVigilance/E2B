@@ -107,6 +107,7 @@ export const SideMenu = () => {
                     },
                 }}
                 open={showSideMenu}
+                onClose={handleToggleMenuClick}
             >
                 <List sx={{ backgroundColor: '#051e34' }}>
                     <ListItem key={'toggle'}>

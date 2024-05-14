@@ -29,6 +29,24 @@ export const ReactionSelect = ({ drugIndex, index }) => {
     const { drugReactionMatrix } = useSelector(drugsSelector);
     const { reactionsData } = useSelector(reactionsSelector);
 
+    
+    useEffect(() => {
+        let drugReactionMatrixCopy = JSON.parse(JSON.stringify(drugReactionMatrix));
+        console.log("!!!!!!!", drugReactionMatrixCopy);
+        let res = null;
+        Object.values(reactionsData).forEach((item, ind) => {
+            if (item['id'] === drugReactionMatrixCopy[drugIndex][index]['G_k_9_i_1_ReactionAssessed']) {
+                res = item['E_i_1_1a_ReactionPrimarySourceNativeLanguage']
+            }
+        });
+
+        console.log(res);
+        if (res !== null) {
+            drugReactionMatrixCopy[drugIndex][index]['G_k_9_i_1_ReactionAssessed'] = res.value;
+            dispatch(setDrugReactionMatrix(drugReactionMatrixCopy));
+        }
+    });
+
     const handleChange = () => (event) => {
         let value = event.target.value;
         if (value === '') {
@@ -37,21 +55,20 @@ export const ReactionSelect = ({ drugIndex, index }) => {
         let drugReactionMatrixCopy = JSON.parse(
             JSON.stringify(drugReactionMatrix),
         );
-        drugReactionMatrixCopy[drugIndex][index]['G_k_9_i_1_ReactionAssessed'] =
-            value;
+        drugReactionMatrixCopy[drugIndex][index]['G_k_9_i_1_ReactionAssessed'] = value;
         dispatch(setDrugReactionMatrix(drugReactionMatrixCopy));
     };
 
     const formReactionsList = () => {
         let list = [];
         Object.values(reactionsData).forEach((item, index) => {
-            let reactionIndex = item['id'];
+            let reactionIndex = item['E_i_1_1a_ReactionPrimarySourceNativeLanguage'].value;
             if (reactionIndex === null) {
                 reactionIndex = item['uuid'];
             }
             list.push(
                 <MenuItem value={reactionIndex}>
-                    Reaction {reactionIndex}
+                    {reactionIndex}
                 </MenuItem>,
             );
         });
@@ -62,7 +79,7 @@ export const ReactionSelect = ({ drugIndex, index }) => {
         <Grid container spacing={2}>
             <Grid item xs={4}>
                 <MatrixFieldLabel
-                    label="Reaction Assessed (id)"
+                    label="Reaction Assessed"
                     field="G_k_9_i_1_ReactionAssessed"
                     drugIndex={drugIndex}
                     index={index}
