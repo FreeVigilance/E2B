@@ -59,7 +59,7 @@ export const InfoSenderComp = () => {
     const dispatch = useDispatch();
     const {
         infoSenderData,
-        CC,
+        countryCodes,
     } = useSelector(infoSenderSelector);
 
     const handleChange = (fieldName) => (event) => {
@@ -78,9 +78,9 @@ export const InfoSenderComp = () => {
         dispatch(setInfoSenderData(infoSenderDataCopy));
     };
 
-    const getCountryByCode = (code) => CC.find(country => country.code === code);
+    const getCountryByCode = (code) => countryCodes.find(country => country.code === code);
 
-    useEffect(() => {dispatch(getCountryCodes({data: ''}));}, []);
+    useEffect(() => {dispatch(getCountryCodes({ data: '' }));}, []);
 
     return (
         <Stack direction={'row'} gap={2}>
@@ -282,7 +282,7 @@ export const InfoSenderComp = () => {
                     ></InfoSenderFieldLabel>
                 </Grid>
                 <Grid item xs={9}>
-                    {CC.length === 0 && <TextField
+                    {countryCodes.length === 0 && <TextField
                         variant="outlined"
                         className={classes.textShort}
                         onChange={handleChange('C_3_4_5_SenderCountryCode')}
@@ -290,16 +290,16 @@ export const InfoSenderComp = () => {
                             infoSenderData['C_3_4_5_SenderCountryCode'].value
                         }
                     />}
-                    {CC.length > 0 && <Autocomplete
+                    {countryCodes.length > 0 && <Autocomplete
                         className={classes.textShort}
                         autoHighlight
                         autoSelect
-                        options={CC}
+                        options={countryCodes}
                         getOptionLabel={(option) => option.code ?? ''}
                         value={getCountryByCode(infoSenderData['C_3_4_5_SenderCountryCode'].value) ?? ''}
                         onChange={handleAutocompleteChange('C_3_4_5_SenderCountryCode')}
-                        filterOptions={(options, {inputValue}) =>
-                            matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.ACRONYM})}
+                        filterOptions={(options, { inputValue }) =>
+                            matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.ACRONYM })}
                         renderOption={(props2, option) => {
                             return (
                                 <li {...props2} key={props2.key}>

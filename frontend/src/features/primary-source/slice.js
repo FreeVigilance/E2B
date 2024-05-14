@@ -37,7 +37,7 @@ export const getPrimarySources = () => {
             itemData['C_2_r_3_ReporterCountryCode'] = item['C_2_r_3_ReporterCountryCode'];
 
             itemData['C_2_r_4_Qualification'] = (item['C_2_r_4_Qualification']['nullFlavor'] !== null
-                ? {'value': null, 'nullFlavor': 'UNK'}
+                ? { 'value': null, 'nullFlavor': 'UNK' }
                 : item['C_2_r_4_Qualification']);
 
             itemData['C_2_r_5_PrimarySourceRegulatoryPurposes'] = item['C_2_r_5_PrimarySourceRegulatoryPurposes'];
@@ -51,13 +51,13 @@ export const getPrimarySources = () => {
 
 const getNullFlavor = (item, field) => {
     return item[field]['nullFlavor'] !== null
-        ? {'value': null, 'nullFlavor': nullFlavors[item[field]['nullFlavor']]}
+        ? { 'value': null, 'nullFlavor': nullFlavors[item[field]['nullFlavor']] }
         : item[field];
 };
 
 const initialState = {
     primarySourceData: [],
-    CC: [],
+    countryCodes: [],
 };
 
 const primarySourceSlice = createSlice({
@@ -68,7 +68,7 @@ const primarySourceSlice = createSlice({
             state.primarySourceData = action.payload;
         },
         setCountryCodes: (state, action) => {
-            state.CC = action.payload;
+            state.countryCodes = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -99,7 +99,7 @@ const primarySourceSlice = createSlice({
         });
 
         builder.addCase(getCountryCodes.fulfilled, (state, action) => {
-            state.CC = action.payload;
+            state.countryCodes = action.payload;
         });
     },
 });

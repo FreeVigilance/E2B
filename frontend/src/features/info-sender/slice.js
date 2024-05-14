@@ -38,7 +38,7 @@ export const getInfoSender = () => {
 
 const initialState = {
     infoSenderData: new InfoSender(),
-    CC: [],
+    countryCodes: [],
 };
 
 const infoSenderSlice = createSlice({
@@ -49,7 +49,7 @@ const infoSenderSlice = createSlice({
             state.infoSenderData = action.payload;
         },
         setCountryCodes: (state, action) => {
-            state.CC = action.payload;
+            state.countryCodes = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -80,7 +80,7 @@ const infoSenderSlice = createSlice({
         });
 
         builder.addCase(getCountryCodes.fulfilled, (state, action) => {
-            state.CC = action.payload;
+            state.countryCodes = action.payload;
         });
     },
 });

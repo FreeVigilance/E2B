@@ -35,7 +35,7 @@ const initialState = {
     narrativeCaseSummary: new NarrativeCaseSummary(),
     diagnosis: [],
     summaryComments: [],
-    LC: [],
+    languageCodes: [],
 };
 
 const narrativeSlice = createSlice({
@@ -52,7 +52,7 @@ const narrativeSlice = createSlice({
             state.summaryComments = action.payload;
         },
         setLanguageCodes: (state, action) => {
-            state.LC = action.payload;
+            state.languageCodes = action.payload;
         },
 
     }, extraReducers: (builder) => {
@@ -147,7 +147,7 @@ const narrativeSlice = createSlice({
         });
 
         builder.addCase(getLanguageCodes.fulfilled, (state, action) => {
-            state.LC = action.payload;
+            state.languageCodes = action.payload;
         });
     },
 });
