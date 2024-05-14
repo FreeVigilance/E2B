@@ -58,7 +58,7 @@ export const getReaction = () => {
             itemData['E_i_3_2a_ResultsDeath'] =
                 item['E_i_3_2a_ResultsDeath']['value'] === false ||
                 item['E_i_3_2a_ResultsDeath']['value'] === null
-                    ? {value: null, nullFlavor: 'NI'}
+                    ? { value: null, nullFlavor: 'NI' }
                     : {
                         value: item['E_i_3_2a_ResultsDeath']['value'],
                         nullFlavor: null,
@@ -66,7 +66,7 @@ export const getReaction = () => {
             itemData['E_i_3_2b_LifeThreatening'] =
                 item['E_i_3_2b_LifeThreatening']['value'] === false ||
                 item['E_i_3_2b_LifeThreatening']['value'] === null
-                    ? {value: null, nullFlavor: 'NI'}
+                    ? { value: null, nullFlavor: 'NI' }
                     : {
                         value: item['E_i_3_2b_LifeThreatening']['value'],
                         nullFlavor: null,
@@ -76,7 +76,7 @@ export const getReaction = () => {
                 false ||
                 item['E_i_3_2c_CausedProlongedHospitalisation']['value'] ===
                 null
-                    ? {value: null, nullFlavor: 'NI'}
+                    ? { value: null, nullFlavor: 'NI' }
                     : {
                         value: item[
                             'E_i_3_2c_CausedProlongedHospitalisation'
@@ -86,7 +86,7 @@ export const getReaction = () => {
             itemData['E_i_3_2d_DisablingIncapacitating'] =
                 item['E_i_3_2d_DisablingIncapacitating']['value'] === false ||
                 item['E_i_3_2d_DisablingIncapacitating']['value'] === null
-                    ? {value: null, nullFlavor: 'NI'}
+                    ? { value: null, nullFlavor: 'NI' }
                     : {
                         value: item['E_i_3_2d_DisablingIncapacitating'][
                             'value'
@@ -97,7 +97,7 @@ export const getReaction = () => {
                 item['E_i_3_2e_CongenitalAnomalyBirthDefect']['value'] ===
                 false ||
                 item['E_i_3_2e_CongenitalAnomalyBirthDefect']['value'] === null
-                    ? {value: null, nullFlavor: 'NI'}
+                    ? { value: null, nullFlavor: 'NI' }
                     : {
                         value: item['E_i_3_2e_CongenitalAnomalyBirthDefect'][
                             'value'
@@ -109,7 +109,7 @@ export const getReaction = () => {
                 false ||
                 item['E_i_3_2f_OtherMedicallyImportantCondition']['value'] ===
                 null
-                    ? {value: null, nullFlavor: 'NI'}
+                    ? { value: null, nullFlavor: 'NI' }
                     : {
                         value: item[
                             'E_i_3_2f_OtherMedicallyImportantCondition'

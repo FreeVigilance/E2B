@@ -69,7 +69,7 @@ export const SummaryCommentsComp = () => {
     const classes = useStyles();
 
     const dispatch = useDispatch();
-    const {summaryComments, LC} = useSelector(narrativeSelector);
+    const { summaryComments, LC } = useSelector(narrativeSelector);
 
     const handleChange = (fieldName, index) => (event) => {
         let value = event.target.value;
@@ -89,7 +89,7 @@ export const SummaryCommentsComp = () => {
 
     const getLanguageByCode = (code) => LC.find(country => country.code === code);
 
-    useEffect(() => {dispatch(getLanguageCodes({data: ''}));}, []);
+    useEffect(() => {dispatch(getLanguageCodes({ data: '' }));}, []);
 
     const formList = () => {
         let list = [];
@@ -98,8 +98,8 @@ export const SummaryCommentsComp = () => {
                 <span>
                     <IconButton
                         size="large"
-                        style={{top: '10px'}}
-                        sx={{color: 'white', backgroundColor: '#1976d2'}}
+                        style={{ top: '10px' }}
+                        sx={{ color: 'white', backgroundColor: '#1976d2' }}
                         onClick={addForm}
                     >
                         <AddIcon />
@@ -148,8 +148,8 @@ export const SummaryCommentsComp = () => {
                                     getOptionLabel={(option) => option.code ?? ''}
                                     value={getLanguageByCode(item['H_5_r_1b_CaseSummaryReporterCommentsLanguage'].value) ?? ''}
                                     onChange={handleAutocompleteChange('H_5_r_1b_CaseSummaryReporterCommentsLanguage', index)}
-                                    filterOptions={(options, {inputValue}) =>
-                                        matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.CONTAINS})}
+                                    filterOptions={(options, { inputValue }) =>
+                                        matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.CONTAINS })}
                                     renderOption={(props2, option) => {
                                         return (
                                             <li {...props2} key={props2.key}>
@@ -195,7 +195,7 @@ export const SummaryCommentsComp = () => {
                                 <span>
                                     <IconButton
                                         size="large"
-                                        style={{top: '10px', right: '10px'}}
+                                        style={{ top: '10px', right: '10px' }}
                                         sx={{
                                             color: 'white',
                                             backgroundColor: '#1976d2',
@@ -209,7 +209,7 @@ export const SummaryCommentsComp = () => {
                             <span>
                                 <IconButton
                                     size="large"
-                                    style={{top: '10px'}}
+                                    style={{ top: '10px' }}
                                     sx={{
                                         color: 'white',
                                         backgroundColor: '#000066',

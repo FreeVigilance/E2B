@@ -353,9 +353,9 @@ export const parseDrug = (data) => {
 
 const getNullFlavor = (item, field, isDate = false) => {
     return item[field]['nullFlavor'] !== null
-        ? {value: null, nullFlavor: nullFlavors[item[field]['nullFlavor']]}
+        ? { value: null, nullFlavor: nullFlavors[item[field]['nullFlavor']] }
         : isDate
-            ? {value: parseDate(item[field].value), nullFlavor: null}
+            ? { value: parseDate(item[field].value), nullFlavor: null }
             : item[field];
 };
 

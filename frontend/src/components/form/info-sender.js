@@ -80,7 +80,7 @@ export const InfoSenderComp = () => {
 
     const getCountryByCode = (code) => CC.find(country => country.code === code);
 
-    useEffect(() => {dispatch(getCountryCodes({data: ''}));}, []);
+    useEffect(() => {dispatch(getCountryCodes({ data: '' }));}, []);
 
     return (
         <Stack direction={'row'} gap={2}>
@@ -298,8 +298,8 @@ export const InfoSenderComp = () => {
                         getOptionLabel={(option) => option.code ?? ''}
                         value={getCountryByCode(infoSenderData['C_3_4_5_SenderCountryCode'].value) ?? ''}
                         onChange={handleAutocompleteChange('C_3_4_5_SenderCountryCode')}
-                        filterOptions={(options, {inputValue}) =>
-                            matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.ACRONYM})}
+                        filterOptions={(options, { inputValue }) =>
+                            matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.ACRONYM })}
                         renderOption={(props2, option) => {
                             return (
                                 <li {...props2} key={props2.key}>

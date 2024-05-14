@@ -40,7 +40,7 @@ export const getStudyIdentification = () => {
 
 const getNullFlavor = (item, field) => {
     return item[field]['nullFlavor'] !== null
-        ? {value: null, nullFlavor: nullFlavors[item[field]['nullFlavor']]}
+        ? { value: null, nullFlavor: nullFlavors[item[field]['nullFlavor']] }
         : item[field];
 };
 

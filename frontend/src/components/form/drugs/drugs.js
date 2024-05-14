@@ -58,7 +58,7 @@ const useStyles = makeStyles({
     },
 });
 
-export const Drugs = ({index}) => {
+export const Drugs = ({ index }) => {
     const classes = useStyles();
 
     const dispatch = useDispatch();
@@ -94,8 +94,8 @@ export const Drugs = ({index}) => {
     const getCountryByCode = (code) => CC.find(country => country.code === code);
     const getDoseByCode = (code) => doseCodes.find(dose => dose.code === code);
 
-    useEffect(() => {dispatch(getCountryCodes({data: ''}));}, []);
-    useEffect(() => {dispatch(getDoseCodes({data: ''}));}, []);
+    useEffect(() => {dispatch(getCountryCodes({ data: '' }));}, []);
+    useEffect(() => {dispatch(getDoseCodes({ data: '' }));}, []);
 
     return (
         <>
@@ -253,8 +253,8 @@ export const Drugs = ({index}) => {
                             getOptionLabel={(option) => option.code ?? ''}
                             value={getCountryByCode(drugs[index]['G_k_2_4_IdentificationCountryDrugObtained'].value) ?? ''}
                             onChange={handleAutocompleteChange('G_k_2_4_IdentificationCountryDrugObtained', index)}
-                            filterOptions={(options, {inputValue}) =>
-                                matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.ACRONYM})}
+                            filterOptions={(options, { inputValue }) =>
+                                matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.ACRONYM })}
                             renderOption={(props2, option) => {
                                 return (
                                     <li {...props2} key={props2.key}>
@@ -323,8 +323,8 @@ export const Drugs = ({index}) => {
                             getOptionLabel={(option) => option.code ?? ''}
                             value={getCountryByCode(drugs[index]['G_k_3_2_CountryAuthorisationApplication'].value) ?? ''}
                             onChange={handleAutocompleteChange('G_k_3_2_CountryAuthorisationApplication', index)}
-                            filterOptions={(options, {inputValue}) =>
-                                matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.ACRONYM})}
+                            filterOptions={(options, { inputValue }) =>
+                                matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.ACRONYM })}
                             renderOption={(props2, option) => {
                                 return (
                                     <li {...props2} key={props2.key}>
@@ -426,8 +426,8 @@ export const Drugs = ({index}) => {
                             value={getDoseByCode(drugs[index]['G_k_5b_CumulativeDoseFirstReactionUnit'].value) ?? drugs[index]['G_k_5b_CumulativeDoseFirstReactionUnit'].value}
                             onChange={handleAutocompleteFreeSoloChange('G_k_5b_CumulativeDoseFirstReactionUnit', index)}
                             onInputChange={handleAutocompleteFreeSoloChange('G_k_5b_CumulativeDoseFirstReactionUnit', index)}
-                            filterOptions={(options, {inputValue}) =>
-                                matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.CONTAINS})}
+                            filterOptions={(options, { inputValue }) =>
+                                matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.CONTAINS })}
                             renderOption={(props2, option) => {
                                 return (
                                     <li {...props2} key={props2.key}>
@@ -533,7 +533,7 @@ export const Drugs = ({index}) => {
                         ></DrugsFieldLabel>
                     </Grid>
                     <Grid item xs={9}>
-                        <Box className="text-small" style={{padding: 0}}>
+                        <Box className="text-small" style={{ padding: 0 }}>
                             <FormControlLabel
                                 control={
                                     <Checkbox
@@ -578,12 +578,12 @@ export const Drugs = ({index}) => {
                 </Grid>
             </Stack>
 
-            <Divider sx={{borderBottomWidth: 5, padding: 2}} />
+            <Divider sx={{ borderBottomWidth: 5, padding: 2 }} />
 
             <Grid container direction="row" columnGap={2}>
                 <Grid container item xs direction="column" rowGap={1}>
                     <FormLabel
-                        sx={{fontSize: 30, marginLeft: '20%', color: 'black'}}
+                        sx={{ fontSize: 30, marginLeft: '20%', color: 'black' }}
                     >
                         Substance Identifier and Strength
                     </FormLabel>
@@ -591,7 +591,7 @@ export const Drugs = ({index}) => {
                 </Grid>
                 <Grid container item xs direction="column" rowGap={1}>
                     <FormLabel
-                        sx={{fontSize: 30, marginLeft: '25%', color: 'black'}}
+                        sx={{ fontSize: 30, marginLeft: '25%', color: 'black' }}
                     >
                         Indication for Use in Case
                     </FormLabel>
@@ -599,7 +599,7 @@ export const Drugs = ({index}) => {
                 </Grid>
                 <Grid container item xs direction="column" rowGap={1}>
                     <FormLabel
-                        sx={{fontSize: 30, marginLeft: '25%', color: 'black'}}
+                        sx={{ fontSize: 30, marginLeft: '25%', color: 'black' }}
                     >
                         Additional Information on Drug
                     </FormLabel>

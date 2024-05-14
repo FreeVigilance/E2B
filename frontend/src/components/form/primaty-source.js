@@ -69,7 +69,7 @@ export const PrimarySourceComp = () => {
     const classes = useStyles();
 
     const dispatch = useDispatch();
-    const {primarySourceData, CC} = useSelector(primarySourceSelector);
+    const { primarySourceData, CC } = useSelector(primarySourceSelector);
 
     const handleChange = (fieldName, index) => (event) => {
         let value = event.target.value;
@@ -96,7 +96,7 @@ export const PrimarySourceComp = () => {
 
     const getCountryByCode = (code) => CC.find(country => country.code === code);
 
-    useEffect(() => {dispatch(getCountryCodes({data: ''}));}, []);
+    useEffect(() => {dispatch(getCountryCodes({ data: '' }));}, []);
 
     const setNullFlavor = (fieldName, index) => (event) => {
         let primarySourceDataCopy = JSON.parse(
@@ -126,8 +126,8 @@ export const PrimarySourceComp = () => {
                 <span>
                     <IconButton
                         size="large"
-                        style={{top: '10px'}}
-                        sx={{color: 'white', backgroundColor: '#1976d2'}}
+                        style={{ top: '10px' }}
+                        sx={{ color: 'white', backgroundColor: '#1976d2' }}
                         onClick={addForm}
                     >
                         <AddIcon />
@@ -1028,8 +1028,8 @@ export const PrimarySourceComp = () => {
                                         getOptionLabel={(option) => option.code ?? ''}
                                         value={getCountryByCode(primarySourceData[index]['C_2_r_3_ReporterCountryCode'].value) ?? ''}
                                         onChange={handleAutocompleteChange('C_2_r_3_ReporterCountryCode', index)}
-                                        filterOptions={(options, {inputValue}) =>
-                                            matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.ACRONYM})}
+                                        filterOptions={(options, { inputValue }) =>
+                                            matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.ACRONYM })}
                                         renderOption={(props2, option) => {
                                             return (
                                                 <li {...props2} key={props2.key}>
@@ -1144,7 +1144,7 @@ export const PrimarySourceComp = () => {
                             <span>
                                 <IconButton
                                     size="large"
-                                    style={{top: '10px', right: '10px'}}
+                                    style={{ top: '10px', right: '10px' }}
                                     sx={{
                                         color: 'white',
                                         backgroundColor: '#1976d2',
@@ -1159,7 +1159,7 @@ export const PrimarySourceComp = () => {
                         <span>
                             <IconButton
                                 size="large"
-                                style={{top: '10px'}}
+                                style={{ top: '10px' }}
                                 sx={{
                                     color: 'white',
                                     backgroundColor: '#000066',

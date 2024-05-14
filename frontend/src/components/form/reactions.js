@@ -84,9 +84,9 @@ const useStyles = makeStyles({
 export const Reactions = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const {reactionsData, LC, CC} = useSelector(reactionsSelector);
+    const { reactionsData, LC, CC } = useSelector(reactionsSelector);
     const { meddraVersion } = useSelector(meddraSelector);
-    const {drugReactionMatrix, relatedness} = useSelector(drugsSelector);
+    const { drugReactionMatrix, relatedness } = useSelector(drugsSelector);
 
     const handleChange =
         (fieldName, index, isNumber = false, length = 1) =>
@@ -112,8 +112,8 @@ export const Reactions = () => {
     const getLanguageByCode = (code) => LC.find(country => country.code === code);
     const getCountryByCode = (code) => CC.find(country => country.code === code);
 
-    useEffect(() => {dispatch(getLanguageCodes({data: ''}));}, []);
-    useEffect(() => {dispatch(getCountryCodes({data: ''}));}, []);
+    useEffect(() => {dispatch(getLanguageCodes({ data: '' }));}, []);
+    useEffect(() => {dispatch(getCountryCodes({ data: '' }));}, []);
 
     const setMeddraValue = (value, fieldName, index) => {
         let reactionsDataCopy = JSON.parse(JSON.stringify(reactionsData));
@@ -146,8 +146,8 @@ export const Reactions = () => {
                 <span>
                     <IconButton
                         size="large"
-                        style={{top: '10px'}}
-                        sx={{color: 'white', backgroundColor: '#1976d2'}}
+                        style={{ top: '10px' }}
+                        sx={{ color: 'white', backgroundColor: '#1976d2' }}
                         onClick={addForm}
                     >
                         <AddIcon />
@@ -243,8 +243,8 @@ export const Reactions = () => {
                                         getOptionLabel={(option) => option.code ?? ''}
                                         value={getLanguageByCode(item['E_i_1_1b_ReactionPrimarySourceLanguage'].value) ?? ''}
                                         onChange={handleAutocompleteChange('E_i_1_1b_ReactionPrimarySourceLanguage', index)}
-                                        filterOptions={(options, {inputValue}) =>
-                                            matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.CONTAINS})}
+                                        filterOptions={(options, { inputValue }) =>
+                                            matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.CONTAINS })}
                                         renderOption={(props2, option) => {
                                             return (
                                                 <li {...props2} key={props2.key}>
@@ -288,7 +288,7 @@ export const Reactions = () => {
                             </Grid>
 
                             <Divider
-                                sx={{borderWidth: 0, padding: 2}}
+                                sx={{ borderWidth: 0, padding: 2 }}
                             ></Divider>
 
                             <Stack direction={'row'}>
@@ -507,8 +507,8 @@ export const Reactions = () => {
                                             getOptionLabel={(option) => option.code ?? ''}
                                             value={getCountryByCode(item['E_i_9_IdentificationCountryReaction'].value) ?? ''}
                                             onChange={handleAutocompleteChange('E_i_9_IdentificationCountryReaction', index)}
-                                            filterOptions={(options, {inputValue}) =>
-                                                matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.ACRONYM})}
+                                            filterOptions={(options, { inputValue }) =>
+                                                matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.ACRONYM })}
                                             renderOption={(props2, option) => {
                                                 return (
                                                     <li {...props2} key={props2.key}>
@@ -946,7 +946,7 @@ export const Reactions = () => {
                             <span>
                                 <IconButton
                                     size="large"
-                                    style={{top: '10px', right: '10px'}}
+                                    style={{ top: '10px', right: '10px' }}
                                     sx={{
                                         color: 'white',
                                         backgroundColor: '#1976d2',
@@ -960,7 +960,7 @@ export const Reactions = () => {
                         <span>
                             <IconButton
                                 size="large"
-                                style={{top: '10px'}}
+                                style={{ top: '10px' }}
                                 sx={{
                                     color: 'white',
                                     backgroundColor: '#000066',
