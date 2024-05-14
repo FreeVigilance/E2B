@@ -1,8 +1,10 @@
+import base64
 import json
 import typing as t
 from http import HTTPStatus
 
 from django import http
+from django.contrib.auth.models import User
 
 from django.shortcuts import render
 from django.views import View
@@ -16,6 +18,29 @@ from extensions import utils
 class BaseView(View):
     domain_service: BusinessServiceProtocol[ApiModel] = ...
     model_class: type[ApiModel] = ...
+
+    def dispatch(self, request: http.HttpRequest, *args, **kwargs) -> http.HttpResponse:
+        try:
+            auth_header = request.META['HTTP_AUTHORIZATION']
+            encoded_credentials = auth_header.split(' ')[1]  # Removes "Basic " to isolate credentials
+            decoded_credentials = base64.b64decode(encoded_credentials).decode('utf-8').split(':')
+            username = decoded_credentials[0]
+            password = decoded_credentials[1]
+        except:
+            print(base64.b64decode(encoded_credentials))
+            return http.HttpResponse('Invalid HTTP_AUTHORIZATION header', status=HTTPStatus.UNAUTHORIZED)
+        
+        is_valid = True
+        try:
+            user = User.objects.get(username=username)
+            is_valid = user.check_password(password)
+        except User.DoesNotExist:
+            is_valid = False
+
+        if not is_valid:
+            return http.HttpResponse('Invalid username or password', status=HTTPStatus.UNAUTHORIZED)
+
+        return super().dispatch(request, *args, **kwargs)
 
     def get_model_from_request(self, request: http.HttpRequest) -> ApiModel:
         data = json.loads(request.body)
