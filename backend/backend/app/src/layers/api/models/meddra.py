@@ -1,13 +1,6 @@
 from pydantic import BaseModel, RootModel
-from enum import StrEnum
 
-
-class LevelEnum(StrEnum):
-    SOC = "SOC"
-    HLGT = "HLGT"
-    HLT = "HLT"
-    PT = "PT"
-    LLT = "LLT"
+from app.src.enums import MedDRALevelEnum
 
 
 class Release(BaseModel):
@@ -29,7 +22,7 @@ class State(BaseModel):
 
 
 class Search(BaseModel):
-    level: LevelEnum
+    level: MedDRALevelEnum
     input: str
 
 
@@ -44,5 +37,5 @@ class Term(BaseModel):
 
 
 class SearchResponse(BaseModel):
-    level: LevelEnum
+    level: MedDRALevelEnum
     terms: list[Term]

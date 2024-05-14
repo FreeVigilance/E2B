@@ -2,7 +2,7 @@ import typing as t
 
 from django.db.models import Q
 
-from app.src.layers.api.models import meddra, code_set
+from app.src import enums
 from app.src.layers.base.services import ServiceProtocol, BusinessServiceProtocol, CIOMSServiceProtocol, \
     MedDRAServiceProtocol, CodeSetServiceProtocol
 from app.src.layers.domain.models import DomainModel, ICSR
@@ -48,26 +48,22 @@ class CIOMSService(CIOMSServiceProtocol):
     def __init__(self, storage_service: ServiceProtocol[DomainModel]) -> None:
         self.storage_service = storage_service
 
-    def convert_icsr_to_cioms(self, pk: int) -> CIOMS:
+    def convert_icsr_to_cioms(self, pk: int) -> dict:
         icsr = self.storage_service.read(ICSR, pk)
-        return CIOMS.from_icsr(icsr)
+        return CIOMS.from_icsr(icsr).__dict__
 
 
-class MedDRAService(MedDRAServiceProtocol):
-    LEVELS = list(meddra.LevelEnum)
+class MedDRAService(MedDRAServiceProtocol[low_level_term]):
+    LEVELS = list(enums.MedDRALevelEnum)
     MODELS = [soc_term, hlgt_pref_term, hlt_pref_term, pref_term, low_level_term]
 
-    def __init__(self, storage_service) -> None:
+    def __init__(self, storage_service=None) -> None:
         self.storage_service = storage_service
 
-    def list(self) -> meddra.ReleaseResponse:
-        return meddra.ReleaseResponse(
-            root=[meddra.Release(id=obj.id, version=obj.version, language=obj.language) for obj in
-                  meddra_release.objects.all()])
+    def list(self) -> list:
+        return meddra_release.objects.all()
 
-    def search(self, search_request: meddra.SearchRequest, meddra_release_id: int) -> meddra.SearchResponse:
-        search_level = search_request.search.level
-        search_state = search_request.state
+    def search(self, search_level: str, search_state, search_input: str, meddra_release_id: int) -> list:
         states = [search_state.SOC, search_state.HLGT, search_state.HLT, search_state.PT, search_state.LLT]
 
         level_index = self.LEVELS.index(search_level)
@@ -84,32 +80,36 @@ class MedDRAService(MedDRAServiceProtocol):
                 parent_field_name = parent_model._meta.object_name + ("" if parent_model is pref_term else "s")
                 filter_key += parent_field_name + "__"
 
-        search_input = search_request.search.input
         if search_input:
             queryset = queryset.filter(Q(name__icontains=search_input) | Q(code__iexact=search_input))
+        return queryset
 
-        return meddra.SearchResponse(terms=[meddra.Term(code=obj.code, name=obj.name) for obj in queryset],
-                                     level=search_request.search.level)
+    def read(self, code: str, meddra_release_id: int) -> low_level_term:
+        return low_level_term.objects.get(meddra_release=meddra_release_id, code=code)
 
 
 class CodeSetService(CodeSetServiceProtocol):
-    def __init__(self, storage_service) -> None:
+    def __init__(self, storage_service=None) -> None:
         self.storage_service = storage_service
 
-    def search(self, codeset: str, query: str, language: str, property: str | None = None) -> code_set.SearchResponse:
+    @staticmethod
+    def _get_model(codeset: str):
         match codeset:
             case 'country':
-                model = CountryCode
+                return CountryCode
             case 'language':
-                model = LanguageCode
+                return LanguageCode
             case 'ucum':
-                model = UCUMCode
+                return UCUMCode
             case 'roa':
-                model = RouteOfAdministrationCode
+                return RouteOfAdministrationCode
             case 'df':
-                model = DosageFormCode
+                return DosageFormCode
             case _:
                 raise ValueError(f"Unknown codeset: {codeset}")
+
+    def search(self, codeset: str, query: str, language: str, property: str | None = None) -> list:
+        model = self._get_model(codeset)
 
         if model is CountryCode or model is LanguageCode:
             queryset = model.objects.filter(language=language)
@@ -122,19 +122,23 @@ class CodeSetService(CodeSetServiceProtocol):
                 queryset = queryset.filter(Q(name__unaccent__icontains=query) &
                                            ~Q(name__unaccent__istartswith=query) & ~Q(code__iexact=query))
 
-            return code_set.SearchResponse([code_set.Term(code=obj.code, name=obj.name) for obj in queryset_exact] +
-                                           [code_set.Term(code=obj.code, name=obj.name) for obj in queryset_start_with] +
-                                           [code_set.Term(code=obj.code, name=obj.name) for obj in queryset])
+            return [obj for obj in queryset_exact] + [obj for obj in queryset_start_with] + [obj for obj in queryset]
+
         if model is UCUMCode:
             queryset = model.objects.filter(language=language)
             if property:
                 queryset = queryset.filter(property=property)
             if query:
                 queryset = queryset.filter(Q(code__icontains=query) | Q(name__icontains=query))
-            return code_set.SearchResponse([code_set.Term(code=obj.code, name=obj.name) for obj in queryset])
+
+            return queryset
 
         if model is RouteOfAdministrationCode or model is DosageFormCode:
             queryset = model.objects.filter(language=language)
             if query:
-                queryset = queryset.filter(Q(code__icontains=query) | Q(name__icontains=query))
-            return code_set.SearchResponse([code_set.Term(code=obj.code, name=obj.name) for obj in queryset])
+                queryset = queryset.filter(Q(code__iexact=query) | Q(name__istartswith=query))
+
+            return queryset
+
+    def read(self, codeset: str, code: str, language: str):
+        return self._get_model(codeset).objects.get(code=code, language=language)
