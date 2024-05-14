@@ -295,7 +295,7 @@ export const InfoSenderComp = () => {
                         autoHighlight
                         autoSelect
                         options={countryCodes}
-                        getOptionLabel={(option) => option.code ?? ''}
+                        getOptionLabel={(option) => option.name ?? ''}
                         value={getCountryByCode(infoSenderData['C_3_4_5_SenderCountryCode'].value) ?? ''}
                         onChange={handleAutocompleteChange('C_3_4_5_SenderCountryCode')}
                         filterOptions={(options, { inputValue }) =>
@@ -303,7 +303,7 @@ export const InfoSenderComp = () => {
                         renderOption={(props2, option) => {
                             return (
                                 <li {...props2} key={props2.key}>
-                                    {`${option.code}\t${option.name}`}
+                                    {`${option.code} — ${option.name}`}
                                 </li>
                             );
                         }}

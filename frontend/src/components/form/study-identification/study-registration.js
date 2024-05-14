@@ -243,45 +243,46 @@ export const StudyRegistrationComp = () => {
                                     </Box>
                                     {item['C_5_1_r_2_StudyRegistrationCountry'][
                                         'nullFlavor'
-                                        ] === null ? (<>
-                                        {countryCodes.length === 0 && <TextField
-                                            variant="outlined"
-                                            className={classes.textShort}
-                                            onChange={handleChange(
-                                                'C_5_1_r_2_StudyRegistrationCountry',
-                                                index,
-                                            )}
-                                            value={
-                                                item[
-                                                    'C_5_1_r_2_StudyRegistrationCountry'
-                                                    ].value
-                                            }
-                                        />}
-                                        {countryCodes.length > 0 && <Autocomplete
-                                            className={classes.textShort}
-                                            autoHighlight
-                                            autoSelect
-                                            options={countryCodes}
-                                            getOptionLabel={(option) => option.code ?? ''}
-                                            value={getCountryByCode(item['C_5_1_r_2_StudyRegistrationCountry'].value) ?? ''}
-                                            onChange={handleAutocompleteChange('C_5_1_r_2_StudyRegistrationCountry', index)}
-                                            filterOptions={(options, { inputValue }) =>
-                                                matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.ACRONYM })}
-                                            renderOption={(props2, option) => {
-                                                return (
-                                                    <li {...props2} key={props2.key}>
-                                                        {`${option.code}\t${option.name}`}
-                                                    </li>
-                                                );
-                                            }}
-                                            renderInput={(params) => (
-                                                <TextField
-                                                    label="2-alpha country code"
-                                                    {...params}
-                                                />
-                                            )}
-                                        ></Autocomplete>}
-                                    </>) : (
+                                        ] === null ? (
+                                        <>
+                                            {countryCodes.length === 0 && <TextField
+                                                variant="outlined"
+                                                className={classes.textShort}
+                                                onChange={handleChange(
+                                                    'C_5_1_r_2_StudyRegistrationCountry',
+                                                    index,
+                                                )}
+                                                value={
+                                                    item[
+                                                        'C_5_1_r_2_StudyRegistrationCountry'
+                                                        ].value
+                                                }
+                                            />}
+                                            {countryCodes.length > 0 && <Autocomplete
+                                                className={classes.textShort}
+                                                autoHighlight
+                                                autoSelect
+                                                options={countryCodes}
+                                                getOptionLabel={(option) => option.name ?? ''}
+                                                value={getCountryByCode(item['C_5_1_r_2_StudyRegistrationCountry'].value) ?? ''}
+                                                onChange={handleAutocompleteChange('C_5_1_r_2_StudyRegistrationCountry', index)}
+                                                filterOptions={(options, { inputValue }) =>
+                                                    matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.ACRONYM })}
+                                                renderOption={(props2, option) => {
+                                                    return (
+                                                        <li {...props2} key={props2.key}>
+                                                            {`${option.code} — ${option.name}`}
+                                                        </li>
+                                                    );
+                                                }}
+                                                renderInput={(params) => (
+                                                    <TextField
+                                                        label="2-alpha country code"
+                                                        {...params}
+                                                    />
+                                                )}
+                                            ></Autocomplete>}
+                                        </>) : (
                                         <FormControl
                                             className={classes.textXshort}
                                         >

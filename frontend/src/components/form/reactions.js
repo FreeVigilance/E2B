@@ -240,7 +240,7 @@ export const Reactions = () => {
                                         autoHighlight
                                         autoSelect
                                         options={languageCodes}
-                                        getOptionLabel={(option) => option.code ?? ''}
+                                        getOptionLabel={(option) => option.name ?? ''}
                                         value={getLanguageByCode(item['E_i_1_1b_ReactionPrimarySourceLanguage'].value) ?? ''}
                                         onChange={handleAutocompleteChange('E_i_1_1b_ReactionPrimarySourceLanguage', index)}
                                         filterOptions={(options, { inputValue }) =>
@@ -248,7 +248,7 @@ export const Reactions = () => {
                                         renderOption={(props2, option) => {
                                             return (
                                                 <li {...props2} key={props2.key}>
-                                                    {`${option.code}\t${option.name}`}
+                                                    {`[${option.code}]\t${option.name}`}
                                                 </li>
                                             );
                                         }}
@@ -504,7 +504,7 @@ export const Reactions = () => {
                                             autoHighlight
                                             autoSelect
                                             options={countryCodes}
-                                            getOptionLabel={(option) => option.code ?? ''}
+                                            getOptionLabel={(option) => option.name ?? ''}
                                             value={getCountryByCode(item['E_i_9_IdentificationCountryReaction'].value) ?? ''}
                                             onChange={handleAutocompleteChange('E_i_9_IdentificationCountryReaction', index)}
                                             filterOptions={(options, { inputValue }) =>
@@ -512,7 +512,7 @@ export const Reactions = () => {
                                             renderOption={(props2, option) => {
                                                 return (
                                                     <li {...props2} key={props2.key}>
-                                                        {`${option.code}\t${option.name}`}
+                                                        {`${option.code} — ${option.name}`}
                                                     </li>
                                                 );
                                             }}

@@ -1025,7 +1025,7 @@ export const PrimarySourceComp = () => {
                                         autoHighlight
                                         autoSelect
                                         options={countryCodes}
-                                        getOptionLabel={(option) => option.code ?? ''}
+                                        getOptionLabel={(option) => option.name ?? ''}
                                         value={getCountryByCode(primarySourceData[index]['C_2_r_3_ReporterCountryCode'].value) ?? ''}
                                         onChange={handleAutocompleteChange('C_2_r_3_ReporterCountryCode', index)}
                                         filterOptions={(options, { inputValue }) =>
@@ -1033,7 +1033,7 @@ export const PrimarySourceComp = () => {
                                         renderOption={(props2, option) => {
                                             return (
                                                 <li {...props2} key={props2.key}>
-                                                    {`${option.code}\t${option.name}`}
+                                                    {`${option.code} — ${option.name}`}
                                                 </li>
                                             );
                                         }}
