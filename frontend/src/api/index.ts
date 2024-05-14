@@ -63,4 +63,10 @@ export const api = {
     getStrengthCodes: (data: any) => {
         return clientER.get(`/codeset/ucum/search?q=${data}&property=strength_dose`);
     },
+    getRouteOfAdministrationCodes: (data: any) => {
+        return clientER.get(`/codeset/roa/search?q=${data}`);
+    },
+    getDosageFormCodes: (data: any) => {
+        return clientER.get(`/codeset/df/search?q=${data}`);
+    },
 };

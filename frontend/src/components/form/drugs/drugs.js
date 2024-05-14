@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
-import { getCountryCodes, drugsSelector, setDrugs, setDosages, getDoseCodes } from '@src/features/drugs/slice';
+import { getCountryCodes, drugsSelector, setDrugs, getDoseCodes } from '@src/features/drugs/slice';
 import { Substances } from './substance';
 import { Indications } from './indications';
 import { AddInfo } from './add-info';

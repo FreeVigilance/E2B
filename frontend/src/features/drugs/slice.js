@@ -43,6 +43,20 @@ export const getDoseCodes = createAsyncThunk(
     },
 );
 
+export const getDosageFormCodes = createAsyncThunk(
+    'dosage/getDosageFormCodes',
+    (options) => {
+        return api.getDosageFormCodes(options.data);
+    },
+);
+
+export const getRouteOfAdministrationCodes = createAsyncThunk(
+    'dosage/getRouteOfAdministrationCodes',
+    (options) => {
+        return api.getRouteOfAdministrationCodes(options.data);
+    },
+);
+
 export const getDrug = () => {
     return (dispatch, getState) => {
         let drugs = getState().drugs.drugs;
@@ -355,7 +369,9 @@ const initialState = {
     additionalInfo: {},
     CC: [],
     strengthCodes: [],
-    doseCodes: []
+    doseCodes: [],
+    dosageFormCodes: [],
+    routeOfAdministrationCodes: [],
 };
 
 const drugsSlice = createSlice({
@@ -391,6 +407,12 @@ const drugsSlice = createSlice({
         },
         setDoseCodes: (state, action) => {
             state.doseCodes = action.payload;
+        },
+        setDosageFormCodes: (state, action) => {
+            state.dosageFormCodes = action.payload;
+        },
+        setRouteOfAdministrationCodes: (state, action) => {
+            state.routeOfAdministrationCodes = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -467,6 +489,14 @@ const drugsSlice = createSlice({
         builder.addCase(getDoseCodes.fulfilled, (state, action) => {
             state.doseCodes = action.payload;
         });
+
+        builder.addCase(getDosageFormCodes.fulfilled, (state, action) => {
+            state.dosageFormCodes = action.payload;
+        });
+
+        builder.addCase(getRouteOfAdministrationCodes.fulfilled, (state, action) => {
+            state.routeOfAdministrationCodes = action.payload;
+        });
     },
 });
 
@@ -482,4 +512,6 @@ export const {
     setCountryCodes,
     setStrengthCodes,
     setDoseCodes,
+    setDosageFormCodes,
+    setRouteOfAdministrationCodes,
 } = drugsSlice.actions;

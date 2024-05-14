@@ -10,34 +10,22 @@ import {
     FormControl,
     InputLabel,
     Grid,
-    Divider,
-    FormLabel,
     Card,
     CardContent,
     IconButton,
+    TextField,
+    Checkbox,
 } from '@mui/material';
-import { resultsSelector, setResults } from '@src/features/results/slice';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import TextField from '@mui/material/TextField';
-import Checkbox from '@mui/material/Checkbox';
-import {
-    patientSelector,
-    setMedicalHistory,
-    setPatientData,
-} from '@src/features/patient/slice';
 import AddIcon from '@mui/icons-material/Add';
-import { MedHistory } from '@src/features/patient/patient';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {
     drugsSelector,
-    getStrengthCodes,
+    getRouteOfAdministrationCodes,
+    getDosageFormCodes,
     getDoseCodes,
     setDosages,
-    setSubstances,
 } from '@src/features/drugs/slice';
 import { Dosage, Substance } from '@src/features/drugs/drugs';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { makeStyles } from '@mui/styles';
 import { DosageFieldLabel } from '@src/components/field-labels/drugs/dosage-label';
 import InputMask from 'react-input-mask';
@@ -82,22 +70,28 @@ export const Dosages = ({ drugIndex }) => {
     const classes = useStyles();
 
     const dispatch = useDispatch();
-    const { dosages, doseCodes } = useSelector(drugsSelector);
+    const { dosages, doseCodes, dosageFormCodes, routeOfAdministrationCodes } = useSelector(drugsSelector);
 
     const handleChange =
         (fieldName, index, isNumber = false, length = 1) =>
-        (event) => {
-            let value = event.target.value;
-            if (isNumber) {
-                if (value.length > length) value = value.slice(0, length);
-            }
-            if (value === '') {
-                value = null;
-            }
-            let dosagesCopy = JSON.parse(JSON.stringify(dosages));
-            dosagesCopy[drugIndex][index][fieldName].value = value;
-            dispatch(setDosages(dosagesCopy));
-        };
+            (event) => {
+                let value = event.target.value;
+                if (isNumber) {
+                    if (value.length > length) value = value.slice(0, length);
+                }
+                if (value === '') {
+                    value = null;
+                }
+                let dosagesCopy = JSON.parse(JSON.stringify(dosages));
+                dosagesCopy[drugIndex][index][fieldName].value = value;
+                dispatch(setDosages(dosagesCopy));
+            };
+
+    const handleAutocompleteChange = (fieldName, index) => (_, value) => {
+        let dosagesCopy = JSON.parse(JSON.stringify(dosages));
+        dosagesCopy[drugIndex][index][fieldName].value = value?.code ?? null;
+        dispatch(setDosages(dosagesCopy));
+    };
 
     const handleAutocompleteFreeSoloChange = (fieldName, index) => (_, value) => {
         let dosagesCopy = JSON.parse(JSON.stringify(dosages));
@@ -106,9 +100,12 @@ export const Dosages = ({ drugIndex }) => {
     };
 
     const getDoseByCode = (code) => doseCodes.find(dose => dose.code === code);
+    const getDosageFormByCode = (code) => dosageFormCodes.find(dosageForm => dosageForm.code === code);
+    const getRouteOfAdministrationByCode = (code) => routeOfAdministrationCodes.find(routeOfAdministration => routeOfAdministration.code === code);
 
-    useEffect(() => {dispatch(getDoseCodes({data: ''}));}, []);
-
+    useEffect(() => {dispatch(getDoseCodes({ data: '' }));}, []);
+    useEffect(() => {dispatch(getDosageFormCodes({ data: '' }));}, []);
+    useEffect(() => {dispatch(getRouteOfAdministrationCodes({ data: '' }));}, []);
 
     const setNullFlavor = (fieldName, index) => (event) => {
         let dosagesCopy = JSON.parse(JSON.stringify(dosages));
@@ -215,8 +212,8 @@ export const Dosages = ({ drugIndex }) => {
                                         value={getDoseByCode(item['G_k_4_r_1b_DoseUnit'].value) ?? item['G_k_4_r_1b_DoseUnit'].value}
                                         onChange={handleAutocompleteFreeSoloChange('G_k_4_r_1b_DoseUnit', index)}
                                         onInputChange={handleAutocompleteFreeSoloChange('G_k_4_r_1b_DoseUnit', index)}
-                                        filterOptions={(options, {inputValue}) =>
-                                            matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.CONTAINS})}
+                                        filterOptions={(options, { inputValue }) =>
+                                            matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.CONTAINS })}
                                         renderOption={(props2, option) => {
                                             return (
                                                 <li {...props2} key={props2.key}>
@@ -261,9 +258,7 @@ export const Dosages = ({ drugIndex }) => {
                                             evt.preventDefault()
                                         }
                                         value={
-                                            item[
-                                                'G_k_4_r_2_NumberUnitsInterval'
-                                            ].value
+                                            item['G_k_4_r_2_NumberUnitsInterval'].value
                                         }
                                     />
                                 </Grid>
@@ -283,9 +278,7 @@ export const Dosages = ({ drugIndex }) => {
                                                 control={
                                                     <Checkbox
                                                         checked={
-                                                            item[
-                                                                'G_k_4_r_4_DateTimeDrug'
-                                                            ].nullFlavor !==
+                                                            item['G_k_4_r_4_DateTimeDrug'].nullFlavor !==
                                                             null
                                                         }
                                                         onChange={setUnknown(
@@ -299,15 +292,13 @@ export const Dosages = ({ drugIndex }) => {
                                         </Box>
                                         {dosages[drugIndex][index][
                                             'G_k_4_r_4_DateTimeDrug'
-                                        ]['nullFlavor'] === null ? (
+                                            ]['nullFlavor'] === null ? (
                                             <InputMask
                                                 mask="9999-99-99 99:99:99"
                                                 maskChar="_"
                                                 className={classes.textShort}
                                                 value={
-                                                    item[
-                                                        'G_k_4_r_4_DateTimeDrug'
-                                                    ].value
+                                                    item['G_k_4_r_4_DateTimeDrug'].value
                                                 }
                                                 onChange={handleChange(
                                                     'G_k_4_r_4_DateTimeDrug',
@@ -330,9 +321,7 @@ export const Dosages = ({ drugIndex }) => {
                                                 </InputLabel>
                                                 <Select
                                                     value={
-                                                        item[
-                                                            'G_k_4_r_4_DateTimeDrug'
-                                                        ].nullFlavor
+                                                        item['G_k_4_r_4_DateTimeDrug'].nullFlavor
                                                     }
                                                     onChange={setNullFlavor(
                                                         'G_k_4_r_4_DateTimeDrug',
@@ -368,11 +357,8 @@ export const Dosages = ({ drugIndex }) => {
                                             <FormControlLabel
                                                 control={
                                                     <Checkbox
-                                                    checked={
-                                                            item[
-                                                                'G_k_4_r_5_DateTimeLastAdministration'
-                                                            ].nullFlavor !==
-                                                            null
+                                                        checked={
+                                                            item['G_k_4_r_5_DateTimeLastAdministration'].nullFlavor !== null
                                                         }
                                                         onChange={setUnknown(
                                                             'G_k_4_r_5_DateTimeLastAdministration',
@@ -383,17 +369,13 @@ export const Dosages = ({ drugIndex }) => {
                                                 label="No Info"
                                             />
                                         </Box>
-                                        {dosages[drugIndex][index][
-                                            'G_k_4_r_5_DateTimeLastAdministration'
-                                        ]['nullFlavor'] === null ? (
+                                        {dosages[drugIndex][index]['G_k_4_r_5_DateTimeLastAdministration']['nullFlavor'] === null ? (
                                             <InputMask
                                                 mask="9999-99-99 99:99:99"
                                                 maskChar="_"
                                                 className={classes.textShort}
                                                 value={
-                                                    item[
-                                                        'G_k_4_r_5_DateTimeLastAdministration'
-                                                    ].value
+                                                    item['G_k_4_r_5_DateTimeLastAdministration'].value
                                                 }
                                                 onChange={handleChange(
                                                     'G_k_4_r_5_DateTimeLastAdministration',
@@ -417,9 +399,7 @@ export const Dosages = ({ drugIndex }) => {
                                                 <Select
                                                     defaultValue={0}
                                                     value={
-                                                        item[
-                                                            'G_k_4_r_5_DateTimeLastAdministration'
-                                                        ].nullFlavor
+                                                        item['G_k_4_r_5_DateTimeLastAdministration'].nullFlavor
                                                     }
                                                     onChange={setNullFlavor(
                                                         'G_k_4_r_5_DateTimeLastAdministration',
@@ -469,9 +449,7 @@ export const Dosages = ({ drugIndex }) => {
                                             evt.preventDefault()
                                         }
                                         value={
-                                            item[
-                                                'G_k_4_r_6a_DurationDrugAdministrationNum'
-                                            ].value
+                                            item['G_k_4_r_6a_DurationDrugAdministrationNum'].value
                                         }
                                     />
                                 </Grid>
@@ -514,11 +492,8 @@ export const Dosages = ({ drugIndex }) => {
                                             <FormControlLabel
                                                 control={
                                                     <Checkbox
-                                                    checked={
-                                                            item[
-                                                                'G_k_4_r_9_1_PharmaceuticalDoseForm'
-                                                            ].nullFlavor !==
-                                                            null
+                                                        checked={
+                                                            item['G_k_4_r_9_1_PharmaceuticalDoseForm'].nullFlavor !== null
                                                         }
                                                         onChange={setUnknown(
                                                             'G_k_4_r_9_1_PharmaceuticalDoseForm',
@@ -529,9 +504,7 @@ export const Dosages = ({ drugIndex }) => {
                                                 label="No Info"
                                             />
                                         </Box>
-                                        {dosages[drugIndex][index][
-                                            'G_k_4_r_9_1_PharmaceuticalDoseForm'
-                                        ]['nullFlavor'] === null ? (
+                                        {dosages[drugIndex][index]['G_k_4_r_9_1_PharmaceuticalDoseForm']['nullFlavor'] === null ? (
                                             <TextField
                                                 variant="outlined"
                                                 className={classes.textLong}
@@ -540,9 +513,7 @@ export const Dosages = ({ drugIndex }) => {
                                                     index,
                                                 )}
                                                 value={
-                                                    item[
-                                                        'G_k_4_r_9_1_PharmaceuticalDoseForm'
-                                                    ].value
+                                                    item['G_k_4_r_9_1_PharmaceuticalDoseForm'].value
                                                 }
                                             />
                                         ) : (
@@ -554,9 +525,7 @@ export const Dosages = ({ drugIndex }) => {
                                                 </InputLabel>
                                                 <Select
                                                     value={
-                                                        item[
-                                                            'G_k_4_r_9_1_PharmaceuticalDoseForm'
-                                                        ].nullFlavor
+                                                        item['G_k_4_r_9_1_PharmaceuticalDoseForm'].nullFlavor
                                                     }
                                                     onChange={setNullFlavor(
                                                         'G_k_4_r_9_1_PharmaceuticalDoseForm',
@@ -595,9 +564,7 @@ export const Dosages = ({ drugIndex }) => {
                                             index,
                                         )}
                                         value={
-                                            item[
-                                                'G_k_4_r_9_2a_PharmaceuticalDoseFormTermIDVersion'
-                                            ].value
+                                            item['G_k_4_r_9_2a_PharmaceuticalDoseFormTermIDVersion'].value
                                         }
                                     />
                                 </Grid>
@@ -611,19 +578,41 @@ export const Dosages = ({ drugIndex }) => {
                                     ></DosageFieldLabel>
                                 </Grid>
                                 <Grid item xs={9}>
-                                    <TextField
+                                    {dosageFormCodes.length === 0 && <TextField
                                         variant="outlined"
-                                        className={classes.textMedium}
+                                        className={classes.textShort}
                                         onChange={handleChange(
                                             'G_k_4_r_9_2b_PharmaceuticalDoseFormTermID',
                                             index,
                                         )}
                                         value={
-                                            item[
-                                                'G_k_4_r_9_2b_PharmaceuticalDoseFormTermID'
-                                            ].value
+                                            item['G_k_4_r_9_2b_PharmaceuticalDoseFormTermID'].value
                                         }
-                                    />
+                                    />}
+                                    {dosageFormCodes.length > 0 && <Autocomplete
+                                        className={classes.textShort}
+                                        autoHighlight
+                                        autoSelect
+                                        options={dosageFormCodes}
+                                        getOptionLabel={(option) => option.code ?? ''}
+                                        value={getDosageFormByCode(item['G_k_4_r_9_2b_PharmaceuticalDoseFormTermID'].value) ?? ''}
+                                        onChange={handleAutocompleteChange('G_k_4_r_9_2b_PharmaceuticalDoseFormTermID', index)}
+                                        filterOptions={(options, { inputValue }) =>
+                                            matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.WORD_STARTS_WITH })}
+                                        renderOption={(props2, option) => {
+                                            return (
+                                                <li {...props2} key={props2.key}>
+                                                    {`${option.code}\t${option.name}`}
+                                                </li>
+                                            );
+                                        }}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                label="EDQM basic dosage form code"
+                                                {...params}
+                                            />
+                                        )}
+                                    ></Autocomplete>}
                                 </Grid>
                             </Grid>
                             <Grid container spacing={2}>
@@ -641,11 +630,8 @@ export const Dosages = ({ drugIndex }) => {
                                             <FormControlLabel
                                                 control={
                                                     <Checkbox
-                                                    checked={
-                                                            item[
-                                                                'G_k_4_r_10_1_RouteAdministration'
-                                                            ].nullFlavor !==
-                                                            null
+                                                        checked={
+                                                            item['G_k_4_r_10_1_RouteAdministration'].nullFlavor !== null
                                                         }
                                                         onChange={setUnknown(
                                                             'G_k_4_r_10_1_RouteAdministration',
@@ -656,9 +642,7 @@ export const Dosages = ({ drugIndex }) => {
                                                 label="No Info"
                                             />
                                         </Box>
-                                        {dosages[drugIndex][index][
-                                            'G_k_4_r_10_1_RouteAdministration'
-                                        ]['nullFlavor'] === null ? (
+                                        {dosages[drugIndex][index]['G_k_4_r_10_1_RouteAdministration']['nullFlavor'] === null ? (
                                             <TextField
                                                 variant="outlined"
                                                 className={classes.textLong}
@@ -667,9 +651,7 @@ export const Dosages = ({ drugIndex }) => {
                                                     index,
                                                 )}
                                                 value={
-                                                    item[
-                                                        'G_k_4_r_10_1_RouteAdministration'
-                                                    ].value
+                                                    item['G_k_4_r_10_1_RouteAdministration'].value
                                                 }
                                             />
                                         ) : (
@@ -681,9 +663,7 @@ export const Dosages = ({ drugIndex }) => {
                                                 </InputLabel>
                                                 <Select
                                                     value={
-                                                        item[
-                                                            'G_k_4_r_10_1_RouteAdministration'
-                                                        ].nullFlavor
+                                                        item['G_k_4_r_10_1_RouteAdministration'].nullFlavor
                                                     }
                                                     onChange={setNullFlavor(
                                                         'G_k_4_r_10_1_RouteAdministration',
@@ -722,9 +702,7 @@ export const Dosages = ({ drugIndex }) => {
                                             index,
                                         )}
                                         value={
-                                            item[
-                                                'G_k_4_r_10_2a_RouteAdministrationTermIDVersion'
-                                            ].value
+                                            item['G_k_4_r_10_2a_RouteAdministrationTermIDVersion'].value
                                         }
                                     />
                                 </Grid>
@@ -738,7 +716,7 @@ export const Dosages = ({ drugIndex }) => {
                                     ></DosageFieldLabel>
                                 </Grid>
                                 <Grid item xs={9}>
-                                    <TextField
+                                    {routeOfAdministrationCodes.length === 0 && <TextField
                                         variant="outlined"
                                         className={classes.textMedium}
                                         onChange={handleChange(
@@ -746,11 +724,33 @@ export const Dosages = ({ drugIndex }) => {
                                             index,
                                         )}
                                         value={
-                                            item[
-                                                'G_k_4_r_10_2b_RouteAdministrationTermID'
-                                            ].value
+                                            item['G_k_4_r_10_2b_RouteAdministrationTermID'].value
                                         }
-                                    />
+                                    />}
+                                    {routeOfAdministrationCodes.length > 0 && <Autocomplete
+                                        className={classes.textMedium}
+                                        autoHighlight
+                                        autoSelect
+                                        options={routeOfAdministrationCodes}
+                                        getOptionLabel={(option) => option.code ?? ''}
+                                        value={getRouteOfAdministrationByCode(item['G_k_4_r_10_2b_RouteAdministrationTermID'].value) ?? ''}
+                                        onChange={handleAutocompleteChange('G_k_4_r_10_2b_RouteAdministrationTermID', index)}
+                                        filterOptions={(options, { inputValue }) =>
+                                            matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.WORD_STARTS_WITH })}
+                                        renderOption={(props2, option) => {
+                                            return (
+                                                <li {...props2} key={props2.key}>
+                                                    {`${option.code}\t${option.name}`}
+                                                </li>
+                                            );
+                                        }}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                label="EDQM route of administration code"
+                                                {...params}
+                                            />
+                                        )}
+                                    ></Autocomplete>}
                                 </Grid>
 
                                 <Grid item xs={3}>
@@ -767,11 +767,8 @@ export const Dosages = ({ drugIndex }) => {
                                             <FormControlLabel
                                                 control={
                                                     <Checkbox
-                                                    checked={
-                                                            item[
-                                                                'G_k_4_r_11_1_ParentRouteAdministration'
-                                                            ].nullFlavor !==
-                                                            null
+                                                        checked={
+                                                            item['G_k_4_r_11_1_ParentRouteAdministration'].nullFlavor !== null
                                                         }
                                                         onChange={setUnknown(
                                                             'G_k_4_r_11_1_ParentRouteAdministration',
@@ -782,9 +779,7 @@ export const Dosages = ({ drugIndex }) => {
                                                 label="No Info"
                                             />
                                         </Box>
-                                        {dosages[drugIndex][index][
-                                            'G_k_4_r_11_1_ParentRouteAdministration'
-                                        ]['nullFlavor'] === null ? (
+                                        {dosages[drugIndex][index]['G_k_4_r_11_1_ParentRouteAdministration']['nullFlavor'] === null ? (
                                             <TextField
                                                 variant="outlined"
                                                 className={classes.textLong}
@@ -793,9 +788,7 @@ export const Dosages = ({ drugIndex }) => {
                                                     index,
                                                 )}
                                                 value={
-                                                    item[
-                                                        'G_k_4_r_11_1_ParentRouteAdministration'
-                                                    ].value
+                                                    item['G_k_4_r_11_1_ParentRouteAdministration'].value
                                                 }
                                             />
                                         ) : (
@@ -807,9 +800,7 @@ export const Dosages = ({ drugIndex }) => {
                                                 </InputLabel>
                                                 <Select
                                                     value={
-                                                        item[
-                                                            'G_k_4_r_11_1_ParentRouteAdministration'
-                                                        ].nullFlavor
+                                                        item['G_k_4_r_11_1_ParentRouteAdministration'].nullFlavor
                                                     }
                                                     onChange={setNullFlavor(
                                                         'G_k_4_r_11_1_ParentRouteAdministration',
@@ -848,9 +839,7 @@ export const Dosages = ({ drugIndex }) => {
                                             index,
                                         )}
                                         value={
-                                            item[
-                                                'G_k_4_r_11_2a_ParentRouteAdministrationTermIDVersion'
-                                            ].value
+                                            item['G_k_4_r_11_2a_ParentRouteAdministrationTermIDVersion'].value
                                         }
                                     />
                                 </Grid>
@@ -864,7 +853,7 @@ export const Dosages = ({ drugIndex }) => {
                                     ></DosageFieldLabel>
                                 </Grid>
                                 <Grid item xs={9}>
-                                    <TextField
+                                    {routeOfAdministrationCodes.length === 0 && <TextField
                                         variant="outlined"
                                         className={classes.textMedium}
                                         onChange={handleChange(
@@ -872,11 +861,33 @@ export const Dosages = ({ drugIndex }) => {
                                             index,
                                         )}
                                         value={
-                                            item[
-                                                'G_k_4_r_11_2b_ParentRouteAdministrationTermID'
-                                            ].value
+                                            item['G_k_4_r_11_2b_ParentRouteAdministrationTermID'].value
                                         }
-                                    />
+                                    />}
+                                    {routeOfAdministrationCodes.length > 0 && <Autocomplete
+                                        className={classes.textMedium}
+                                        autoHighlight
+                                        autoSelect
+                                        options={routeOfAdministrationCodes}
+                                        getOptionLabel={(option) => option.code ?? ''}
+                                        value={getRouteOfAdministrationByCode(item['G_k_4_r_11_2b_ParentRouteAdministrationTermID'].value) ?? ''}
+                                        onChange={handleAutocompleteChange('G_k_4_r_11_2b_ParentRouteAdministrationTermID', index)}
+                                        filterOptions={(options, { inputValue }) =>
+                                            matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.WORD_STARTS_WITH })}
+                                        renderOption={(props2, option) => {
+                                            return (
+                                                <li {...props2} key={props2.key}>
+                                                    {`${option.code}\t${option.name}`}
+                                                </li>
+                                            );
+                                        }}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                label="EDQM route of administration code"
+                                                {...params}
+                                            />
+                                        )}
+                                    ></Autocomplete>}
                                 </Grid>
 
                                 <Grid item xs={3}>
@@ -896,8 +907,7 @@ export const Dosages = ({ drugIndex }) => {
                                             index,
                                         )}
                                         value={
-                                            item['G_k_4_r_7_BatchLotNumber']
-                                                .value
+                                            item['G_k_4_r_7_BatchLotNumber'].value
                                         }
                                     />
                                 </Grid>
