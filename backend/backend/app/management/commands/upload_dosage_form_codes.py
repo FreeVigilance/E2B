@@ -18,7 +18,7 @@ def parse_df_codes_file(file_path: pathlib.Path, language: str):
     logger.info(f'Parsing {file_path}')
 
     with file_path.open() as f:
-        reader = csv.reader(f)
+        reader = csv.reader(f, quoting=csv.QUOTE_ALL)
         DosageFormCode.objects.bulk_create(
             [DosageFormCode(code=code, name=name, language=language) for code, name in reader]
         )
