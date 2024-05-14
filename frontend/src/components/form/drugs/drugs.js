@@ -86,6 +86,12 @@ export const Drugs = ({index}) => {
         dispatch(setDrugs(drugsDataCopy));
     };
 
+    const handleAutocompleteFreeSoloChange = (fieldName, index) => (_, value) => {
+        let drugsDataCopy = JSON.parse(JSON.stringify(drugs));
+        drugsDataCopy[index][fieldName].value = value?.code ?? value;
+        dispatch(setDrugs(drugsDataCopy));
+    };
+
     const getCountryByCode = (code) => CC.find(country => country.code === code);
     const getDoseByCode = (code) => doseCodes.find(dose => dose.code === code);
 
@@ -417,9 +423,10 @@ export const Drugs = ({index}) => {
                             className={classes.textShort}
                             freeSolo
                             options={doseCodes}
-                            getOptionLabel={(option) => option.code ?? ''}
-                            value={getDoseByCode(drugs[index]['G_k_5b_CumulativeDoseFirstReactionUnit'].value) ?? ''}
-                            onChange={handleAutocompleteChange('G_k_5b_CumulativeDoseFirstReactionUnit', index)}
+                            getOptionLabel={(option) => option?.code ?? option}
+                            value={getDoseByCode(drugs[index]['G_k_5b_CumulativeDoseFirstReactionUnit'].value) ?? drugs[index]['G_k_5b_CumulativeDoseFirstReactionUnit'].value}
+                            onChange={handleAutocompleteFreeSoloChange('G_k_5b_CumulativeDoseFirstReactionUnit', index)}
+                            onInputChange={handleAutocompleteFreeSoloChange('G_k_5b_CumulativeDoseFirstReactionUnit', index)}
                             filterOptions={(options, {inputValue}) =>
                                 matchSorter(options, inputValue, {keys: ['code', 'name'], threshold: matchSorter.rankings.CONTAINS})}
                             renderOption={(props2, option) => {
