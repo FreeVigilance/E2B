@@ -90,6 +90,13 @@ def get_therapy_duration(num: int | None, unit: str | None):
         return f"{num} {G_k_4_r_6b_duration_drug_administration_unit(unit).name.lower()}s"
 
 
+def safe_read(model_class, **kwargs):
+    try:
+        return model_class.objects.get(**kwargs)
+    except model_class.DoesNotExist:
+        return None
+
+
 def get_daily_dose(num: int | None, unit: str | None, num_interval: int | None, unit_interval: str | None,
                    dose_text: str | None):
     dose = f'{num} {unit}' if num else ''
@@ -204,35 +211,59 @@ class CIOMS(BaseModel):
                     f"{drug_id} {get_action_taken_drug(drug_information.g_k_8_action_taken_drug)}")
 
             if drug_information.g_k_1_characterisation_drug_role == G_k_1_characterisation_drug_role.SUSPECT:
-                suspect_drugs.append({
-                    "name": drug_id,
-                    "dosages_information": [{
-                        "lot_number": dosage_information.g_k_4_r_7_batch_lot_number,
-                        "daily_dose": get_daily_dose(
-                            dosage_information.g_k_4_r_1a_dose_num,
-                            dosage_information.g_k_4_r_1b_dose_unit,
-                            dosage_information.g_k_4_r_2_number_units_interval,
-                            dosage_information.g_k_4_r_3_definition_interval_unit,
-                            dosage_information.g_k_4_r_8_dosage_text),
-                        "route_of_administration": codeset_service.read(
+                dosages_information = []
+                for dosage_information in drug_information.g_k_4_r_dosage_information:
+                    route_of_administration = dosage_information.g_k_4_r_10_1_route_administration
+                    if dosage_information.g_k_4_r_10_2b_route_administration_termid:
+                        object = codeset_service.read(
                             'roa',
                             dosage_information.g_k_4_r_10_2b_route_administration_termid,
                             'ENG'
-                        ).name if dosage_information.g_k_4_r_10_2b_route_administration_termid else dosage_information.g_k_4_r_10_1_route_administration,
-                        "therapy_dates_from": get_date(*parse_date(dosage_information.g_k_4_r_4_date_time_drug)),
-                        "therapy_dates_to": get_date(
-                            *parse_date(dosage_information.g_k_4_r_5_date_time_last_administration)),
-                        "therapy_duration": get_therapy_duration(
-                            dosage_information.g_k_4_r_6a_duration_drug_administration_num,
-                            dosage_information.g_k_4_r_6b_duration_drug_administration_unit),
-                    } for dosage_information in drug_information.g_k_4_r_dosage_information],
-                    "indications_for_use": [{
-                        "primary_source": indication_for_use.g_k_7_r_1_indication_primary_source,
-                        "meddra": meddra_service.read(
+                        )
+                        if object:
+                            route_of_administration = object.name
+
+                    dosages_information.append(
+                        {
+                            "lot_number": dosage_information.g_k_4_r_7_batch_lot_number,
+                            "daily_dose": get_daily_dose(
+                                dosage_information.g_k_4_r_1a_dose_num,
+                                dosage_information.g_k_4_r_1b_dose_unit,
+                                dosage_information.g_k_4_r_2_number_units_interval,
+                                dosage_information.g_k_4_r_3_definition_interval_unit,
+                                dosage_information.g_k_4_r_8_dosage_text),
+                            "route_of_administration": route_of_administration,
+                            "therapy_dates_from": get_date(*parse_date(dosage_information.g_k_4_r_4_date_time_drug)),
+                            "therapy_dates_to": get_date(
+                                *parse_date(dosage_information.g_k_4_r_5_date_time_last_administration)),
+                            "therapy_duration": get_therapy_duration(
+                                dosage_information.g_k_4_r_6a_duration_drug_administration_num,
+                                dosage_information.g_k_4_r_6b_duration_drug_administration_unit),
+                        }
+                    )
+
+                indications_for_use = []
+                for indication_for_use in drug_information.g_k_7_r_indication_use_case:
+                    meddra = None
+                    if indication_for_use.g_k_7_r_2b_indication_meddra_code:
+                        object = meddra_service.read(
                             indication_for_use.g_k_7_r_2b_indication_meddra_code,
                             indication_for_use.g_k_7_r_2a_meddra_version_indication
-                        ).name if indication_for_use.g_k_7_r_2b_indication_meddra_code else None,
-                    } for indication_for_use in drug_information.g_k_7_r_indication_use_case],
+                        )
+                        if object:
+                            meddra = object.name
+
+                    indications_for_use.append(
+                        {
+                            "primary_source": indication_for_use.g_k_7_r_1_indication_primary_source,
+                            "meddra": meddra,
+                        }
+                    )
+
+                suspect_drugs.append({
+                    "name": drug_id,
+                    "dosages_information": dosages_information,
+                    "indications_for_use": indications_for_use,
                     "abate": get_reaction_abate_after_stopping_drug(drug_information.g_k_8_action_taken_drug, outcome),
                     "reappear": get_reaction_reappear_after_reintroduction(
                         drug_information.g_k_9_i_drug_reaction_matrix, primary_reaction_event)
@@ -269,9 +300,18 @@ class CIOMS(BaseModel):
                 if source.c_1_9_1_r_1_source_case_id:
                     name_and_address_of_manufacturer.append(source.c_1_9_1_r_1_source_case_id)
 
+        country = None
+        if primary_reaction_event:
+            object = codeset_service.read(
+                'country',
+                primary_reaction_event.e_i_9_identification_country_reaction,
+                'ENG'
+            )
+            country = object.name if object else primary_reaction_event.e_i_9_identification_country_reaction
+
         return cls(
             f1_patient_initials=icsr.d_patient_characteristics.d_1_patient,
-            f1a_country=primary_reaction_event.e_i_9_identification_country_reaction if primary_reaction_event else None,
+            f1a_country=country,
 
             f2_date_of_birth_day=date_of_birth_day,
             f2_date_of_birth_month=date_of_birth_month,
