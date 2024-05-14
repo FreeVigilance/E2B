@@ -9,6 +9,7 @@ import {
     InputLabel,
     IconButton,
     Grid,
+    FormLabel,
 } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
@@ -251,5 +252,21 @@ export const ReferencesComp = () => {
         dispatch(setReferencesData(referencesDataCopy));
     };
 
-    return <div>{formList()}</div>;
+    return <div>{formList()}
+        <FormLabel
+        sx={{
+            position: 'fixed',
+            bottom: '2%',
+            right: '8%',
+            zIndex: 10000,
+            fontSize: 25,
+            color: 'black',
+            backgroundColor: '#f1f1fb',
+            padding: '5px',
+            fontWeight: 600
+        }}
+        >
+            LITERATURE REFERENCES
+        </FormLabel>
+        </div>;
 };

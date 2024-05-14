@@ -21,6 +21,7 @@ import {
     deleteReport,
     getData,
     revertAll,
+    setCurrentTab,
     setOpenNewReport,
     setShowCasesList,
 } from '@src/features/display/slice';

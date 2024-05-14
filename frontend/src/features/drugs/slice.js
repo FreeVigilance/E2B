@@ -200,13 +200,27 @@ export const getDrug = () => {
 
             itemData['G_k_8_ActionTakenDrug'] = item['G_k_8_ActionTakenDrug'];
 
+            const findReactionByName = (name) => {
+                let res;
+                Object.values(getState().reactions.reactionsData).forEach((item, index) => {
+                    if (item['E_i_1_1a_ReactionPrimarySourceNativeLanguage'].value === name) {
+                        console.log(item['id']);
+                        if (item['id'] !== null) {
+                            res = item['id'];
+                        } else {
+                            res = item['uuid'];
+                        }
+                    }
+                });
+                return res;
+            }
+
             let drugReactionMatrixData = [];
             Object.values(drugReactionMatrix[index]).forEach(
                 (subItem, subIndex) => {
                     let data = {
                         id: subItem['id'],
-                        G_k_9_i_1_ReactionAssessed:
-                            subItem['G_k_9_i_1_ReactionAssessed'],
+                        G_k_9_i_1_ReactionAssessed: findReactionByName(subItem['G_k_9_i_1_ReactionAssessed']),
                         G_k_9_i_3_1a_IntervalDrugAdministrationReactionNum:
                             subItem[
                                 'G_k_9_i_3_1a_IntervalDrugAdministrationReactionNum'

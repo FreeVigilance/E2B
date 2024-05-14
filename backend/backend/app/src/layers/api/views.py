@@ -114,14 +114,17 @@ class ModelCIOMSView(View):
     cioms_service: CIOMSServiceProtocol = ...
 
     def get(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
-        return render(request, 'cioms.html', self.cioms_service.convert_icsr_to_cioms(pk).__dict__)
+        return render(request, 'cioms.html', self.cioms_service.convert_icsr_to_cioms(pk))
 
 
 class MedDRAReleaseView(View):
     meddra_service: MedDRAServiceProtocol = ...
 
     def get(self, request: http.HttpRequest) -> http.HttpResponse:
-        response = self.meddra_service.list()
+        objects = self.meddra_service.list()
+        response = meddra.ReleaseResponse(
+            root=[meddra.Release(id=obj.id, version=obj.version, language=obj.language) for obj in objects]
+        )
         return http.HttpResponse(response.model_dump_json(), status=HTTPStatus.OK, content_type='application/json')
 
 
@@ -130,7 +133,12 @@ class MedDRASearchView(View):
 
     def post(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
         search_request = meddra.SearchRequest.parse_raw(request.body)
-        response = self.meddra_service.search(search_request, pk)
+        objects = self.meddra_service.search(search_request.search.level,
+                                             search_request.state,
+                                             search_request.search.input,
+                                             pk)
+        response = meddra.SearchResponse(terms=[meddra.Term(code=obj.code, name=obj.name) for obj in objects],
+                                         level=search_request.search.level)
         return http.HttpResponse(response.model_dump_json(), status=HTTPStatus.OK, content_type='application/json')
 
 
@@ -138,7 +146,9 @@ class CodeSetSearchView(View):
     code_set_service: CodeSetServiceProtocol = ...
 
     def get(self, request: http.HttpRequest, codeset: str) -> http.HttpResponse:
-        response = self.code_set_service.search(codeset, request.GET.get('q', ''),
-                                                request.GET.get('lang', 'ENG'),
-                                                request.GET.get('property', None))
+        objects = self.code_set_service.search(codeset,
+                                               request.GET.get('q', ''),
+                                               request.GET.get('lang', 'ENG'),
+                                               request.GET.get('property', None))
+        response = code_set.SearchResponse([code_set.Term(code=obj.code, name=obj.name) for obj in objects])
         return http.HttpResponse(response.model_dump_json(), status=HTTPStatus.OK, content_type='application/json')

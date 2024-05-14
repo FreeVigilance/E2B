@@ -7,6 +7,7 @@ import {
     MenuItem,
     Grid,
     Stack,
+    FormLabel,
 } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import {
@@ -83,6 +84,7 @@ export const InfoSenderComp = () => {
     useEffect(() => {dispatch(getCountryCodes({ data: '' }));}, []);
 
     return (
+        <div>
         <Stack direction={'row'} gap={2}>
             <Grid container spacing={2}>
                 <Grid item xs={3}>
@@ -363,5 +365,21 @@ export const InfoSenderComp = () => {
                 </Grid>
             </Grid>
         </Stack>
+            <FormLabel
+            sx={{
+                position: 'fixed',
+                bottom: '2%',
+                right: '8%',
+                zIndex: 10000,
+                fontSize: 25,
+                color: 'black',
+                backgroundColor: '#f1f1fb',
+                padding: '5px',
+                fontWeight: 600
+            }}
+            >
+                SENDER INFORMATION
+            </FormLabel>
+        </div>
     );
 };
