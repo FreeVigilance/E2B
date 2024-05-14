@@ -89,12 +89,6 @@ export const Dosages = ({ drugIndex }) => {
 
     const handleAutocompleteChange = (fieldName, index) => (_, value) => {
         let dosagesCopy = JSON.parse(JSON.stringify(dosages));
-        dosagesCopy[drugIndex][index][fieldName].value = value?.code ?? null;
-        dispatch(setDosages(dosagesCopy));
-    };
-
-    const handleAutocompleteFreeSoloChange = (fieldName, index) => (_, value) => {
-        let dosagesCopy = JSON.parse(JSON.stringify(dosages));
         dosagesCopy[drugIndex][index][fieldName].value = value?.code ?? value;
         dispatch(setDosages(dosagesCopy));
     };
@@ -207,11 +201,11 @@ export const Dosages = ({ drugIndex }) => {
                                     {doseCodes.length > 0 && <Autocomplete
                                         className={classes.textShort}
                                         freeSolo
+                                        autoSelect
                                         options={doseCodes}
                                         getOptionLabel={(option) => option?.code ?? option}
                                         value={getDoseByCode(item['G_k_4_r_1b_DoseUnit'].value) ?? item['G_k_4_r_1b_DoseUnit'].value}
-                                        onChange={handleAutocompleteFreeSoloChange('G_k_4_r_1b_DoseUnit', index)}
-                                        onInputChange={handleAutocompleteFreeSoloChange('G_k_4_r_1b_DoseUnit', index)}
+                                        onChange={handleAutocompleteChange('G_k_4_r_1b_DoseUnit', index)}
                                         filterOptions={(options, { inputValue }) =>
                                             matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.CONTAINS })}
                                         renderOption={(props2, option) => {
