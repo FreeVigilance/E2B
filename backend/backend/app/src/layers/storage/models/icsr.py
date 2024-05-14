@@ -5,6 +5,7 @@ from django.db import models as m
 
 from app.src import enums as e
 from app.src.enums import NullFlavor as NF
+from app.src.exceptions import UserError
 from extensions.django import constraints as ec
 from extensions.django import fields as ef
 from extensions.django import models as em
@@ -151,7 +152,7 @@ class ICSR(StorageModel):
         except C_1_identification_case_safety_report.DoesNotExist:
             return
         if new_c_1.id != old_c_1.id:
-            raise ValueError('C.1 cannot be recreated for ICSR, consider updating it with the id instead')
+            raise UserError('C.1 cannot be recreated for ICSR, consider updating it with the id instead')
         
     def post_create(self) -> None:
         self.post_save()
@@ -219,7 +220,7 @@ class C_1_identification_case_safety_report(StorageModel):
                 self.calculate_c_1_1()
         else:
             if new_c_1_1 and new_c_1_1 != old_c_1_1:
-                raise ValueError('Cannot change once created C.1.1')
+                raise UserError('Cannot change once created C.1.1')
             else:
                 self.c_1_1_sender_safety_report_unique_id = old_c_1_1
         

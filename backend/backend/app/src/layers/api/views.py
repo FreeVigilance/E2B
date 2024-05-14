@@ -1,32 +1,73 @@
 import base64
 import json
-import typing as t
 from http import HTTPStatus
+import typing as t
 
 from django import http
 from django.contrib.auth.models import User
-
 from django.shortcuts import render
+from django.utils import timezone as djtz
 from django.views import View
 
+from app.src.exceptions import UserError
 from app.src.layers.api.models import ApiModel, meddra, code_set
-from app.src.layers.base.services import BusinessServiceProtocol, CIOMSServiceProtocol, MedDRAServiceProtocol, \
-    CodeSetServiceProtocol
+from app.src.layers.api.models.logging import Log
+from app.src.layers.base.services import (
+    BusinessServiceProtocol, 
+    CIOMSServiceProtocol, 
+    CodeSetServiceProtocol,
+    MedDRAServiceProtocol
+)
 from extensions import utils
+
+
+def log(method: t.Callable[[http.HttpRequest], http.HttpResponse]) \
+-> t.Callable[[http.HttpRequest], http.HttpResponse]:
+    
+    def wrapper(self: View, request: http.HttpRequest, *args, **kwargs) -> http.HttpResponse:
+        log = Log.create_from_request(request)
+
+        exc = None
+        try:
+            response = method(self, request, *args, **kwargs)
+            log.status = response.status_code
+        except Exception as e:
+            exc = e
+            log.status = 500
+
+        log.response_time = djtz.now()
+        log.save()
+
+        if exc:
+            raise exc
+        return response
+    
+    return wrapper
+
+
+def handle_user_errors(method: t.Callable[[http.HttpRequest], http.HttpResponse]) \
+-> t.Callable[[http.HttpRequest], http.HttpResponse]:
+    
+    def wrapper(self: View, request: http.HttpRequest, *args, **kwargs) -> http.HttpResponse:
+        try:
+            return method(self, request, *args, **kwargs)
+        except UserError as e:
+            return http.HttpResponse(str(e), status=HTTPStatus.BAD_REQUEST)
+    
+    return wrapper
 
 
 class AuthView(View):
     def dispatch(self, request: http.HttpRequest, *args, **kwargs) -> http.HttpResponse:
         try:
             auth_header = request.META['HTTP_AUTHORIZATION']
-            encoded_credentials = auth_header.split(' ')[1]  # Removes "Basic " to isolate credentials
+            encoded_credentials = auth_header.split(' ')[1]  # Remove "Basic " to isolate credentials
             decoded_credentials = base64.b64decode(encoded_credentials).decode('utf-8').split(':')
             username = decoded_credentials[0]
             password = decoded_credentials[1]
         except:
             return http.HttpResponse('Invalid HTTP_AUTHORIZATION header', status=HTTPStatus.UNAUTHORIZED)
         
-        is_valid = True
         try:
             user = User.objects.get(username=username)
             is_valid = user.check_password(password)
@@ -35,7 +76,8 @@ class AuthView(View):
 
         if not is_valid:
             return http.HttpResponse('Invalid username or password', status=HTTPStatus.UNAUTHORIZED)
-
+        
+        request.user = user
         return super().dispatch(request, *args, **kwargs)
 
 
@@ -68,6 +110,8 @@ class ModelClassView(BaseView):
         result_list = self.domain_service.list(self.model_class)
         return self.respond_with_object_as_json(result_list, HTTPStatus.OK)
 
+    @log
+    @handle_user_errors
     def post(self, request: http.HttpRequest) -> http.HttpResponse:
         model = self.get_model_from_request(request)
         if model.is_valid:
@@ -84,6 +128,8 @@ class ModelInstanceView(BaseView):
         model = self.domain_service.read(self.model_class, pk)
         return self.respond_with_model_as_json(model, HTTPStatus.OK)
 
+    @log
+    @handle_user_errors
     def put(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
         # TODO: check pk = model.id
         model = self.get_model_from_request(request)
@@ -94,6 +140,8 @@ class ModelInstanceView(BaseView):
         status = self.get_status_code(is_ok)
         return self.respond_with_model_as_json(model, status)
 
+    @log
+    @handle_user_errors
     def delete(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
         is_ok = self.domain_service.delete(self.model_class, pk)
         status = self.get_status_code(is_ok)
