@@ -91,7 +91,7 @@ export class HTTP {
             // if (data instanceof FormData) {
             //     return header;
             // }  
-            return { ...header, "Content-Type": "application/json" };;
+            return { ...header, "Content-Type": "application/json" };
         }
 
         const { method, data, responseFormat = 'json' } = options;
@@ -175,8 +175,12 @@ export class HTTP {
         }
 
         function serializeHeader(method: METHOD, data: T) {
-            console.log('header');
-            return { 'Content-Type': 'application/json' };
+            const username = cookie.load('username');
+            const password = cookie.load('password');
+
+            const header = { authorization: `Basic ${btoa(username+':'+password)}` };
+
+            return { ...header, 'Content-Type': 'application/json' };
         }
 
         const { method, data, responseFormat = 'text' } = options;
@@ -268,7 +272,12 @@ export class HTTP {
         }
 
         function serializeHeader(method: METHOD, data: T) {
-            return { 'Content-Type': 'application/json' };
+            const username = cookie.load('username');
+            const password = cookie.load('password');
+
+            const header = { authorization: `Basic ${btoa(username+':'+password)}` };
+
+            return { ...header, 'Content-Type': 'application/json' };
         }
 
         const { method, data, responseFormat = 'json' } = options;

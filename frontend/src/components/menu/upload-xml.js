@@ -48,6 +48,7 @@ export const UploadXml = () => {
                 dispatch(revertAll());
                 dispatch(setUploadedFile(readXml));
                 const data = { value: readXml };
+                dispatch(setShowCasesList(false));
                 dispatch(getJsonFromXml(data));
                 dispatch(setShowUpload(false));
                 dispatch(setOpenNewReport(true));
@@ -72,6 +73,7 @@ export const UploadXml = () => {
                             <input
                                 type="file"
                                 name="file"
+                                accept={".xml"}
                                 onChange={handleFileChange}
                             ></input>
                             <span className="input-file-btn">Choose file</span>
