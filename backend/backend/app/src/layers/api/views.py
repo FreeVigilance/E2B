@@ -47,18 +47,6 @@ def log(method: t.Callable[[http.HttpRequest], http.HttpResponse]) \
     return wrapper
 
 
-def handle_user_errors(method: t.Callable[[http.HttpRequest], http.HttpResponse]) \
--> t.Callable[[http.HttpRequest], http.HttpResponse]:
-    
-    def wrapper(self: View, request: http.HttpRequest, *args, **kwargs) -> http.HttpResponse:
-        try:
-            return method(self, request, *args, **kwargs)
-        except UserError as e:
-            return http.HttpResponse(str(e), status=HTTPStatus.BAD_REQUEST)
-    
-    return wrapper
-
-
 class AuthView(View):
     def dispatch(self, request: http.HttpRequest, *args, **kwargs) -> http.HttpResponse:
         try:
@@ -87,6 +75,14 @@ class BaseView(AuthView):
     domain_service: BusinessServiceProtocol[ApiModel] = ...
     model_class: type[ApiModel] = ...
 
+    def dispatch(self, request: http.HttpRequest, *args, **kwargs) -> http.HttpResponse:
+        try:
+            return super().dispatch(request, *args, **kwargs)
+        except (TypeError, json.JSONDecodeError):
+            return http.HttpResponse('Invalid json data', status=HTTPStatus.BAD_REQUEST)
+        except UserError as e:
+            return http.HttpResponse(str(e), status=HTTPStatus.BAD_REQUEST)
+
     def get_model_from_request(self, request: http.HttpRequest) -> ApiModel:
         data = json.loads(request.body)
         model = self.model_class.model_dict_construct(data)
@@ -95,15 +91,15 @@ class BaseView(AuthView):
     def get_status_code(self, is_ok: bool) -> HTTPStatus:
         return HTTPStatus.OK if is_ok else HTTPStatus.BAD_REQUEST
 
-    def respond_with_model_as_json(self, model: ApiModel, status: int) -> http.HttpResponse:
+    def respond_with_model_as_json(self, model: ApiModel, status: HTTPStatus) -> http.HttpResponse:
         # Dump data and ignore warnings about wrong data format and etc.
         data = utils.exec_without_warnings(lambda: model.model_dump_json(by_alias=True))
         return self.respond_with_json(data, status)
 
-    def respond_with_object_as_json(self, obj: t.Any, status: int) -> http.HttpResponse:
+    def respond_with_object_as_json(self, obj: t.Any, status: HTTPStatus) -> http.HttpResponse:
         return self.respond_with_json(json.dumps(obj), status)
 
-    def respond_with_json(self, json_str: str, status: int) -> http.HttpResponse:
+    def respond_with_json(self, json_str: str, status: HTTPStatus) -> http.HttpResponse:
         return http.HttpResponse(json_str, status=status, content_type='application/json')
 
 
@@ -113,7 +109,6 @@ class ModelClassView(BaseView):
         return self.respond_with_object_as_json(result_list, HTTPStatus.OK)
 
     @log
-    @handle_user_errors
     def post(self, request: http.HttpRequest) -> http.HttpResponse:
         model = self.get_model_from_request(request)
         if model.is_valid:
@@ -131,7 +126,6 @@ class ModelInstanceView(BaseView):
         return self.respond_with_model_as_json(model, HTTPStatus.OK)
 
     @log
-    @handle_user_errors
     def put(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
         # TODO: check pk = model.id
         model = self.get_model_from_request(request)
@@ -143,7 +137,6 @@ class ModelInstanceView(BaseView):
         return self.respond_with_model_as_json(model, status)
 
     @log
-    @handle_user_errors
     def delete(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
         is_ok = self.domain_service.delete(self.model_class, pk)
         status = self.get_status_code(is_ok)
@@ -187,7 +180,7 @@ class ModelFromXmlView(BaseView):
         model_dict = model_dict[self.model_class.__name__]
         self.reduce_lists(model_dict)
         model = self.model_class(**model_dict)
-        return self.respond_with_model_as_json(model)
+        return self.respond_with_model_as_json(model, HTTPStatus.OK)
 
     # Is needed to fix issue with single item list in xmltodict lib
     @classmethod
