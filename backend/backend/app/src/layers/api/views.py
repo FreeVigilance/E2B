@@ -234,3 +234,15 @@ class CodeSetSearchView(View):
                                                request.GET.get('property', None))
         response = code_set.SearchResponse([code_set.Term(code=obj.code, name=obj.name) for obj in objects])
         return http.HttpResponse(response.model_dump_json(), status=HTTPStatus.OK, content_type='application/json')
+
+
+class CodeSetView(View):
+    code_set_service: CodeSetServiceProtocol = ...
+
+    def post(self, request: http.HttpRequest, codeset: str) -> http.HttpResponse:
+        file = request.FILES.get('file')
+        if not file:
+            return http.HttpResponse(status=HTTPStatus.BAD_REQUEST, content="File not uploaded")
+
+        self.code_set_service.create(codeset, file, request.POST.get('lang', 'ENG'))
+        return http.HttpResponse(status=HTTPStatus.CREATED)

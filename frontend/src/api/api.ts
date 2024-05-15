@@ -88,10 +88,10 @@ export class HTTP {
             // if (method === METHOD.GET || method === METHOD.DELETE) {
             //     return header;
             // }
-            // if (data instanceof FormData) {
-            //     return header;
-            // }  
-            return { ...header, "Content-Type": "application/json" };;
+            if (data instanceof FormData && method == METHOD.POST) {
+                return header;
+            }
+            return { ...header, "Content-Type": "application/json" };
         }
 
         const { method, data, responseFormat = 'json' } = options;
