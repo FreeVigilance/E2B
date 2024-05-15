@@ -30,6 +30,9 @@ urlpatterns = [
     path('icsr/<int:pk>', views.ModelInstanceView.as_view(**view_shared_args)),
     path('icsr/validate', views.ModelBusinessValidationView.as_view(**view_shared_args)),
 
+    path('icsr/to-xml', views.ModelToXmlView.as_view(**view_shared_args)),
+    path('icsr/from-xml', views.ModelFromXmlView.as_view(**view_shared_args)),
+
     path('cioms/<int:pk>', views.ModelCIOMSView.as_view(cioms_service=cioms_service)),
 
     path('meddra/release/<int:pk>/search', views.MedDRASearchView.as_view(meddra_service=meddra_service)),

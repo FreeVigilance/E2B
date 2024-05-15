@@ -9,6 +9,8 @@ from django.shortcuts import render
 from django.utils import timezone as djtz
 from django.views import View
 
+import xmltodict
+
 from app.src.exceptions import UserError
 from app.src.layers.api.models import ApiModel, meddra, code_set
 from app.src.layers.api.models.logging import Log
@@ -157,6 +159,44 @@ class ModelBusinessValidationView(BaseView):
             is_ok = False
         status = self.get_status_code(is_ok)
         return self.respond_with_model_as_json(model, status)
+
+
+class ModelToXmlView(BaseView):
+    def post(self, request: http.HttpRequest) -> http.HttpResponse:
+        model = self.get_model_from_request(request)
+        model_dict = model.model_dump()
+        self.extend_lists(model_dict)
+        model_dict = {self.model_class.__name__: model_dict}
+        result = xmltodict.unparse(model_dict)
+        return http.HttpResponse(result, content_type='application/xml')
+
+    # Is needed to fix issue with single item list in xmltodict lib
+    @classmethod
+    def extend_lists(cls, model_dict: dict[str, t.Any]) -> None:
+        for value in model_dict.values():
+            if isinstance(value, dict):
+                cls.extend_lists(value)
+            if isinstance(value, list) and len(value) == 1:
+                value.append(dict())
+
+
+class ModelFromXmlView(BaseView):
+    def post(self, request: http.HttpRequest) -> http.HttpResponse:
+        xml = json.loads(request.body)['value']
+        model_dict = xmltodict.parse(xml)
+        model_dict = model_dict[self.model_class.__name__]
+        self.reduce_lists(model_dict)
+        model = self.model_class(**model_dict)
+        return self.respond_with_model_as_json(model)
+
+    # Is needed to fix issue with single item list in xmltodict lib
+    @classmethod
+    def reduce_lists(cls, model_dict: dict[str, t.Any]) -> None:
+        for value in model_dict.values():
+            if isinstance(value, dict):
+                cls.reduce_lists(value)
+            if isinstance(value, list) and len(value) == 2 and value[1] is None:
+                value.pop(1)
 
 
 class ModelCIOMSView(View):
