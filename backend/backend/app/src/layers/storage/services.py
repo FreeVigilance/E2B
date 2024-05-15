@@ -20,7 +20,10 @@ class StorageService(ServiceProtocol[StorageModel]):
         return model_class.list()
 
     def read(self, model_class: type[StorageModel], pk: int) -> StorageModel:
-        return model_class.objects.get(pk=pk)
+        try:
+            return model_class.objects.get(pk=pk)
+        except dje.ObjectDoesNotExist:
+            raise UserError(f"{model_class.__name__} object with id {pk} doesn't exist")
 
     @transaction.atomic
     def create(self, new_model: StorageModel) -> tuple[StorageModel, bool]:
@@ -83,7 +86,7 @@ class StorageService(ServiceProtocol[StorageModel]):
         return new_model, True
     
     def delete(self, model_class: type[StorageModel], pk: int) -> bool:
-        model_class.objects.get(pk=pk).delete()
+        self.read(model_class, pk).delete()
         return True
 
     def _save_with_related(self, new_model: StorageModel, save_operation: SaveOperation) -> None:
