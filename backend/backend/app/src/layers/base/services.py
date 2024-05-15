@@ -1,5 +1,7 @@
 import typing as t
 
+from django.core.files.uploadedfile import InMemoryUploadedFile
+
 
 class ServiceProtocol[T](t.Protocol):
     def list(self, model_class: type[T]) -> list[dict[str, t.Any]]: ...
@@ -33,3 +35,5 @@ class CodeSetServiceProtocol[T](t.Protocol):
     def search(self, codeset: str, query: str, lang: str, property: str | None) -> list: ...
 
     def read(self, codeset: str, code: str, lang: str) -> T: ...
+
+    def create(self, codeset: str, file: InMemoryUploadedFile, language: str): ...

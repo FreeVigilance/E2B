@@ -1,5 +1,9 @@
+import csv
 import typing as t
+from io import StringIO
 
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.db import transaction
 from django.db.models import Q
 
 from app.src import enums
@@ -149,3 +153,20 @@ class CodeSetService(CodeSetServiceProtocol):
             return self._get_model(codeset).objects.get(code=code, language=language)
         except Exception as e:
             return None
+
+    @transaction.atomic
+    def create(self, codeset: str, file: InMemoryUploadedFile, language: str):
+        reader = csv.reader(StringIO(file.read().decode('utf-8')))
+        model = self._get_model(codeset)
+        model.objects.filter(language=language).delete()
+        if model is UCUMCode:
+            objects = []
+            for data in reader:
+                code, name = data[:2]
+                property = data[2] if len(data) > 2 else 'other'
+                objects.append(model(code=code, name=name, property=property, language=language))
+            model.objects.bulk_create(objects)
+        else:
+            model.objects.bulk_create(
+                [model(code=code, name=name, language=language) for code, name in reader]
+            )

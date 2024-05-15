@@ -39,4 +39,5 @@ urlpatterns = [
     path('meddra/release', views.MedDRAReleaseView.as_view(meddra_service=meddra_service)),
 
     path('codeset/<str:codeset>/search', views.CodeSetSearchView.as_view(code_set_service=code_set_service)),
+    path('codeset/<str:codeset>', views.CodeSetView.as_view(code_set_service=code_set_service)),
 ]
