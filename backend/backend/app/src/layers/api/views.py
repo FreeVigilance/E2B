@@ -91,15 +91,15 @@ class BaseView(AuthView):
     def get_status_code(self, is_ok: bool) -> HTTPStatus:
         return HTTPStatus.OK if is_ok else HTTPStatus.BAD_REQUEST
 
-    def respond_with_model_as_json(self, model: ApiModel, status: int) -> http.HttpResponse:
+    def respond_with_model_as_json(self, model: ApiModel, status: HTTPStatus) -> http.HttpResponse:
         # Dump data and ignore warnings about wrong data format and etc.
         data = utils.exec_without_warnings(lambda: model.model_dump_json(by_alias=True))
         return self.respond_with_json(data, status)
 
-    def respond_with_object_as_json(self, obj: t.Any, status: int) -> http.HttpResponse:
+    def respond_with_object_as_json(self, obj: t.Any, status: HTTPStatus) -> http.HttpResponse:
         return self.respond_with_json(json.dumps(obj), status)
 
-    def respond_with_json(self, json_str: str, status: int) -> http.HttpResponse:
+    def respond_with_json(self, json_str: str, status: HTTPStatus) -> http.HttpResponse:
         return http.HttpResponse(json_str, status=status, content_type='application/json')
 
 
@@ -180,7 +180,7 @@ class ModelFromXmlView(BaseView):
         model_dict = model_dict[self.model_class.__name__]
         self.reduce_lists(model_dict)
         model = self.model_class(**model_dict)
-        return self.respond_with_model_as_json(model)
+        return self.respond_with_model_as_json(model, HTTPStatus.OK)
 
     # Is needed to fix issue with single item list in xmltodict lib
     @classmethod
