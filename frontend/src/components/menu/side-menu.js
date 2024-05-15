@@ -14,6 +14,7 @@ import {
     setShowCasesList,
     setShowSideMenu,
     setShowUpload,
+    setShowUploadCodeSet,
 } from '@src/features/display/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Divider, Fab, ListItemIcon } from '@mui/material';
@@ -88,6 +89,13 @@ export const SideMenu = () => {
         dispatch(setShowSideMenu(true));
         dispatch(setCurrentId(null));
         dispatch(setShowUpload(true));
+    };
+
+    const handleAddCodeSetClick = () => {
+        dispatch(revertAll());
+        dispatch(setShowCasesList(false));
+        dispatch(setCurrentId(null));
+        dispatch(setShowUploadCodeSet(true));
     };
 
     const handleToggleMenuClick = () => {
@@ -179,6 +187,27 @@ export const SideMenu = () => {
                     >
                         <ListItemButton onClick={handleUploadClick}>
                             <ListItemText primary={'Import XML'} />
+                        </ListItemButton>
+                    </ListItem>
+
+                    <Divider
+                        sx={{ backgroundColor: 'white', height: '1px' }}
+                    ></Divider>
+
+                    <ListItem
+                        key={'Add Code Set'}
+                        disablePadding
+                        sx={{
+                            color: 'white',
+                            backgroundColor: '#122c44',
+                            '&:hover': {
+                                backgroundColor: '#fff',
+                                color: '#122c44',
+                            },
+                        }}
+                    >
+                        <ListItemButton onClick={handleAddCodeSetClick}>
+                            <ListItemText primary={'Add Code Set'} />
                         </ListItemButton>
                     </ListItem>
 
