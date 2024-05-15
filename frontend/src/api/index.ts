@@ -69,4 +69,7 @@ export const api = {
     getDosageFormCodes: (data: any) => {
         return clientER.get(`/codeset/df/search?q=${data}`);
     },
+    postCodeSet: (codeset: any, data: any) => {
+        return clientER.post(`/codeset/${codeset}`, { data: data });
+    },
 };

@@ -17,6 +17,7 @@ import { UploadXml } from './components/menu/upload-xml';
 import { useSnackbar } from 'notistack';
 import CloseIcon from '@mui/icons-material/Close';
 import { getCasesList } from './features/cases-list/slice';
+import { CodeSet } from '@src/components/code-set/code-set';
 
 const SnackbarCloseButton = ({ snackbarKey }) => {
     const { closeSnackbar } = useSnackbar();
@@ -31,7 +32,7 @@ const SnackbarCloseButton = ({ snackbarKey }) => {
 export const App = () => {
     const dispatch = useDispatch();
     const { isAuth } = useSelector(authSelector);
-    const { showCasesList, openNewReport, showUpload } =
+    const { showCasesList, openNewReport, showUpload, showUploadCodeSet } =
         useSelector(displaySelector);
 
 
@@ -65,6 +66,7 @@ export const App = () => {
                     <SideMenu></SideMenu>
                     {showCasesList ? <CasesList></CasesList> : null}
                     {openNewReport ? <FormTabs></FormTabs> : null}
+                    {showUploadCodeSet ? <CodeSet></CodeSet> : null}
                 </SnackbarProvider>
             </Provider>
         );

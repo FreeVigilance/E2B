@@ -277,6 +277,7 @@ const initialState = {
     currentSaved: 0,
     uploadedFile: null,
     showUpload: false,
+    showUploadCodeSet: false,
     errors: {},
     currentValidated: 0,
     errorTabs: {
@@ -324,6 +325,9 @@ const displaySlice = createSlice({
         },
         setShowUpload: (state, action) => {
             state.showUpload = action.payload;
+        },
+        setShowUploadCodeSet: (state, action) => {
+            state.showUploadCodeSet = action.payload;
         },
         setErrorTabs: (state, action) => {
             state.errorTabs = action.payload;
@@ -444,4 +448,5 @@ export const {
     setShowUpload,
     setErrorTabs,
     setCurrentValidated,
+    setShowUploadCodeSet,
 } = displaySlice.actions;
