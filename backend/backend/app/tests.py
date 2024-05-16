@@ -4,14 +4,16 @@ from http import HTTPStatus
 import json
 import logging
 import typing as t
+import tempfile
 
 from django import http
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
+from django.urls import reverse
 
 from app.src.layers.api.models.logging import Log
 from app.src.layers.storage import models as sm
-
+from app.src.layers.storage.models import DosageFormCode
 
 PATH_BASE = '/api/icsr'
 USERNAME = 'testuser'
@@ -26,7 +28,7 @@ class RequestData:
     auth: tuple[str, str] = AUTH
     id: int = None
     data: dict[str, t.Any] = None
-    
+
     def call(self, *, auth: tuple[str, str] = None, id: int = None, data: dict[str, t.Any] = None) -> http.HttpResponse:
         if auth is None:
             auth = self.auth
@@ -45,7 +47,7 @@ class RequestData:
                 'HTTP_AUTHORIZATION':
                     'Basic ' + base64.b64encode(f'{auth[0]}:{auth[1]}'.encode()).decode()
             }
-        
+
         if data:
             return self.method(path, data=json.dumps(data), content_type='application/json', **auth_dict)
         else:
@@ -158,28 +160,28 @@ class MainTestCase(TestCase):
         self.assertEqual(sm.C_3_information_sender_case_safety_report.objects.count(), 1)
         self.assertEqual(sm.C_2_r_primary_source_information.objects.count(), 2)
         self.assertEqual(
-            sm.ICSR.objects.last().id, 
+            sm.ICSR.objects.last().id,
             res_data['id']
         )
         c_3 = sm.C_3_information_sender_case_safety_report.objects.last()
         self.assertEqual(
-            c_3.id, 
+            c_3.id,
             res_data['c_3_information_sender_case_safety_report']['id']
         )
         self.assertEqual(
             c_3.c_3_2_sender_organisation,
-            res_data['c_3_information_sender_case_safety_report']['c_3_2_sender_organisation']['value'], 
+            res_data['c_3_information_sender_case_safety_report']['c_3_2_sender_organisation']['value'],
         )
         self.assertEqual(
             c_3.c_3_2_sender_organisation,
             'abc',
         )
         self.assertEqual(
-            sm.C_2_r_primary_source_information.objects.first().id, 
+            sm.C_2_r_primary_source_information.objects.first().id,
             res_data['c_2_r_primary_source_information'][0]['id']
         )
         self.assertEqual(
-            sm.C_2_r_primary_source_information.objects.last().id, 
+            sm.C_2_r_primary_source_information.objects.last().id,
             res_data['c_2_r_primary_source_information'][1]['id']
         )
 
@@ -188,22 +190,22 @@ class MainTestCase(TestCase):
         c_3 = sm.C_3_information_sender_case_safety_report.objects.create(icsr=icsr, c_3_2_sender_organisation='abc')
         c_2_1 = sm.C_2_r_primary_source_information.objects.create(icsr=icsr)
         c_2_2 = sm.C_2_r_primary_source_information.objects.create(icsr=icsr)
-        
+
         resp = READ_RD.call(id=icsr.id)
         res_data = json.loads(resp.content)
 
         self.assertEqual(resp.status_code, HTTPStatus.OK)
         self.assertEqual(
-            icsr.id, 
+            icsr.id,
             res_data['id']
         )
         self.assertEqual(
-            c_3.id, 
+            c_3.id,
             res_data['c_3_information_sender_case_safety_report']['id']
         )
         self.assertEqual(
             c_3.c_3_2_sender_organisation,
-            res_data['c_3_information_sender_case_safety_report']['c_3_2_sender_organisation']['value'], 
+            res_data['c_3_information_sender_case_safety_report']['c_3_2_sender_organisation']['value'],
         )
         self.assertEqual(
             c_2_1.id,
@@ -242,19 +244,19 @@ class MainTestCase(TestCase):
         self.assertEqual(sm.C_3_information_sender_case_safety_report.objects.count(), 1)
         self.assertEqual(sm.C_2_r_primary_source_information.objects.count(), 1)
         self.assertEqual(
-            icsr.id, 
+            icsr.id,
             res_data['id']
         )
         self.assertEqual(
-            c_3.id, 
+            c_3.id,
             res_data['c_3_information_sender_case_safety_report']['id']
         )
         self.assertEqual(
-            c_3.c_3_2_sender_organisation, 
+            c_3.c_3_2_sender_organisation,
             res_data['c_3_information_sender_case_safety_report']['c_3_2_sender_organisation']['value']
         )
         self.assertEqual(
-            c_3.c_3_2_sender_organisation, 
+            c_3.c_3_2_sender_organisation,
             'def'
         )
         c_2 = sm.C_2_r_primary_source_information.objects.last()
@@ -300,7 +302,8 @@ class MainTestCase(TestCase):
 
         self.assertEqual(resp.status_code, HTTPStatus.BAD_REQUEST)
         self.assertEqual(
-            len(res_data['_errors']['c_3_information_sender_case_safety_report']['c_3_2_sender_organisation']['_self']['parsing']),
+            len(res_data['_errors']['c_3_information_sender_case_safety_report']['c_3_2_sender_organisation']['_self'][
+                    'parsing']),
             1
         )
 
@@ -344,3 +347,139 @@ class MainTestCase(TestCase):
         self.assertEqual(len(res_data['c_2_r_primary_source_information']), 2)
         self.assertEqual(len(res_data['c_4_r_literature_reference']), 1)
         self.assertEqual(len(res_data['f_r_results_tests_procedures_investigation_patient']), 0)
+
+
+class CodeSetViewIntegrationTest(TestCase):
+    fixtures = ['df.json', 'cc.json']
+
+    def setUp(self):
+        self.client = Client()
+
+    def test_get_search_df(self):
+        url_get = reverse('codeset', args=["df"])
+        response = self.client.get(url_get, {'q': 'Cachet'})
+
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertEqual(response['Content-Type'], 'application/json')
+
+        expected_response = [
+            {"code": "BDF-0050", "name": "Cachet"},
+            {"code": "PDF-10209000", "name": "Cachet"}
+        ]
+
+        self.assertJSONEqual(response.content, json.dumps(expected_response))
+
+    def test_get_search_country_unnacent(self):
+        url_get = reverse('codeset', args=["country"])
+        response = self.client.get(url_get, {'q': 'Aland'})
+
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertEqual(response['Content-Type'], 'application/json')
+
+        expected_response = [
+            {"code": "AX", "name": "Åland Islands"},
+            {"code": "NZ", "name": "New Zealand"}
+        ]
+
+        self.assertJSONEqual(response.content, json.dumps(expected_response))
+
+    def test_post_codeset_no_file(self):
+        url_post = reverse('codeset', args=["df"])
+        response = self.client.post(url_post)
+
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+        self.assertEqual(response.content.decode(), "File not uploaded")
+
+    def test_post_codeset_with_file(self):
+        url_post = reverse('codeset', args=["df"])
+        with tempfile.NamedTemporaryFile(delete=True) as tmp_file:
+            tmp_file.write(b"123,test")
+            tmp_file.seek(0)
+            response = self.client.post(url_post, {'file': tmp_file})
+
+        self.assertEqual(response.status_code, HTTPStatus.CREATED)
+        self.assertTrue(DosageFormCode.objects.filter(code="123").exists())
+
+
+class MedDRASearchViewIntegrationTest(TestCase):
+    fixtures = ['meddra_release.json', 'soc.json', 'hlgt.json', 'hlt.json']
+
+    def setUp(self):
+        self.client = Client()
+        self.pk = 1
+        self.url_post = reverse('meddra_search', args=[self.pk])
+
+    def test_post_search_empty_state(self):
+        search_request_data = {
+            "state": {},
+            "search": {
+                "level": "HLGT",
+                "input": "head"
+            }
+        }
+
+        response = self.client.post(
+            self.url_post,
+            data=json.dumps(search_request_data),
+            content_type='application/json'
+        )
+
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertEqual(response['Content-Type'], 'application/json')
+
+        response_data = json.loads(response.content)
+        self.assertIn('terms', response_data)
+        self.assertIn('level', response_data)
+        self.assertEqual(response_data['level'], "HLGT")
+
+        expected_data = {
+            "level": "HLGT",
+            "terms": [
+                {
+                    "code": 10019190,  # "SOC": 10042613
+                    "name": "Head and neck therapeutic procedures"
+                },
+                {
+                    "code": 10019231,  # "SOC": 10029205
+                    "name": "Headaches"
+                }
+            ]
+        }
+        self.assertEqual(response_data, expected_data)
+
+    def test_post_search(self):
+        search_request_data = {
+            "state": {
+                "SOC": 10036585,
+                "HLGT": 10010273
+            },
+            "search": {
+                "level": "HLT",
+                "input": "newborn"
+            }
+        }
+
+        response = self.client.post(
+            self.url_post,
+            data=json.dumps(search_request_data),
+            content_type='application/json'
+        )
+
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertEqual(response['Content-Type'], 'application/json')
+
+        response_data = json.loads(response.content)
+        self.assertIn('terms', response_data)
+        self.assertIn('level', response_data)
+        self.assertEqual(response_data['level'], "HLT")
+
+        expected_data = {
+            "level": "HLT",
+            "terms": [
+                {
+                    "code": 10057176,
+                    "name": "Normal newborn status"
+                }
+            ]
+        }
+        self.assertEqual(response_data, expected_data)
