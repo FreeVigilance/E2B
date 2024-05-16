@@ -35,8 +35,8 @@ urlpatterns = [
 
     path('cioms/<int:pk>', views.ModelCIOMSView.as_view(cioms_service=cioms_service)),
 
-    path('meddra/release/<int:pk>/search', views.MedDRASearchView.as_view(meddra_service=meddra_service)),
+    path('meddra/release/<int:pk>/search', views.MedDRASearchView.as_view(meddra_service=meddra_service), name='meddra_search'),
     path('meddra/release', views.MedDRAReleaseView.as_view(meddra_service=meddra_service)),
 
-    path('codeset/<str:codeset>', views.CodeSetView.as_view(code_set_service=code_set_service)),
+    path('codeset/<str:codeset>', views.CodeSetView.as_view(code_set_service=code_set_service), name='codeset'),
 ]
