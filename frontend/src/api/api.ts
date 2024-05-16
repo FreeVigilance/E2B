@@ -98,6 +98,7 @@ export class HTTP {
 
         const defaultReject = (response: Response | TypeError | any) => {
             if (response.status === 401) {
+                console.log('AAA');
                 console.log({
                     type: 'error',
                     msg: MESSAGES.FAIL_AUTH,
@@ -175,8 +176,12 @@ export class HTTP {
         }
 
         function serializeHeader(method: METHOD, data: T) {
-            console.log('header');
-            return { 'Content-Type': 'application/json' };
+            const username = cookie.load('username');
+            const password = cookie.load('password');
+
+            const header = { authorization: `Basic ${btoa(username+':'+password)}` };
+
+            return { ...header, 'Content-Type': 'application/json' };
         }
 
         const { method, data, responseFormat = 'text' } = options;
@@ -268,7 +273,12 @@ export class HTTP {
         }
 
         function serializeHeader(method: METHOD, data: T) {
-            return { 'Content-Type': 'application/json' };
+            const username = cookie.load('username');
+            const password = cookie.load('password');
+
+            const header = { authorization: `Basic ${btoa(username+':'+password)}` };
+
+            return { ...header, 'Content-Type': 'application/json' };
         }
 
         const { method, data, responseFormat = 'json' } = options;

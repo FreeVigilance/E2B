@@ -5,8 +5,8 @@ import cookie from "react-cookies";
 
 export const postAuth = createAsyncThunk(
     '',
-    (params) => {
-        return "token_test";
+    () => {
+        return api.getCasesList();
     },
 );
 
@@ -41,6 +41,7 @@ const authSlice = createSlice({
             state.loading = false;             
         });
         builder.addCase(postAuth.rejected, (state, action) => {
+            console.log("!!!!!!!!!!!");
             state.isAuth = false;
             state.show = true;
             state.loading = false;   
