@@ -90,7 +90,7 @@ export class HTTP {
             // }
             if (data instanceof FormData && method == METHOD.POST) {
                 return header;
-            }  
+            }
             return { ...header, "Content-Type": "application/json" };
         }
 
