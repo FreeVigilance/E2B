@@ -1,3 +1,4 @@
-![FreeVigilance2_001](https://github.com/FreeVigilance/E2B/assets/150789782/530739ce-c3a7-4da6-aa18-5e5d97e537f1)
+![FreeVigilance2_001_e2b](https://github.com/FreeVigilance/E2B/assets/150789782/c126ff82-ea13-46bd-a461-ec964b901f4d)
 
 The only free and opensource software for pharmacovigilance.
+
