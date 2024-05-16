@@ -38,13 +38,13 @@ export const AuthComponent = () => {
             enqueueSnackbar(`Сначала введите данные для авторизации.`,{ variant: 'error' });
             return;
         }
-        dispatch(setLoading(true));
+        // dispatch(setLoading(true));
         try {
             dispatch(postAuth({username: username, password: password}));
         } catch (e) {
             enqueueSnackbar(`Произошла ошибка при авторизации. Попробуйте позже. ${e}`,{ variant: 'error' });
         }
-        dispatch(setLoading(false));
+        // dispatch(setLoading(false));
     }
 
 

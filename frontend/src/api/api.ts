@@ -88,9 +88,9 @@ export class HTTP {
             // if (method === METHOD.GET || method === METHOD.DELETE) {
             //     return header;
             // }
-            // if (data instanceof FormData) {
-            //     return header;
-            // }  
+            if (data instanceof FormData) {
+                return header;
+            }  
             return { ...header, "Content-Type": "application/json" };
         }
 
@@ -98,6 +98,7 @@ export class HTTP {
 
         const defaultReject = (response: Response | TypeError | any) => {
             if (response.status === 401) {
+                console.log('AAA');
                 console.log({
                     type: 'error',
                     msg: MESSAGES.FAIL_AUTH,
