@@ -88,7 +88,7 @@ export class HTTP {
             // if (method === METHOD.GET || method === METHOD.DELETE) {
             //     return header;
             // }
-            if (data instanceof FormData) {
+            if (data instanceof FormData && method == METHOD.POST) {
                 return header;
             }  
             return { ...header, "Content-Type": "application/json" };
