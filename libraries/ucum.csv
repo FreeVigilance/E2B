@@ -1,35 +1,35 @@
-kg,kilogram,strength_dose
-g,gram,strength_dose
-mg,milligram,strength_dose
-ug,microgram,strength_dose
-ng,nanogram,strength_dose
-pg,picogram,strength_dose
-mg/kg,milligram/kilogram,strength_dose
-ug/kg,microgram/kilogram,strength_dose
-mg/mL,milligram/milliliter,strength_dose
-mg/m2,milligram/sq. meter,strength_dose
-ug/m2,microgram/sq. meter,strength_dose
-L,liter,strength_dose
-mL,milliliter,strength_dose
-uL,microliter,strength_dose
-Bq,becquerel,strength_dose
-GBq,gigabecquerel,strength_dose
-MBq,megabecquerel,strength_dose
-kBq,killobecquerel,strength_dose
-Ci,curie,strength_dose
-mCi,millicurie,strength_dose
-uCi,microcurie,strength_dose
-nCi,nanocurie,strength_dose
-mol,mole,strength_dose
-mmol,millimole,strength_dose
-umol,micromole,strength_dose
-[iU],international unit,strength_dose
-k[iU],kilo-international unit,strength_dose
-M[iU],mega-international unit,strength_dose
-[iU]/kg,international unit/kilogram,strength_dose
-meq,milliequivalent,strength_dose
-%,percent,strength_dose
-[drp],drop,strength_dose
+kg,kilogram,dose
+g,gram,dose
+mg,milligram,dose
+ug,microgram,dose
+ng,nanogram,dose
+pg,picogram,dose
+mg/kg,milligram/kilogram,dose
+ug/kg,microgram/kilogram,dose
+mg/mL,milligram/milliliter,dose
+mg/m2,milligram/sq. meter,dose
+ug/m2,microgram/sq. meter,dose
+L,liter,dose
+mL,milliliter,dose
+uL,microliter,dose
+Bq,becquerel,dose
+GBq,gigabecquerel,dose
+MBq,megabecquerel,dose
+kBq,killobecquerel,dose
+Ci,curie,dose
+mCi,millicurie,dose
+uCi,microcurie,dose
+nCi,nanocurie,dose
+mol,mole,dose
+mmol,millimole,dose
+umol,micromole,dose
+[iU],international unit,dose
+k[iU],kilo-international unit,dose
+M[iU],mega-international unit,dose
+[iU]/kg,international unit/kilogram,dose
+meq,milliequivalent,dose
+%,percent,dose
+[drp],drop,dose
 Ms,megasecond,time
 a,year,time
 d,day,time

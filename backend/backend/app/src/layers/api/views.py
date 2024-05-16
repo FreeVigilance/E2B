@@ -224,7 +224,7 @@ class MedDRASearchView(View):
         return http.HttpResponse(response.model_dump_json(), status=HTTPStatus.OK, content_type='application/json')
 
 
-class CodeSetSearchView(View):
+class CodeSetView(View):
     code_set_service: CodeSetServiceProtocol = ...
 
     def get(self, request: http.HttpRequest, codeset: str) -> http.HttpResponse:
@@ -234,10 +234,6 @@ class CodeSetSearchView(View):
                                                request.GET.get('property', None))
         response = code_set.SearchResponse([code_set.Term(code=obj.code, name=obj.name) for obj in objects])
         return http.HttpResponse(response.model_dump_json(), status=HTTPStatus.OK, content_type='application/json')
-
-
-class CodeSetView(View):
-    code_set_service: CodeSetServiceProtocol = ...
 
     def post(self, request: http.HttpRequest, codeset: str) -> http.HttpResponse:
         file = request.FILES.get('file')
