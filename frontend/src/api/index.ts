@@ -47,25 +47,25 @@ export const api = {
     //     }
     // }
     getCountryCodes: (data: any) => {
-        return clientER.get(`/codeset/country/search?q=${data}`);
+        return clientER.get(`/codeset/country?q=${data}`);
     },
     getLanguageCodes: (data: any) => {
-        return clientER.get(`/codeset/language/search?q=${data}`);
+        return clientER.get(`/codeset/language?q=${data}`);
     },
     getUCUMCodes: (data: any) => {
-        return clientER.get(`/codeset/ucum/search?q=${data}`);
+        return clientER.get(`/codeset/ucum?q=${data}`);
     },
     getDoseCodes: (data: any) => {
-        return clientER.get(`/codeset/ucum/search?q=${data}&property=strength_dose`);
+        return clientER.get(`/codeset/ucum?q=${data}&property=dose`);
     },
     getStrengthCodes: (data: any) => {
-        return clientER.get(`/codeset/ucum/search?q=${data}&property=strength_dose`);
+        return clientER.get(`/codeset/ucum?q=${data}&property=dose`);
     },
     getRouteOfAdministrationCodes: (data: any) => {
-        return clientER.get(`/codeset/roa/search?q=${data}`);
+        return clientER.get(`/codeset/roa?q=${data}`);
     },
     getDosageFormCodes: (data: any) => {
-        return clientER.get(`/codeset/df/search?q=${data}`);
+        return clientER.get(`/codeset/df?q=${data}`);
     },
     postCodeSet: (codeset: any, data: any) => {
         return clientER.post(`/codeset/${codeset}`, { data: data });
