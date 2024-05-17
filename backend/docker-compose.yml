@@ -1,0 +1,26 @@
+# This config is used to run backend only
+
+name: e2b4free
+services:
+  db:
+    image: postgres:16.1
+    restart: unless-stopped
+    ports: 
+      - 5432:5432
+    volumes:
+      - ../data/dbdata:/var/lib/postgresql/data
+      - ../scripts/install-extensions.sql:/docker-entrypoint-initdb.d/install-extensions.sql
+    env_file: ../.env
+    restart: unless-stopped
+
+  backend:
+    build: .
+    command: python backend/backend/manage.py runserver 0.0.0.0:8000
+    ports: 
+      - 8000:8000
+    volumes:
+      - ../:/e2b4free
+    env_file: ../.env
+    depends_on:
+      - db
+    restart: unless-stopped
