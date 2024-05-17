@@ -5,21 +5,15 @@ import typing as t
 
 from django import http
 from django.contrib.auth.models import User
-from django.shortcuts import render
 from django.utils import timezone as djtz
 from django.views import View
 
 import xmltodict
 
 from app.src.exceptions import UserError
-from app.src.layers.api.models import ApiModel, meddra, code_set
+from app.src.layers.api.models import ApiModel
 from app.src.layers.api.models.logging import Log
-from app.src.layers.base.services import (
-    BusinessServiceProtocol, 
-    CIOMSServiceProtocol, 
-    CodeSetServiceProtocol,
-    MedDRAServiceProtocol
-)
+from app.src.layers.base.services import BusinessServiceProtocol
 from extensions import utils
 
 
@@ -190,59 +184,3 @@ class ModelFromXmlView(BaseView):
                 cls.reduce_lists(value)
             if isinstance(value, list) and len(value) == 2 and value[1] is None:
                 value.pop(1)
-
-
-class ModelCIOMSView(View):
-    cioms_service: CIOMSServiceProtocol = ...
-
-    def get(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
-        return render(request, 'cioms.html', self.cioms_service.convert_icsr_to_cioms(pk))
-
-
-class MedDRAReleaseView(View):
-    meddra_service: MedDRAServiceProtocol = ...
-
-    def get(self, request: http.HttpRequest) -> http.HttpResponse:
-        objects = self.meddra_service.list()
-        response = meddra.ReleaseResponse(
-            root=[meddra.Release(id=obj.id, version=obj.version, language=obj.language) for obj in objects]
-        )
-        return http.HttpResponse(response.model_dump_json(), status=HTTPStatus.OK, content_type='application/json')
-
-
-class MedDRASearchView(View):
-    meddra_service: MedDRAServiceProtocol = ...
-
-    def post(self, request: http.HttpRequest, pk: int) -> http.HttpResponse:
-        search_request = meddra.SearchRequest.parse_raw(request.body)
-        objects = self.meddra_service.search(search_request.search.level,
-                                             search_request.state,
-                                             search_request.search.input,
-                                             pk)
-        response = meddra.SearchResponse(terms=[meddra.Term(code=obj.code, name=obj.name) for obj in objects],
-                                         level=search_request.search.level)
-        return http.HttpResponse(response.model_dump_json(), status=HTTPStatus.OK, content_type='application/json')
-
-
-class CodeSetSearchView(View):
-    code_set_service: CodeSetServiceProtocol = ...
-
-    def get(self, request: http.HttpRequest, codeset: str) -> http.HttpResponse:
-        objects = self.code_set_service.search(codeset,
-                                               request.GET.get('q', ''),
-                                               request.GET.get('lang', 'ENG'),
-                                               request.GET.get('property', None))
-        response = code_set.SearchResponse([code_set.Term(code=obj.code, name=obj.name) for obj in objects])
-        return http.HttpResponse(response.model_dump_json(), status=HTTPStatus.OK, content_type='application/json')
-
-
-class CodeSetView(View):
-    code_set_service: CodeSetServiceProtocol = ...
-
-    def post(self, request: http.HttpRequest, codeset: str) -> http.HttpResponse:
-        file = request.FILES.get('file')
-        if not file:
-            return http.HttpResponse(status=HTTPStatus.BAD_REQUEST, content="File not uploaded")
-
-        self.code_set_service.create(codeset, file, request.POST.get('lang', 'ENG'))
-        return http.HttpResponse(status=HTTPStatus.CREATED)
