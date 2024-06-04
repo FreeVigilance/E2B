@@ -27,7 +27,7 @@ def parse_df_codes_file(file_path: pathlib.Path, language: str):
 
 
 class Command(BaseCommand):
-    help = ('Uploads ROA codes to the database. '
+    help = ('Uploads DF codes to the database. '
             'Be aware that script will clear the DF codes for specified language before adding new data.')
 
     def add_arguments(self, parser):

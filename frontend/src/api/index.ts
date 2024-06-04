@@ -67,6 +67,9 @@ export const api = {
     getDosageFormCodes: (data: any) => {
         return clientER.get(`/codeset/df?q=${data}`);
     },
+    getSubstanceCodes: (data: any) => {
+        return clientER.get(`/codeset/sub?q=${data}`);
+    },
     postCodeSet: (codeset: any, data: any) => {
         return clientER.post(`/codeset/${codeset}`, { data: data });
     },

@@ -36,6 +36,13 @@ export const getStrengthCodes = createAsyncThunk(
     },
 );
 
+export const getSubstanceCodes = createAsyncThunk(
+    'substance/getSubstanceCodes',
+    (options) => {
+        return api.getSubstanceCodes(options.data);
+    },
+);
+
 export const getDoseCodes = createAsyncThunk(
     'dosage/getStrengthCodes',
     (options) => {
@@ -383,6 +390,7 @@ const initialState = {
     additionalInfo: {},
     countryCodes: [],
     strengthCodes: [],
+    substanceCodes: [],
     doseCodes: [],
     dosageFormCodes: [],
     routeOfAdministrationCodes: [],
@@ -418,6 +426,9 @@ const drugsSlice = createSlice({
         },
         setStrengthCodes: (state, action) => {
             state.strengthCodes = action.payload;
+        },
+        setSubstanceCodes: (state, action) => {
+            state.substanceCodes = action.payload;
         },
         setDoseCodes: (state, action) => {
             state.doseCodes = action.payload;
@@ -500,6 +511,10 @@ const drugsSlice = createSlice({
             state.strengthCodes = action.payload;
         });
 
+        builder.addCase(getSubstanceCodes.fulfilled, (state, action) => {
+            state.substanceCodes = action.payload;
+        });
+
         builder.addCase(getDoseCodes.fulfilled, (state, action) => {
             state.doseCodes = action.payload;
         });
@@ -525,6 +540,7 @@ export const {
     setAdditionalInfo,
     setCountryCodes,
     setStrengthCodes,
+    setSubstanceCodes,
     setDoseCodes,
     setDosageFormCodes,
     setRouteOfAdministrationCodes,

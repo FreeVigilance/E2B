@@ -58,6 +58,7 @@ export const CodeSet = () => {
                         <MenuItem value={'ucum'}>UCUM</MenuItem>
                         <MenuItem value={'roa'}>Routes of Administration</MenuItem>
                         <MenuItem value={'df'}>Dosage Forms</MenuItem>
+                        <MenuItem value={'sub'}>Substance TermIDs</MenuItem>
                         <MenuItem value={'country'}>Country Codes</MenuItem>
                         <MenuItem value={'language'}>Language Codes</MenuItem>
                     </Select>

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Autocomplete, Card, CardContent, IconButton, Grid } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import AddIcon from '@mui/icons-material/Add';
-import { drugsSelector, setSubstances, getStrengthCodes } from '@src/features/drugs/slice';
+import { drugsSelector, setSubstances, getStrengthCodes, getSubstanceCodes } from '@src/features/drugs/slice';
 import { Substance } from '@src/features/drugs/drugs';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { makeStyles } from '@mui/styles';
@@ -49,7 +49,7 @@ export const Substances = ({ drugIndex }) => {
     const classes = useStyles();
 
     const dispatch = useDispatch();
-    const { substances, strengthCodes } = useSelector(drugsSelector);
+    const { substances, substanceCodes, strengthCodes } = useSelector(drugsSelector);
 
     const handleChange =
         (fieldName, index, isNumber = false, length = 1) =>
@@ -73,8 +73,10 @@ export const Substances = ({ drugIndex }) => {
     };
 
     const getStrengthByCode = (code) => strengthCodes.find(strength => strength.code === code);
+    const getSubstanceByCode = (code) => substanceCodes.find(substance => substance.code === code);
 
     useEffect(() => {dispatch(getStrengthCodes({ data: '' }));}, []);
+    useEffect(() => {dispatch(getSubstanceCodes({ data: '' }));}, []);
 
     const formList = () => {
         let list = [];
@@ -161,7 +163,7 @@ export const Substances = ({ drugIndex }) => {
                                 ></SubstanceFieldLabel>
                             </Grid>
                             <Grid item xs={9}>
-                                <TextField
+                                {substanceCodes.length === 0 && <TextField
                                     variant="outlined"
                                     className={classes.textShort}
                                     onChange={handleChange(
@@ -171,7 +173,31 @@ export const Substances = ({ drugIndex }) => {
                                     value={
                                         item['G_k_2_3_r_2b_SubstanceTermID'].value
                                     }
-                                />
+                                />}
+                                {substanceCodes.length > 0 && <Autocomplete
+                                    className={classes.textShort}
+                                    freeSolo
+                                    autoSelect
+                                    options={substanceCodes}
+                                    getOptionLabel={(option) => option?.code ?? option}
+                                    value={getSubstanceByCode(item['G_k_2_3_r_2b_SubstanceTermID'].value) ?? item['G_k_2_3_r_2b_SubstanceTermID'].value}
+                                    onChange={handleAutocompleteChange('G_k_2_3_r_2b_SubstanceTermID', index)}
+                                    filterOptions={(options, { inputValue }) =>
+                                        matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.CONTAINS })}
+                                    renderOption={(props2, option) => {
+                                        return (
+                                            <li {...props2} key={props2.key}>
+                                                {`${option.code} ${option.name}`}
+                                            </li>
+                                        );
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            label="EDQM Substance TermID code"
+                                            {...params}
+                                        />
+                                    )}
+                                ></Autocomplete>}
                             </Grid>
 
                             <Grid item xs={3}>
