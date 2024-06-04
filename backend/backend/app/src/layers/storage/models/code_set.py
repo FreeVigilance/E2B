@@ -73,3 +73,15 @@ class DosageFormCode(models.Model):
         max_length=3,
         validators=[MinLengthValidator(3)],
     )
+
+
+class SubstanceCode(models.Model):
+    class Meta:
+        unique_together = ('code', 'language')
+
+    code = models.CharField()
+    name = models.CharField()
+    language = models.CharField(
+        max_length=3,
+        validators=[MinLengthValidator(3)],
+    )
