@@ -9,6 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { makeStyles } from '@mui/styles';
 import { SubstanceFieldLabel } from '@src/components/field-labels/drugs/substance-label';
 import { matchSorter } from 'match-sorter';
+import { VariableSizeList } from 'react-window';
 
 const useStyles = makeStyles({
     margin: {
@@ -77,6 +78,57 @@ export const Substances = ({ drugIndex }) => {
 
     useEffect(() => {dispatch(getStrengthCodes({ data: '' }));}, []);
     useEffect(() => {dispatch(getSubstanceCodes({ data: '' }));}, []);
+
+    const renderRow = ({ data, index, style }) => {
+        return React.cloneElement(data[index], {
+            ...style,
+            top: style.top + 8,
+        });
+    };
+
+    const useResetCache = (data) => {
+        const ref = React.useRef(null);
+        React.useEffect(() => {
+            if (ref.current !== null) {
+                ref.current.resetAfterIndex(0, true);
+            }
+        }, [data]);
+        return ref;
+    };
+
+    const OuterElementContext = React.createContext({});
+
+    const OuterElementType = React.forwardRef((props, ref) => {
+        const outerProps = React.useContext(OuterElementContext);
+        return <div ref={ref} {...props} {...outerProps} />;
+    });
+
+    const VirtualizedList = React.forwardRef((props, ref) => {
+        const { children } = props;
+
+        const itemCount = children.length;
+        const gridRef = useResetCache(itemCount);
+        const outerProps = { ...props };
+        delete outerProps.children;
+        return (
+            <div ref={ref}>
+                <OuterElementContext.Provider value={outerProps}>
+                    <VariableSizeList
+                        ref={gridRef}
+                        outerElementType={OuterElementType}
+                        height={itemCount * 36}
+                        width="100%"
+                        itemCount={itemCount}
+                        itemSize={() => 36}
+                        overscanCount={5}
+                        itemData={{ ...children }}
+                    >
+                        {renderRow}
+                    </VariableSizeList>
+                </OuterElementContext.Provider>
+            </div>
+        );
+    });
 
     const formList = () => {
         let list = [];
@@ -165,7 +217,7 @@ export const Substances = ({ drugIndex }) => {
                             <Grid item xs={9}>
                                 {substanceCodes.length === 0 && <TextField
                                     variant="outlined"
-                                    className={classes.textShort}
+                                    className={classes.textLong}
                                     onChange={handleChange(
                                         'G_k_2_3_r_2b_SubstanceTermID',
                                         index,
@@ -175,15 +227,19 @@ export const Substances = ({ drugIndex }) => {
                                     }
                                 />}
                                 {substanceCodes.length > 0 && <Autocomplete
-                                    className={classes.textShort}
-                                    freeSolo
-                                    autoSelect
+                                    className={classes.textLong}
+                                    autoHighlight
+                                    ListboxComponent={VirtualizedList}
                                     options={substanceCodes}
-                                    getOptionLabel={(option) => option?.code ?? option}
-                                    value={getSubstanceByCode(item['G_k_2_3_r_2b_SubstanceTermID'].value) ?? item['G_k_2_3_r_2b_SubstanceTermID'].value}
+                                    getOptionLabel={(option) => option.name ?? ''}
+                                    value={getSubstanceByCode(item['G_k_2_3_r_2b_SubstanceTermID'].value) ?? ''}
                                     onChange={handleAutocompleteChange('G_k_2_3_r_2b_SubstanceTermID', index)}
                                     filterOptions={(options, { inputValue }) =>
-                                        matchSorter(options, inputValue, { keys: ['code', 'name'], threshold: matchSorter.rankings.CONTAINS })}
+                                        matchSorter(options, inputValue, {
+                                            keys: ['code', 'name'],
+                                            threshold: matchSorter.rankings.CONTAINS,
+                                        }).slice(0, 10)
+                                    }
                                     renderOption={(props2, option) => {
                                         return (
                                             <li {...props2} key={props2.key}>
